@@ -4,3 +4,9 @@
 
 * condivisione idee per tool da usare
 * progetto su intellij : @Vito
+
+#Week 2
+
+* UML model completato
+* Inizio scrittura codice, divisone classi
+
