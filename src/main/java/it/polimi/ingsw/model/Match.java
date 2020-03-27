@@ -13,6 +13,7 @@ public class Match {
      */
     public Match(int gameID){
         this.gameID = gameID;
+        this.island = new Island();
     }
 
     /* Attributes */
@@ -20,9 +21,9 @@ public class Match {
     private int gameID;
     private int numbPlayers; // secondo me ne possiamo fare a meno usando la Arraylist
     private Island island;
-    private List<Player> listPlayers = new ArrayList<Player>();
+    private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
-    private List<String> listCards = new ArrayList<String>(); // qui considero solo le cards in gioco con il loro string ID
+    private List<String> listCards = new ArrayList<>(); // qui considero solo le cards in gioco con il loro string ID
 
 
     /* Methods */
@@ -46,9 +47,6 @@ public class Match {
         return listCards;
     }
 
-    public void setIsland(Island island) {
-        this.island = island;
-    }
     public void setNumbPlayers(int numbPlayers) {
         this.numbPlayers = numbPlayers;
     }
