@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.commons;
 
 /**
  * This is the class for the components of a tower

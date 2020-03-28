@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.polimi.ingsw.commons.Component;
 import it.polimi.ingsw.exceptions.*;
 
 /**
