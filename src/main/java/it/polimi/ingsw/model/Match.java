@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Match {
     /* Attributes */
-    private int gameID;
+    private int matchID;
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
@@ -21,20 +21,20 @@ public class Match {
     /**
      * Constructor
      */
-    private Match(int gameID){
-        this.gameID = gameID;
+    public Match(int matchID){
+        this.matchID = matchID;
         this.island = new Island();
     }
 
     /* Methods */
 
-    public int getGameID() {
-        return gameID;
+    public int getMatchID() {
+        return matchID;
     }
     public List<Player> getPlayers() {
         return listPlayers;
     }
-    public Island getBoard() {
+    public Island getIsland() {
         return island;
     }
     public Player getCurrentPlayer(){
@@ -48,10 +48,19 @@ public class Match {
         this.listCards.add(card);
     }
 
+
     /**
-     * Method to set the current player of the match, if it exists in  the array of players of the match.
+     * Method to add a player to the list of players of the Match
+     * @param Player player to be added to the list
+     */
+    public void addPlayer(Player player) {
+        this.listPlayers.add(player);
+    }
+
+    /**
+     * Method to set the current player of the match, only if it exists in the array of players of the match.
      * @param currentPlayer player object that you want to add as current player
-     * @return if the currentPlayer was successfully added, returns the index in the array of players, else returns -1
+     * @return returns the index in the array of players of the current player just added, else throws an exception
      */
     public int setCurrentPlayer(Player currentPlayer) throws PlayerNotPresentException {
         if (listPlayers.contains(currentPlayer)){
@@ -62,12 +71,5 @@ public class Match {
         }
     }
 
-    /**
-     * Method to add and add player to the list of player of the Match
-     * @param name name of the player you wanna add to the Match
-     * @param birthday birthday of the player you wanna add to the Match
-     */
-    public void createPlayer(String name, Date birthday) {
-        this.listPlayers.add(new Player(name,birthday));
-    }
+
 }

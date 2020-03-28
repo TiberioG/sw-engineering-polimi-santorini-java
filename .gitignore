@@ -8,4 +8,15 @@
 
 # Maven
 log/
-target/s
+target/
+target/classes/it/polimi/ingsw/commons/Component.class
+target/classes/it/polimi/ingsw/exceptions/
+target/classes/it/polimi/ingsw/model/Cell.class
+target/classes/it/polimi/ingsw/model/Constructor.class
+target/classes/it/polimi/ingsw/model/Island.class
+target/classes/it/polimi/ingsw/model/Match.class
+target/generated-sources/
+target/generated-test-sources/
+target/maven-status/
+target/surefire-reports/
+target/test-classes/it/polimi/ingsw/model/
