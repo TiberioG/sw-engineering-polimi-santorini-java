@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Match {
     /* Attributes */
-    private int gameID;
+    private int matchID;
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
@@ -21,20 +21,20 @@ public class Match {
     /**
      * Constructor
      */
-    private Match(int gameID){
-        this.gameID = gameID;
+    public Match(int matchID){
+        this.matchID = matchID ;
         this.island = new Island();
     }
 
     /* Methods */
 
-    public int getGameID() {
-        return gameID;
+    public int getMatchID() {
+        return matchID;
     }
     public List<Player> getPlayers() {
         return listPlayers;
     }
-    public Island getBoard() {
+    public Island getIsland() {
         return island;
     }
     public Player getCurrentPlayer(){
@@ -63,11 +63,14 @@ public class Match {
     }
 
     /**
-     * Method to add and add player to the list of player of the Match
+     * Method to add add player to the list of player of the Match
      * @param name name of the player you wanna add to the Match
      * @param birthday birthday of the player you wanna add to the Match
+     * @return the reference to the player obj just created
      */
-    public void createPlayer(String name, Date birthday) {
-        this.listPlayers.add(new Player(name,birthday));
+    public Player createPlayer(String name, Date birthday) {
+        Player playToAdd = new Player(name,birthday);
+        this.listPlayers.add(playToAdd);
+        return playToAdd;
     }
 }
