@@ -11,11 +11,11 @@ import it.polimi.ingsw.exceptions.*;
  * @author sup3rgiu
  */
 
-public class Cell implements Constructor{
+public class Cell {
 
     /* Attributes */
 
-    private List<Component> tower = new ArrayList<>();
+    private Tower tower;
     private Worker currentWorker;
     private int coordX;
     private int coordY;
@@ -32,17 +32,33 @@ public class Cell implements Constructor{
         currentWorker = null;
         coordX = x;
         coordY = y;
-        tower.add(Component.GROUND);
+        tower = new Tower();
     }
 
     /* Methods */
 
     /**
+     * Returns coordinate X of the cell
+     * @return coordinate X
+     */
+    public int getCoordX() {
+        return coordX;
+    }
+
+    /**
+     * Returns coordinate Y of the cell
+     * @return coordinate Y
+     */
+    public int getCoordY() {
+        return coordY;
+    }
+
+    /**
      * Returns the tower built on the cell
      *
-     * @return tower object as {@link List<Component>}
+     * @return tower object as {@link Tower}
      */
-    public List<Component> getTower() {
+    public Tower getTower() {
         return tower;
     }
 
@@ -74,26 +90,4 @@ public class Cell implements Constructor{
         this.currentWorker = null;
     }
 
-    /**
-     * Adds the given component at the top of the tower
-     *
-     * @param component {@link Component} to be added
-     */
-    @Override
-    public void addLevel(Component component) {
-        tower.add(component);
-    }
-
-    /**
-     * Removes the last {@link Component} of the tower.
-     *
-     * @return {@link Component} removed. Null if tower has only the {@link Component#GROUND} component
-     */
-    @Override
-    public Component removeLevel() {
-        if(tower.size() > 1) { // greater than 1 because first level can not be removed (GROUND)
-            return tower.remove(tower.size() - 1);
-        }
-        return null;
-    }
 }

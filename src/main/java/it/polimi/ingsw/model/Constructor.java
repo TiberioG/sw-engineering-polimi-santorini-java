@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.exceptions.BuildLowerComponentException;
+import it.polimi.ingsw.exceptions.RemoveGroundLevelException;
 
 public interface Constructor {
-    void addLevel(Component component);
-    Component removeLevel();
+    void addComponent(Component component) throws BuildLowerComponentException;
+    Component removeComponent() throws RemoveGroundLevelException;
 }

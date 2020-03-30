@@ -5,9 +5,19 @@ package it.polimi.ingsw.commons;
  * @author sup3rgiu
  */
 public enum Component {
-    GROUND,
-    FIRST_LEVEL,
-    SECOND_LEVEL,
-    THIRD_LEVEL,
-    DOME
+    GROUND(0),
+    FIRST_LEVEL(1),
+    SECOND_LEVEL(2),
+    THIRD_LEVEL(3),
+    DOME(4);
+
+    private final int componentCode;
+
+    Component(int componentCode) {
+        this.componentCode = componentCode;
+    }
+
+    public int getComponentCode() {
+        return componentCode;
+    }
 }
