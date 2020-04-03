@@ -1,0 +1,11 @@
+[{
+  "id": 0,
+  "name": "Apollo",
+  "type": "Tuo spostamento",
+  "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+  "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+}
+]
