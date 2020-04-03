@@ -9,46 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DefaultBuild implements StrategyBuild {
-
-    private List<Cell> getAdjacentCells(Location location, Island island) {
-        int x = .getCoordX();
-        int y = worker.getCurrentCell().getCoordY();
-        List<Cell> adjacentCells = new ArrayList<>();
-        Cell[][] field =  island.getField();
-
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                if ((i != 0) ^ ( j!= 0)) {
-                    if (x+i >= 0 && y+j >= 0 && x+i<field[0].length && y+j<field.length) { //check boundaries
-                        adjacentCells.add(field[x+i][y+j]);
-                    }
-                }
-            }
-        }
-
-
-    }
-
-
-    @Override
-    public void build(Component component, Cell cell, Worker worker){
-            Tower currentTower = cell.getTower();
-            try {
-                currentTower.addComponent(component);
-            } catch (BuildLowerComponentException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-
-
-
-
-
-   //strategy build
+public class DefaultBuild implements StrategyBuild{
 
     public void buildComponent(Cell cell) {
         Tower currentTower = cell.getTower();
@@ -61,5 +22,40 @@ public class DefaultBuild implements StrategyBuild {
 
 
 
+    @Override
+    public void build(ArrayList<Component> listCompToBuild, ArrayList<Cell> listWhereToBuild, Match match, Worker worker) {
+        Cell whereIam = match.getLocation().getLocation(worker);
+        ArrayList nearby = match.getIsland().getAdjCells(whereIam);
 
+
+        //0check, since is default strategy i con only build once
+        boolean cond0 = ( listCompToBuild.size() == 1 && listWhereToBuild.size() == 1 );
+
+        //1st check, I should only build close to me
+        boolean cond1 = nearby.contains(listWhereToBuild.get(0));
+
+        //2nd check, where I wanna build there's not another worker
+        boolean cond2 = (match.getLocation().getOccupant(listWhereToBuild.get(0)) == null);
+
+        //3rd check, what I wanna build is compatible with the level already present
+        boolean cond3 = listWhereToBuild.get(0).getTower().nextBuildable() == listCompToBuild.get(0).getComponentCode();
+
+        //TODO gestire le eccezioni per ogni condizione
+
+        if (cond0 && cond1 && cond2 && cond3){
+            try {
+                listWhereToBuild.get(0).getTower().addComponent(listCompToBuild.get(0));
+            } catch (BuildLowerComponentException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+
+
+
+
+
+    }
 }

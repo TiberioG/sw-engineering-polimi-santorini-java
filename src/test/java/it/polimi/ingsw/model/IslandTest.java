@@ -66,8 +66,8 @@ public class IslandTest {
         assertEquals(adjacentCells, this.island.getAdjCells(centralCell));
     }
 
+    @Test
     public void getAdjCell_areReallyAdj_nearUpperBorder()throws CellOutOfBoundsException{
-
         ArrayList<Cell> adjacentCells = new ArrayList<>();
         adjacentCells.add( this.island.getCell(0, 1) ); // 0, 1
         adjacentCells.add( this.island.getCell(1, 0) );  // 1, 0

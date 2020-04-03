@@ -36,7 +36,6 @@ public class Tower {
 
     /**
      * Adds the given component at the top of the tower
-     *
      * @param component {@link Component} to be added
      * @throws BuildLowerComponentException if the given component is lower than the tower's latest component
      */
@@ -49,7 +48,6 @@ public class Tower {
 
     /**
      * Removes the last {@link Component} of the tower.
-     *
      * @return {@link Component} removed. Null if the tower has only the {@link Component#GROUND} component
      */
     public Component removeComponent() throws RemoveGroundLevelException {
@@ -58,4 +56,15 @@ public class Tower {
         }
         throw new RemoveGroundLevelException();
     }
+
+
+    public Component getTopComponent (){
+        return this.components.get(components.size() -1);
+    }
+
+    public int nextBuildable(){
+        return this.getTopComponent().getComponentCode() + 1;
+    }
+
+
 }
