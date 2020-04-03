@@ -10,7 +10,7 @@ public class Worker {
     /* Attributes */
 
     private final Colors color;
-    private Cell currentCell;
+    //private Cell currentCell; no more need with location
 
     /* Constructor(s) */
 
@@ -26,13 +26,5 @@ public class Worker {
     public Colors getColor() {
         return color;
     }
-    public Cell getCurrentCell() {
-        return currentCell;
-    }
-
-    public void setCurrentCell(Cell cell) {
-        this.currentCell = cell;
-    }
-
 
 }

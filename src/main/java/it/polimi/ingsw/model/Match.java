@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class Match {
     /* Attributes */
+    private Location location;
     private int matchID;
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
@@ -24,6 +25,7 @@ public class Match {
     public Match(int matchID){
         this.matchID = matchID ;
         this.island = new Island();
+        this.location = Location.myLocation();
     }
 
     /* Methods */
@@ -72,5 +74,9 @@ public class Match {
         Player playToAdd = new Player(name,birthday);
         this.listPlayers.add(playToAdd);
         return playToAdd;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }

@@ -45,12 +45,26 @@ public class LocationTest {
 
     @Test
     public void getLocation() {
+        try {
+            Location.myLocation().setLocation(cell1, worker1);
+        }
+        catch (WorkerAlreadyPresentException except){
+            // no need to manage here
+        }
+
         assertEquals(cell1, Location.myLocation().getLocation(worker1));
-        assertNotEquals(cell1, Location.myLocation().getLocation(worker2));
+        assertNull(Location.myLocation().getLocation(worker2));
     }
 
     @Test
     public void getOccupant() {
+        try {
+            Location.myLocation().setLocation(cell1, worker1);
+        }
+        catch (WorkerAlreadyPresentException except){
+            // no need to manage here
+        }
+
         assertNotEquals(worker1, Location.myLocation().getOccupant(cell2));
         assertEquals(worker1, Location.myLocation().getOccupant(cell1));
     }
