@@ -20,10 +20,4 @@ public class WorkerTest {
         Assert.assertSame(worker.getColor(), colorBlue);
     }
 
-    @Test
-    public void setAndGetSameCurrentCell() {
-        Cell currentCell = new Cell(1, 1);
-        worker.setCurrentCell(currentCell);
-        Assert.assertEquals(worker.getCurrentCell(), currentCell);
-    }
 }

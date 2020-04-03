@@ -28,25 +28,6 @@ public class CellTest {
     }
 
     @Test
-    public void setAndGetCurrentWorker() throws WorkerAlreadyPresentException {
-        assertNull(cell.getCurrentWorker());
-        cell.setCurrentWorker(worker);
-        assertEquals(worker, cell.getCurrentWorker());
-    }
-
-    @Test (expected = WorkerAlreadyPresentException.class)
-    public void setAndGetCurrentWorker_WorkerAlreadyPresent_throwsWorkerAlreadyPresentException() throws WorkerAlreadyPresentException {
-        cell.setCurrentWorker(worker);
-        cell.setCurrentWorker(new Worker(Colors.RED));
-    }
-
-    @Test
-    public void removeCurrentWorker() {
-        cell.removeCurrentWorker();
-        assertNull(cell.getCurrentWorker());
-    }
-
-    @Test
     public void getCoordX() {
         assertEquals(x, cell.getCoordX());
     }

@@ -127,5 +127,10 @@ public class MatchTest {
 
     }
 
+    @Test
+    public void testGetLocation(){
+
+    }
+
 }
 
