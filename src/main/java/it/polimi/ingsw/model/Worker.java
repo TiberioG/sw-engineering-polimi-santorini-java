@@ -10,21 +10,25 @@ public class Worker {
     /* Attributes */
 
     private final Colors color;
-    //private Cell currentCell; no more need with location
+    private final Player owner;
 
     /* Constructor(s) */
 
     /**
      * Constructor
      */
-    public Worker(Colors color) {
+    public Worker(Colors color, Player owner) {
         this.color = color;
+        this.owner = owner;
     }
 
     /* Methods */
 
     public Colors getColor() {
         return color;
+    }
+    public Player getOwner() {
+        return owner;
     }
 
 }

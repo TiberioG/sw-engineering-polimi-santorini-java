@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 public class CellTest {
@@ -18,7 +20,7 @@ public class CellTest {
     @Before
     public void setUp() {
         cell = new Cell(x, y);
-        worker = new Worker(Colors.BLUE);
+        worker = new Worker(Colors.BLUE, new Player("Vespasiano", new Date(6666666)));
     }
 
     @After

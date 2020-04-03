@@ -25,7 +25,7 @@ public class Match {
     public Match(int matchID){
         this.matchID = matchID ;
         this.island = new Island();
-        this.location = Location.myLocation();
+        this.location = new Location();
     }
 
     /* Methods */

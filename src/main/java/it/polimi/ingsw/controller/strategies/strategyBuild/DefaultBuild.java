@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class DefaultBuild implements StrategyBuild {
 
     private List<Cell> getAdjacentCells(Location location, Island island) {
-        int x = worke.getCurrentCell().getCoordX();
+        int x = .getCoordX();
         int y = worker.getCurrentCell().getCoordY();
         List<Cell> adjacentCells = new ArrayList<>();
         Cell[][] field =  island.getField();

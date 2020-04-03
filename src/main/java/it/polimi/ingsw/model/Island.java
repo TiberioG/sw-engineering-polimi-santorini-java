@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This is the class for the Island (billboard)
  * @author sup3rgiu
@@ -50,4 +53,28 @@ public class Island {
             throw new CellOutOfBoundsException();
         return this.field[x][y];
     }
+
+    /**
+     * method to get the adjacent cells given an instance of cell
+     * @param cell
+     * @return an arraylist of cells
+     */
+    public ArrayList<Cell> getAdjCells (Cell cell) {
+        int x = cell.getCoordX();
+        int y = cell.getCoordY();
+        ArrayList<Cell> adjacentCells = new ArrayList<>();
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if ((i != 0) || ( j!= 0)) {
+                    if (x+i >= 0 && y+j >= 0 && x+i<maxX && y+j<maxY) { //check boundaries
+                        adjacentCells.add(field[x+i][y+j]);
+                    }
+                }
+            }
+        }
+        return adjacentCells;
+
+    }
+
+
 }

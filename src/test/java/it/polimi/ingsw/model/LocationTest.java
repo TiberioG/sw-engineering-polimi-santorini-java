@@ -12,6 +12,8 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 public class LocationTest {
+    private Match testMatch;
+    private final int testID = 478939;
     private Player player = new Player("Agrippa", new Date(2393939));
     private Island island = new Island();
     private Cell cell1;
@@ -25,47 +27,48 @@ public class LocationTest {
 
     @Before
     public void setUp() {
+        testMatch = new Match(testID);
         cell1 = new Cell(x1, y1);
-        worker1 = new Worker(Colors.BLUE);
+        worker1 = new Worker(Colors.BLUE, player);
     }
 
-
-    @Test
-    public void myLocation() {
-    }
 
     @Test
     public void setLocation() throws WorkerAlreadyPresentException {
-        Location.myLocation().setLocation(cell1,worker1);
+        Location locationTest = testMatch.getLocation();
+        locationTest.setLocation(cell1,worker1);
 
-        assertEquals(cell1, Location.myLocation().getLocation(worker1));
-        assertEquals(worker1, Location.myLocation().getOccupant(cell1));
+        assertEquals(cell1, locationTest.getLocation(worker1));
+        assertEquals(worker1, locationTest.getOccupant(cell1));
 
     }
 
     @Test
     public void getLocation() {
+        Location locationTest = testMatch.getLocation();
+
         try {
-            Location.myLocation().setLocation(cell1, worker1);
+            locationTest.setLocation(cell1, worker1);
         }
         catch (WorkerAlreadyPresentException except){
             // no need to manage here
         }
 
-        assertEquals(cell1, Location.myLocation().getLocation(worker1));
-        assertNull(Location.myLocation().getLocation(worker2));
+        assertEquals(cell1, locationTest.getLocation(worker1));
+        assertNull(locationTest.getLocation(worker2));
     }
 
     @Test
     public void getOccupant() {
+        Location locationInstance = testMatch.getLocation();
         try {
-            Location.myLocation().setLocation(cell1, worker1);
+            locationInstance.setLocation(cell1, worker1);
         }
         catch (WorkerAlreadyPresentException except){
             // no need to manage here
         }
 
-        assertNotEquals(worker1, Location.myLocation().getOccupant(cell2));
-        assertEquals(worker1, Location.myLocation().getOccupant(cell1));
+        assertNotEquals(worker1, locationInstance.getOccupant(cell2));
+        assertEquals(worker1, locationInstance.getOccupant(cell1));
     }
 }

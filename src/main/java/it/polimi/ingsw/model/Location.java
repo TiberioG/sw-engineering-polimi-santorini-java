@@ -5,26 +5,12 @@ import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
 import java.util.HashMap;
 
 /**
- * this singleton class represents the location
+ * This class represents the location
  * we want to represent here the 1:1 relationship between Worker and Cell
  */
 
 public class Location {
-
     private HashMap<Cell, Worker> map = new HashMap<>();
-
-    private static Location location = null; //the only instance
-    /**
-     * Private constructor of the singleton
-     */
-    private Location(){} //defalut private constructor
-
-    public static Location myLocation (){
-        if (location == null){
-            location = new Location();
-        }
-        return location;
-    }
 
     /**
      * method to add a pair cell-worker in the map
@@ -46,8 +32,8 @@ public class Location {
      * @return Cell where the worker ins
      */
     public Cell getLocation(Worker worker){
-        if (map.containsValue(worker)) {
-            for (HashMap.Entry<Cell, Worker> entry : map.entrySet()) {
+        if (this.map.containsValue(worker)) {
+            for (HashMap.Entry<Cell, Worker> entry : this.map.entrySet()) {
                 if (worker.equals(entry.getValue())) {
                     return entry.getKey();
                 }

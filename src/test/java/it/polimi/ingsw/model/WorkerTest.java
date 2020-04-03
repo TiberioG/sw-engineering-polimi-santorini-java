@@ -6,13 +6,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
+
 public class WorkerTest {
     private Worker worker;
     private Colors colorBlue = Colors.BLUE;
 
     @Before
     public void setUp() {
-        worker = new Worker(colorBlue);
+        worker = new Worker(colorBlue, new Player("domiziana", new Date(9999999)));
     }
 
     @Test

@@ -54,7 +54,7 @@ public class Player {
      */
 
     public Worker addWorker(Colors color) {
-        Worker worker = new Worker(color);
+        Worker worker = new Worker(color, this);
         workers.add(worker);
         return worker;
     }
