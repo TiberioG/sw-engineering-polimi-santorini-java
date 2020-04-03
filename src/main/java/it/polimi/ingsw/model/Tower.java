@@ -7,7 +7,7 @@ import it.polimi.ingsw.exceptions.RemoveGroundLevelException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tower implements Constructor {
+public class Tower {
 
     /* Attributes */
 
@@ -40,7 +40,6 @@ public class Tower implements Constructor {
      * @param component {@link Component} to be added
      * @throws BuildLowerComponentException if the given component is lower than the tower's latest component
      */
-    @Override
     public void addComponent(Component component) throws BuildLowerComponentException {
         if(components.size()!=0 && component.getComponentCode() <= components.get(components.size()-1).getComponentCode())
             throw new BuildLowerComponentException();
@@ -53,7 +52,6 @@ public class Tower implements Constructor {
      *
      * @return {@link Component} removed. Null if the tower has only the {@link Component#GROUND} component
      */
-    @Override
     public Component removeComponent() throws RemoveGroundLevelException {
         if(components.size() > 1) { // greater than 1 because first level can not be removed (GROUND)
             return components.remove(components.size() - 1);
