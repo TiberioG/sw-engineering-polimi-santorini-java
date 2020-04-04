@@ -13,7 +13,7 @@ public class Location {
     private HashMap<Cell, Worker> map = new HashMap<>();
 
     /**
-     * method to add a pair cell-worker in the map
+     * Method to add a pair cell-worker in the map
      * @param cell
      * @param worker
      * @throws WorkerAlreadyPresentException
@@ -22,25 +22,37 @@ public class Location {
         if (this.map.get(cell) != null) {
             throw new WorkerAlreadyPresentException();
         } else {
+            this.map.put(getLocation(worker), null);
             this.map.put(cell, worker);
         }
     }
 
     /**
-     * method to get the cell where a worker is
+     * Swaps the worker placed in cell1 with that in cell2
+     * @param cell1
+     * @param cell2
+     */
+    public void swapLocation(Cell cell1, Cell cell2) {
+        Worker worker1 = getOccupant(cell1);
+        Worker worker2 = getOccupant(cell2);
+        this.map.put(cell1, worker2);
+        this.map.put(cell2, worker1);
+    }
+
+    /**
+     * Method to get the cell where a worker is
      * @param worker
-     * @return Cell where the worker ins
+     * @return {@link Cell} where the worker is
      */
     public Cell getLocation(Worker worker){
-        if (this.map.containsValue(worker)) {
+        if (worker != null && this.map.containsValue(worker)) {
             for (HashMap.Entry<Cell, Worker> entry : this.map.entrySet()) {
                 if (worker.equals(entry.getValue())) {
                     return entry.getKey();
                 }
             }
-            return null;
         }
-        else  return null;
+        return null;
     }
 
     /**

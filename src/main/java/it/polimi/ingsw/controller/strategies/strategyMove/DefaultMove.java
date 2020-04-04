@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.commons.Component;
-import it.polimi.ingsw.controller.TurnProperties;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.exceptions.WrongCellSelectedMoveException;
 import it.polimi.ingsw.exceptions.ZeroCellsAvailableMoveException;
@@ -12,9 +11,7 @@ import it.polimi.ingsw.model.Worker;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// APOLLO
-
-public class SwapWorker implements StrategyMove {
+public class DefaultMove implements StrategyMove {
 
     /* Attributes */
 
@@ -22,7 +19,7 @@ public class SwapWorker implements StrategyMove {
 
     /* Constructor(s) */
 
-    public SwapWorker(Match match) {
+    public DefaultMove(Match match) {
         this.match = match;
     }
 
@@ -34,10 +31,7 @@ public class SwapWorker implements StrategyMove {
         if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }
         else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }
         else {
-            if(match.getLocation().getOccupant(cell) != null) // if cell is occupied by an enemy worker
-                match.getLocation().swapLocation(match.getLocation().getLocation(worker), cell);
-            else
-                match.getLocation().setLocation(cell, worker);
+            match.getLocation().setLocation(cell, worker);
         }
     }
 
@@ -47,7 +41,7 @@ public class SwapWorker implements StrategyMove {
         return adjCells.stream()
                 .filter(cell -> !(cell.getTower().getTopComponent().getComponentCode() == workerCell.getTower().getTopComponent().getComponentCode() + 2)) // remove cells where tower is 2 or more level higher than where the worker is
                 .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
-                .filter(cell -> (match.getLocation().getOccupant(cell) == null || match.getLocation().getOccupant(cell).getOwner() != worker.getOwner()) ) // remove cells where there is a worker owned by the current player
+                .filter(cell -> match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker
                 .collect(Collectors.toList());
     }
 }
