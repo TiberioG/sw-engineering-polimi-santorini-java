@@ -17,7 +17,7 @@ public class DomeAnywhere implements StrategyBuild {
         ArrayList nearby = match.getIsland().getAdjCells(whereIam);
 
         //0check, atlante can only build once
-        boolean cond0 = ( listCompToBuild.size() == 1 && listWhereToBuild.size() == 1 );
+        boolean cond0 = (listCompToBuild.size() == 1 && listWhereToBuild.size() == 1);
 
         //1st check, I should only build close to me
         boolean cond1 = nearby.contains(listWhereToBuild.get(0));
@@ -29,10 +29,12 @@ public class DomeAnywhere implements StrategyBuild {
 
         //TODO gestire le eccezioni per ogni condizione
 
-        if (cond0 && cond1 && cond2){
+        if (cond0 && cond1 && cond2) {
             try {
                 listWhereToBuild.get(0).getTower().addComponent(listCompToBuild.get(0));
             } catch (BuildLowerComponentException e) {
                 e.printStackTrace();
             }
+        }
+    }
 }

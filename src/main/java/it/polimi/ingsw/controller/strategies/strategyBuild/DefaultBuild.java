@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class DefaultBuild implements StrategyBuild{
 
+    /*
     public void buildComponent(Cell cell) {
         Tower currentTower = cell.getTower();
         try {
@@ -19,8 +20,7 @@ public class DefaultBuild implements StrategyBuild{
             e.printStackTrace();
         }
     }
-
-
+    */
 
     @Override
     public void build(ArrayList<Component> listCompToBuild, ArrayList<Cell> listWhereToBuild, Match match, Worker worker) {

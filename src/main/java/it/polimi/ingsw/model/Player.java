@@ -17,7 +17,7 @@ public class Player {
 
     private final String name;
     private final Date birthday;
-    private String currentCard;
+    private int currentCard;
     private List<Worker> workers = new ArrayList<>();
 
     /* Constructor(s) */
@@ -39,10 +39,10 @@ public class Player {
     public Date getBirthday() {
         return birthday;
     }
-    public String getCurrentCard() {
+    public int getCurrentCard() {
         return currentCard;
     }
-    public void setCurrentCard(String currentCard) {
+    public void setCurrentCard(int currentCard) {
         this.currentCard = currentCard;
     }
 
