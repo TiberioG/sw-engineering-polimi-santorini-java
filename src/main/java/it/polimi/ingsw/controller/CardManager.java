@@ -9,9 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CardManager {
-    private HashMap<Integer, Card> cardMap = new HashMap<>();
+    private static CardManager instance = null;
+    private static HashMap<Integer, Card> cardMap = new HashMap<>();
 
-    public CardManager() {
+    private CardManager() {
         try {
             JsonAdapter jsonAdapter = new JsonAdapter("/Cards.json", "array");
             JsonArray jsonArray = jsonAdapter.getMainJsonArray();
@@ -23,17 +24,35 @@ public class CardManager {
                 newCard.setDescription(JsonAdapter.getStringFromJsonObject(jsonObject, "description"));
                 newCard.setType(JsonAdapter.getStringFromJsonObject(jsonObject, "type"));
 
-                //load strategy settings, controllare valori null
+                newCard.setStrategySettings(addStrategySettings(jsonObject));
 
                 newCard.setInitialPhase(addInitialPhase(jsonObject));
 
                 cardMap.put(newCard.getId(), newCard);
             }
-            /*Gson gson = new Gson();
-            cardList = gson.fromJson(jsonReader, new TypeToken<List<Card>>(){}.getType());*/
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static CardManager initCardManager() {
+        if (instance == null) instance = new CardManager();
+        return instance;
+    }
+
+    private StrategySettings addStrategySettings(JsonObject jsonObject) {
+        JsonObject strategySettingsJsonObject = jsonObject.getAsJsonObject("strategySettings");
+        StrategySettings strategySettings = new StrategySettings();
+        if (strategySettingsJsonObject != null) {
+            strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
+            strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
+            strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
+        } else {
+            strategySettings.setStrategyMove("DefaultMove");
+            strategySettings.setStrategyBuild("DefaultBuild");
+            strategySettings.setStrategyWin("DefaultWin");
+        }
+        return strategySettings;
     }
 
     private Phase addInitialPhase(JsonObject jsonObject) {

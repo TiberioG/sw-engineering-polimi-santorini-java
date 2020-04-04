@@ -6,7 +6,8 @@ public class Card {
     private String type;
     private String description;
     private Phase initialPhase;
-    //private StrategySettings strategySettings;
+
+    private StrategySettings strategySettings;
 
 
     public int getId() {
@@ -48,4 +49,13 @@ public class Card {
     public void setInitialPhase(Phase initialPhase) {
         this.initialPhase = initialPhase;
     }
+
+    public StrategySettings getStrategySettings() {
+        return strategySettings;
+    }
+
+    public void setStrategySettings(StrategySettings strategySettings) {
+        this.strategySettings = strategySettings;
+    }
+
 }
