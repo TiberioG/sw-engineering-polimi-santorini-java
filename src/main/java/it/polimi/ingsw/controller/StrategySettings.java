@@ -1,9 +1,16 @@
 package it.polimi.ingsw.controller;
 
+/**
+ * This class represents an object with all strategy
+ * @author Vito96
+ */
 public class StrategySettings {
+    /* Attributes */
     private String strategyMove;
     private String StrategyWin;
     private String strategyBuild;
+
+    /* Methods */
 
     public String getStrategyMove() {
         return strategyMove;

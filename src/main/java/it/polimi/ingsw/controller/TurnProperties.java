@@ -9,6 +9,7 @@ public class TurnProperties {
     private static int currentTurnId = -1;
     private static HashMap<Worker, Cell> initialPositionMap;
     private static HashMap<Worker, Integer> initialLevels;
+    private static HashMap<Worker, Cell> builtInThisTurn;
 
 
 
@@ -17,6 +18,7 @@ public class TurnProperties {
         currentTurnId = -1;
         initialPositionMap = new HashMap<>();
         initialLevels = new HashMap<>();
+        builtInThisTurn = new HashMap<>();
     }
 
     public static HashMap<Worker, Cell> getInitialPositionMap() {
@@ -30,4 +32,13 @@ public class TurnProperties {
     public static int getCurrentTurnId() {
         return currentTurnId;
     }
+
+    public static void builtNow(Worker worker, Cell cell){
+        builtInThisTurn.put(worker, cell);
+    }
+
+    public static Cell getPreviousBuild(Worker worker){
+        return builtInThisTurn.get(worker);
+    }
+
 }

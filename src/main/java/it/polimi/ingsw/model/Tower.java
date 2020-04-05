@@ -62,9 +62,6 @@ public class Tower {
         return this.components.get(components.size() -1);
     }
 
-    public int nextBuildable(){
-        return this.getTopComponent().getComponentCode() + 1;
-    }
 
 
 }

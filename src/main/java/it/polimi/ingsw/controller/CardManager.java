@@ -8,10 +8,20 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This is a Singleton class for retrieve the card information
+ * @author Vito96
+ */
 public class CardManager {
+    /* Attributes */
     private static CardManager instance = null;
     private static HashMap<Integer, Card> cardMap = new HashMap<>();
 
+    /* Constructor(s) */
+
+    /**
+     * Constructor: retrieve information of alla card from a json file and put all card in cardMap
+     */
     private CardManager() {
         try {
             JsonAdapter jsonAdapter = new JsonAdapter("/Cards.json", "array");
@@ -35,11 +45,22 @@ public class CardManager {
         }
     }
 
+    /* Methods */
+
+    /**
+     * This method initialize and return the singleton instance or only return the already created instance
+     * @return the instance of CardManager
+     */
     public static CardManager initCardManager() {
         if (instance == null) instance = new CardManager();
         return instance;
     }
 
+    /**
+     * This method create @link StrategySetting object from a {@link JsonObject} instance
+     * @param jsonObject the json with the information needed to create the {@link StrategySettings} object
+     * @return the strategy setting created with the jsonObject
+     */
     private StrategySettings addStrategySettings(JsonObject jsonObject) {
         JsonObject strategySettingsJsonObject = jsonObject.getAsJsonObject("strategySettings");
         StrategySettings strategySettings = new StrategySettings();
@@ -55,6 +76,11 @@ public class CardManager {
         return strategySettings;
     }
 
+    /**
+     * This method create @link Phase object from a @link JsonObject instance
+     * @param jsonObject the json with the information needed to create the @link Phase object
+     * @return the Phase created with the jsonObject
+     */
     private Phase addInitialPhase(JsonObject jsonObject) {
         JsonObject permittedPhasesJsonObject = jsonObject.getAsJsonObject("permittedPhases");
         if (permittedPhasesJsonObject != null) {
@@ -66,7 +92,11 @@ public class CardManager {
         } else return null;
     }
 
-
+    /**
+     * This recursive method create a tree structure that cointains a {@link LinkedList} of phases
+     * @param currentPhases {@link JsonArray} which cointains the currentPhases
+     * @return list of phases
+     */
     private List<Phase> buildTreeOfList(JsonArray currentPhases) {
         List<Phase> currentPhasesList = new LinkedList<>();
         for(JsonElement nextPhaseElement: currentPhases){
@@ -80,6 +110,11 @@ public class CardManager {
         return  currentPhasesList;
     }
 
+    /**
+     * Method for retrieve card information
+     * @param id the unique id of the card
+     * @return the card object
+     */
     public Card getCardById(int id){
         return cardMap.get(id);
     }
