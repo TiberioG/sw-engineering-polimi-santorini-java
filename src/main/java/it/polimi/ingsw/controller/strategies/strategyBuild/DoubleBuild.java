@@ -14,58 +14,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// DEMETRA
+/**
+ * This Class is used to to define the DEMETRA card
+ * This strategy makes possible to build a second time, but not in the same Cell
+ * AAATTENTION:: The Build method must be called TWICE during the same turn
+ */
+public class DoubleBuild extends DefaultBuild {
 
-public class DoubleBuild implements StrategyBuild {/* Attributes */
-    private Match match;
-
-    /* Constructor(s) */
     public DoubleBuild(Match match) {
-        this.match = match;
+        super(match);
     }
 
-    /* Methods */
+    /**
+     * This method overrides the one of the superclass {@link DefaultBuild} removing from the list of buildable Cells the cell used to buld by the same worker in the same turn,
+     * this is done by using the  {@link TurnProperties} static class where is saved the list of cells built by each worker in every turn
+     * @param worker is the {@link Worker} you want to know where it can build
+     * @return a list of {@link Cell} near the worker where is possible to build, without the one of previous build
+     */
     @Override
-    public void build(Component compToBuild, Cell whereToBuild, Worker worker) throws ZeroCellsAvailableBuildException, WrongCellSelectedBuildException, ComponentNotAllowed, BuildLowerComponentException {
-        List<Cell> buildableCells = getBuildableCells(worker);
-
-        if (buildableCells.size() == 0) //1 check: threre are free cells close to the worker where is possible to build
-        {
-            throw new ZeroCellsAvailableBuildException();
-        } else {
-            if (!buildableCells.contains(whereToBuild)) //2 check: where I wanna build is in the list of buildable cells
-            {
-                throw new WrongCellSelectedBuildException();
-            } else {
-                if (!getComponentsBuildable(whereToBuild).contains(compToBuild.getComponentCode())) //3 check: what I wanna bubild is allowed there
-                {
-                    throw new ComponentNotAllowed();
-                }
-                whereToBuild.getTower().addComponent(compToBuild);
-                TurnProperties.builtNow(worker, whereToBuild);
-            }
-        }
-
-    }
-
-    private List<Cell> getBuildableCells(Worker worker) {
+    public List<Cell> getBuildableCells(Worker worker) {
         Cell whereIam = match.getLocation().getLocation(worker);
         List<Cell> adjCells = match.getIsland().getAdjCells(whereIam);
         return adjCells.stream()
                 .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
                 .filter(cell -> match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker
-                .filter(cell -> !cell.equals(TurnProperties.getPreviousBuild(worker))) // removes the cell where I built before
+                .filter(cell -> !cell.equals(TurnProperties.getPreviousBuild(worker))) // removes the cell where I built before <------------
                 .collect(Collectors.toList());
     }
 
-    private List<Integer> getComponentsBuildable(Cell cell) {
-        List<Integer> comps = new ArrayList<>();
-        Component current = cell.getTower().getTopComponent();
-        if (current == Component.DOME) { // if tower is already complete
-            return comps; // the list of buildable components must be empty
-        } else {
-            comps.add(current.getComponentCode() + 1);
-            return comps;
-        }
-    }
+
+
 }

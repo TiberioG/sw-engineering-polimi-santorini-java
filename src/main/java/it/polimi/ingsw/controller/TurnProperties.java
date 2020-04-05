@@ -33,10 +33,20 @@ public class TurnProperties {
         return currentTurnId;
     }
 
+    /**
+     * This method is used to update the table of the builds done during a turn
+     * @param worker is the {@link Worker} that has built
+     * @param cell is the {@link Cell} where the worker has built
+     */
     public static void builtNow(Worker worker, Cell cell){
         builtInThisTurn.put(worker, cell);
     }
 
+    /**
+     * This method is used to get where a Worker has built during the turn
+     * @param worker is the {@link Worker} that has built
+     * @return the {@link Cell} where the worker has built
+     */
     public static Cell getPreviousBuild(Worker worker){
         return builtInThisTurn.get(worker);
     }

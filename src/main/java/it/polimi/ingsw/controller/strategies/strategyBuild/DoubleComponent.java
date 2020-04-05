@@ -14,55 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// EFESTO
+/**
+ * This Class is used to to define the EFESTO card
+ * This strategy makes possible to build two Components at the same time, but the second cannot be a {@link Component#DOME}
+ */
+public class DoubleComponent extends DefaultBuild {
 
-public class DoubleComponent implements StrategyBuild {
-    /* Attributes */
-    private Match match;
-
-
-    /* Constructor(s) */
     public DoubleComponent(Match match) {
-        this.match = match;
+        super(match);
     }
 
-    /* Methods */
-
+    /**
+     * This method overrides the one of superclass {@link DefaultBuild} adding the possibility to build two components at the same time.
+     * @param cell is the {@link Cell} where you want to know which are the  buildable components
+     * @return a list of integers that represent the {@link Component} code of the buildable components
+     */
     @Override
-    public void build(Component compToBuild, Cell whereToBuild, Worker worker) throws ZeroCellsAvailableBuildException, WrongCellSelectedBuildException, ComponentNotAllowed, BuildLowerComponentException {
-        List<Cell> buildableCells = getBuildableCells(worker);
-
-        if(buildableCells.size() == 0) //1 check: threre are free cells close to the worker where is possible to build
-        {
-            throw new ZeroCellsAvailableBuildException();
-        }
-        else {
-            if(!buildableCells.contains(whereToBuild) ) //2 check: where I wanna build is in the list of buildable cells
-            {
-                throw new WrongCellSelectedBuildException();
-            }
-            else {
-                if(!getComponentsBuildable(whereToBuild).contains(compToBuild.getComponentCode()) ) //3 check: what I wanna build is allowed there
-                {
-                    throw new ComponentNotAllowed();
-                }
-                whereToBuild.getTower().addComponent(compToBuild);
-                TurnProperties.builtNow(worker, whereToBuild);
-            }
-        }
-
-    }
-
-    private List<Cell> getBuildableCells(Worker worker) {
-        Cell whereIam = match.getLocation().getLocation(worker);
-        List<Cell> adjCells = match.getIsland().getAdjCells(whereIam);
-        return adjCells.stream()
-                .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
-                .filter(cell -> match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker
-                .collect(Collectors.toList());
-    }
-
-    private List<Integer>getComponentsBuildable(Cell cell){
+    public List<Integer>getComponentsBuildable(Cell cell){
         List<Integer> comps = new ArrayList<>();
         Component current = cell.getTower().getTopComponent();
         if (current == Component.DOME){ // if tower is already complete

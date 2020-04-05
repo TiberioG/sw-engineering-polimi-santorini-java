@@ -7,7 +7,9 @@ import it.polimi.ingsw.model.*;
 import java.util.ArrayList;
 import java.util.Locale;
 
-
+/**
+ * This is the Interface used to make the workers build
+ */
 public interface StrategyBuild {
     void build(Component CompToBuild, Cell WhereToBuild, Worker worker) throws SantoriniException;
 }

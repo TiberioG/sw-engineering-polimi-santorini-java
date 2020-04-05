@@ -64,4 +64,13 @@ public class TowerTest {
     public void removeLevel_RemoveIfNoComponentsBuilt_throwsRemoveGroundLevelException () throws RemoveGroundLevelException {
         tower.removeComponent();
     }
+
+    @Test
+    public void getTopComponent() throws BuildLowerComponentException{
+        tower.addComponent(Component.FIRST_LEVEL);
+        tower.addComponent(Component.SECOND_LEVEL);
+
+        assertEquals(Component.SECOND_LEVEL, tower.getTopComponent());
+
+    }
 }

@@ -14,54 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// ATLANTE
+/**
+ * This Class is used to to define the ATLANTE card
+ * This strategy makes possible to build a {@link Component#DOME} in every level of the Island
+ */
+public class DomeAnywhere extends DefaultBuild {
 
-public class DomeAnywhere implements StrategyBuild {
-    /* Attributes */
-    private Match match;
+    public DomeAnywhere(Match match) {
+        super(match);
+    }
 
-
-    /* Methods */
+    /**
+     * This method overrides the one of the superclass {@link DefaultBuild} adding the possibility to build a {@link Component#DOME} in addition to the normal level buildable wih the default rules
+     * @param cell is the {@link Cell} where you want to know which are the components buildable
+     * @return a list of integers that represent the {@link Component} code
+     */
     @Override
-    public void build(Component compToBuild, Cell whereToBuild, Worker worker) throws ZeroCellsAvailableBuildException, WrongCellSelectedBuildException, ComponentNotAllowed, BuildLowerComponentException {
-        List<Cell> buildableCells = getBuildableCells(worker);
-
-        if (buildableCells.size() == 0) //1 check: threre are free cells close to the worker where is possible to build
-        {
-            throw new ZeroCellsAvailableBuildException();
-        } else {
-            if (!buildableCells.contains(whereToBuild)) //2 check: where I wanna build is in the list of buildable cells
-            {
-                throw new WrongCellSelectedBuildException();
-            } else {
-                if (!getComponentsBuildable(whereToBuild).contains(compToBuild.getComponentCode())) //3 check: what I wanna bubild is allowed there
-                {
-                    throw new ComponentNotAllowed();
-                }
-                whereToBuild.getTower().addComponent(compToBuild);
-                TurnProperties.builtNow(worker, whereToBuild);
-            }
-        }
-
-    }
-
-    private List<Cell> getBuildableCells(Worker worker) {
-        Cell whereIam = match.getLocation().getLocation(worker);
-        List<Cell> adjCells = match.getIsland().getAdjCells(whereIam);
-        return adjCells.stream()
-                .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
-                .filter(cell -> match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker
-                .collect(Collectors.toList());
-    }
-
-    private List<Integer> getComponentsBuildable(Cell cell) {
+    public List<Integer> getComponentsBuildable(Cell cell) {
         List<Integer> comps = new ArrayList<>();
         Component current = cell.getTower().getTopComponent();
         if (current == Component.DOME) { // if tower is already complete
             return comps; // the list of buildable components must be empty
         } else {
             comps.add(current.getComponentCode() + 1);
-            comps.add(Component.DOME.getComponentCode()); // a dome is allowed everywhere
+            comps.add(Component.DOME.getComponentCode()); // a dome is allowed everywhere (if not already present) !!!! <----------
             return comps;
         }
     }
