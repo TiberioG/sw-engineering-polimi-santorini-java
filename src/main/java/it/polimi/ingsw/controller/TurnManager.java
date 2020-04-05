@@ -53,6 +53,7 @@ public class TurnManager {
     public void beginTurn() {
         currentPlayer.getWorkers().forEach(worker -> {
             TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
+            TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
         });
     };
 }

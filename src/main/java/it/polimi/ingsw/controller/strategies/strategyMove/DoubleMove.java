@@ -38,7 +38,7 @@ public class DoubleMove implements StrategyMove {
         }
     }
 
-    private List<Cell> getAvailableCells(Worker worker) {
+    public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
         List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);
         return adjCells.stream()
