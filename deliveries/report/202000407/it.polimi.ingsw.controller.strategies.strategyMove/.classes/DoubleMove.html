@@ -1,0 +1,134 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DoubleMove</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.controller.strategies.strategyMove</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DoubleMove (it.polimi.ingsw.controller.strategies.strategyMove)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DoubleMove</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.controller.strategies.strategyMove;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.TurnProperties;
+<i>5</i>&nbsp;import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
+<i>6</i>&nbsp;import it.polimi.ingsw.exceptions.WrongCellSelectedMoveException;
+<i>7</i>&nbsp;import it.polimi.ingsw.exceptions.ZeroCellsAvailableMoveException;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.Cell;
+<i>9</i>&nbsp;import it.polimi.ingsw.model.Match;
+<i>10</i>&nbsp;import it.polimi.ingsw.model.Worker;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.stream.Collectors;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;// ARTEMIDE
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;public class DoubleMove implements StrategyMove {
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /* Attributes */
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    private Match match;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /* Constructor(s) */
+<i>24</i>&nbsp;
+<b class="fc"><i>25</i>&nbsp;    public DoubleMove(Match match) {</b>
+<b class="fc"><i>26</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /* Methods */
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    @Override
+<i>32</i>&nbsp;    public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException {
+<b class="fc"><i>33</i>&nbsp;        List&lt;Cell&gt; availableCells = getAvailableCells(worker);</b>
+<b class="fc"><i>34</i>&nbsp;        if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }</b>
+<b class="fc"><i>35</i>&nbsp;        else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }</b>
+<i>36</i>&nbsp;        else {
+<b class="fc"><i>37</i>&nbsp;            match.getLocation().setLocation(cell, worker);</b>
+<i>38</i>&nbsp;        }
+<b class="fc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    public List&lt;Cell&gt; getAvailableCells(Worker worker) {
+<b class="fc"><i>42</i>&nbsp;        Cell workerCell = match.getLocation().getLocation(worker);</b>
+<b class="fc"><i>43</i>&nbsp;        List&lt;Cell&gt; adjCells = match.getIsland().getAdjCells(workerCell);</b>
+<b class="fc"><i>44</i>&nbsp;        return adjCells.stream()</b>
+<b class="fc"><i>45</i>&nbsp;                .filter(cell -&gt; !(cell.getTower().getTopComponent().getComponentCode() == workerCell.getTower().getTopComponent().getComponentCode() + 2)) // remove cells where tower is 2 or more level higher than where the worker is</b>
+<b class="fc"><i>46</i>&nbsp;                .filter(cell -&gt; cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete</b>
+<b class="fc"><i>47</i>&nbsp;                .filter(cell -&gt; match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker</b>
+<b class="fc"><i>48</i>&nbsp;                .filter(cell -&gt; cell != TurnProperties.getInitialPositionMap().get(worker)) // removes initial position cell</b>
+<b class="fc"><i>49</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-06 22:29</div>
+</div>
+</body>
+</html>

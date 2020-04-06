@@ -1,0 +1,176 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TurnManager</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TurnManager (it.polimi.ingsw.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TurnManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (22/ 24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.strategies.strategyBuild.StrategyBuild;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
+<i>5</i>&nbsp;import it.polimi.ingsw.controller.strategies.strategyWin.StrategyWin;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.lang.reflect.Constructor;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * This class manage all operation of a turn of the current player of the match
+<i>13</i>&nbsp; * @author Vito96
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class TurnManager {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /* Attributes */
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    private Match match;
+<i>20</i>&nbsp;    private Player currentPlayer;
+<i>21</i>&nbsp;    private CardManager cardManager;
+<i>22</i>&nbsp;    //private Virtual View
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    //various strategy
+<i>25</i>&nbsp;    private StrategyMove strategyMove;
+<i>26</i>&nbsp;    private StrategyWin strategyWin;
+<i>27</i>&nbsp;    private StrategyBuild strategyBuild;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /* Constructor(s) */
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    /**
+<i>32</i>&nbsp;     * Constructor: init turnManager&#39;s instance
+<i>33</i>&nbsp;     * @param match the match of the turn
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;    public TurnManager(Match match) {</b>
+<b class="fc"><i>37</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>38</i>&nbsp;        this.currentPlayer = this.match.getCurrentPlayer();</b>
+<b class="fc"><i>39</i>&nbsp;        this.cardManager = CardManager.initCardManager();</b>
+<b class="fc"><i>40</i>&nbsp;        buildStrategies();</b>
+<b class="fc"><i>41</i>&nbsp;        TurnProperties.resetAllParameter();</b>
+<b class="fc"><i>42</i>&nbsp;    }</b>
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /* Methods */
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * This method create strategy instances using reflection
+<i>48</i>&nbsp;     * @param className the name of the class of the desired istance
+<i>49</i>&nbsp;     * @param types the class of the params for the costructor of the desired instance
+<i>50</i>&nbsp;     * @param parameters the parameters of the params for the constructor of the desired instance
+<i>51</i>&nbsp;     * @return the desidered istance
+<i>52</i>&nbsp;     * @throws Exception for errors while creating the instance
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    private Object createStrategyWithReflection(String className, Class[] types, Object[] parameters) throws Exception {
+<b class="fc"><i>55</i>&nbsp;        Class clazz = Class.forName(className);</b>
+<b class="fc"><i>56</i>&nbsp;        Constructor constructor =  clazz.getConstructor(types);</b>
+<b class="fc"><i>57</i>&nbsp;        return constructor.newInstance(parameters);</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * This method create set the strategy of the turn from the card of the current player
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    private void buildStrategies() {
+<i>64</i>&nbsp;        //builder/factory
+<b class="fc"><i>65</i>&nbsp;        int cardId = this.currentPlayer.getCurrentCard();</b>
+<b class="fc"><i>66</i>&nbsp;        Card card = cardManager.getCardById(cardId);</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;        //use reflection
+<i>69</i>&nbsp;        try {
+<i>70</i>&nbsp;            //make this for all strategies
+<b class="fc"><i>71</i>&nbsp;            strategyMove = (StrategyMove) createStrategyWithReflection(&quot;it.polimi.ingsw.controller.strategies.strategyMove.&quot; + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match});</b>
+<b class="fc"><i>72</i>&nbsp;            strategyWin = (StrategyWin) createStrategyWithReflection(&quot;it.polimi.ingsw.controller.strategies.strategyWin.&quot; + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match});</b>
+<i>73</i>&nbsp;            //strategyBuild = (StrategyBuild) createStrategyWithReflection(&quot;it.polimi.ingsw.controller.strategies.strategyBuild.&quot; + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match});
+<b class="nc"><i>74</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>75</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>76</i>&nbsp;        }</b>
+<b class="fc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * This method make all operation for init the turn
+<i>81</i>&nbsp;     */
+<i>82</i>&nbsp;    public void beginTurn() {
+<b class="fc"><i>83</i>&nbsp;        currentPlayer.getWorkers().forEach(worker -&gt; {</b>
+<b class="fc"><i>84</i>&nbsp;            TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));</b>
+<b class="fc"><i>85</i>&nbsp;            TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());</b>
+<b class="fc"><i>86</i>&nbsp;        });</b>
+<b class="fc"><i>87</i>&nbsp;    };</b>
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    public Player getCurrentPlayer() {
+<b class="fc"><i>90</i>&nbsp;        return currentPlayer;</b>
+<i>91</i>&nbsp;    }
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-06 22:30</div>
+</div>
+</body>
+</html>
