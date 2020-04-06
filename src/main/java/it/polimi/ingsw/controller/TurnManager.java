@@ -85,4 +85,9 @@ public class TurnManager {
             TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
         });
     };
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
 }

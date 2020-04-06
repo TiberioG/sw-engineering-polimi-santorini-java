@@ -26,7 +26,7 @@ public class Player {
      * Constructor
      */
 
-    public Player(String name, Date birthday) {
+    protected Player(String name, Date birthday) {
         this.name = name;
         this.birthday = birthday;
     }
