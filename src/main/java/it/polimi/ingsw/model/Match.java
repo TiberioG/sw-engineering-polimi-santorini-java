@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.commons.Subscriber;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.Date;
  * This is the class for the Match
  * @author tiberioG
  */
-public class Match {
+public class Match implements Publisher {
     /* Attributes */
     private Location location;
     private int matchID;
@@ -18,6 +20,8 @@ public class Match {
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
     private List<String> listCards = new ArrayList<>(); // qui considero solo le cards in gioco con il loro string ID
+
+    private Subscriber view;
 
     /**
      * Constructor
@@ -78,5 +82,24 @@ public class Match {
 
     public Location getLocation() {
         return location;
+    }
+
+
+
+    //here methods for observer pattern
+    @Override
+    public void addSubscriber(Subscriber subscriber) {
+// secondo me deve essere solo uno qui, tanto è la view che è unicca
+        this.view =  subscriber;
+    }
+
+    @Override
+    public void removeSubscriber(Subscriber subscriber) {
+        this.view = null;
+    }
+
+    @Override
+    public void notify(Subscriber subscriber) {
+
     }
 }
