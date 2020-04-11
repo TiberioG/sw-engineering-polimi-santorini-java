@@ -24,10 +24,11 @@ public class Match extends Publisher<ModelEventName> {
     /**
      * Constructor
      */
-    public Match(int matchID){
+    public Match(int matchID/*, Virtual view*/) {
+        //addListener(view);
         this.matchID = matchID ;
         this.island = new Island();
-        this.location = new Location();
+        this.location = new Location(/*view*/);
     }
 
     /* Methods */
@@ -75,7 +76,7 @@ public class Match extends Publisher<ModelEventName> {
     public Player createPlayer(String name, Date birthday) {
         Player playToAdd = new Player(name,birthday);
         this.listPlayers.add(playToAdd);
-        publish(ModelEventName.PLAYER_LIST_ADDED, this.listPlayers);
+        publish(ModelEventName.ADDED_PLAYER_IN_LIST, this.listPlayers);
         return playToAdd;
     }
 

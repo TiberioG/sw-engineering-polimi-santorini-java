@@ -12,7 +12,12 @@ public abstract class Publisher<T> {
         }
     }
 
-    public void addListeners(Listener<T> listener){
+    public void addlistener(Listener<T> listener){
         listeners.add(listener);
     }
+
+    public void removelistener(Listener<T> listener){
+        listeners.remove(listener);
+    }
+
 }
