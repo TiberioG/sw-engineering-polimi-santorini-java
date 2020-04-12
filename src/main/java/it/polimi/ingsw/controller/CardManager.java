@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.commons.JsonAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,4 +119,14 @@ public class CardManager {
     public Card getCardById(int id){
         return cardMap.get(id);
     }
+
+    /**
+     * Method to get the hashmap of all the cards
+     * @return the cardMap int, Card
+     */
+    public static HashMap<Integer, Card> getCardMap(){
+        return cardMap;
+    }
+
+
 }
