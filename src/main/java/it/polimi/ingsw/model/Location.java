@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.commons.ModelEventName;
+import it.polimi.ingsw.commons.Message;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
  * we want to represent here the 1:1 relationship between Worker and Cell
  */
 
-public class Location extends Publisher<ModelEventName> {
+public class Location extends Publisher<Message> {
     private HashMap<Cell, Worker> map = new HashMap<>();
 
     /*

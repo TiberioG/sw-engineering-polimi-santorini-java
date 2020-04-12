@@ -1,12 +1,14 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.commons.Listener;
-import it.polimi.ingsw.commons.VirtualViewEventName;
+import it.polimi.ingsw.commons.Message;
+import it.polimi.ingsw.commons.TypeOfMessage;
 import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.Player;
 
 import java.util.Date;
 
-public class Controller implements Listener<VirtualViewEventName> {
+public class Controller implements Listener<Message> {
     private Match match;
     private CardManager cardManager;
 
@@ -14,20 +16,22 @@ public class Controller implements Listener<VirtualViewEventName> {
         cardManager = CardManager.initCardManager();
     }
     
-    public void createNewMatch() {
+    private void createNewMatch() {
         match = new Match(new Date().hashCode());
     }
 
+    private void addPlayerToMatch(String name, Date birthday) {
+        match.createPlayer(name, birthday);
+    }
+
     @Override
-    public void update(VirtualViewEventName eventName, Object... objects) {
-        switch (eventName) {
-            case PLAYER_INFORMATION_ADDED:
-                match.createPlayer((String)objects[0], (Date)objects[1]);
-            break;
-            case CARDS_IN_GAME_SELECTED:
-                match.addCard((String)objects[0]);
-                match.addCard((String)objects[1]);
-                match.addCard((String)objects[2]);
+    public void update(Message message) {
+        TypeOfMessage type = message.getTypeOfMessage();
+
+        switch (type) {
+            case CREATED_PLAYER:
+                Player player = (Player) message.getObjectFromJson(Player.class);
+                System.out.println(player);
                 break;
         }
     }

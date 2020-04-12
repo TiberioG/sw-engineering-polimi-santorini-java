@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.commons.Message;
 import it.polimi.ingsw.commons.Publisher;
-import it.polimi.ingsw.commons.Subscriber;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CLI implements Publisher {
+public class CLI extends Publisher<Message> {
     /* ATTRIBUTES */
 
-    private List<Subscriber> subscribers = new ArrayList<>();
+    private List<Publisher> subscribers = new ArrayList<>();
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
 
@@ -48,7 +48,7 @@ public class CLI implements Publisher {
 
 
 
-
+    /*
     @Override
     public void addSubscriber(Subscriber subscriber) {
         this.subscribers.add(subscriber);
@@ -65,4 +65,6 @@ public class CLI implements Publisher {
 
 
     }
+
+     */
 }

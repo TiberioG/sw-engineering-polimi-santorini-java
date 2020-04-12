@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.commons.Message;
 import it.polimi.ingsw.commons.Publisher;
-import it.polimi.ingsw.commons.ModelEventName;
+import it.polimi.ingsw.commons.TypeOfMessage;
+import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.Date;
  * This is the class for the Match
  * @author tiberioG
  */
-public class Match extends Publisher<ModelEventName> {
+public class Match extends Publisher<Message> {
     /* Attributes */
     private Location location;
     private int matchID;
@@ -24,8 +26,8 @@ public class Match extends Publisher<ModelEventName> {
     /**
      * Constructor
      */
-    public Match(int matchID/*, Virtual view*/) {
-        //addListener(view);
+    public Match(int matchID/*, View view*/) {
+        //addlistener(controller);
         this.matchID = matchID ;
         this.island = new Island();
         this.location = new Location(/*view*/);
@@ -76,7 +78,7 @@ public class Match extends Publisher<ModelEventName> {
     public Player createPlayer(String name, Date birthday) {
         Player playToAdd = new Player(name,birthday);
         this.listPlayers.add(playToAdd);
-        publish(ModelEventName.ADDED_PLAYER_IN_LIST, this.listPlayers);
+        publish(new Message("ALL", TypeOfMessage.CREATED_PLAYER, playToAdd));
         return playToAdd;
     }
 

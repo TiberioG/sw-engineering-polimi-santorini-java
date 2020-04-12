@@ -113,4 +113,9 @@ public class JsonAdapter {
             return jsonElement.getAsInt();
         } else return 0;
     };
+
+    public static String toJsonClass(Object object) {
+        Gson gson = new Gson();
+        return gson.toJson(object);
+    }
 }

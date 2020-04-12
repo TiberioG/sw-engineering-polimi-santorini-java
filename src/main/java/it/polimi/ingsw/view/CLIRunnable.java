@@ -120,7 +120,7 @@ public class CLIRunnable {
     }
 
     public void utilsTester(){
-         String arry = new String[]{}
+         //String arry = new String[]{}
 
     }
 
@@ -185,7 +185,7 @@ public class CLIRunnable {
     public static void main( String[] args ) throws ParseException {
         CLIRunnable thiscli = new CLIRunnable();
 
-        utils.listPrinter("Ciao", );
+        //utils.listPrinter("Ciao", );
 
 
     }
