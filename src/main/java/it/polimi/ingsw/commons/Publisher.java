@@ -6,9 +6,9 @@ import java.util.List;
 public abstract class Publisher<T> {
     private List<Listener<T>> listeners = new ArrayList<>();
 
-    public void publish(T eventType, Object object) {
+    public void publish(T eventType, Object... objects) {
         for (Listener listener : listeners) {
-            listener.update(eventType, object);
+            listener.update(eventType, objects);
         }
     }
 
