@@ -8,9 +8,10 @@ import java.util.Date;
 
 public class Controller implements Listener<VirtualViewEventName> {
     private Match match;
+    private CardManager cardManager;
 
     public Controller() {
-
+        cardManager = CardManager.initCardManager();
     }
     
     public void createNewMatch() {

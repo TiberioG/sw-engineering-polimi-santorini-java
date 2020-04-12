@@ -1,17 +1,20 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
+import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.commons.VirtualViewEventName;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 
 
 /**
  * This is the class for the Player
  * @author Vito96
  */
-public class Player {
+public class Player extends Publisher<VirtualViewEventName> {
 
     /* Attributes */
 
@@ -26,9 +29,10 @@ public class Player {
      * Constructor
      */
 
-    protected Player(String name, Date birthday) {
+    protected Player(String name, Date birthday /* VirtualView view*/) {
         this.name = name;
         this.birthday = birthday;
+        //addlistener(view);
     }
 
     /* Methods */

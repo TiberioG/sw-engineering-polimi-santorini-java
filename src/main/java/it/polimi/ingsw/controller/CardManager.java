@@ -65,15 +65,26 @@ public class CardManager {
     private StrategySettings addStrategySettings(JsonObject jsonObject) {
         JsonObject strategySettingsJsonObject = jsonObject.getAsJsonObject("strategySettings");
         StrategySettings strategySettings = new StrategySettings();
-        if (strategySettingsJsonObject != null) {
-            strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
-            strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
-            strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
-        } else {
-            strategySettings.setStrategyMove("DefaultMove");
-            strategySettings.setStrategyBuild("DefaultBuild");
-            strategySettings.setStrategyWin("DefaultWin");
+        try {
+            if (strategySettingsJsonObject != null) {
+                strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
+                strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
+                strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
+
+                Class.forName("it.polimi.ingsw.controller.strategies.strategyMove." + strategySettings.getStrategyMove());
+                Class.forName("it.polimi.ingsw.controller.strategies.strategyBuild." + strategySettings.getStrategyBuild());
+                Class.forName("it.polimi.ingsw.controller.strategies.strategyWin." + strategySettings.getStrategyWin());
+
+            } else {
+                strategySettings.setStrategyMove("DefaultMove");
+                strategySettings.setStrategyBuild("DefaultBuild");
+                strategySettings.setStrategyWin("DefaultWin");
+            }
+
+        } catch( ClassNotFoundException e ) {
+            e.printStackTrace();
         }
+
         return strategySettings;
     }
 
