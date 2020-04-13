@@ -9,11 +9,14 @@ import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.model.*;
 
+import java.awt.*;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Sta classe serve solo per testare il flusso del gioco senza tutta la sbatta di usare MVC
@@ -80,47 +83,43 @@ public class CLIRunnable {
 
     }
 
-    public void cardSelection()  {
+    public void cardSelection() throws InterruptedException {
         //get list of card names
-        //todo invocare il controller qui
-        cardMap = CardManager.getCardMap();
+        //todo invocare il controller qui, ho bisogno che mmi arrivi una copia della hashmap
+        CardManager myCardManager = CardManager.initCardManager();
+        cardMap = myCardManager.getCardMap();
+
+        String[] cardNames = new String[cardMap.size()];
+
 
         //print all card names
         for(int i=0; i<cardMap.size(); i++) {
-            out.println(cardMap.get(i).getName());
+            cardNames[i] = Colors.randomColor() + cardMap.get(i).getName() + Colors.reset();
         }
+
+        utils.singleTableCool("Cards Available", cardNames, 100);
+
+
     }
 
 
-    public void setInitialPosition() {
+    public void setInitialPosition() throws InterruptedException {
+        out.println("I's time to choose one color for your workers, choose from following list:");
+        utils.singleTableCool("options", Colors.allNamesColored(), 100);
+        int choice = utils.readNumbers(0,Colors.allNamesColored().length);
 
-
-        out.println("Select your worker color:");
-        out.println("\n\n╔═══════════════════════╗\n" +
-                "║        OPTIONS        ║\n" +
-                "╠═══════════════════════╣\n" +
-                "║ 1. WHITE              ║\n" +
-                "║ 2. BLACK              ║\n" +
-                "║ 3. BLUE               ║\n" +
-                "║ 4. RED                ║\n" +
-                "║ 5. GREEN              ║\n" +
-                "║ 6. YELLOW             ║\n" +
-                "╚═══════════════════════╝");
-        int choice = utils.readNumbers(1,6);
+        out.println("Wooow, you have selected color " + Colors.allNamesColored()[choice]+ " for your workers");
 
         //todo chiamata al controller per settare player e colore
         //Controller.setWorkerColor(player);
 
-         out.println("Put you worker no1, format x, y ");
+         out.println("Now put your first worker in one spot of the board format");
+
+         utils.readPosition(0,5);
 
         //todo chiamata al controller per settare posizione iniziale
         //Controller.setWorkerColor(player); //questo deve tirare un porco se stai mettendo il worker dove c'è già uno di un tuo avversario
 
-
-    }
-
-    public void utilsTester(){
-         //String arry = new String[]{}
 
     }
 
@@ -174,7 +173,6 @@ public class CLIRunnable {
      */
     public void moveWorkerDumb() {
         System.out.println("Scegli il tuo worker");
-
         System.out.println("muovi il tuo worker: formato destinazione:  x,y ");
 
 
@@ -182,10 +180,21 @@ public class CLIRunnable {
 
 
 
-    public static void main( String[] args ) throws ParseException {
+    public static void main( String[] args ) throws ParseException, InterruptedException {
         CLIRunnable thiscli = new CLIRunnable();
+        System.out.println("Loading");
+        for (int i =0; i<101; i++) {
+            TimeUnit.MILLISECONDS.sleep(10);
+            System.out.print("\u001b[200D" + i + "%");
+            System.out.flush();
+        }
+        System.out.println(" ");
+        thiscli.userLogin();
+        thiscli.cardSelection();
+        thiscli.setInitialPosition();
 
-        //utils.listPrinter("Ciao", );
+
+
 
 
     }

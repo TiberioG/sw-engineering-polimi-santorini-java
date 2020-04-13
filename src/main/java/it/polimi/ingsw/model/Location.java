@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Message;
 import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.commons.TypeOfMessage;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
 
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class Location extends Publisher<Message> {
         } else {
             this.map.put(getLocation(worker), null);
             this.map.put(cell, worker);
+            publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this)); //every time i change the location I send a copy of the complete updated location
         }
     }
 

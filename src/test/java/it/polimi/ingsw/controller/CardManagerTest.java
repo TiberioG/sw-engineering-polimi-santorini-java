@@ -20,4 +20,13 @@ public class CardManagerTest {
         Card card = firstInstance.getCardById(-1);
         assertEquals(card, null);
     }
+
+    @Test
+    public void getCardMap_namesCardAreCorrect(){
+        CardManager firstInstance = CardManager.initCardManager();
+
+
+        assertEquals("Apollo", firstInstance.getCardMap().get(0).getName());
+
+    }
 }

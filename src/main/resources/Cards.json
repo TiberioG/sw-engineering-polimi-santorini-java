@@ -7,5 +7,95 @@
     {
       "type": "selectWorker"
     }
-}
+},
+  {
+    "id": 1,
+    "name": "Artemide",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Atena",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Atlante",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Demetra",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Efesto",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Ermes",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Minotauro",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Pan",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Prometeo",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+    "permittedPhases":
+    {
+      "type": "selectWorker"
+    }
+  }
 ]

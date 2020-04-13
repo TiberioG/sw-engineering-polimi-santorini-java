@@ -135,7 +135,7 @@ public class CardManager {
      * Method to get the hashmap of all the cards
      * @return the cardMap int, Card
      */
-    public static HashMap<Integer, Card> getCardMap(){
+    public  HashMap<Integer, Card> getCardMap(){
         return cardMap;
     }
 
