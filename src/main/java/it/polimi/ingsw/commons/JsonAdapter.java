@@ -70,7 +70,7 @@ public class JsonAdapter {
     public static String getStringFromJsonObject(JsonObject jsonObject, String keyValue, String defaultValue) {
         JsonElement jsonElement = jsonObject.get(keyValue);
         if (jsonElement != null) {
-            return jsonElement.toString();
+            return jsonElement.getAsString();
         } else return defaultValue;
     };
 
@@ -83,7 +83,7 @@ public class JsonAdapter {
     public static String getStringFromJsonObject(JsonObject jsonObject, String keyValue) {
         JsonElement jsonElement = jsonObject.get(keyValue);
         if (jsonElement != null) {
-            return jsonElement.toString();
+            return jsonElement.getAsString();
         } else return null;
     };
 
