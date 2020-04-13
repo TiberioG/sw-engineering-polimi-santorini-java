@@ -14,6 +14,15 @@ public class Server
   public static final int MAX_PORT = 50000;
 
 
+  //todo creare virtualview
+
+
+  //todo creare lobby locale
+  //todo ricordarsi check se ho player con nomi uguali
+
+
+
+
   public static void main(String[] args)
   {
     Scanner stdin = new Scanner(System.in);

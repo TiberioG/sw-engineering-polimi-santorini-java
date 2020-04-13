@@ -16,7 +16,7 @@ import java.util.List;
 public class CardManager {
     /* Attributes */
     private static CardManager instance = null;
-    private static HashMap<Integer, Card> cardMap = new HashMap<>();
+    private static HashMap<Integer, Card> cardMap = new HashMap<>(); //
 
     /* Constructor(s) */
 
@@ -135,7 +135,7 @@ public class CardManager {
      * Method to get the hashmap of all the cards
      * @return the cardMap int, Card
      */
-    public  HashMap<Integer, Card> getCardMap(){
+    public HashMap<Integer, Card> getCardMap(){
         return cardMap;
     }
 

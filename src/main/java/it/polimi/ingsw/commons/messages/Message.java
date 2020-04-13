@@ -1,6 +1,7 @@
-package it.polimi.ingsw.commons;
+package it.polimi.ingsw.commons.messages;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.commons.JsonAdapter;
 
 import java.io.Serializable;
 

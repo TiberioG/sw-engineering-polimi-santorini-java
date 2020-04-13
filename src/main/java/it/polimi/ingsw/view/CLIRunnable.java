@@ -22,10 +22,6 @@ import java.util.concurrent.TimeUnit;
  * Sta classe serve solo per testare il flusso del gioco senza tutta la sbatta di usare MVC
  */
 public class CLIRunnable {
-
-
-
-
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
     private List<String > usernames  = new ArrayList<>();
@@ -42,8 +38,6 @@ public class CLIRunnable {
     private Match match;
 
     private Utils utils = new Utils(in, out);
-
-
 
 
     /* METHODS*/
@@ -68,10 +62,8 @@ public class CLIRunnable {
 
         // only when I hve all the player => I can create the match
         for (int i = 0; i<loggedUsers; i++){
-            match = new Match(1191991); //TODO gestire in modo automatico i nomi univoci dei macth salvando su disco
-            match.createPlayer(usernames.get(i),dates.get(i));
-        }
 
+        }
 
     }
 
@@ -103,7 +95,7 @@ public class CLIRunnable {
     }
 
 
-    public void setInitialPosition() throws InterruptedException {
+    public void setInitialPosition( ) throws InterruptedException {
         out.println("I's time to choose one color for your workers, choose from following list:");
         utils.singleTableCool("options", Colors.allNamesColored(), 100);
         int choice = utils.readNumbers(0,Colors.allNamesColored().length);
@@ -182,6 +174,7 @@ public class CLIRunnable {
 
     public static void main( String[] args ) throws ParseException, InterruptedException {
         CLIRunnable thiscli = new CLIRunnable();
+        /*
         System.out.println("Loading");
         for (int i =0; i<101; i++) {
             TimeUnit.MILLISECONDS.sleep(10);
@@ -190,7 +183,8 @@ public class CLIRunnable {
         }
         System.out.println(" ");
         thiscli.userLogin();
-        thiscli.cardSelection();
+        thiscli.cardSelection(); */
+
         thiscli.setInitialPosition();
 
 

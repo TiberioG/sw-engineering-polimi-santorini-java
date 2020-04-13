@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Component;
-import it.polimi.ingsw.commons.Message;
+import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.exceptions.RemoveGroundLevelException;

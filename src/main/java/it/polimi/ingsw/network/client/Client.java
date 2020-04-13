@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.commons.messages.CoordinatesMessage;
+import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.network.server.Server;
 
 import java.io.IOException;
@@ -7,6 +9,9 @@ import java.net.Socket;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+//todo creare qui o cli o gui qui
+//todo metodo sendtoServer -> adapter -> server
+// qui faccio conversione a stringa
 
 public class Client implements Runnable, ServerObserver
 {
@@ -138,4 +143,20 @@ public class Client implements Runnable, ServerObserver
     return output;
   }
 
+
+
+  public void handleMessage(Message message){
+    switch (message.getTypeOfMessage()) {
+      case CARD_GET:
+        //deserializzare qui
+        viewInterface.cardSelection();
+        //todo passare una lista di carte
+        //todo attributo
+
+      case REQUEST_INITIAL_POSITION
+        //deserial
+        viewInterface.setInitialPosition(List < CoordinatesMessage >); //ci piace??
+
+    }
+  }
 }

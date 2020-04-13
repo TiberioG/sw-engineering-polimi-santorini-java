@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.commons.Message;
+import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
-import it.polimi.ingsw.commons.TypeOfMessage;
-import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
+import it.polimi.ingsw.network.server.VirtualView;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -21,16 +21,16 @@ public class Match extends Publisher<Message> {
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
-    private List<String> listCards = new ArrayList<>(); // qui considero solo le cards in gioco con il loro string ID
+    private List<String> listCardsInGame = new ArrayList<>(); // todo: caricare qui le carte nel gioco
 
     /**
      * Constructor
      */
-    public Match(int matchID/*, View view*/) {
-        //addlistener(controller);
+    public Match(int matchID, VirtualView virtualView) {
+        addListener(virtualView);
         this.matchID = matchID ;
         this.island = new Island();
-        this.location = new Location(/*view*/);
+        this.location = new Location(virtualView);
     }
 
     /* Methods */
@@ -48,11 +48,11 @@ public class Match extends Publisher<Message> {
         return currentPlayer;
     }
     public List<String> getCards() {
-        return listCards;
+        return listCardsInGame;
     }
 
     public void addCard(String card){
-        this.listCards.add(card);
+        this.listCardsInGame.add(card);
     }
 
     /**

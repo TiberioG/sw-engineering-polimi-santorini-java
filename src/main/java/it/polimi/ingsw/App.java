@@ -10,7 +10,8 @@ public class App
 {
     public static void main( String[] args )
     {
-        Controller controller = new Controller();
+
+        System.out.println(System.getProperty("os.name"));
 
         System.out.println(  "\u001B[31m" + "Hello World!");
     }

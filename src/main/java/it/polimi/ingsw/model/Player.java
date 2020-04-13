@@ -1,13 +1,12 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
-import it.polimi.ingsw.commons.Message;
+import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
 
 
 /**
@@ -32,7 +31,7 @@ public class Player extends Publisher<Message> {
     public Player(String name, Date birthday /* VirtualView view*/) {
         this.name = name;
         this.birthday = birthday;
-        //addlistener(view);
+        //addListener(view);
     }
 
     /* Methods */

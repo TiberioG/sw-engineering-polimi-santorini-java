@@ -1,9 +1,10 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.commons.Message;
+import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
-import it.polimi.ingsw.commons.TypeOfMessage;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
+import it.polimi.ingsw.network.server.VirtualView;
 
 import java.util.HashMap;
 
@@ -15,11 +16,11 @@ import java.util.HashMap;
 public class Location extends Publisher<Message> {
     private HashMap<Cell, Worker> map = new HashMap<>();
 
-    /*
-    public Location(VirtualView view) {
-        addListeners(view);
+
+    public Location(VirtualView virtualView) {
+        addListener(virtualView);
     }
-    */
+
 
     /**
      * Method to add a pair cell-worker in the map

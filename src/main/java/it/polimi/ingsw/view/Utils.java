@@ -68,7 +68,7 @@ public class Utils {
         do {
             out.println("Choose one number:\n");
             while (!in.hasNextInt()) {
-                out.println("That's not a number!\n");
+                out.println("\nThat's not a number!\n");
                 in.next();
             }
             number = in.nextInt();
@@ -80,12 +80,14 @@ public class Utils {
     public int[] readPosition(int min, int max){
         int[] coord = new int[2];
         do {
-            out.println("Insert coordinates in format x,y:\n");
+            out.println("Insert coordinates in format x,y:");
             while (!in.hasNext("\\d*,\\d*")) {
-                out.println("That's not the correct pattern!\n");
+                out.println("\nThat's not the correct pattern!");
                 in.next();
             }
+            in.nextLine();
             String correct = in.nextLine();
+            out.println(correct);
             String[] ints= correct.split(",");
             coord[0] = Integer.parseInt(ints[0]);
             coord[1] = Integer.parseInt(ints[0]);
@@ -174,7 +176,7 @@ public class Utils {
         table.append("╗\n");
 
         //title line
-        table.append("║" + titleString.replaceAll("\n", " ").toUpperCase() +"║\n");
+        table.append("║").append(titleString.replaceAll("\n", " ").toUpperCase()).append("║\n");
 
         //close tile line
         table.append("╠");

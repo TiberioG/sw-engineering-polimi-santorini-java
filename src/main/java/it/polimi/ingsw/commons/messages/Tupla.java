@@ -1,4 +1,4 @@
-package it.polimi.ingsw.commons;
+package it.polimi.ingsw.commons.messages;
 
 import java.util.Date;
 
