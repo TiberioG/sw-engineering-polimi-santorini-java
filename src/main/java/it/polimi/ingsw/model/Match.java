@@ -33,6 +33,17 @@ public class Match extends Publisher<Message> {
         this.location = new Location(virtualView);
     }
 
+//todo remove after tests
+    /**
+     * dumb constructior
+     * @param matchID
+     */
+    public Match(int matchID) {
+        this.matchID = matchID ;
+        this.island = new Island();
+    }
+
+
     /* Methods */
 
     public int getMatchID() {
@@ -78,7 +89,8 @@ public class Match extends Publisher<Message> {
     public Player createPlayer(String name, Date birthday) {
         Player playToAdd = new Player(name,birthday);
         this.listPlayers.add(playToAdd);
-        publish(new Message("ALL", TypeOfMessage.CREATED_PLAYER, playToAdd));
+        //TODO togliere commento che sminckia la view, mi printa il json se lo lascio
+        //publish(new Message("ALL", TypeOfMessage.CREATED_PLAYER, playToAdd));
         return playToAdd;
     }
 

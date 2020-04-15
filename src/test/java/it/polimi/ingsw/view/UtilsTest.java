@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.commons.Colors;
+import it.polimi.ingsw.view.cli.Utils;
 import org.junit.Test;
 
 import java.io.PrintWriter;
@@ -59,29 +60,29 @@ public class UtilsTest {
     }
 
     @Test
-    public void singleTable_titleIsLongest() {
+    public void singleTable_titleIsLongest() throws InterruptedException {
         String[] arry = new String[]{s1, s2, s13, s4, s5, s6};
-        myutils.singleTable(s14, arry );
+        myutils.singleTableCool(s14, arry, 100);
 
     }
 
     @Test
-    public void singleTable_titleIsShortest() {
+    public void singleTable_titleIsShortest() throws InterruptedException {
         String[] arry = new String[]{s1, s2, s3, s4, s5, s11};
-        myutils.singleTable(s2, arry );
+        myutils.singleTableCool(s2, arry, 100 );
 
     }
 
     @Test
-    public void singleTable_hasNewLines() {
+    public void singleTable_hasNewLines() throws InterruptedException {
         String[] arry = new String[]{s1, s2, swithnewline, s4, s5, s11};
-        myutils.singleTable(s2, arry );
+        myutils.singleTableCool(s2, arry, 100 );
     }
 
     @Test
-    public void singleTable_hasColors() {
+    public void singleTable_hasColors() throws InterruptedException {
         String[] arry = new String[]{s1, s2, colored, s4, s5, s11};
-        myutils.singleTable("options", arry);
+        myutils.singleTableCool("options", arry, 100);
     }
 
     @Test
@@ -92,8 +93,8 @@ public class UtilsTest {
     }
 
     @Test
-    public void singleTable_showColors(){
-        myutils.singleTable("All Colors available", Colors.allNamesColored());
+    public void singleTable_showColors() throws InterruptedException {
+        myutils.singleTableCool("All Colors available", Colors.allNamesColored(), 100);
     }
 
 

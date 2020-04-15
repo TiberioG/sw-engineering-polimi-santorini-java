@@ -3,15 +3,13 @@ package it.polimi.ingsw.controller.strategies.strategyBuild;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
 import it.polimi.ingsw.controller.TurnProperties;
-import it.polimi.ingsw.controller.strategies.strategyMove.DefaultMove;
-import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.view.Utils;
+import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.network.server.VirtualView;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -55,7 +53,7 @@ public class DefaultBuildTest {
 
     @Before
     public void setUp() throws Exception {
-        match = new Match(12123131);
+        match = new Match(66666, new VirtualView(new Server()));
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String birthDate1 = "22/03/1998";

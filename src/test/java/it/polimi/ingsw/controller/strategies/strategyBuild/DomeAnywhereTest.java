@@ -10,6 +10,8 @@ import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Worker;
+import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.network.server.VirtualView;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +57,7 @@ Initial Map:
 
         @Before
         public void setUp() throws Exception {
-            match = new Match(12123131);
+            match = new Match(66666, new VirtualView(new Server()));
 
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String birthDate1 = "22/03/1998";

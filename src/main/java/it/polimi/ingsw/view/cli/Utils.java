@@ -1,16 +1,15 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
- * Small library of utilities for the CLI
+ * Small library of utilities for the CLI, old version
  * @author tiberioG
  */
 public class Utils {
@@ -68,7 +67,7 @@ public class Utils {
         do {
             out.println("Choose one number:\n");
             while (!in.hasNextInt()) {
-                out.println("\nThat's not a number!\n");
+                out.println("That's not a number!\n");
                 in.next();
             }
             number = in.nextInt();
@@ -92,69 +91,7 @@ public class Utils {
             coord[0] = Integer.parseInt(ints[0]);
             coord[1] = Integer.parseInt(ints[0]);
         } while (coord[0] < min || coord[0] > max || coord[1] < min || coord[1] > max);
-
         return coord;
-    }
-
-
-
-    /**
-     * method to print a single column table in ASCII art with numbered items
-     * @param title a string containing the title of the table
-     * @param inputList an Array of strings to display numbered
-     */
-    public void singleTable(String title, String[] inputList){
-        final  int SPACEADD = 5;
-        int height = inputList.length;
-
-        int width = Math.max(Utils.longestArray(inputList), title.length()) + SPACEADD;
-        int innerwidth = width - 4;
-
-        String titleString = centerString(width, title);
-        //top line
-        out.print("╔");
-        for (int i = 0; i< (width); i++ ){
-            out.print("═");
-        }
-        out.print("╗\n");
-
-        //title line
-        out.print("║" + titleString.replaceAll("\n", " ").toUpperCase() +"║\n");
-
-        //close tile line
-        out.print("╠");
-        for (int i = 0; i< (width); i++ ){
-            out.print("═");
-        }
-        out.print("╣\n");
-
-        //middle item lines
-        for (int i = 0; i < height; i++ ){
-            String nonewline = inputList[i].replaceAll("\n", " ");
-            String output = String.format(". %-" + innerwidth + "s", nonewline);
-
-            if (nonewline.length() > Colors.reset().length()) { // if length is less than the colorreset length it means cannot be colored for sure
-                if (!Colors.reset().equals(nonewline.substring(nonewline.length() - Colors.reset().length()))) { //then I check if it contains a color reset at the end
-                    out.print("║ " + i + output + "║\n"); //if not
-                } else { // it there is colorreset at the end: FIX needed!
-                    out.print("║ " + i + output + "         ║\n");  //sorry for magic numbers of spaces but just works
-
-                }
-            }
-            else {
-                out.print("║ " + i + output + "║\n");
-            }
-        }
-
-        //closeline
-        out.print("╚");
-        for (int i = 0; i< (width); i++ ){
-            out.print("═");
-        }
-        out.print("╝\n");
-
-        out.println();
-
     }
 
 
@@ -216,7 +153,25 @@ public class Utils {
             out.println(lines[i]);
             TimeUnit.MILLISECONDS.sleep(delay);
         }
+    }
 
+
+    public void printMap(String[][] stringIsland ){
+        String lineSplit = "";
+        StringJoiner splitJoiner = new StringJoiner("┼", "|", "|");
+        for (int i= 0; i <5 ; i++) {
+            splitJoiner.add(String.format("%14s", "").replace(" ", "-"));
+        }
+        lineSplit = splitJoiner.toString();
+        for (String[] row : stringIsland) {
+            StringJoiner sj = new StringJoiner(" | ", "| ", " |");
+            for (String col : row) {
+                sj.add(col);
+            }
+            System.out.println(lineSplit);
+            System.out.println(sj.toString());
+        }
+        System.out.println(lineSplit);
 
     }
 
@@ -230,4 +185,44 @@ public class Utils {
     public static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
+
+
+    public static void maketitle() throws InterruptedException {
+        final int DELAY = 2000;
+        Terminal.clearAll();
+        TimeUnit.MILLISECONDS.sleep(100);
+        System.out.println(
+                "                                                oooo     oooo ooooooooooo ooooo         oooooooo8   ooooooo  oooo     oooo ooooooooooo               \n" +
+                        "                                                 88   88  88   888    88   888        o888     88 o888   888o 8888o   888   888    88                \n" +
+                        "                                                  88 888 88    888ooo8     888        888         888     888 88 888o8 88   888ooo8                  \n" +
+                        "                                                   888 888     888    oo   888      o 888o     oo 888o   o888 88  888  88   888    oo                \n" +
+                        "                                                    8   8     o888ooo8888 o888ooooo88  888oooo88    88ooo88  o88o  8  o88o o888ooo8888"              );
+        TimeUnit.MILLISECONDS.sleep(DELAY);
+        Terminal.clearAll();
+        System.out.println(
+                "                                                                                ooooooooooo   ooooooo                                                   \n" +
+                        "                                                                                88  888  88 o888   888o                                                 \n" +
+                        "                                                                                    888     888     888                                                 \n" +
+                        "                                                                                    888     888o   o888                                                 \n" +
+                        "                                                                                   o888o      88ooo88                                                   \n" +
+                        "                                                                                                                   ");
+
+
+        TimeUnit.MILLISECONDS.sleep(DELAY);
+        Terminal.clearAll();
+        System.out.println(
+                "                                               oooooooo8      o      oooo   oooo ooooooooooo   ooooooo  oooooooooo  ooooo oooo   oooo ooooo           \n" +
+                        "                                              888            888      8888o  88  88  888  88 o888   888o 888    888  888   8888o  88   888            \n" +
+                        "                                               888oooooo    8  88     88 888o88      888     888     888 888oooo88   888   88 888o88   888            \n" +
+                        "                                                      888  8oooo88    88   8888      888     888o   o888 888  88o    888   88   8888   888            \n" +
+                        "                                              o88oooo888 o88o  o888o o88o    88     o888o      88ooo88  o888o  88o8 o888o o88o    88  o888o           \n" +
+                        "                                                                                                                   \n");
+
+    }
+
+
+
+
+
+
 }

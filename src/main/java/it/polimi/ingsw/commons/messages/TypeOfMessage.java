@@ -9,7 +9,10 @@ public enum TypeOfMessage {
     SET_PLAYER_COLOR(6),  //obj_type : Tupla(Player, Color)
     CARDS_GET_ALL(7),     //
     CARDS_SET_GAME(8),
-    CARD_SET_PLAYER(9);
+    CARD_SET_PLAYER(9),
+    SET_WORKER_COLOR(10),
+    SET_WORKER_POSITION(11)
+    ;
 
 
     private final int typeOfMessage;

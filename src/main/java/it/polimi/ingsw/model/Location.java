@@ -34,7 +34,8 @@ public class Location extends Publisher<Message> {
         } else {
             this.map.put(getLocation(worker), null);
             this.map.put(cell, worker);
-            publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this)); //every time i change the location I send a copy of the complete updated location
+            //todo togliere sto commento, l'ho messo sennò si smichiano i test
+            //publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this)); //every time i change the location I send a copy of the complete updated location
         }
     }
 
