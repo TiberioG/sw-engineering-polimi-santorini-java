@@ -29,7 +29,7 @@ public class LocationTest {
     public void setUp() {
         testMatch = new Match(testID);
         cell1 = new Cell(x1, y1);
-        worker1 = new Worker(Colors.BLUE, player);
+        worker1 = new Worker(0, Colors.BLUE, player);
     }
 
 

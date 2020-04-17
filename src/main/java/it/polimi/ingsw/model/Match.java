@@ -2,13 +2,14 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
-import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.network.server.VirtualView;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * This is the class for the Match
@@ -21,7 +22,7 @@ public class Match extends Publisher<Message> {
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
-    private List<String> listCardsInGame = new ArrayList<>(); // todo: caricare qui le carte nel gioco
+    private List<Card> listCardsInGame = new ArrayList<>(); // todo: caricare qui le carte nel gioco
 
     /**
      * Constructor
@@ -58,11 +59,11 @@ public class Match extends Publisher<Message> {
     public Player getCurrentPlayer(){
         return currentPlayer;
     }
-    public List<String> getCards() {
+    public List<Card> getCards() {
         return listCardsInGame;
     }
 
-    public void addCard(String card){
+    public void addCard(Card card){
         this.listCardsInGame.add(card);
     }
 
@@ -96,5 +97,10 @@ public class Match extends Publisher<Message> {
 
     public Location getLocation() {
         return location;
+    }
+
+    public List<Player> buildOrderedList(Comparator<Player> comparator) {
+        //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
+        return listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
     }
 }

@@ -3,7 +3,7 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
-import it.polimi.ingsw.controller.Card;
+import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.controller.CardManager;
 import it.polimi.ingsw.controller.TurnProperties;
 import it.polimi.ingsw.controller.strategies.strategyBuild.DefaultBuild;
@@ -16,9 +16,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.network.server.VirtualView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;

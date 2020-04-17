@@ -1,4 +1,7 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
+
+import it.polimi.ingsw.controller.Phase;
+import it.polimi.ingsw.controller.StrategySettings;
 
 public class Card {
     private int id;

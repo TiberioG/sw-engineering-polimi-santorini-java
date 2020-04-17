@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.CardManager;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import org.junit.After;
 import org.junit.Before;
@@ -96,14 +97,12 @@ public class MatchTest {
      */
     @Test
     public void testGetCards() {
+        CardManager cardManager = CardManager.initCardManager();
+        Card athenaCard = cardManager.getCardById(0);
 
-        testMatch.addCard("Athena");
-        testMatch.addCard("Demetra");
-        testMatch.addCard("Zeus");
+        testMatch.addCard(athenaCard);
 
-        assertEquals("Athena", testMatch.getCards().get(0));
-        assertEquals("Demetra", testMatch.getCards().get(1));
-        assertEquals("Zeus", testMatch.getCards().get(2));
+        assertEquals(athenaCard, testMatch.getCards().get(0));
     }
 
     /**
@@ -111,7 +110,10 @@ public class MatchTest {
      */
     @Test
     public void addCard() {
-        testMatch.addCard("Athena");
+        CardManager cardManager = CardManager.initCardManager();
+        Card athenaCard = cardManager.getCardById(0);
+        testMatch.addCard(athenaCard);
+
         assertNotNull(testMatch.getCards());
     }
 

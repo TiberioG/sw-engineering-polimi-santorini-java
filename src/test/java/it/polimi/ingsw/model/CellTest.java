@@ -20,7 +20,7 @@ public class CellTest {
     @Before
     public void setUp() {
         cell = new Cell(x, y);
-        worker = new Worker(Colors.BLUE, new Player("Vespasiano", new Date(6666666)));
+        worker = new Worker(0, Colors.BLUE, new Player("Vespasiano", new Date(6666666)));
     }
 
     @After

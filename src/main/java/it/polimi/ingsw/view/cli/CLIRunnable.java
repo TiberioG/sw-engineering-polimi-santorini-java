@@ -3,7 +3,7 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
-import it.polimi.ingsw.controller.Card;
+import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.controller.CardManager;
 import it.polimi.ingsw.controller.TurnProperties;
 import it.polimi.ingsw.controller.strategies.strategyBuild.DefaultBuild;

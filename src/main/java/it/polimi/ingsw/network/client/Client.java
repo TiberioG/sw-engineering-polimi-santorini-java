@@ -147,16 +147,17 @@ public class Client implements Runnable, ServerObserver
 
   public void handleMessage(Message message){
     switch (message.getTypeOfMessage()) {
+      /*
       case CARD_GET:
         //deserializzare qui
         viewInterface.cardSelection();
         //todo passare una lista di carte
         //todo attributo
 
-      case REQUEST_INITIAL_POSITION
+      case REQUEST_INITIAL_POSITION:
         //deserial
         viewInterface.setInitialPosition(List < CoordinatesMessage >); //ci piace??
-
+       */
     }
   }
 }

@@ -19,7 +19,7 @@ public class Player extends Publisher<Message> {
 
     private final String name;
     private final Date birthday;
-    private int currentCard;
+    private Card currentCard;
     private List<Worker> workers = new ArrayList<>();
 
     /* Constructor(s) */
@@ -42,10 +42,10 @@ public class Player extends Publisher<Message> {
     public Date getBirthday() {
         return birthday;
     }
-    public int getCurrentCard() {
+    public Card getCurrentCard() {
         return currentCard;
     }
-    public void setCurrentCard(int currentCard) {
+    public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
     }
 
@@ -57,8 +57,10 @@ public class Player extends Publisher<Message> {
      */
 
     public Worker addWorker(Colors color) {
-        Worker worker = new Worker(color, this);
-        workers.add(worker);
+        int id = 0;
+        if (workers.size() > 0) id = workers.get(workers.size() - 1).getId() + 1;
+        Worker worker = new Worker(id, color, this);
+        workers.add(new Worker(id, color, this));
         return worker;
     }
 

@@ -14,7 +14,7 @@ public class WorkerTest {
 
     @Before
     public void setUp() {
-        worker = new Worker(colorBlue, new Player("domiziana", new Date(9999999)));
+        worker = new Worker(0,colorBlue, new Player("domiziana", new Date(9999999)));
     }
 
     @Test
