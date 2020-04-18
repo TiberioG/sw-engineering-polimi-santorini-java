@@ -1,26 +1,32 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.commons.messages.Message;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 
 
 public class Server
 {
-  public int SOCKET_PORT;
-  public static final int MIN_PORT = 1000;
-  public static final int MAX_PORT = 50000;
+  private static final int MIN_PORT = 1000;
+  private static final int MAX_PORT = 50000;
 
+  private VirtualView virtualView;
 
-  //todo creare virtualview
+  private Map<String, ClientHandler> clientsMap = new HashMap<>();
 
 
   //todo creare lobby locale
   //todo ricordarsi check se ho player con nomi uguali
 
-
+  public Server() {
+    virtualView = new VirtualView(this);
+  }
 
 
   public static void main(String[] args)
@@ -38,12 +44,13 @@ public class Server
       return;
     }
 
+    Server server = new Server();
     while (true) {
       try {
         /* accepts connections; for every connection we accept,
          * create a new Thread executing a ClientHandler */
         Socket client = socket.accept();
-        ClientHandler clientHandler = new ClientHandler(client);
+        ClientHandler clientHandler = new ClientHandler(client, server);
         Thread thread = new Thread(clientHandler, "server_" + client.getInetAddress());
         thread.start();
       } catch (IOException e) {
@@ -81,5 +88,29 @@ public class Server
     return output;
   }
 
+  public void receivedMessage(Message message) {
+    // todo: switch statement
+  }
 
+  public void sendToClient(Message message) {
+    if(message.getUsername().equals("ALL")) {
+       clientsMap.forEach((user, client) -> client.sendMessage(message));
+    } else {
+      // todo: sostituire username con uuid univoco. Vedi todo dentro a ClientHandler.java
+      clientsMap.get(message.getUsername()).sendMessage(message);
+    }
+  }
+
+  public void addClient(String username, ClientHandler client) {
+    clientsMap.put(username, client);
+  }
+
+  /**
+   * Checks if the user's client is already associated
+   * @param username username t
+   * @return true if an association exists
+   */
+  public boolean clientAssociationExists(String username) {
+    return clientsMap.containsKey(username);
+  }
 }

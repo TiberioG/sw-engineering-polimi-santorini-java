@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.commons.messages.Message;
+
 public interface ServerObserver
 {
-  void didReceiveConvertedString(String oldStr, String newStr);
+  void handleMessage(Message message);
 }

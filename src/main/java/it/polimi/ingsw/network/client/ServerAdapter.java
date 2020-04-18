@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.commons.messages.Message;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,11 +13,11 @@ import java.util.List;
 public class ServerAdapter implements Runnable
 {
   private enum Commands {
-    CONVERT_STRING,
+    SEND_MESSAGE,
     STOP
   }
   private Commands nextCommand;
-  private String convertStringParam;
+  private Message messageToSend;
 
   private Socket server;
   private ObjectOutputStream outputStm;
@@ -37,7 +39,6 @@ public class ServerAdapter implements Runnable
     }
   }
 
-
   public void removeObserver(ServerObserver observer)
   {
     synchronized (observers) {
@@ -45,21 +46,11 @@ public class ServerAdapter implements Runnable
     }
   }
 
-
   public synchronized void stop()
   {
     nextCommand = Commands.STOP;
     notifyAll();
   }
-
-
-  public synchronized void requestConversion(String input)
-  {
-    nextCommand = Commands.CONVERT_STRING;
-    convertStringParam = input;
-    notifyAll();
-  }
-
 
   @Override
   public void run()
@@ -70,17 +61,85 @@ public class ServerAdapter implements Runnable
       handleServerConnection();
     } catch (IOException e) {
       System.out.println("Server has died");
-    } catch (ClassCastException | ClassNotFoundException e) {
-      System.out.println("Protocol violation");
+      try {
+        server.close();
+      } catch (IOException ex) { }
     }
 
-    try {
-      server.close();
-    } catch (IOException e) { }
   }
 
+  /**
+   * Sends a message to the server
+   * @param message
+   */
+  public synchronized void send(Message message) {
+    nextCommand = Commands.SEND_MESSAGE;
+    messageToSend = message;
+    notifyAll();
+  }
 
-  private synchronized void handleServerConnection() throws IOException, ClassNotFoundException
+  /**
+   * Runs two threads in background, one to listen for incoming messages from the server and one to send messages to the server
+   */
+  private synchronized void handleServerConnection() {
+    new Thread(() -> {
+      try {
+        handleSendServerConnection();
+      } catch (IOException e) {
+        System.out.println("server has died");
+      } catch (ClassCastException e) {
+        System.out.println("protocol violation");
+      }
+
+      try {
+        server.close();
+      } catch (IOException e) { }
+    }).start();
+
+    new Thread(() -> {
+      try {
+        handleReceiveServerConnection();
+      } catch (IOException e) {
+        System.out.println("server has died");
+      } catch (ClassCastException | ClassNotFoundException e) {
+        System.out.println("protocol violation");
+      }
+
+      try {
+        server.close();
+      } catch (IOException e) { }
+    }).start();
+  }
+
+  /**
+   * Listens for incoming messages from the server
+   * @throws IOException
+   * @throws ClassNotFoundException
+   */
+  private synchronized void handleReceiveServerConnection() throws IOException, ClassNotFoundException {
+    while (true) {
+      Message msg = (Message) inputStm.readObject();
+
+      /* copy the list of observers in case some observers changes it from inside
+       * the notification method */
+      List<ServerObserver> observersCpy;
+      synchronized (observers) {
+        observersCpy = new ArrayList<>(observers);
+      }
+
+      /* notify the observers that we got a message from the server */
+      for (ServerObserver observer : observersCpy) {
+        observer.handleMessage(msg);
+      }
+    }
+  }
+
+  /**
+   * Listens for messages to be sent to server
+   * @throws IOException
+   * @throws ClassNotFoundException
+   */
+  private synchronized void handleSendServerConnection() throws IOException
   {
     /* wait for commands */
     while (true) {
@@ -93,33 +152,15 @@ public class ServerAdapter implements Runnable
         continue;
 
       switch (nextCommand) {
-        case CONVERT_STRING:
-          doStringConversion();
+        case SEND_MESSAGE:
+          outputStm.reset();
+          outputStm.writeObject(messageToSend);
+          outputStm.flush();
           break;
 
         case STOP:
           return;
       }
-    }
-  }
-
-
-  private synchronized void doStringConversion() throws IOException, ClassNotFoundException
-  {
-    /* send the string to the server and get the new string back */
-    outputStm.writeObject(convertStringParam);
-    String newStr = (String)inputStm.readObject();
-
-    /* copy the list of observers in case some observers changes it from inside
-     * the notification method */
-    List<ServerObserver> observersCpy;
-    synchronized (observers) {
-      observersCpy = new ArrayList<>(observers);
-    }
-
-    /* notify the observers that we got the string */
-    for (ServerObserver observer: observersCpy) {
-      observer.didReceiveConvertedString(convertStringParam, newStr);
     }
   }
 

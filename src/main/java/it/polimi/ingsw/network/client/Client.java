@@ -3,161 +3,149 @@ package it.polimi.ingsw.network.client;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.view.CLI;
+import it.polimi.ingsw.view.ViewInterface;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-//todo creare qui o cli o gui qui
-//todo metodo sendtoServer -> adapter -> server
-// qui faccio conversione a stringa
+public class Client implements ServerObserver {
 
-public class Client implements Runnable, ServerObserver
-{
+  /* Attributes */
+
+  ViewInterface view;
+
+  String serverIP;
+
+  int serverPort;
+
+  ServerAdapter serverAdapter;
+
+  private static final Logger LOGGER = Logger.getLogger("Client");
+
+
   /* auxiliary variable used for implementing the consumer-producer pattern*/
   private String response = null;
+
+  /* Constructor(s) */
+
+  public Client() {}
+
+  /* Methods */
 
 
   public static void main( String[] args )
   {
-    /* Instantiate a new Client which will also receive events from
-     * the server by implementing the ServerObserver interface */
     Client client = new Client();
-    client.run();
+    boolean cli = true;
+
+    if (args.length > 0) {
+
+      switch (args[0]) {
+
+        case "cli":
+          cli = true;
+          break;
+        case "gui":
+          break;
+        default:
+          LOGGER.log(Level.WARNING, "After the name of the program write 'cli' if you want to use the console, 'gui' if you want to use the gui interface");
+          System.exit(0);
+          break;
+      }
+    }
+
+    if (cli){
+      CLI view = new CLI(client);
+      client.setView(view);
+      view.displaySetup(); // ask for server IP and Port
+    }
+
+    /*else {
+      Application.launch(GUI.class, args);
+    }*/
+
   }
 
-
-  @Override
-  public void run()
-  {
-    /*
-     * WARNING: this method executes IN THE CONTEXT OF THE MAIN THREAD
-     */
-
-    Scanner stdin = new Scanner(System.in);
-
-    System.out.println("IP address of server?");
-    String ip = readIp(stdin);
-
-    System.out.println("Port number?");
-    int port = readPort(stdin);
-
+  /**
+   * Instantiates a connection with the server
+   * @param message message containing the informations about the server to connect to
+   */
+  public void connectToServer(Message message) {
+    setServerIP(message.getServerIp());
+    setServerPort(message.getServerPort());
 
     /* open a connection to the server */
     Socket server;
     try {
-      server = new Socket(ip, port);
+      server = new Socket(getServerIP(), getServerPort());
+
+      /* Create the adapter that will allow communication with the server
+       * in background, and start running its thread */
+      serverAdapter = new ServerAdapter(server);
+      serverAdapter.addObserver(this);
+      Thread serverAdapterThread = new Thread(serverAdapter);
+      serverAdapterThread.start();
+      view.displayLogin();
     } catch (IOException e) {
-      System.out.println("Server unreachable");
-      return;
+      //System.out.println("Server unreachable");
+      view.displaySetupFailure();
     }
-    System.out.println("Connected");
+  }
 
-    /* Create the adapter that will allow communication with the server
-     * in background, and start running its thread */
-    ServerAdapter serverAdapter = new ServerAdapter(server);
-    serverAdapter.addObserver(this);
-    Thread serverAdapterThread = new Thread(serverAdapter);
-    serverAdapterThread.start();
-
-    String str = stdin.nextLine();
-    while (!"".equals(str)) {
-
-      synchronized (this) {
-        /* reset the variable that contains the next string to be consumed
-         * from the server */
-        response = null;
-
-        serverAdapter.requestConversion(str);
-
-        /* While we wait for the server to respond, we can do whatever we want.
-         * In this case we print a count-up of the number of seconds since we
-         * requested the conversion to the server. */
-        int seconds = 0;
-        while (response == null) {
-          System.out.println("been waiting for " + seconds + " seconds");
-          try {
-            wait(1000);
-          } catch (InterruptedException e) { }
-          seconds++;
-        }
-
-        /* we have the response, print it */
-        System.out.println(response);
-      }
-
-      str = stdin.nextLine();
-    }
-
+  /* todo: SERVE?? */
+  public void stop() {
     serverAdapter.stop();
   }
 
 
-  @Override
-  public synchronized void didReceiveConvertedString(String oldStr, String newStr)
-  {
-    /*
-     * WARNING: this method executes IN THE CONTEXT OF `serverAdapterThread`
-     * because it is called from inside the `run` method of ServerAdapter!
-     */
-
-    /* Save the string and notify the main thread */
-    response = newStr;
-    notifyAll();
+  public ViewInterface getView() {
+    return view;
   }
 
-  private String readIp(Scanner stdin) {
-    String ip;
-    ip = stdin.nextLine();
-
-    while (!isValidIp(ip)) {
-      System.out.println("This is not a valid IPv4 address. Please, try again:");
-      ip = stdin.nextLine();
-    }
-    return ip;
+  public void setView(ViewInterface view) {
+    this.view = view;
   }
 
-  private static boolean isValidIp(String input) {
-    return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$");
-  }
-
-  private int readPort(Scanner stdin) {
-    int output;
-    try {
-      output = stdin.nextInt(); //Integer.parseInt(stdin.nextLine());
-    } catch (InputMismatchException e) {
-      output = Server.MIN_PORT - 1;
-      stdin.nextLine();
-    }
-    while (output > Server.MAX_PORT || output < Server.MIN_PORT) {
-      System.out.println("Value must be between " + Server.MIN_PORT + " and " + Server.MAX_PORT + ". Please, try again:");
-      try {
-        output = stdin.nextInt();
-      } catch (InputMismatchException e) {
-        output = Server.MIN_PORT - 1;
-        stdin.nextLine();
-      }
-    }
-    stdin.nextLine(); // handle nextInt()
-    return output;
-  }
-
-
-
+  /**
+   * Performs actions depeneding on the message type
+   * @param message message received from the server
+   */
   public void handleMessage(Message message){
     switch (message.getTypeOfMessage()) {
-      /*
       case CARD_GET:
         //deserializzare qui
-        viewInterface.cardSelection();
+        view.cardSelection();
         //todo passare una lista di carte
-        //todo attributo
 
       case REQUEST_INITIAL_POSITION:
         //deserial
-        viewInterface.setInitialPosition(List < CoordinatesMessage >); //ci piace??
-       */
+        view.setInitialPosition(List < CoordinatesMessage >); //ci piace??
+
     }
+  }
+
+  public void sendToServer(Message message) {
+    serverAdapter.send(message);
+  }
+
+  public void setServerIP(String serverIP) {
+    this.serverIP = serverIP;
+  }
+
+  public String getServerIP() {
+    return serverIP;
+  }
+
+  public void setServerPort(int serverPort) {
+    this.serverPort = serverPort;
+  }
+
+  public int getServerPort() {
+    return serverPort;
   }
 }

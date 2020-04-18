@@ -42,13 +42,22 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
     }
 
 
-      @Override
+    /**
+     * Receives match changes
+     * @param object
+     */
+    @Override
     public void update(Message object) {
-
-
-
-
-
+        displayMessage(object);
     }
+
+    /**
+     * Sends message to the client
+     * @param message
+     */
+    public void displayMessage(Message message) {
+        server.sendToClient(message);
+    }
+
 }
 
