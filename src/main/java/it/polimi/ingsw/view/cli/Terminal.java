@@ -6,13 +6,13 @@ import it.polimi.ingsw.model.Match;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
  * This class is used to change the terminal type in linux, switching from line buffered input to byte
  * using the comand stty https://linux.die.net/man/1/stty
- * Some methods are taken from:
- * https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
+ *
  */
 public class Terminal {
 
@@ -105,15 +105,52 @@ public class Terminal {
         }
     }
 
-    public static void moveAbsoluteCursor(int col, int row){
+    public static void moveAbsoluteCursor(int row, int col){
         System.out.print("\u001b["+row+";"+col+"H");
-
     }
 
+
+    public static int[] getAbsoluteCursor() throws IOException {
+        ArrayList<Integer> row = new ArrayList<Integer>();
+        ArrayList<Integer> col = new ArrayList<Integer>();
+
+        System.out.print("\u001b[6n"); //Sending this i receive ESC[row;colR
+        int next1 = System.in.read();
+        int next2 = System.in.read();
+
+        if (next1 == 27 && next2 == 91) { //parsing ESC[
+            do {
+                row.add(System.in.read());
+            } while (row.get(row.size() - 1) != 59); // ;
+            do {
+                col.add(System.in.read());
+            } while (col.get(col.size() - 1) != 82); // R
+
+            row.remove(row.size() - 1);
+            col.remove(col.size() - 1);
+        }
+
+        int[] out = new int[2];
+
+        //conversion from ASCII -> String -> Int -> DECimal int
+        for(int i = col.size() - 1 ; i >= 0; i--){
+            int k = 0;
+            String cifra = Character.toString(col.get(col.size()- i - 1));
+            out[1] = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + out[1]);
+        }
+        for(int i = row.size() - 1 ; i >=0; i--){
+            String cifra = Character.toString(row.get(row.size() - i - 1));
+            out[0] = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + out[0]);
+        }
+        return out;
+
+    }
 
     /**
      *  Execute the stty command with the specified arguments
      *  against the current active terminal.
+     *  author:
+     *  https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
      */
     private static String stty(final String args) throws IOException, InterruptedException {
 
@@ -129,6 +166,8 @@ public class Terminal {
     /**
      *  Execute the specified command and return the output
      *  (both stdout and stderr).
+     *  author:
+     *  https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
      */
     private static String exec(final String[] cmd)  throws IOException, InterruptedException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();

@@ -69,13 +69,7 @@ public class CoolCLI {
 
     }
 
-    public Player setRandomFirstUser() throws PlayerNotPresentException {
-        //TODO andrà messa nel controler secondo me sta roba, ed esporre alla view solo il current player
-        int randomNum = rand.nextInt(loggedUsers);
-        match.setCurrentPlayer(match.getPlayers().get(randomNum)); // set current player a random one
-        return match.getCurrentPlayer();
 
-    }
 
     public void cardSelection() throws InterruptedException {
         //get list of card names
@@ -88,9 +82,19 @@ public class CoolCLI {
 
         utils.singleTableCool("Cards Available", names, 100);
 
-        String[] selected = IntStream.range(0, 3).mapToObj(i -> names[utils.readNumbers(0, names.length - 1)]).toArray(String[]::new);
+        System.out.println("Select " + 3 + " cards");
 
-        utils.singleTableCool("Cards Selected", selected, 100);
+
+        List<Integer> selections = utils.readNotSameNumbers(0, names.length - 1, 3 );
+        String[] strSelections = new String[3];
+
+       for (int i =0 ; i< selections.size()  ; i++){
+           strSelections[i] = names[selections.get(i)];
+       }
+
+        utils.singleTableCool("Card selected", strSelections, 100);
+
+
 
 
     }
@@ -144,10 +148,10 @@ public class CoolCLI {
         worker2_1 = player2.addWorker(Colors.BLUE);
         worker2_2 = player2.addWorker(Colors.GREEN);
 
-        initCellWorker1_1 = match.getIsland().getCell(2, 2);
+        initCellWorker1_1 = match.getIsland().getCell(0, 1);
         initCellWorker1_2 = match.getIsland().getCell(3, 3);
-        initCellWorker2_1 = match.getIsland().getCell(0, 0);
-        initCellWorker2_2 = match.getIsland().getCell(1, 1);
+        initCellWorker2_1 = match.getIsland().getCell(1, 2);
+        initCellWorker2_2 = match.getIsland().getCell(1, 0);
 
 
         match.getLocation().setLocation(initCellWorker1_1, worker1_1);
@@ -198,7 +202,7 @@ public class CoolCLI {
 */
         //utils.printMap(stringIsland);
 
-        IslandAdapter myisland = new IslandAdapter(match.getIsland().getField(), match.getLocation(), 10, 6);
+        IslandAdapter2 myisland = new IslandAdapter2(match.getIsland().getField(), match.getLocation());
         myisland.print();
 
 
@@ -219,46 +223,28 @@ public class CoolCLI {
 
     public static void main(String[] args) throws ParseException, InterruptedException, IOException, CellOutOfBoundsException, BuildLowerComponentException, WorkerAlreadyPresentException {
         CoolCLI thiscli = new CoolCLI();
-        Terminal.resize(100, 200);
+
+
+        Terminal.resize(110, 150);
+
+        Frame left = new Frame(new int[]{7,0}, new int[]{ 99, 58 });
         Utils.maketitle();
+        left.print();
+        thiscli.userLogin();
+        left.clear();
         thiscli.cardSelection();
 
+
         Terminal.noBuffer();
+        Terminal.moveAbsoluteCursor(7, 60);
 
-        Terminal.moveAbsoluteCursor(60, 8);
-
-
-        thiscli.showIsland();
+       thiscli.showIsland();
+       left.clear();
+       left.print();
+       thiscli.cardSelection();
 
         TimeUnit.MILLISECONDS.sleep(20000);
-
-
-/*
-
-            System.out.println("Loading");
-            for (int i =0; i<101; i++) {
-                TimeUnit.MILLISECONDS.sleep(10);
-                System.out.print("\u001b[200D" + i + "%");
-                System.out.flush();
-            }
-
-            System.out.print("\u001b[H"); //set cursor at top left
-            System.out.print("\u001b[J"); //clear
-
-            thiscli.userLogin();
-
-            System.out.print("\u001b[H"); //set cursor at top left
-            System.out.print("\u001b[J"); //clear
-
-            thiscli.cardSelection();
-            System.out.print("\u001b[H"); //set cursor at top left
-            System.out.print("\u001b[J"); //set cursor at top left
-
-            thiscli.setInitialPosition();
-            System.out.print("\u001b[H"); //set cursor at top left
-            System.out.print("\u001b[J"); //set cursor at top left
-
-            //System.out.print("\u001b[2J" );
+        /*
 
         Terminal.noBuffer();
 
@@ -326,6 +312,9 @@ public class CoolCLI {
                             col.add( System.in.read());
                         } while (col.get(col.size() - 1) != 82); // R
 
+                        row.remove(row.size() - 1);
+                        col.remove(col.size() - 1);
+
                         break;
                     }//endif
 
@@ -346,14 +335,15 @@ public class CoolCLI {
         int riga = 0;
 
 
+
         //conversion from ASCII -> String -> Int -> DECimal int
-        for(int i = 0; i < col.size()-1; i++){
-            String cifra = Character.toString(col.get(i));
+        for(int i = col.size() - 1 ; i >= 0; i--){
+            int k = 0;
+            String cifra = Character.toString(col.get(col.size()- i - 1));
             colonna = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + colonna);
         }
-
-        for(int i = 0; i < row.size()-1; i++){
-            String cifra = Character.toString(row.get(i));
+        for(int i = row.size() - 1 ; i >=0; i--){
+            String cifra = Character.toString(row.get(row.size() - i - 1));
             riga = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + riga);
         }
 

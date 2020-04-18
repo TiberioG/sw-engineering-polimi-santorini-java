@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Location;
@@ -89,9 +90,15 @@ public class CLI implements ViewInterface {
         System.out.println("Select " + numPlayers + " cards");
 
         //todo cannot be the same card
-        String[] selectedCards = IntStream.range(0, numPlayers).mapToObj(i -> names[utils.readNumbers(0, names.length - 1)]).toArray(String[]::new);
+        //String[] selectedCards = IntStream.range(0, numPlayers).mapToObj(i -> names[utils.readNumbers(0, names.length - 1)]).toArray(String[]::new);
+        List<Integer> selections = utils.readNotSameNumbers(0, names.length - 1, numPlayers );
+        String[] strSelections = new String[numPlayers];
 
-        //client.send2Server(new Message(username, TypeOfMessage.CARDS_SET_GAME, selectedCards));
+        for (int i =0 ; i< selections.size()  ; i++){
+            strSelections[i] = names[selections.get(i)];
+        }
+
+        //client.send2Server(new Message(username, TypeOfMessage.CARDS_SET_GAME, strSelections));
     }
 
 

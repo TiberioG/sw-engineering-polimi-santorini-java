@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.Card;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

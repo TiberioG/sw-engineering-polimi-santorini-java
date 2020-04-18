@@ -3,6 +3,8 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +75,18 @@ public class Utils {
             number = in.nextInt();
         } while (number < min || number > max);
         return number;
+    }
+
+    public List<Integer> readNotSameNumbers(int min, int max, int howmany){
+        List<Integer> numbers = new ArrayList<Integer>();
+
+        while (numbers.size() < howmany ) {
+            int curinput = readNumbers(min, max);
+            if(!numbers.contains(curinput)) {
+                numbers.add(curinput);
+            }
+        }
+        return numbers;
     }
 
 
@@ -192,7 +206,7 @@ public class Utils {
         Terminal.clearAll();
         TimeUnit.MILLISECONDS.sleep(100);
         System.out.println(
-                "                                                oooo     oooo ooooooooooo ooooo         oooooooo8   ooooooo  oooo     oooo ooooooooooo               \n" +
+                        "                                                oooo     oooo ooooooooooo ooooo         oooooooo8   ooooooo  oooo     oooo ooooooooooo               \n" +
                         "                                                 88   88  88   888    88   888        o888     88 o888   888o 8888o   888   888    88                \n" +
                         "                                                  88 888 88    888ooo8     888        888         888     888 88 888o8 88   888ooo8                  \n" +
                         "                                                   888 888     888    oo   888      o 888o     oo 888o   o888 88  888  88   888    oo                \n" +
@@ -200,7 +214,7 @@ public class Utils {
         TimeUnit.MILLISECONDS.sleep(DELAY);
         Terminal.clearAll();
         System.out.println(
-                "                                                                                ooooooooooo   ooooooo                                                   \n" +
+                        "                                                                                ooooooooooo   ooooooo                                                   \n" +
                         "                                                                                88  888  88 o888   888o                                                 \n" +
                         "                                                                                    888     888     888                                                 \n" +
                         "                                                                                    888     888o   o888                                                 \n" +
@@ -211,7 +225,7 @@ public class Utils {
         TimeUnit.MILLISECONDS.sleep(DELAY);
         Terminal.clearAll();
         System.out.println(
-                "                                               oooooooo8      o      oooo   oooo ooooooooooo   ooooooo  oooooooooo  ooooo oooo   oooo ooooo           \n" +
+                        "                                               oooooooo8      o      oooo   oooo ooooooooooo   ooooooo  oooooooooo  ooooo oooo   oooo ooooo           \n" +
                         "                                              888            888      8888o  88  88  888  88 o888   888o 888    888  888   8888o  88   888            \n" +
                         "                                               888oooooo    8  88     88 888o88      888     888     888 888oooo88   888   88 888o88   888            \n" +
                         "                                                      888  8oooo88    88   8888      888     888o   o888 888  88o    888   88   8888   888            \n" +
