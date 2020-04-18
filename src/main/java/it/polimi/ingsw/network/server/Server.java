@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.Tupla;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -89,7 +91,12 @@ public class Server
   }
 
   public void receivedMessage(Message message) {
-    // todo: switch statement
+    switch (message.getTypeOfMessage()) {
+      case ADD_PLAYER:
+        // todo controllo sull'username
+        System.out.println("Player " + message.getUsername() + " aggiunto!");
+        sendToClient(new Message(message.getUsername(), TypeOfMessage.LOGIN_SUCCESSFUL, "Aggiunto"));
+    }
   }
 
   public void sendToClient(Message message) {

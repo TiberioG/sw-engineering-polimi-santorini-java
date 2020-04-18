@@ -6,15 +6,19 @@ import it.polimi.ingsw.commons.JsonAdapter;
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    private String creator;
+    private String username;
     private TypeOfMessage typeOfMessage;
     private String jsonMessage;
 
-    public Message(String creator, TypeOfMessage typeOfMessage, Object object) {
-        this.creator = creator;
+    public Message(String username, TypeOfMessage typeOfMessage, Object object) {
+        this.username = username;
         this.typeOfMessage = typeOfMessage;
         this.jsonMessage = JsonAdapter.toJsonClass(object);
-        System.out.println(this.jsonMessage + " prova json");
+        //System.out.println(this.jsonMessage + " prova json");
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public TypeOfMessage getTypeOfMessage() {

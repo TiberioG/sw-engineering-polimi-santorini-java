@@ -12,18 +12,15 @@ import java.util.List;
 
 public class ServerAdapter implements Runnable
 {
-  private enum Commands {
-    SEND_MESSAGE,
-    STOP
-  }
-  private Commands nextCommand;
-  private Message messageToSend;
 
   private Socket server;
   private ObjectOutputStream outputStm;
   private ObjectInputStream inputStm;
 
   private List<ServerObserver> observers = new ArrayList<>();
+
+  private Object objReceive = new Object();
+  private Object objSend = new Object();
 
 
   public ServerAdapter(Socket server)
@@ -46,69 +43,23 @@ public class ServerAdapter implements Runnable
     }
   }
 
+  // todo: se serve, decidere come voler fare lo stop. Chiudere brutalmente il client oppure mandare prima un messaggio di stop al server?
   public synchronized void stop()
   {
-    nextCommand = Commands.STOP;
-    notifyAll();
   }
 
   @Override
-  public void run()
-  {
+  public void run() {
     try {
       outputStm = new ObjectOutputStream(server.getOutputStream());
       inputStm = new ObjectInputStream(server.getInputStream());
       handleServerConnection();
-    } catch (IOException e) {
-      System.out.println("Server has died");
+    } catch (IOException | ClassNotFoundException e) {
+      System.out.println("Server has died or protocol violation");
       try {
         server.close();
       } catch (IOException ex) { }
     }
-
-  }
-
-  /**
-   * Sends a message to the server
-   * @param message
-   */
-  public synchronized void send(Message message) {
-    nextCommand = Commands.SEND_MESSAGE;
-    messageToSend = message;
-    notifyAll();
-  }
-
-  /**
-   * Runs two threads in background, one to listen for incoming messages from the server and one to send messages to the server
-   */
-  private synchronized void handleServerConnection() {
-    new Thread(() -> {
-      try {
-        handleSendServerConnection();
-      } catch (IOException e) {
-        System.out.println("server has died");
-      } catch (ClassCastException e) {
-        System.out.println("protocol violation");
-      }
-
-      try {
-        server.close();
-      } catch (IOException e) { }
-    }).start();
-
-    new Thread(() -> {
-      try {
-        handleReceiveServerConnection();
-      } catch (IOException e) {
-        System.out.println("server has died");
-      } catch (ClassCastException | ClassNotFoundException e) {
-        System.out.println("protocol violation");
-      }
-
-      try {
-        server.close();
-      } catch (IOException e) { }
-    }).start();
   }
 
   /**
@@ -116,7 +67,7 @@ public class ServerAdapter implements Runnable
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  private synchronized void handleReceiveServerConnection() throws IOException, ClassNotFoundException {
+  private void handleServerConnection() throws IOException, ClassNotFoundException {
     while (true) {
       Message msg = (Message) inputStm.readObject();
 
@@ -135,33 +86,18 @@ public class ServerAdapter implements Runnable
   }
 
   /**
-   * Listens for messages to be sent to server
-   * @throws IOException
-   * @throws ClassNotFoundException
+   * Sends a message to the server
+   * @param message message to be seent
    */
-  private synchronized void handleSendServerConnection() throws IOException
-  {
-    /* wait for commands */
-    while (true) {
-      nextCommand = null;
-      try {
-        wait();
-      } catch (InterruptedException e) { }
-
-      if (nextCommand == null)
-        continue;
-
-      switch (nextCommand) {
-        case SEND_MESSAGE:
-          outputStm.reset();
-          outputStm.writeObject(messageToSend);
-          outputStm.flush();
-          break;
-
-        case STOP:
-          return;
-      }
+  public void send(Message message) {
+    try {
+      outputStm.reset();
+      outputStm.writeObject(message);
+      outputStm.flush();
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
     }
   }
+
 
 }

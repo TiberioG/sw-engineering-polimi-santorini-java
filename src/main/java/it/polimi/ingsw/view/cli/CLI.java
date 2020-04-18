@@ -3,6 +3,8 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
+import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.Tupla;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Cell;
@@ -14,10 +16,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -44,6 +43,9 @@ public class CLI implements ViewInterface {
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
 
+    private static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
+    private static final int MAX_PORT = 50000;
+
 
     private Utils utils = new Utils(in, out);
 
@@ -57,23 +59,57 @@ public class CLI implements ViewInterface {
      * this class now just creates the match
      */
 
-    public void startGame() {
+    private void showTitle() {
         out.println("Welcome to Santorini");
-
     }
+
+    public void displaySetup() {
+
+        showTitle();
+
+        out.println("IP address of server?");
+        String ip = readIp(in);
+
+        System.out.println("Port number?");
+        int port = readPort(in);
+
+        client.setServerIP(ip);
+        client.setServerPort(port);
+
+        client.connectToServer();
+    }
+
+    public void displaySetupFailure() {
+        out.println("Can not reach the server, please try again");
+        displaySetup();
+    }
+
 
     /**
      * method to read from console the players and add them to the match
      * @throws ParseException
      */
-    public void userLogin() throws ParseException {
+    public void displayLogin() {
 
         out.println("nome?");
         username = in.nextLine();
         out.println("Birthdate format dd/MM/yyyy"); //todo ustils per parsare in modo fico
-        date = dateFormat.parse(in.nextLine());
+        try {
+            date = dateFormat.parse(in.nextLine());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        //client.send2Server(new Message(username, TypeOfMessage.ADD_PLAYER, new Tupla(username, date)));
+        client.sendToServer(new Message(username, TypeOfMessage.ADD_PLAYER, new Tupla(username, date)));
+    }
+
+    public void displayLoginSuccessful(String prova) {
+        out.println("Sei stato aggiunto!");
+        out.println(prova);
+    }
+
+    public void displayLoginFailure() {
+
     }
 
 
@@ -81,12 +117,15 @@ public class CLI implements ViewInterface {
      * This method is used to display all the cards available to the user and make him choose a subset of them of cardinality equals to the number of players
      * @param cards a list of  {@link Card>}
      * @param numPlayers an int which is the number of player in ame which should equals to the number of selected cards
-     * @throws InterruptedException
      */
-    public void cardShowAndSelection(List<Card> cards, int numPlayers) throws InterruptedException {
+    public void displayCardSelection(List<Card> cards, int numPlayers) {
 
         String[] names = cards.stream().map(Card::getName).toArray(String[]::new);
-        utils.singleTableCool("Cards Available", names, 100);
+        try {
+            utils.singleTableCool("Cards Available", names, 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("Select " + numPlayers + " cards");
 
         //todo cannot be the same card
@@ -99,6 +138,10 @@ public class CLI implements ViewInterface {
         }
 
         //client.send2Server(new Message(username, TypeOfMessage.CARDS_SET_GAME, strSelections));
+    }
+
+    public void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList) {
+
     }
 
 
@@ -172,6 +215,42 @@ public class CLI implements ViewInterface {
 
         }
     }*/
+
+    private String readIp(Scanner stdin) {
+        String ip;
+        ip = stdin.nextLine();
+
+        while (!isValidIp(ip)) {
+            System.out.println("This is not a valid IPv4 address. Please, try again:");
+            ip = stdin.nextLine();
+        }
+        return ip;
+    }
+
+    private static boolean isValidIp(String input) {
+        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
+    }
+
+    private int readPort(Scanner stdin) {
+        int output;
+        try {
+            output = stdin.nextInt(); //Integer.parseInt(stdin.nextLine());
+        } catch (InputMismatchException e) {
+            output = MIN_PORT - 1;
+            stdin.nextLine();
+        }
+        while (output > MAX_PORT || output < MIN_PORT) {
+            System.out.println("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:");
+            try {
+                output = stdin.nextInt();
+            } catch (InputMismatchException e) {
+                output = MIN_PORT - 1;
+                stdin.nextLine();
+            }
+        }
+        stdin.nextLine(); // handle nextInt()
+        return output;
+    }
 }
 
 

@@ -3,7 +3,7 @@ package it.polimi.ingsw.network.client;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.network.server.Server;
-import it.polimi.ingsw.view.CLI;
+import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class Client implements ServerObserver {
       }
     }
 
-    if (cli){
+    if (cli) {
       CLI view = new CLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
@@ -73,12 +73,8 @@ public class Client implements ServerObserver {
 
   /**
    * Instantiates a connection with the server
-   * @param message message containing the informations about the server to connect to
    */
-  public void connectToServer(Message message) {
-    setServerIP(message.getServerIp());
-    setServerPort(message.getServerPort());
-
+  public void connectToServer() {
     /* open a connection to the server */
     Socket server;
     try {
@@ -97,7 +93,7 @@ public class Client implements ServerObserver {
     }
   }
 
-  /* todo: SERVE?? */
+  /* todo: SERVE?? Nel caso, implementarlo correttamente in serverAdapter */
   public void stop() {
     serverAdapter.stop();
   }
@@ -117,15 +113,18 @@ public class Client implements ServerObserver {
    */
   public void handleMessage(Message message){
     switch (message.getTypeOfMessage()) {
-      case CARD_GET:
+      /*case CARD_GET:
         //deserializzare qui
         view.cardSelection();
         //todo passare una lista di carte
 
       case REQUEST_INITIAL_POSITION:
         //deserial
-        view.setInitialPosition(List < CoordinatesMessage >); //ci piace??
+        view.setInitialPositionco(List < CoordinatesMessage >); //ci piace??*/
 
+      case LOGIN_SUCCESSFUL:
+        view.displayLoginSuccessful((String)message.getObjectFromJson(String.class));
+        stop();
     }
   }
 

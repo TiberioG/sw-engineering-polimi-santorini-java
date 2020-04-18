@@ -11,7 +11,9 @@ public enum TypeOfMessage {
     CARD_SET_PLAYER(9),
     SET_WORKER_COLOR(10),
     SET_WORKER_POSITION(11),
-    SELECT_WORKER(12)
+    SELECT_WORKER(12),
+    LOGIN_SUCCESSFUL(13),
+    LOGIN_FAILURE(14)
     ;
 
 

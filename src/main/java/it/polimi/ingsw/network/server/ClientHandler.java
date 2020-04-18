@@ -56,7 +56,7 @@ public class ClientHandler implements Runnable {
         //       Inviare l'uuid al client che dovrà usarlo per ogni messaggio successivo
 
         // Will be done only at the first message received (login message)
-        if(!server.clientAssociationExists(message.getUsername())) {
+        if(message.getUsername() != null && !server.clientAssociationExists(message.getUsername())) {
           server.addClient(message.getUsername(), this);
         }
 
