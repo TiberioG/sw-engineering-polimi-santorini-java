@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.server.VirtualView;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -55,23 +54,23 @@ public class Controller implements Listener<Message> {
         TypeOfMessage type = message.getTypeOfMessage();
 
         switch (type) {
-            case CREATE_MATCH: //if I receive this i'm ready to create a new match
+            case START_MATCH: //if I receive this i'm ready to create a new match
                 createNewMatch();
                 break;
-            case ADD_PLAYER: //if i receive this
-                Tupla tuplaPlayerData = (Tupla) message.getObjectFromJson(Tupla.class);
+            case LOGIN: //if i receive this
+                Tupla tuplaPlayerData = (Tupla) message.getPayload(Tupla.class);
                 addPlayerToMatch((String) tuplaPlayerData.getFirst(), (Date) tuplaPlayerData.getSecond());
                 break;
             case CARDS_SET_GAME: //if i receive this
-                List<Integer> listOfIdCard = (List) message.getObjectFromJson(List.class);
+                List<Integer> listOfIdCard = (List) message.getPayload(List.class);
                 addCardToMatch(listOfIdCard);
                 break;
             case CARD_SET_PLAYER:
-                Tupla tuplaSetPlayer = (Tupla) message.getObjectFromJson(Tupla.class);
+                Tupla tuplaSetPlayer = (Tupla) message.getPayload(Tupla.class);
                 addCardToPlayer((String) tuplaSetPlayer.getFirst(), (Integer) tuplaSetPlayer.getSecond());
                 break;
             case SELECT_WORKER:
-                Tupla tuplaSelectWorker = (Tupla) message.getObjectFromJson(Tupla.class);
+                Tupla tuplaSelectWorker = (Tupla) message.getPayload(Tupla.class);
                 turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((int) tuplaSelectWorker.getSecond()));
                 break;
         }

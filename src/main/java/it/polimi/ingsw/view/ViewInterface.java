@@ -14,8 +14,13 @@ public interface ViewInterface {
     void displaySetup();
     void displaySetupFailure();
     void displayLogin();
-    void displayLoginSuccessful(String prova);
+    void displayLoginSuccessful();
     void displayLoginFailure();
+    void displayHowManyPlayers();
+    void displayUserJoined(String details);
+    void displayAddedToQueue(String details);
+    void displayStartingMatch();
+    void displayGenericMessage(String message);
     void displayCardSelection(List<Card> cards, int numPlayers);
     void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList);
 }

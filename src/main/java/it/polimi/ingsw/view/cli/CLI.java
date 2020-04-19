@@ -17,7 +17,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.IntStream;
 
 /**
  *
@@ -35,7 +34,6 @@ public class CLI implements ViewInterface {
 
     /* ATTRIBUTES */
     private Client client;
-    private String username;
     private Date date;
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -91,8 +89,8 @@ public class CLI implements ViewInterface {
      */
     public void displayLogin() {
 
-        out.println("nome?");
-        username = in.nextLine();
+        out.println("Choose your username:");
+        String username = in.nextLine();
         out.println("Birthdate format dd/MM/yyyy"); //todo ustils per parsare in modo fico
         try {
             date = dateFormat.parse(in.nextLine());
@@ -100,16 +98,41 @@ public class CLI implements ViewInterface {
             e.printStackTrace();
         }
 
-        client.sendToServer(new Message(username, TypeOfMessage.ADD_PLAYER, new Tupla(username, date)));
+        client.setUsername(username);
+        client.sendToServer(new Message(TypeOfMessage.LOGIN, new Tupla(username, date)));
     }
 
-    public void displayLoginSuccessful(String prova) {
-        out.println("Sei stato aggiunto!");
-        out.println(prova);
+    public void displayLoginSuccessful() {
+        out.println("You have been logged in successfully");
     }
 
     public void displayLoginFailure() {
+        out.println("I'm sorry, this username is already taken. Please try with a different username:");
+        String username = in.nextLine();
+        client.setUsername(username);
+        client.sendToServer(new Message(TypeOfMessage.LOGIN, new Tupla(username, date)));
+    }
 
+    public void displayHowManyPlayers() {
+        out.println("How many players?");
+        int numPlayers = validateIntInput(in, 2, 3);
+        client.sendToServer(new Message(TypeOfMessage.HOW_MANY_PLAYERS, numPlayers));
+    }
+
+    public void displayUserJoined(String details) {
+        out.println(details);
+    }
+
+    public void displayAddedToQueue(String details) {
+        out.println(details);
+    }
+
+    public void displayStartingMatch() {
+        out.println("MATCH IS STARTING!!!!");
+    }
+
+    public void displayGenericMessage(String message) {
+        out.println(message);
     }
 
 
@@ -249,6 +272,36 @@ public class CLI implements ViewInterface {
             }
         }
         stdin.nextLine(); // handle nextInt()
+        return output;
+    }
+
+
+    /**
+     * Manages the insertion of an integer on command line input,
+     * asking it again until it not a valid value.
+     *
+     * @param stdin          is the input scanner
+     * @param minValue       is the minimum acceptable value of the input
+     * @param maxValue       is the maximum acceptable value of the input
+     * @return the value of the input
+     */
+    private static int validateIntInput(Scanner stdin, int minValue, int maxValue) {
+        int output;
+        try {
+            output = stdin.nextInt();
+        } catch (InputMismatchException e) {
+            output = minValue - 1;
+            stdin.nextLine();
+        }
+        while (output > maxValue || output < minValue) {
+            System.out.println("Value must be between " + minValue + " and " + maxValue + ". Please, try again:");
+            try {
+                output = stdin.nextInt();
+            } catch (InputMismatchException e) {
+                output = minValue - 1;
+                stdin.nextLine();
+            }
+        }
         return output;
     }
 }

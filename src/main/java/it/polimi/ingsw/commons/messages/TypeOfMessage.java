@@ -2,8 +2,9 @@ package it.polimi.ingsw.commons.messages;
 
 public enum TypeOfMessage {
     MOVE_WORKER(0),
-    CREATE_MATCH(3),      //obj_type : null
-    ADD_PLAYER(4),        //obj_type : Tupla(String, Date)
+    GENERIC_MESSAGE(1),
+    START_MATCH(3),      //obj_type : null
+    LOGIN(4),        //obj_type : Tupla(String, Date)
     LOCATION_UPDATED(5),  //obj_type : Location
     SET_PLAYER_COLOR(6),  //obj_type : Tupla(Player, Color)
     CARDS_GET_ALL(7),     //obj_type : List<Int>
@@ -14,7 +15,10 @@ public enum TypeOfMessage {
     SELECT_WORKER(12),
     LOGIN_SUCCESSFUL(13),
     LOGIN_FAILURE(14),
-    CREATED_MATCH(15);      //obj_type : null
+    CREATED_MATCH(15),      //obj_type : null
+    HOW_MANY_PLAYERS(16),
+    USER_JOINED(17),
+    ADDED_TO_QUEUE(18),
     ;
 
 

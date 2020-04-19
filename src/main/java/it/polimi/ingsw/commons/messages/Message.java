@@ -9,24 +9,60 @@ public class Message implements Serializable {
     private String username;
     private TypeOfMessage typeOfMessage;
     private String jsonMessage;
+    private String UUID;
 
-    public Message(String username, TypeOfMessage typeOfMessage, Object object) {
-        this.username = username;
+    public Message(String UUID, TypeOfMessage typeOfMessage, Object object) {
+        this.UUID = UUID;
         this.typeOfMessage = typeOfMessage;
         this.jsonMessage = JsonAdapter.toJsonClass(object);
         //System.out.println(this.jsonMessage + " prova json");
+    }
+
+    public Message(TypeOfMessage typeOfMessage) {
+        this.typeOfMessage = typeOfMessage;
+    }
+
+    public Message(TypeOfMessage typeOfMessage, Object object) {
+        this.typeOfMessage = typeOfMessage;
+        this.jsonMessage = JsonAdapter.toJsonClass(object);
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUUID() {
+        return UUID;
+    }
+
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
+
     public TypeOfMessage getTypeOfMessage() {
         return typeOfMessage;
     }
 
-    public Object getObjectFromJson(Class classType) {
+    public void setPayload(Object object) {
+        this.jsonMessage = JsonAdapter.toJsonClass(object);
+    }
+
+    public Object getPayload(Class classType) {
         Gson gson = new Gson();
         return gson.fromJson(this.jsonMessage, classType);
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "username='" + username + '\'' +
+                ", typeOfMessage=" + typeOfMessage +
+                ", jsonMessage='" + jsonMessage + '\'' +
+                ", UUID='" + UUID + '\'' +
+                '}';
     }
 }

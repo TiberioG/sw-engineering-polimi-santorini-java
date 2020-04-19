@@ -38,7 +38,7 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
      *crea match
      */
     public void initGame(){
-        publish(new Message("ALL", TypeOfMessage.CREATE_MATCH, null)); //just send a message to controller to create the match
+        publish(new Message("ALL", TypeOfMessage.START_MATCH, null)); //just send a message to controller to create the match
     }
 
 

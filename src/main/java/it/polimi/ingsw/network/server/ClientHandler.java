@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -56,8 +57,10 @@ public class ClientHandler implements Runnable {
         //       Inviare l'uuid al client che dovrà usarlo per ogni messaggio successivo
 
         // Will be done only at the first message received (login message)
-        if(message.getUsername() != null && !server.clientAssociationExists(message.getUsername())) {
-          server.addClient(message.getUsername(), this);
+        if(message.getTypeOfMessage() == TypeOfMessage.LOGIN && message.getUsername() != null && message.getUUID() == null) {
+          String UUID = java.util.UUID.randomUUID().toString();
+          server.addClient(UUID, this);
+          message.setUUID(UUID);
         }
 
         server.receivedMessage(message);

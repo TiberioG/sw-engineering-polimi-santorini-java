@@ -1,15 +1,11 @@
 package it.polimi.ingsw.network.client;
 
-import it.polimi.ingsw.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.commons.messages.Message;
-import it.polimi.ingsw.network.server.Server;
 import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,19 +13,19 @@ public class Client implements ServerObserver {
 
   /* Attributes */
 
-  ViewInterface view;
+  private ViewInterface view;
 
-  String serverIP;
+  private String serverIP;
 
-  int serverPort;
+  private int serverPort;
+
+  private String UUID = null;
+
+  private String username = null;
 
   ServerAdapter serverAdapter;
 
   private static final Logger LOGGER = Logger.getLogger("Client");
-
-
-  /* auxiliary variable used for implementing the consumer-producer pattern*/
-  private String response = null;
 
   /* Constructor(s) */
 
@@ -98,15 +94,6 @@ public class Client implements ServerObserver {
     serverAdapter.stop();
   }
 
-
-  public ViewInterface getView() {
-    return view;
-  }
-
-  public void setView(ViewInterface view) {
-    this.view = view;
-  }
-
   /**
    * Performs actions depeneding on the message type
    * @param message message received from the server
@@ -122,14 +109,40 @@ public class Client implements ServerObserver {
         //deserial
         view.setInitialPositionco(List < CoordinatesMessage >); //ci piace??*/
 
+      case GENERIC_MESSAGE:
+        view.displayGenericMessage((String)message.getPayload(String.class));
+        break;
+
       case LOGIN_SUCCESSFUL:
-        view.displayLoginSuccessful((String)message.getObjectFromJson(String.class));
-        stop();
+        setUUID(message.getUUID());
+        view.displayLoginSuccessful();
+        break;
+
+      case LOGIN_FAILURE:
+        view.displayLoginFailure();
+        break;
+
+      case HOW_MANY_PLAYERS:
+        view.displayHowManyPlayers();
+        break;
+
+      case USER_JOINED:
+        view.displayUserJoined((String)message.getPayload(String.class));
+        break;
+
+      case ADDED_TO_QUEUE:
+        view.displayAddedToQueue((String)message.getPayload(String.class));
+        break;
+
+      case START_MATCH:
+        view.displayStartingMatch();
         break;
     }
   }
 
   public void sendToServer(Message message) {
+    message.setUsername(this.username); // add the username to each message
+    message.setUUID(this.UUID); // add the UUID to each message. Used to validate the user server side
     serverAdapter.send(message);
   }
 
@@ -147,5 +160,29 @@ public class Client implements ServerObserver {
 
   public int getServerPort() {
     return serverPort;
+  }
+
+  public ViewInterface getView() {
+    return view;
+  }
+
+  public void setView(ViewInterface view) {
+    this.view = view;
+  }
+
+  public String getUUID() {
+    return UUID;
+  }
+
+  public void setUUID(String UUID) {
+    this.UUID = UUID;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
   }
 }
