@@ -21,10 +21,11 @@ public class DefaultWin implements StrategyWin {
 
     @Override
     public boolean checkWin() {
+        boolean hasWin = false;
         for(Worker worker : match.getCurrentPlayer().getWorkers()) {
             if(match.getLocation().getLocation(worker) != TurnProperties.getInitialPositionMap().get(worker)) // check if the worker has moved
-                return match.getLocation().getLocation(worker).getTower().getTopComponent() == Component.THIRD_LEVEL;
+                hasWin = match.getLocation().getLocation(worker).getTower().getTopComponent() == Component.THIRD_LEVEL || hasWin;
         }
-        return false;
+        return hasWin;
     }
 }

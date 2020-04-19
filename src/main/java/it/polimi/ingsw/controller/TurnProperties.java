@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 public class TurnProperties {
     private static int currentTurnId = -1;
-    private static HashMap<Worker, Cell> initialPositionMap;
-    private static HashMap<Worker, Integer> initialLevels;
-    private static HashMap<Worker, Cell> builtInThisTurn;
+    private static HashMap<Worker, Cell> initialPositionMap = new HashMap<>();;
+    private static HashMap<Worker, Integer> initialLevels = new HashMap<>();;
+    private static HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
 
 
 

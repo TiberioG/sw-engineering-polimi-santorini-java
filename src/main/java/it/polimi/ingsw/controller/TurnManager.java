@@ -163,11 +163,11 @@ public class TurnManager {
     }
 
     private void inizializedCurrentTurn() {
+        TurnProperties.resetAllParameter();
         this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
             TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
             TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
         });
-        TurnProperties.resetAllParameter();
         if (currentTurn.noAvailableCellForWorkers()) {
             //notificare la perdità
             // rimuovere l'utente dal match

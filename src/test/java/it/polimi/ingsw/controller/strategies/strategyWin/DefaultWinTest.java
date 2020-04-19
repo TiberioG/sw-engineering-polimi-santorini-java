@@ -125,12 +125,13 @@ public class DefaultWinTest {
     @Test
     public void checkWin_true_defaultMove() throws SantoriniException {
         match.setCurrentPlayer(player2);
-        TurnManager turnManager = new TurnManager(match);
+        //TurnManager turnManager = new TurnManager(match);
 
         // go from LVL2 to LVL3
         Cell cellToMove2_2 = match.getIsland().getCell(1, 2);
         strategyMove1.move(worker2_2, cellToMove2_2);
-        assertTrue(strategyWin.checkWin());
+        boolean win = strategyWin.checkWin();
+        assertTrue(win);
     }
 
     @Test

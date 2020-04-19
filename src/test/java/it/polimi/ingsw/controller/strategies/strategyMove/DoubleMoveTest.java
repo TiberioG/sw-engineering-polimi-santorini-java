@@ -67,6 +67,10 @@ public class DoubleMoveTest {
         player1 = match.createPlayer("Mario", date1);
         player2 = match.createPlayer("Luigi", date2);
 
+        CardManager cardManager = CardManager.initCardManager();
+        player1.setCurrentCard(cardManager.getCardById(0));
+        player2.setCurrentCard(cardManager.getCardById(1));
+
         worker1_1 = player1.addWorker(Colors.RED);
         worker1_2 = player1.addWorker(Colors.RED);
         worker2_1 = player2.addWorker(Colors.BLUE);
@@ -88,9 +92,6 @@ public class DoubleMoveTest {
         match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
 
         match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
-
-        CardManager cardManager = CardManager.initCardManager();
-        player1.setCurrentCard(cardManager.getCardById(0));
 
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
