@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.commons.Component;
-import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.controller.strategies.strategyWin.StrategyWin;
@@ -10,6 +9,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.network.server.VirtualView;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -22,16 +22,10 @@ public class TurnManager {
     /* Attributes */
 
     private Match match;
-    private Player currentPlayer;
     private VirtualView virtualView;
-    private CardManager cardManager;
-    private Phase currentPhase;
-    private Worker selectedWorker;
 
-    //various strategy
-    private StrategyMove strategyMove;
-    private StrategyWin strategyWin;
-    private StrategyBuild strategyBuild;
+    private HashMap<String, Turn> turnsMap = new HashMap<>();
+    private Turn currentTurn;
 
     /* Constructor(s) */
 
@@ -42,6 +36,7 @@ public class TurnManager {
     public TurnManager(Match match, VirtualView virtualView) {
         this(match);
         this.virtualView = virtualView;
+        //richiamo la virtual view per notificargli l'inizio del turno con le fasi disponibili
     }
 
     /**
@@ -49,14 +44,20 @@ public class TurnManager {
      */
     public TurnManager(Match match) {
         this.match = match;
-        this.currentPlayer = this.match.getCurrentPlayer();
-        this.cardManager = CardManager.initCardManager();
-        buildStrategies();
-        TurnProperties.resetAllParameter();
+        CardManager.initCardManager();
+        createTurns();
     }
 
     /* Methods */
-
+    private void createTurns() {
+        for(Player player : match.getPlayers()) {
+            Turn turn = new Turn(player);
+            buildStrategies(turn);
+            turnsMap.put(player.getName(), turn);
+        }
+        currentTurn = turnsMap.get(match.getPlayers().get(0).getName());
+        inizializedCurrentTurn();
+    }
     /**
      * This method create strategy instances using reflection
      * @param className the name of the class of the desired istance
@@ -74,92 +75,110 @@ public class TurnManager {
     /**
      * This method create set the strategy of the turn from the card of the current player
      */
-    private void buildStrategies() {
+    private void buildStrategies(Turn turn) {
         //builder/factory
-        Card card = this.currentPlayer.getCurrentCard();
-
+        Card card = turn.getPlayer().getCurrentCard();
         //use reflection
         try {
             //make this for all strategies
-            strategyMove = (StrategyMove) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyMove." + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match});
-            strategyWin = (StrategyWin) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyWin." + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match});
-            strategyBuild = (StrategyBuild) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyBuild." + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match});
+            turn.setStrategyMove((StrategyMove) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyMove." + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match}));
+            turn.setStrategyBuild((StrategyBuild) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyBuild." + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match}));
+            turn.setStrategyWin((StrategyWin) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyWin." + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match}));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * This method make all operation for init the turn
-     */
-    public void beginTurn() {
-        currentPlayer.getWorkers().forEach(worker -> {
-            TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
-            TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
-        });
-        this.currentPhase = currentPlayer.getCurrentCard().getInitialPhase();
-
-    };
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    private List<Cell> getAvailableCellForMove() {
-        Phase nextPhase = checkForPermittedPhase("move");
+    private void getAvailableCellForMove() {
         List<Cell> availableCell = null;
-        if (nextPhase != null) {
-            availableCell = this.strategyMove.getAvailableCells(selectedWorker);
+        if (checkForPermittedPhase("move")) {
+            availableCell = currentTurn.getAvailableCellForMove();
         }
-        return availableCell;
+        //chiamare la virtual view con le celle disponibili
     }
 
 
     public void move(Worker worker, Cell cell) throws SantoriniException {
-        Phase nextPhase = checkForPermittedPhase("move");
-        if (nextPhase != null) {
-            this.strategyMove.move(worker, cell);
-            currentPhase = nextPhase;
+        if (checkForPermittedPhase("move")) {
+            currentTurn.move(worker, cell);
+            updateCurrentPhase("move");
         }
     };
 
-    public List<Cell> getAvailableCellForBuild() {
-        Phase nextPhase = checkForPermittedPhase("build");
+    public void getAvailableCellForBuild() {
         List<Cell> availableCell = null;
-        if (nextPhase != null) {
-            availableCell = this.strategyBuild.getBuildableCells(selectedWorker);
+        if (checkForPermittedPhase("build")) {
+            availableCell = currentTurn.getAvailableCellForBuild();
         }
-        return availableCell;
+        //chiamare la virtual view con le celle disponibili
     }
 
     public void build(Component component, Cell cell) throws SantoriniException {
-        Phase nextPhase = checkForPermittedPhase("build");
-        if (nextPhase != null) {
-            this.strategyBuild.build(component, cell, selectedWorker);
-            currentPhase = nextPhase;
+        if (checkForPermittedPhase("build")) {
+            currentTurn.build(component, cell);
+            updateCurrentPhase("build");
         }
     }
 
-    public boolean checkWin() {
-        return this.strategyWin.checkWin();
+    public void checkWin() {
+        if (currentTurn.checkWin()) {
+            //chiamare la view
+        }
     }
 
-    private Phase checkForPermittedPhase(String type) {
-        Phase nextPhase = null;
-        for(Phase phase : currentPhase.getNextPhases()) {
-            if (phase.equals(type)) {
-                nextPhase = phase;
-            }
+    private Boolean checkForPermittedPhase(String type) {
+        for(Phase phase : currentTurn.getCurrentPhase().getNextPhases()) {
+            if (phase.equals(type)) return true;
         }
-        return nextPhase;
+        return false;
     }
 
     public List<Phase> getNextPhases() {
-        return this.currentPhase.getNextPhases();
+        return currentTurn.getCurrentPhase().getNextPhases();
     }
 
     public void selectWorker(Worker worker) {
-        if (currentPhase.getType().equals("selectWorker")) this.selectedWorker = worker;
+        if (checkForPermittedPhase("selectWorker")) currentTurn.setSelectedWorker(worker);
     }
+
+    private void updateCurrentPhase(String type) {
+        Phase currentPhaseOfTurn = currentTurn.getCurrentPhase();
+        if (currentPhaseOfTurn.getNeedCheckForVictory() && currentTurn.checkWin()) {
+            //richiamare la virtualview notificando la vittoria
+        }
+
+        if (currentPhaseOfTurn.getNextPhases() == null) {
+            //seleziono il prossimo turno
+            selectNextTurn();
+            //richiamare la virtual view per notificare la fine del turno
+        } else {
+            currentTurn.updateCurrentPhaseFromType(type);
+            //richiamare la virtual view per notificare le prossime mosse disponibili con le next phases
+        }
+    }
+
+    private void selectNextTurn() {
+        match.selectNextCurrentPlayer();
+        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
+    }
+
+    private void inizializedCurrentTurn() {
+        this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
+            TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
+            TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
+        });
+        TurnProperties.resetAllParameter();
+        if (currentTurn.noAvailableCellForWorkers()) {
+            //notificare la perdità
+            // rimuovere l'utente dal match
+            // aggiornato la mappa
+            selectNextTurn();
+        }
+    }
+
+    public Turn getCurrentTurn() {
+        return currentTurn;
+    }
+
 
 }

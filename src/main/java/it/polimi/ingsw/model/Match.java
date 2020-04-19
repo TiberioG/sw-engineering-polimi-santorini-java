@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.network.server.VirtualView;
 
@@ -32,6 +33,7 @@ public class Match extends Publisher<Message> {
         this.matchID = matchID ;
         this.island = new Island();
         this.location = new Location(virtualView);
+        publish(new Message("ALL", TypeOfMessage.CREATED_MATCH, this));
     }
 
 //todo remove after tests
@@ -42,6 +44,7 @@ public class Match extends Publisher<Message> {
     public Match(int matchID) {
         this.matchID = matchID ;
         this.island = new Island();
+        this.location = new Location();
     }
 
 
@@ -102,5 +105,13 @@ public class Match extends Publisher<Message> {
     public List<Player> buildOrderedList(Comparator<Player> comparator) {
         //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
         return listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
+    }
+
+    public int selectNextCurrentPlayer() {
+        if (listPlayers.size() == 0) return -1;
+        int indexOfCurrentPlayer = listPlayers.indexOf(currentPlayer);
+        int indexOfNextCurrentPlayer = indexOfCurrentPlayer == listPlayers.size() - 1 ? indexOfCurrentPlayer + 1 : 0;
+        currentPlayer = listPlayers.get(indexOfCurrentPlayer);
+        return indexOfCurrentPlayer;
     }
 }

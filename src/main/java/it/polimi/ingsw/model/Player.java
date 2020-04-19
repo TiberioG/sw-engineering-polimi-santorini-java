@@ -60,7 +60,7 @@ public class Player extends Publisher<Message> {
         int id = 0;
         if (workers.size() > 0) id = workers.get(workers.size() - 1).getId() + 1;
         Worker worker = new Worker(id, color, this);
-        workers.add(new Worker(id, color, this));
+        workers.add(worker);
         return worker;
     }
 

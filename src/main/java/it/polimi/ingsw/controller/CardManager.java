@@ -98,9 +98,10 @@ public class CardManager {
         if (permittedPhasesJsonObject != null) {
             String type = JsonAdapter.getStringFromJsonObject(permittedPhasesJsonObject, "type");
             JsonArray nextPhases = permittedPhasesJsonObject.getAsJsonArray("nextPhases");
+            Boolean needCheckForVictory = JsonAdapter.getBooleanFromJson(permittedPhasesJsonObject, "checkVictory");
             List<Phase> nextPhasesTreeSet = null;
             if (nextPhases != null) nextPhasesTreeSet = buildTreeOfList(nextPhases);
-            return new Phase(type, nextPhasesTreeSet);
+            return new Phase(type, nextPhasesTreeSet, needCheckForVictory);
         } else return null;
     }
 
@@ -115,9 +116,10 @@ public class CardManager {
             JsonObject phaseObject = nextPhaseElement.getAsJsonObject();
             String type = JsonAdapter.getStringFromJsonObject(phaseObject, "type");
             JsonArray nextPhases = phaseObject.getAsJsonArray("nextPhases");
+            Boolean needCheckForVictory = JsonAdapter.getBooleanFromJson(phaseObject, "checkVictory");
             List<Phase> nextPhasesList = null;
             if (nextPhases != null) nextPhasesList = buildTreeOfList(nextPhases);
-            currentPhasesList.add(new Phase(type, nextPhasesList));
+            currentPhasesList.add(new Phase(type, nextPhasesList, needCheckForVictory));
         }
         return  currentPhasesList;
     }

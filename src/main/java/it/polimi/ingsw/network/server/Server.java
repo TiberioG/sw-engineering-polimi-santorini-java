@@ -96,6 +96,8 @@ public class Server
         // todo controllo sull'username
         System.out.println("Player " + message.getUsername() + " aggiunto!");
         sendToClient(new Message(message.getUsername(), TypeOfMessage.LOGIN_SUCCESSFUL, "Aggiunto"));
+        virtualView.initGame();
+        break;
     }
   }
 

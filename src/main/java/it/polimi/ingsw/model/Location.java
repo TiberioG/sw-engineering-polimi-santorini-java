@@ -21,6 +21,8 @@ public class Location extends Publisher<Message> {
         addListener(virtualView);
     }
 
+    public Location() {}
+
 
     /**
      * Method to add a pair cell-worker in the map

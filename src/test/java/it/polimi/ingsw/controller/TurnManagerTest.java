@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
+import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Island;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
@@ -20,13 +21,15 @@ public class TurnManagerTest {
     public void setUp() throws PlayerNotPresentException {
         match = new Match(0);
         Player currentPlayer = match.createPlayer("firstPlayer", new Date());
-        Player player2 = match.createPlayer("secondPlayer", new Date());
+        CardManager cardManager = CardManager.initCardManager();
+        currentPlayer.setCurrentCard(cardManager.getCardById(0));
         match.setCurrentPlayer(currentPlayer);
+
         turnManager = new TurnManager(match);
     }
 
     @Test
     public void hasSamePlayerAsMatch() {
-        assertEquals(match.getCurrentPlayer(), turnManager.getCurrentPlayer());
+        assertEquals(match.getCurrentPlayer(), turnManager.getCurrentTurn().getPlayer());
     }
 }

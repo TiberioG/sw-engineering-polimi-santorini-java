@@ -45,10 +45,10 @@ public class Controller implements Listener<Message> {
         }
     }
 
-    private void initNewTurn() {
+    private void initTurManager() {
         turnManager = new TurnManager(match, virtualView);
-        turnManager.beginTurn();
     }
+
 
     @Override
     public void update(Message message) {

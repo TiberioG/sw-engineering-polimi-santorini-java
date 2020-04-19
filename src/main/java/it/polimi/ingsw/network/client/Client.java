@@ -125,6 +125,7 @@ public class Client implements ServerObserver {
       case LOGIN_SUCCESSFUL:
         view.displayLoginSuccessful((String)message.getObjectFromJson(String.class));
         stop();
+        break;
     }
   }
 

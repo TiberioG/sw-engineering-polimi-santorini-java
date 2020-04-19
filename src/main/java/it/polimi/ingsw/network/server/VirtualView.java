@@ -48,7 +48,9 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
      */
     @Override
     public void update(Message object) {
-        displayMessage(object);
+        if (object.getUsername().equals("VIRTUAL_VIEW")) {
+            
+        } else displayMessage(object);
     }
 
     /**

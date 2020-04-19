@@ -35,11 +35,11 @@ public class LocationTest {
 
     @Test
     public void setLocation() throws WorkerAlreadyPresentException {
-        Location locationTest = testMatch.getLocation();
-        locationTest.setLocation(cell1,worker1);
+        Location location = testMatch.getLocation();
+        location.setLocation(cell1,worker1);
 
-        assertEquals(cell1, locationTest.getLocation(worker1));
-        assertEquals(worker1, locationTest.getOccupant(cell1));
+        assertEquals(cell1, location.getLocation(worker1));
+        assertEquals(worker1, location.getOccupant(cell1));
 
     }
 

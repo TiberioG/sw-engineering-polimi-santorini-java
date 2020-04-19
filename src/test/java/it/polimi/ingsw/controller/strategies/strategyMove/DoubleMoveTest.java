@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.controller.CardManager;
 import it.polimi.ingsw.controller.TurnManager;
 import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.exceptions.WrongCellSelectedMoveException;
@@ -88,9 +89,11 @@ public class DoubleMoveTest {
 
         match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
 
+        CardManager cardManager = CardManager.initCardManager();
+        player1.setCurrentCard(cardManager.getCardById(0));
+
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
-        turnManager.beginTurn();
         strategyMove = new DoubleMove(match);
     }
 

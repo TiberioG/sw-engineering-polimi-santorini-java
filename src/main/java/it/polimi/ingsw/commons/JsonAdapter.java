@@ -114,6 +114,14 @@ public class JsonAdapter {
         } else return 0;
     };
 
+
+    public static boolean getBooleanFromJson(JsonObject jsonObject, String keyValue) {
+        JsonElement jsonElement = jsonObject.get(keyValue);
+        if (jsonElement != null) {
+            return jsonElement.getAsBoolean();
+        } else return false;
+    };
+
     public static String toJsonClass(Object object) {
         Gson gson = new Gson();
         return gson.toJson(object);

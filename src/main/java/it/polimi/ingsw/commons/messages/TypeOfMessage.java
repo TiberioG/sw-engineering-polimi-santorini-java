@@ -13,7 +13,8 @@ public enum TypeOfMessage {
     SET_WORKER_POSITION(11),
     SELECT_WORKER(12),
     LOGIN_SUCCESSFUL(13),
-    LOGIN_FAILURE(14)
+    LOGIN_FAILURE(14),
+    CREATED_MATCH(15);      //obj_type : null
     ;
 
 
