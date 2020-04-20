@@ -38,7 +38,7 @@ public class SquareCell2 {
     public void print(int startRow, int startCol) throws IOException, InterruptedException {
         this.startRow = startRow;
         this.startCol = startCol;
-        Terminal.noBuffer();
+        //Terminal.noBuffer();
         if (!worker) {
             if (level == 0) {
                 this.noWorkerL0();
@@ -95,6 +95,13 @@ public class SquareCell2 {
 
     }
 
+
+    public void selected(int startRow, int startCol) throws IOException, InterruptedException {
+        this.startRow = startRow;
+        this.startCol = startCol;
+        this.higlited();
+    }
+
     private void noWorkerL0 () throws IOException, InterruptedException {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
@@ -105,7 +112,6 @@ public class SquareCell2 {
     }
 
 
-
     private void noWorkerL1 () throws IOException, InterruptedException {
         for (int i = 0; i < hei - 2  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 1, startCol + 1 ); // scendo di una riga ogni volta con offset 1
@@ -114,9 +120,6 @@ public class SquareCell2 {
             }
         }
     }
-
-
-
 
     private void noWorkerL2 () throws IOException, InterruptedException {
         for (int i = 0; i < hei - 4  ; i ++){ // till penultima riga
@@ -150,15 +153,21 @@ public class SquareCell2 {
         for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
             for (int j = 0; j < len - 6 ; j++){
-                if (i + 1 == j) {
-                    System.out.print(color.getAnsiCode() + "▙"); //verdino
+                if (i == j) {
+                    System.out.print(color.getAnsiCode() + "   ▙");
                 }
             }
         }
-
     }
 
-
+    private void higlited () throws IOException, InterruptedException {
+        for (int i = 0; i < hei ; i ++){
+            Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
+            for (int j = 0; j < len; j++){
+                System.out.print("\u001b[48;5;202m" + " "); //rossino
+            }
+        }
+    }
 
     public static int getLen(){
         return len;

@@ -2,14 +2,11 @@ package it.polimi.ingsw.controller.strategies.strategyWin;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
-import it.polimi.ingsw.controller.CardManager;
+import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.controller.TurnManager;
 import it.polimi.ingsw.controller.strategies.strategyMove.DefaultMove;
-import it.polimi.ingsw.controller.strategies.strategyMove.DoubleMove;
 import it.polimi.ingsw.controller.strategies.strategyMove.PushEnemyWorker;
 import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
-import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Match;

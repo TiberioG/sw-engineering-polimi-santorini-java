@@ -44,11 +44,9 @@ public class CLI implements ViewInterface {
     private static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
     private static final int MAX_PORT = 50000;
 
-
     private Utils utils = new Utils(in, out);
 
     Location location;
-
 
 
     /* METHODS*/

@@ -21,6 +21,7 @@ public class Player extends Publisher<Message> {
     private final Date birthday;
     private Card currentCard;
     private List<Worker> workers = new ArrayList<>();
+    //private String UUID;
 
     /* Constructor(s) */
 

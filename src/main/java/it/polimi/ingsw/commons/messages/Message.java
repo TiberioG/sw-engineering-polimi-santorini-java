@@ -11,13 +11,18 @@ public class Message implements Serializable {
     private String jsonMessage;
     private String UUID;
 
-    public Message(String UUID, TypeOfMessage typeOfMessage, Object object) {
-        this.UUID = UUID;
-        this.typeOfMessage = typeOfMessage;
+    public Message(String username, TypeOfMessage typeOfMessage, Object object) {
+        this(username, typeOfMessage);
         this.jsonMessage = JsonAdapter.toJsonClass(object);
         //System.out.println(this.jsonMessage + " prova json");
     }
 
+    public Message(String username, TypeOfMessage typeOfMessage) {
+        this.username = username;
+        this.typeOfMessage = typeOfMessage;
+    }
+
+    //todo quanti bei costruttori
     public Message(TypeOfMessage typeOfMessage) {
         this.typeOfMessage = typeOfMessage;
     }

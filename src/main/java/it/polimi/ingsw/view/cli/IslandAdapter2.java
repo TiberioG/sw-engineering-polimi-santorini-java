@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.cli;
 
+import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Location;
 
@@ -17,6 +18,7 @@ public class IslandAdapter2 {
     private SquareCell2[][] matrix ;
     private int len;
     private int hei;
+    private int[] cursor = {7, 60};
 
     final int SPACING_H = 1;
     final int SPACING_V = 2;
@@ -26,8 +28,6 @@ public class IslandAdapter2 {
      * The constructor
      * @param field from the model, a matrix of {@link Cell}
      * @param location from the model {@link Location}
-     * @param len (int) is the length of the rectangles that will appear on the map (in columns)
-     * @param wid  (int) is the width of the rectangles that will appear on the map (in rows)
      */
     public IslandAdapter2(Cell[][] field, Location  location){
         matrix = new SquareCell2[field.length][field.length];
@@ -53,18 +53,34 @@ public class IslandAdapter2 {
      * @throws InterruptedException
      */
     public void print () throws IOException, InterruptedException {
-        Terminal.noBuffer();
-        int initRow = Terminal.getAbsoluteCursor()[0];
-        int initCol = Terminal.getAbsoluteCursor()[1];
+        //Terminal.noBuffer();
+        int initRow = cursor[0];
+        int initCol = cursor[1];
 
         for (int row = 0; row < matrix.length; row ++) {
             for (int col = 0; col < matrix.length; col++) {
                 matrix[row][col].print(initRow + row*(hei + SPACING_H), initCol + col*(len + SPACING_H));
             }
         }
-
+        System.out.print(Colors.reset());
     }
 
+
+    public void higlight (int r, int c) throws IOException, InterruptedException {
+        //Terminal.noBuffer();
+        int initRow = cursor[0];
+        int initCol = cursor[1];
+
+        for (int row = 0; row < matrix.length; row ++) {
+            for (int col = 0; col < matrix.length; col++) {
+                if (row == r && col == c){
+                    matrix[row][col].selected(initRow + row*(hei + SPACING_H), initCol + col*(len + SPACING_H));
+                }else
+                matrix[row][col].print(initRow + row*(hei + SPACING_H), initCol + col*(len + SPACING_H));
+            }
+        }
+
+    }
 
 
 }

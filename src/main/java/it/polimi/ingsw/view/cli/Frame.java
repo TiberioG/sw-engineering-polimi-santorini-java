@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
+import org.davidmoten.text.utils.WordWrap;
 
 public class Frame {
 
@@ -11,7 +12,7 @@ public class Frame {
     private int colSpan;
 
 
-    public Frame(int[] absInit, int[] absEnd){
+    Frame(int[] absInit, int[] absEnd){
         this.absInit = absInit;
         this.absEnd = absEnd;
         rowSpan = absEnd[0] - absInit[0];
@@ -19,10 +20,7 @@ public class Frame {
     }
 
 
-
-
-
-    public void clear(){
+    void clear(){
         System.out.print(Colors.reset());
         for (int row = absInit[0]; row <= absEnd[0]; row++){
             Terminal.moveAbsoluteCursor(row, absEnd[1]);
@@ -31,10 +29,24 @@ public class Frame {
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
     }
 
-    public void print (){
+    void print(){
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
 
     }
 
+    public int[] getInit(){
+        return this.absInit;
+    }
+
+
+    void writeln (String towrite){
+        String wrapped =
+                WordWrap.from(towrite)
+                        .maxWidth(rowSpan)
+                        .insertHyphens(true) // true is the default
+                        .wrap();
+        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        System.out.print(wrapped);
+    }
 
 }

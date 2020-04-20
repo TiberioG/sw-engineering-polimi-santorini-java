@@ -65,22 +65,19 @@ public class Terminal {
     }
 
 
-    public static void saveCursor(){
-        System.out.print("\u001b[s");
+    public static void showCursor() {
+        System.out.print("\u001b[?25h");
     }
-
-    public static void restoreCursor(){
-        System.out.print("\u001b[u");
+    public static void hideCursor() {
+        System.out.print("\u001b[?25l");
     }
 
     public static void downCursor(int i){
         System.out.print("\u001b[" + i + "B");
     }
-
     public static void forwCursor(int i){
         System.out.print("\u001b[" + i + "C");
     }
-
     public static void backwCursor(int i){
         System.out.print("\u001b[" + i + "D");
     }

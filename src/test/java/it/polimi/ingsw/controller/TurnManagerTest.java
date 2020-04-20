@@ -1,11 +1,7 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Island;
-import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.*;
 import org.junit.Before;
 import org.junit.Test;
 

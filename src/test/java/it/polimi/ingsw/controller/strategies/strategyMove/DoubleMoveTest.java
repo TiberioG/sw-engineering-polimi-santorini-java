@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
-import it.polimi.ingsw.controller.CardManager;
+import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.controller.TurnManager;
 import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.exceptions.WrongCellSelectedMoveException;

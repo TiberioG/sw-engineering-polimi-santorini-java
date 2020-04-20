@@ -3,7 +3,7 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.commons.Listener;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.network.client.Client;
+
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -169,7 +169,7 @@ public class Server
         sendToClient(messageToSend);
         matchUsers.clear();
         matchUsers.addAll(lobby);
-        //virtualView.initGame();
+        virtualView.initGame(matchUsers);
       }
     }
   }

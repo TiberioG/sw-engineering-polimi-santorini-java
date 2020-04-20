@@ -19,10 +19,11 @@ public enum TypeOfMessage {
     HOW_MANY_PLAYERS(16),
     USER_JOINED(17),
     ADDED_TO_QUEUE(18),
+    TOWER_UPDATED(19),
     ;
 
 
-    private final int typeOfMessage;
+    private final int typeOfMessage; //todo kill this
 
     TypeOfMessage(int typeOfMessage) {
         this.typeOfMessage = typeOfMessage;

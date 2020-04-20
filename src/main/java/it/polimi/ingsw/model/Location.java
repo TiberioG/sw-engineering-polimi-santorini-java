@@ -36,8 +36,8 @@ public class Location extends Publisher<Message> {
         } else {
             this.map.put(getLocation(worker), null);
             this.map.put(cell, worker);
-            //todo togliere sto commento, l'ho messo sennò si smichiano i test
-            //publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this)); //every time i change the location I send a copy of the complete updated location
+
+            this.update();  //every time i change the location I send a copy of the complete updated location
         }
     }
 
@@ -51,6 +51,8 @@ public class Location extends Publisher<Message> {
         Worker worker2 = getOccupant(cell2);
         this.map.put(cell1, worker2);
         this.map.put(cell2, worker1);
+
+        this.update();  //every time i change the location I send a copy of the complete updated location
     }
 
     /**
@@ -76,6 +78,12 @@ public class Location extends Publisher<Message> {
      */
     public  Worker getOccupant(Cell cell) {
         return this.map.get(cell);
+    }
+
+
+
+    private void update (){
+        publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this));
     }
 
 

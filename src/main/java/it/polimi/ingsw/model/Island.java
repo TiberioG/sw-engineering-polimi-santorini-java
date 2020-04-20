@@ -42,7 +42,7 @@ public class Island {
      */
     public Cell[][] getField() {
         return this.field;
-    }
+    } //todo fare una copia qui
 
     /**
      * Returns max coordinate X of the billboard

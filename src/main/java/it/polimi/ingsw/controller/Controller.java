@@ -4,6 +4,7 @@ import it.polimi.ingsw.commons.Listener;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.messages.Tupla;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.server.VirtualView;
@@ -19,7 +20,7 @@ public class Controller implements Listener<Message> {
 
     /**
      *
-     * @param virtualView
+     * @param virtualView npn
      */
     public Controller(VirtualView virtualView) {
         this.virtualView = virtualView;
@@ -28,6 +29,8 @@ public class Controller implements Listener<Message> {
 
     private void createNewMatch() {
         match = new Match(new Date().hashCode(), this.virtualView);
+        virtualView.setMatch(match);
+
     }
 
     private void addPlayerToMatch(String name, Date birthday) {
@@ -56,6 +59,7 @@ public class Controller implements Listener<Message> {
         switch (type) {
             case START_MATCH: //if I receive this i'm ready to create a new match
                 createNewMatch();
+                (List<String>) message.getPayload(List<String>). // TODO 
                 break;
             case LOGIN: //if i receive this
                 Tupla tuplaPlayerData = (Tupla) message.getPayload(Tupla.class);
@@ -73,6 +77,7 @@ public class Controller implements Listener<Message> {
                 Tupla tuplaSelectWorker = (Tupla) message.getPayload(Tupla.class);
                 turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((int) tuplaSelectWorker.getSecond()));
                 break;
+
         }
     }
 }

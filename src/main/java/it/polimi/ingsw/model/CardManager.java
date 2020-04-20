@@ -1,13 +1,16 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.commons.JsonAdapter;
-import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.controller.Phase;
+import it.polimi.ingsw.controller.StrategySettings;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 /**
  * This is a Singleton class for retrieve the card information

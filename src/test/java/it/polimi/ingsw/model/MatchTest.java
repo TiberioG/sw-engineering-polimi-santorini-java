@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.CardManager;
 import it.polimi.ingsw.exceptions.PlayerNotPresentException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.*;
 
 public class MatchTest {
     /* declarations */
