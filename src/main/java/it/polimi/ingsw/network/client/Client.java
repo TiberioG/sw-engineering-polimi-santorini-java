@@ -90,8 +90,9 @@ public class Client implements ServerObserver {
   }
 
   /* todo: SERVE?? Nel caso, implementarlo correttamente in serverAdapter */
-  public void stop() {
+  public void close() {
     serverAdapter.stop();
+    System.exit(0);
   }
 
   /**
@@ -137,6 +138,11 @@ public class Client implements ServerObserver {
       case START_MATCH:
         view.displayStartingMatch();
         break;
+
+      case DISCONNECTED_SERVER_SIDE:
+        view.displayDisconnected((String)message.getPayload(String.class));
+        break;
+
     }
   }
 

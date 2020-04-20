@@ -20,6 +20,7 @@ public interface ViewInterface {
     void displayUserJoined(String details);
     void displayAddedToQueue(String details);
     void displayStartingMatch();
+    void displayDisconnected(String details);
     void displayGenericMessage(String message);
     void displayCardSelection(List<Card> cards, int numPlayers);
     void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList);

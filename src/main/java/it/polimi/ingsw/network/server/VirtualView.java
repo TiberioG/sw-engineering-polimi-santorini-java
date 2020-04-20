@@ -36,10 +36,6 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
         addListener(controller);
     }
 
-
-    //metodo che o mi tengo i player prima che esistono
-    //oppure inserisco appena arrivano
-
     /**
      *la chiama il Server
      *crea match
@@ -48,35 +44,36 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
         publish(new Message("ALL", TypeOfMessage.START_MATCH, matchUser)); //just send a message to controller to create the match;
     }
 
-    public void sendAllCard(){
-        publish(new Message (match.getCurrentPlayer().getName()));
-    }
-
     /**
      * Receives match changes
-     * @param object
+     * @param message
      */
     @Override
-    public void update(Message object) {
-        switch (object.getTypeOfMessage()){
+    public void update(Message message) {
+        switch (message.getTypeOfMessage()){
             case TOWER_UPDATED:
                 Cell[][] island = match.getIsland().getField();
                 displayMessage(new Message("ALL",TypeOfMessage.TOWER_UPDATED, island));
+
             case LOCATION_UPDATED:
                 Location location = match.getLocation();
                 displayMessage(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, location));
+
+            // todo è giusta questa logica? Che la virtualView riceva in questo modo un messaggio da server
+            case CHOOSE_GAME_CARDS:
+                // todo qua il payload di messaggio contiene le 2/3 carte scelte dal giocatore master. Andare a settare queste carte da qualche parte
         }
 
-        if (object.getUsername() != null && object.getUsername().equals("VIRTUAL_VIEW")) {
+        if (message.getUsername() != null && message.getUsername().equals("VIRTUAL_VIEW")) {
 
-        } else displayMessage(object);
+        } else displayMessage(message);
     }
 
     /**
      * Sends message to the client
      * @param message
      */
-    private void displayMessage(Message message) { //todo controllare private o no
+    public void displayMessage(Message message) {
         server.sendToClient(message);
     }
 

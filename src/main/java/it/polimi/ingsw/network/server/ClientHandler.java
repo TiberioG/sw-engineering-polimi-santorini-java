@@ -15,11 +15,13 @@ public class ClientHandler implements Runnable {
   private ObjectOutputStream outputStm;
   private ObjectInputStream inputStm;
 
-
+  private String UUID;
+  private boolean isConnected;
 
   ClientHandler(Socket client, Server server) {
     this.client = client;
     this.server = server;
+    this.isConnected = true;
   }
 
 
@@ -30,12 +32,14 @@ public class ClientHandler implements Runnable {
       inputStm = new ObjectInputStream(client.getInputStream());
       handleClientConnection();
     } catch (IOException e) {
+      isConnected = false;
+      server.userDisconnected(this.UUID);
       System.out.println("Client " + client.getInetAddress() + " connection dropped");
     }
   }
 
-  public void sendMessage(Message message){
-    try{
+  protected void sendMessage(Message message){
+    try {
       outputStm.reset();
       outputStm.writeObject(message);
       outputStm.flush();
@@ -53,12 +57,10 @@ public class ClientHandler implements Runnable {
       while (true) {
         Message message = (Message) inputStm.readObject();
 
-        // todo: genereare un uuid univoco e usarlo come key della mappa.
-        //       Inviare l'uuid al client che dovrà usarlo per ogni messaggio successivo
-
         // Will be done only at the first message received (login message)
         if(message.getTypeOfMessage() == TypeOfMessage.LOGIN && message.getUsername() != null && message.getUUID() == null) {
           String UUID = java.util.UUID.randomUUID().toString();
+          this.UUID = UUID;
           server.addClient(UUID, this);
           message.setUUID(UUID);
         }
@@ -69,7 +71,16 @@ public class ClientHandler implements Runnable {
     } catch (ClassNotFoundException | ClassCastException e) {
       System.out.println("Invalid stream from client");
     }
-
     client.close();
+  }
+
+  protected synchronized void closeConnection(String message) {
+    sendMessage(new Message(TypeOfMessage.DISCONNECTED_SERVER_SIDE, message)); // notify user about the server-side disconnection
+    try {
+      client.close();
+    } catch (IOException e){
+      System.err.println(e.getMessage());
+    }
+    isConnected = false;
   }
 }

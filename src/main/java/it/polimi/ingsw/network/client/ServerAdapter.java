@@ -46,6 +46,10 @@ public class ServerAdapter implements Runnable
   // todo: se serve, decidere come voler fare lo stop. Chiudere brutalmente il client oppure mandare prima un messaggio di stop al server?
   public synchronized void stop()
   {
+    try {
+      server.close();
+    } catch (IOException e) {
+    }
   }
 
   @Override

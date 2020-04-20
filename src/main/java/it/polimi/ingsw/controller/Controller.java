@@ -30,7 +30,6 @@ public class Controller implements Listener<Message> {
     private void createNewMatch() {
         match = new Match(new Date().hashCode(), this.virtualView);
         virtualView.setMatch(match);
-
     }
 
     private void addPlayerToMatch(String name, Date birthday) {
@@ -59,11 +58,8 @@ public class Controller implements Listener<Message> {
         switch (type) {
             case START_MATCH: //if I receive this i'm ready to create a new match
                 createNewMatch();
-                (List<String>) message.getPayload(List<String>). // TODO 
-                break;
-            case LOGIN: //if i receive this
-                Tupla tuplaPlayerData = (Tupla) message.getPayload(Tupla.class);
-                addPlayerToMatch((String) tuplaPlayerData.getFirst(), (Date) tuplaPlayerData.getSecond());
+                ((List<String>)message.getPayload(List.class)).forEach( username -> addPlayerToMatch(username, null)); // todo modificare tutto mettendo che ricevo anche la data di nascita
+                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, cardManager.getCardMap())); // todo: scegliere il primo giocatore correttamente e decidere che payload mandare nel messaggio
                 break;
             case CARDS_SET_GAME: //if i receive this
                 List<Integer> listOfIdCard = (List) message.getPayload(List.class);

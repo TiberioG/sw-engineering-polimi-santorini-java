@@ -1,9 +1,7 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.commons.Listener;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
-
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,12 +18,15 @@ public class Server
 
   private VirtualView virtualView;
 
+  // todo salvare anche la data di nascita che ricevo dal client al login
   // todo: eventualmente fare una mappa apposita per gestire più partite in contemporanea
   private Map<String, String> usernameUUIDMap = new HashMap<>();
   private Map<String, ClientHandler> clientsMap = new HashMap<>();
   private List<String> lobby = new ArrayList<>();
+  private List<String> waitingRoom = new ArrayList<>();
   private List<String> matchUsers = new ArrayList<>();
   private int howManyPlayers = 0;
+  private boolean lobbyCreationPending = false;
 
   private static Logger LOGGER = Logger.getLogger("server");
 
@@ -64,6 +65,11 @@ public class Server
     }
   }
 
+  /**
+   * Called when the server receive a message from a client
+   *
+   * @param message message received
+   */
   public void receivedMessage(Message message) {
     switch (message.getTypeOfMessage()) {
       case LOGIN:
@@ -72,13 +78,20 @@ public class Server
 
       case HOW_MANY_PLAYERS:
         howManyPlayers = (int)message.getPayload(Integer.class);
+        lobbyCreationPending = false;
         sendToClient(new Message(message.getUUID(), TypeOfMessage.GENERIC_MESSAGE, "Waiting for " + (howManyPlayers-1) + " other(s) player(s)..."));
+        handleWaitingRoom(message.getUUID());
+        break;
+
+      case CHOOSE_GAME_CARDS:
+        virtualView.update(message);
         break;
     }
   }
 
   /**
    * Sends a message to one or all clients, depending on the {@link Message#getUsername()} value. If this value equals to "ALL", then the message will be sent to all the clients
+   *
    * @param message message to be sent
    */
   public void sendToClient(Message message) {
@@ -98,11 +111,11 @@ public class Server
   }
 
   /**
-   * Sends a message to all clients except for those whose UUID is in uuidExcept parameter
+   * Sends a message to all clients except for those whose UUID is in the uuidExcept parameter
    * @param message message to be sent
    * @param uuidExcept {@link List} of UUIDs corresponding to the clients to whom not to send the message
    */
-  public void sendToClient(Message message, List<String> uuidExcept) {
+  public void sendToClientExcept(Message message, List<String> uuidExcept) {
     HashMap<String, ClientHandler> tmpClientsMap = new HashMap<String, ClientHandler>(clientsMap);
     try {
       tmpClientsMap.keySet().removeAll(uuidExcept);
@@ -113,64 +126,132 @@ public class Server
 
   }
 
+  /**
+   * Adds a client (player), using the UUID associated to him as identifier
+   *
+   * @param UUID UUID of the player to be added
+   * @param client {@link ClientHandler} corresponding to the UUID
+   */
   public void addClient(String UUID, ClientHandler client) {
     clientsMap.put(UUID, client);
   }
 
-  private void handleLogin(Message message) {
+  private synchronized void handleLogin(Message message) {
     boolean usernameAlreadyExists = usernameUUIDMap.containsValue(message.getUsername());
     String uuid = message.getUUID();
     Message messageToSend;
-    if(usernameAlreadyExists) {
-      LOGGER.log(Level.INFO, "Username " + message.getUsername() + " already exists");
-      messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this username is already taken");
-      messageToSend.setUUID(uuid);
-      sendToClient(messageToSend);
+    if(!matchUsers.isEmpty() || (howManyPlayers!=0 && lobby.size() == howManyPlayers) /*CONDIZIONI NON FINITE, MA COMUNQUE CAMBIO LOGICA*/) { // todo
 
-      clientsMap.remove(uuid);
     } else {
-      usernameUUIDMap.put(uuid, message.getUsername());
-      LOGGER.log(Level.INFO, "Player " + message.getUsername() + " has been added!");
-      messageToSend = new Message(TypeOfMessage.LOGIN_SUCCESSFUL);
-      messageToSend.setUUID(uuid);
-      sendToClient(messageToSend);
-      handleLobby(uuid);
+      if(usernameAlreadyExists) {
+        LOGGER.log(Level.INFO, "Username " + message.getUsername() + " already exists");
+        messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this username is already taken");
+        messageToSend.setUUID(uuid);
+        sendToClient(messageToSend);
+        clientsMap.remove(uuid);
+      } else {
+        usernameUUIDMap.put(uuid, message.getUsername());
+        LOGGER.log(Level.INFO, "Player " + message.getUsername() + " has been added!");
+        messageToSend = new Message(TypeOfMessage.LOGIN_SUCCESSFUL);
+        messageToSend.setUUID(uuid);
+        sendToClient(messageToSend);
+        handleLobby(uuid);
+      }
     }
+
   }
 
   //todo sistemare lobby nel caso di disconnessioni o giocatore fermo su "how many players" che non risponde
-  private void handleLobby(String uuid) {
+  private synchronized void handleLobby(String uuid) {
     lobby.add(uuid);
     Message messageToSend;
     if(lobby.size() == 1) {
+      lobbyCreationPending = true;
       LOGGER.log(Level.INFO, "Asking to the first user with how many players play the match");
       messageToSend = new Message(TypeOfMessage.HOW_MANY_PLAYERS);
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
     } else {
-      LOGGER.log(Level.INFO, "Notifying other users about new user joined to the queue");
-      String details = usernameUUIDMap.get(uuid) + " joined!\n";
-      details += howManyPlayers == lobby.size() ? "Match starting soon..." : "Waiting for " + (howManyPlayers-lobby.size()) + " other(s) player(s)...";
-      messageToSend = new Message(TypeOfMessage.USER_JOINED, details);
-      sendToClient(messageToSend, Arrays.asList(uuid));
-
-      LOGGER.log(Level.INFO, "Notifying the user about he has been added to a queue");
-      details = "You joined a " + howManyPlayers + "-player match.\n";
-      details += howManyPlayers == lobby.size() ? "You were the last player required! Match starting soon..." : "Waiting for " + (howManyPlayers-lobby.size()) + " other(s) player(s)...";
-      messageToSend = new Message(TypeOfMessage.ADDED_TO_QUEUE, details);
-      messageToSend.setUUID(uuid);
-      sendToClient(messageToSend);
-
-      if(lobby.size() == howManyPlayers) {
-        LOGGER.log(Level.INFO, "The desired number of players has been reached. Starting the match!");
-        // todo: controllare se nel frattempo qualcuno si è disconnesso
-        messageToSend = new Message(TypeOfMessage.START_MATCH);
-        messageToSend.setUsername("ALL");
+      String details;
+      if(lobbyCreationPending) {
+        waitingRoom.add(uuid);
+        LOGGER.log(Level.INFO, "Notifying the user that someone is already creating the match");
+        details = "Someone is already creating the match. Wait...\n";
+        messageToSend = new Message(TypeOfMessage.GENERIC_MESSAGE, details);
+        messageToSend.setUUID(uuid);
         sendToClient(messageToSend);
-        matchUsers.clear();
-        matchUsers.addAll(lobby);
-        virtualView.initGame(matchUsers);
+      } else {
+        LOGGER.log(Level.INFO, "Notifying other users about new user joined to the queue");
+        details = usernameUUIDMap.get(uuid) + " joined!\n";
+        details += howManyPlayers == lobby.size() ? "Match starting soon..." : "Waiting for " + (howManyPlayers - lobby.size()) + " other(s) player(s)...";
+        messageToSend = new Message(TypeOfMessage.USER_JOINED, details);
+        sendToClientExcept(messageToSend, Arrays.asList(uuid));
+
+        LOGGER.log(Level.INFO, "Notifying the user about he has been added to a queue");
+        details = "You joined a " + howManyPlayers + "-player match.\n";
+        details += howManyPlayers == lobby.size() ? "You were the last player required! Match starting soon..." : "Waiting for " + (howManyPlayers - lobby.size()) + " other(s) player(s)...";
+        messageToSend = new Message(TypeOfMessage.ADDED_TO_QUEUE, details);
+        messageToSend.setUUID(uuid);
+        sendToClient(messageToSend);
+
+        if (lobby.size() == howManyPlayers) {
+          LOGGER.log(Level.INFO, "The desired number of players has been reached. Starting the match!");
+          // todo: controllare se nel frattempo qualcuno si è disconnesso
+          messageToSend = new Message(TypeOfMessage.START_MATCH);
+          messageToSend.setUsername("ALL");
+          sendToClient(messageToSend);
+          matchUsers.clear();
+          matchUsers.addAll(lobby);
+          virtualView.initGame(matchUsers);
+        }
       }
+    }
+  }
+
+  private void handleWaitingRoom(String matchCreatorUUID) {
+
+  }
+
+  /**
+   * Called when the server detects a disconnection
+   * @param UUID disconnected user's UUID
+   */
+  protected void userDisconnected(String UUID) {
+    String disconnectedUser = usernameUUIDMap.remove(UUID);
+    clientsMap.remove(UUID);
+    String details = "I'm sorry, " + disconnectedUser + " left the game.\nWe can't continue this match :(";
+    disconnectAllPlayers(details);
+  }
+
+  private void resetServer() {
+    clientsMap.clear();
+    usernameUUIDMap.clear();
+    lobby.clear();
+    matchUsers.clear();
+    howManyPlayers = 0;
+    lobbyCreationPending = false;
+  }
+
+  private synchronized void disconnectAllPlayers(String details) {
+    disconnectPlayers(new ArrayList<>(clientsMap.keySet()), details);
+    resetServer();
+  }
+
+  /**
+   * Disconnects one or more players and notify those with a message
+   *
+   * @param playersUUID {@link List<String>} of UUID corresponding to the players to disconnect
+   * @param details details to send to disconnected players (e.g.: reason about server-side disconnection)
+   */
+  public synchronized void disconnectPlayers(List<String> playersUUID, String details) {
+    if(playersUUID != null) {
+      playersUUID.forEach(UUID -> {
+                        if (clientsMap.containsKey(UUID)) {
+                          clientsMap.remove(UUID).closeConnection(details); // close and remove connection
+                          usernameUUIDMap.remove(UUID); // remove user
+                          // todo: controllare se ero in fased di lobby o di game
+                        }
+                      });
     }
   }
 

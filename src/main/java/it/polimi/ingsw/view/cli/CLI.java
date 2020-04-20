@@ -59,6 +59,7 @@ public class CLI implements ViewInterface {
         out.println("Welcome to Santorini");
     }
 
+    @Override
     public void displaySetup() {
 
         showTitle();
@@ -75,6 +76,7 @@ public class CLI implements ViewInterface {
         client.connectToServer();
     }
 
+    @Override
     public void displaySetupFailure() {
         out.println("Can not reach the server, please try again");
         displaySetup();
@@ -85,6 +87,7 @@ public class CLI implements ViewInterface {
      * method to read from console the players and add them to the match
      * @throws ParseException
      */
+    @Override
     public void displayLogin() {
 
         out.println("Choose your username:");
@@ -100,10 +103,12 @@ public class CLI implements ViewInterface {
         client.sendToServer(new Message(TypeOfMessage.LOGIN, new Tupla(username, date)));
     }
 
+    @Override
     public void displayLoginSuccessful() {
         out.println("You have been logged in successfully");
     }
 
+    @Override
     public void displayLoginFailure() {
         out.println("I'm sorry, this username is already taken. Please try with a different username:");
         String username = in.nextLine();
@@ -111,34 +116,45 @@ public class CLI implements ViewInterface {
         client.sendToServer(new Message(TypeOfMessage.LOGIN, new Tupla(username, date)));
     }
 
+    @Override
     public void displayHowManyPlayers() {
         out.println("How many players?");
         int numPlayers = validateIntInput(in, 2, 3);
         client.sendToServer(new Message(TypeOfMessage.HOW_MANY_PLAYERS, numPlayers));
     }
 
+    @Override
     public void displayUserJoined(String details) {
         out.println(details);
     }
 
+    @Override
     public void displayAddedToQueue(String details) {
         out.println(details);
     }
 
+    @Override
     public void displayStartingMatch() {
         out.println("MATCH IS STARTING!!!!");
     }
 
+    @Override
     public void displayGenericMessage(String message) {
         out.println(message);
     }
 
+    @Override
+    public void displayDisconnected(String details) {
+        out.println(details);
+        client.close();
+    }
 
     /**
      * This method is used to display all the cards available to the user and make him choose a subset of them of cardinality equals to the number of players
      * @param cards a list of  {@link Card>}
      * @param numPlayers an int which is the number of player in ame which should equals to the number of selected cards
      */
+    @Override
     public void displayCardSelection(List<Card> cards, int numPlayers) {
 
         String[] names = cards.stream().map(Card::getName).toArray(String[]::new);
@@ -161,6 +177,7 @@ public class CLI implements ViewInterface {
         //client.send2Server(new Message(username, TypeOfMessage.CARDS_SET_GAME, strSelections));
     }
 
+    @Override
     public void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList) {
 
     }
