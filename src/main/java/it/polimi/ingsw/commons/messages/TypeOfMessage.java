@@ -21,7 +21,9 @@ public enum TypeOfMessage {
     USER_JOINED(17),
     ADDED_TO_QUEUE(18),
     TOWER_UPDATED(19),
+    ISLAND_UPDATED(20);
     ;
+
 
 
     private final int typeOfMessage; //todo kill this
