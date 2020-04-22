@@ -105,7 +105,15 @@ public class CardManager {
             List<Phase> nextPhasesTreeSet = null;
             if (nextPhases != null) nextPhasesTreeSet = buildTreeOfList(nextPhases);
             return new Phase(type, nextPhasesTreeSet, needCheckForVictory);
-        } else return null;
+        } else {
+            List<Phase> nextPhasesOfMove = new LinkedList<>();
+            nextPhasesOfMove.add(new Phase("build", null, false));
+
+            List<Phase> nextPhasesOfSelectWorker = new LinkedList<>();
+            nextPhasesOfSelectWorker.add(new Phase("move", nextPhasesOfMove , true));
+
+            return new Phase("selectWorker", nextPhasesOfSelectWorker, false);
+        }
     }
 
     /**

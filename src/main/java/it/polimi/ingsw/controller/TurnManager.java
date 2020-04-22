@@ -89,7 +89,7 @@ public class TurnManager {
         }
     }
 
-    private void getAvailableCellForMove() {
+    public void getAvailableCellForMove() {
         List<Cell> availableCell = null;
         if (checkForPermittedPhase("move")) {
             availableCell = currentTurn.getAvailableCellForMove();
@@ -176,8 +176,8 @@ public class TurnManager {
         }
     }
 
-    public Turn getCurrentTurn() {
-        return currentTurn;
+    public Player getCurrentPlayer() {
+        return currentTurn.getPlayer();
     }
 
 
