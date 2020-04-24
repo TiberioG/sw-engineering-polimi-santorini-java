@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -73,20 +72,16 @@ public class MatchTest {
      */
     @Test
     public void testGetCurrentPlayer() {
-        try {
-            testMatch.setCurrentPlayer(player2);
-        } catch (PlayerNotPresentException except) {
-            //no need to catch it here
-        }
+        testMatch.setCurrentPlayer(player2);
         assertEquals(player2, testMatch.getCurrentPlayer());
     }
 
     /**
      * Test shows that if i try to set as current player one not preset in the list I get an exception
      */
-    @Test(expected = PlayerNotPresentException.class)
-    public void testGetCurrentPlayer_ExceptionPlayerNotPres() throws PlayerNotPresentException {
-        testMatch.setCurrentPlayer(playerNotAdded);
+    @Test()
+    public void testGetCurrentPlayer_ExceptionPlayerNotPres() {
+        assertEquals(testMatch.setCurrentPlayer(playerNotAdded), -1);
     }
 
     /**
@@ -117,11 +112,7 @@ public class MatchTest {
 
     @Test
     public void testSetCurrentPlayer() {
-        try {
-            testMatch.setCurrentPlayer(player2);
-        } catch (PlayerNotPresentException except) {
-            //no need to catch it here
-        }
+        testMatch.setCurrentPlayer(player2);
         assertNotNull(testMatch.getCurrentPlayer());
 
     }

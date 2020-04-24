@@ -10,7 +10,7 @@ public class Worker {
     /* Attributes */
     private int id;
     private final Colors color;
-    private final Player owner;
+    transient private final Player owner;
 
     /* Constructor(s) */
 

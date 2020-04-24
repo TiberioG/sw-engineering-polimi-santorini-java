@@ -81,6 +81,15 @@ public class Location extends Publisher<Message> {
     }
 
 
+    /**
+     * Method to remove a worker from his cell
+     * @param worker
+     */
+    public void removeLocation(Worker worker){
+        Cell cell = getLocation(worker);
+        map.put(cell, null);
+    }
+
 
     private void update (){
         publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this));

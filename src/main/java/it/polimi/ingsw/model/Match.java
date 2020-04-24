@@ -3,13 +3,9 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.network.server.VirtualView;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,7 +52,7 @@ public class Match extends Publisher<Message> {
         return matchID;
     }
     public List<Player> getPlayers() {
-        return listPlayers;
+        return Collections.unmodifiableList(new ArrayList<>(listPlayers));
     }
     public Island getIsland() {
         return island;
@@ -67,12 +63,9 @@ public class Match extends Publisher<Message> {
     public List<Card> getCards() {
         return listCardsInGame;
     }
-
     public void addCard(Card card){
         this.listCardsInGame.add(card);
     }
-
-
     public Location getLocation() {
         return location;
     }
@@ -82,24 +75,28 @@ public class Match extends Publisher<Message> {
      * @param currentPlayer player object that you want to add as current player
      * @return if the currentPlayer was successfully added, returns the index in the array of players, else returns -1
      */
-    public int setCurrentPlayer(Player currentPlayer) throws PlayerNotPresentException {
-        if (listPlayers.contains(currentPlayer)){
-            this.currentPlayer = currentPlayer;
-            return listPlayers.indexOf(currentPlayer);
-        } else {
-            throw new PlayerNotPresentException();
-        }
+    public int setCurrentPlayer(Player currentPlayer) {
+        int indexOfPlayer = listPlayers.indexOf(currentPlayer);
+        if (indexOfPlayer != -1) this.currentPlayer = currentPlayer;
+        return indexOfPlayer;
+    }
 
+    /**
+     * Method to retrieve player from the listPlayer from name
+     * @param name player name that you want to retrieve
+     * @return the player founded or null if no exists player with the name of the params
+     */
+    public Player getPlayerByName(String name) {
+         return listPlayers.stream().filter(player -> player.getName().equals(name)).findFirst().orElse(null);
     }
 
     /**
      * Method to set the current player of the match, if it exists in  the array of players of the match.
      * @param name player name that you want to add as current player
-     * @return if the currentPlayer was successfully added, returns the index in the array of players, else returns -1
+     * @return if the currentPlayer was successfully added, returns the index in the listPlayers, else returns -1
      */
     public int setCurrentPlayer(String name) {
-        Player currentPlayer = listPlayers.stream().filter(player -> player.getName().equals(name)).findFirst().orElse(null);
-        if (currentPlayer == null){
+        if (getPlayerByName(name) == null){
             return -1;
         } else {
             this.currentPlayer = currentPlayer;
@@ -123,16 +120,41 @@ public class Match extends Publisher<Message> {
     }
 
 
+    /**
+     * Method for select the next current player with the order of listPlayers
+     * @return the index of the new currentPlayer
+     */
     public int selectNextCurrentPlayer() {
         if (listPlayers.size() == 0) return -1;
         int indexOfCurrentPlayer = listPlayers.indexOf(currentPlayer);
         int indexOfNextCurrentPlayer = indexOfCurrentPlayer == listPlayers.size() - 1 ? indexOfCurrentPlayer + 1 : 0;
-        currentPlayer = listPlayers.get(indexOfCurrentPlayer);
-        return indexOfCurrentPlayer;
+        currentPlayer = listPlayers.get(indexOfNextCurrentPlayer);
+        return indexOfNextCurrentPlayer;
     }
 
+
+    /**
+     * Method for order the list of player with a specified compator
+     * @param comparator the comparator used for order the list of player
+     * @return the list of player
+     */
     public List<Player> buildOrderedList(Comparator<Player> comparator) {
         //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
-        return listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
+        listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
+        return getPlayers();
+    }
+
+    /**
+     * Method to remove a player from the match
+     * @param name player name that you want to remove
+     * @return the list of remaining players
+     */
+    public List<Player> removePlayer(String name) {
+        Player player = getPlayerByName(name);
+        if (player != null) {
+            player.getWorkers().stream().forEach(worker -> location.removeLocation(worker));
+            listPlayers.remove(player);
+        }
+        return getPlayers();
     }
 }

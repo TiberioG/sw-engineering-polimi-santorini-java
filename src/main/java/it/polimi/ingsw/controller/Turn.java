@@ -76,7 +76,7 @@ public class Turn {
     }
 
     public boolean noAvailableCellForWorkers() {
-        return player.getWorkers().stream().filter(worker -> this.strategyMove.getAvailableCells(worker).size() > 0).collect(Collectors.toList()).size() == 0;
+        return player.getWorkers().stream().filter(worker -> strategyMove.getAvailableCells(worker).size() > 0).collect(Collectors.toList()).size() == 0;
     }
 
     public void updateCurrentPhaseFromType(String type) {

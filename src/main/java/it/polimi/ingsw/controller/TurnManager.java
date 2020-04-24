@@ -46,7 +46,6 @@ public class TurnManager {
      */
     public TurnManager(Match match) {
         this.match = match;
-        CardManager.initCardManager();
         createTurns();
     }
 
@@ -166,19 +165,21 @@ public class TurnManager {
 
     private void inizializedCurrentTurn() {
         TurnProperties.resetAllParameter();
-        this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
-            TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
-            TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
-        });
 
         //se non ci sono celle disponibili
         if (currentTurn.noAvailableCellForWorkers()) {
+            //ricordarsi di gestire atena
+            String name = this.match.getCurrentPlayer().getName();
+            turnsMap.remove(name);
+            match.removePlayer(name);
             //notificare la perdità
-            // rimuovere l'utente dal match
-            // aggiornato la mappa
             selectNextTurn();
         } else {
-            virtualView.displayMessage(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN));
+            this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
+                TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
+                TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
+            });
+            updateVirtualView(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN));
         }
     }
 
@@ -186,5 +187,8 @@ public class TurnManager {
         return currentTurn.getPlayer();
     }
 
+    private void updateVirtualView(Message message) {
+        if (virtualView != null) virtualView.displayMessage(message);
+    }
 
 }

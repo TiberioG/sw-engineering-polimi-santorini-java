@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 
