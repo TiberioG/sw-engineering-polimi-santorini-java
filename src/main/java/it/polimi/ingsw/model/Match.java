@@ -24,6 +24,7 @@ public class Match extends Publisher<Message> {
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
     private List<Card> listCardsInGame = new ArrayList<>(); // todo: caricare qui le carte nel gioco
+    private VirtualView virtualView;
 
     /**
      * Constructor
@@ -33,6 +34,7 @@ public class Match extends Publisher<Message> {
         this.matchID = matchID ;
         this.island = new Island();
         this.location = new Location(virtualView);
+        this.virtualView = virtualView;
         publish(new Message("ALL", TypeOfMessage.CREATED_MATCH, this));
     }
 
@@ -70,6 +72,11 @@ public class Match extends Publisher<Message> {
         this.listCardsInGame.add(card);
     }
 
+
+    public Location getLocation() {
+        return location;
+    }
+
     /**
      * Method to set the current player of the match, if it exists in  the array of players of the match.
      * @param currentPlayer player object that you want to add as current player
@@ -82,7 +89,24 @@ public class Match extends Publisher<Message> {
         } else {
             throw new PlayerNotPresentException();
         }
+
     }
+
+    /**
+     * Method to set the current player of the match, if it exists in  the array of players of the match.
+     * @param name player name that you want to add as current player
+     * @return if the currentPlayer was successfully added, returns the index in the array of players, else returns -1
+     */
+    public int setCurrentPlayer(String name) {
+        Player currentPlayer = listPlayers.stream().filter(player -> player.getName().equals(name)).findFirst().orElse(null);
+        if (currentPlayer == null){
+            return -1;
+        } else {
+            this.currentPlayer = currentPlayer;
+            return listPlayers.indexOf(currentPlayer);
+        }
+    }
+
 
     /**
      * Method to add add player to the list of player of the Match
@@ -91,21 +115,13 @@ public class Match extends Publisher<Message> {
      * @return the reference to the player obj just created
      */
     public Player createPlayer(String name, Date birthday) {
-        Player playToAdd = new Player(name,birthday);
+        Player playToAdd = new Player(name,birthday, virtualView);
         this.listPlayers.add(playToAdd);
         //TODO togliere commento che sminckia la view, mi printa il json se lo lascio
         //publish(new Message("ALL", TypeOfMessage.CREATED_PLAYER, playToAdd));
         return playToAdd;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public List<Player> buildOrderedList(Comparator<Player> comparator) {
-        //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
-        return listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
-    }
 
     public int selectNextCurrentPlayer() {
         if (listPlayers.size() == 0) return -1;
@@ -113,5 +129,10 @@ public class Match extends Publisher<Message> {
         int indexOfNextCurrentPlayer = indexOfCurrentPlayer == listPlayers.size() - 1 ? indexOfCurrentPlayer + 1 : 0;
         currentPlayer = listPlayers.get(indexOfCurrentPlayer);
         return indexOfCurrentPlayer;
+    }
+
+    public List<Player> buildOrderedList(Comparator<Player> comparator) {
+        //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
+        return listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
     }
 }

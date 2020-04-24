@@ -2,13 +2,16 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.commons.Listener;
 import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.SelectWorkersMessage;
 import it.polimi.ingsw.commons.messages.Tupla;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Worker;
 import it.polimi.ingsw.network.server.VirtualView;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -41,12 +44,13 @@ public class Controller implements Listener<Message> {
     }
 
     private void addCardToPlayer(String name, int cardId) {
+        //todo gestire controllo che la carta non sia associata ad altri player
         for (Player player : match.getPlayers()) {
             if (player.getName().equals(name)) player.setCurrentCard(cardManager.getCardById(cardId));
         }
     }
 
-    private void initTurManager() {
+    private void initTurnManager() {
         turnManager = new TurnManager(match, virtualView);
     }
 
@@ -61,17 +65,61 @@ public class Controller implements Listener<Message> {
                 ((List<String>)message.getPayload(List.class)).forEach( username -> addPlayerToMatch(username, null)); // todo modificare tutto mettendo che ricevo anche la data di nascita
                 virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, cardManager.getCardMap())); // todo: scegliere il primo giocatore correttamente e decidere che payload mandare nel messaggio
                 break;
-            case CARDS_SET_GAME: //if i receive this
+            case SET_CARDS_TO_GAME: //if i receive this
                 List<Integer> listOfIdCard = (List) message.getPayload(List.class);
                 addCardToMatch(listOfIdCard);
+                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_PLAYERS_CARD, match.getCards()));
                 break;
-            case CARD_SET_PLAYER:
+            case SET_CARD_TO_PLAYER:
                 Tupla tuplaSetPlayer = (Tupla) message.getPayload(Tupla.class);
                 addCardToPlayer((String) tuplaSetPlayer.getFirst(), (Integer) tuplaSetPlayer.getSecond());
+
+                if (match.selectNextCurrentPlayer() != 0) {
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_PLAYERS_CARD, match.getCards()));
+                } else {
+                    virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));
+                }
                 break;
+            case SET_FIRST_PLAYER:
+                String nameOfFirstPlayer = (String)message.getPayload(String.class);
+                match.buildOrderedList(Comparator.comparing(Player::getBirthday));
+                match.setCurrentPlayer(nameOfFirstPlayer);
+                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));
+                break;
+            case SET_POSITION_OF_WORKER:
+                SelectWorkersMessage selectWorkersMessage = (SelectWorkersMessage) message.getPayload(SelectWorkersMessage.class);
+                selectWorkersMessage.getPositionOfWorkers().stream().forEach(position -> {
+                    Worker worker = match.getCurrentPlayer().addWorker(selectWorkersMessage.getColorOfWorkers());
+                    try {
+                        match.getLocation().setLocation(match.getIsland().getCell(position.getX(),position.getY()), worker);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+
+                if (match.selectNextCurrentPlayer() != 0) {
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));
+                } else {
+                    initTurnManager();
+                }
+                break;
+
             case SELECT_WORKER:
                 Tupla tuplaSelectWorker = (Tupla) message.getPayload(Tupla.class);
                 turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((int) tuplaSelectWorker.getSecond()));
+                break;
+            case RETRIEVE_CELL_FOR_MOVE:
+                turnManager.getAvailableCellForMove();
+                break;
+            case MOVE_WORKER:
+                //turnManager.move();
+                break;
+            case RETRIEVE_CELL_FOR_BUILD:
+                turnManager.getAvailableCellForBuild();
+                break;
+            case BUILD_CELL:
+                //turnManager.build();
                 break;
 
         }

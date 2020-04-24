@@ -54,8 +54,8 @@ public class Turn {
     }
 
 
-    public void move(Worker worker, Cell cell) throws SantoriniException {
-        this.strategyMove.move(worker, cell);
+    public void move(Cell cell) throws SantoriniException {
+        this.strategyMove.move(selectedWorker, cell);
     };
 
     public List<Cell> getAvailableCellForBuild() {

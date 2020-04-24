@@ -1,35 +1,34 @@
 package it.polimi.ingsw.commons.messages;
 
 public enum TypeOfMessage {
-    MOVE_WORKER(0),
-    GENERIC_MESSAGE(1),
-    DISCONNECTED_SERVER_SIDE(2),
-    START_MATCH(3),      //obj_type : null
-    LOGIN(4),        //obj_type : Tupla(String, Date)
-    LOCATION_UPDATED(5),  //obj_type : Location
-    SET_PLAYER_COLOR(6),  //obj_type : Tupla(Player, Color)
-    CHOOSE_GAME_CARDS(7),
-    CARDS_SET_GAME(8),
-    CARD_SET_PLAYER(9),
-    SET_WORKER_COLOR(10),
-    SET_WORKER_POSITION(11),
-    SELECT_WORKER(12),
-    LOGIN_SUCCESSFUL(13),
-    LOGIN_FAILURE(14),
-    CREATED_MATCH(15),      //obj_type : null
-    HOW_MANY_PLAYERS(16),
-    USER_JOINED(17),
-    ADDED_TO_QUEUE(18),
-    TOWER_UPDATED(19),
-    ISLAND_UPDATED(20);
-    ;
+    GENERIC_MESSAGE,
+    DISCONNECTED_SERVER_SIDE,
+    LOGIN_SUCCESSFUL,
+    LOGIN_FAILURE,
+    CREATED_MATCH,      //obj_type : null
+    START_MATCH,      //obj_type : null
+    LOGIN,        //obj_type : Tupla(String, Date)
+    USER_JOINED,
+    HOW_MANY_PLAYERS,
+    ADDED_TO_QUEUE,
 
+    CHOOSE_GAME_CARDS,
+    CHOOSE_PLAYERS_CARD,
+    CHOOSE_FIRST_PLAYER,
+    CHOOSE_POSITION_OF_WORKERS,
+    SET_CARDS_TO_GAME,
+    SET_CARD_TO_PLAYER,
+    SET_FIRST_PLAYER,
+    SET_POSITION_OF_WORKER,
+    SELECT_WORKER,
+    INIT_TURN,
+    RETRIEVE_CELL_FOR_MOVE,
+    MOVE_WORKER,
+    RETRIEVE_CELL_FOR_BUILD,
+    BUILD_CELL,
 
-
-    private final int typeOfMessage; //todo kill this
-
-    TypeOfMessage(int typeOfMessage) {
-        this.typeOfMessage = typeOfMessage;
-    }
-
+    TOWER_UPDATED,
+    ISLAND_UPDATED,
+    PLAYER_UPDATED,
+    LOCATION_UPDATED;  //obj_type : Location
 }

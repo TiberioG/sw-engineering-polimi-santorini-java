@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.controller.strategies.strategyWin.StrategyWin;
@@ -55,7 +57,7 @@ public class TurnManager {
             buildStrategies(turn);
             turnsMap.put(player.getName(), turn);
         }
-        currentTurn = turnsMap.get(match.getPlayers().get(0).getName());
+        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
         inizializedCurrentTurn();
     }
     /**
@@ -100,7 +102,7 @@ public class TurnManager {
 
     public void move(Worker worker, Cell cell) throws SantoriniException {
         if (checkForPermittedPhase("move")) {
-            currentTurn.move(worker, cell);
+            currentTurn.move(cell);
             updateCurrentPhase("move");
         }
     };
@@ -168,11 +170,15 @@ public class TurnManager {
             TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
             TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
         });
+
+        //se non ci sono celle disponibili
         if (currentTurn.noAvailableCellForWorkers()) {
             //notificare la perdità
             // rimuovere l'utente dal match
             // aggiornato la mappa
             selectNextTurn();
+        } else {
+            virtualView.displayMessage(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN));
         }
     }
 

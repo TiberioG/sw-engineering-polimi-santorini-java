@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.network.server.VirtualView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,10 +31,10 @@ public class Player extends Publisher<Message> {
      * Constructor
      */
 
-    public Player(String name, Date birthday /* VirtualView view*/) {
+    public Player(String name, Date birthday,VirtualView virtualView) {
+        addListener(virtualView);
         this.name = name;
         this.birthday = birthday;
-        //addListener(view);
     }
 
     /* Methods */
@@ -48,6 +50,7 @@ public class Player extends Publisher<Message> {
     }
     public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
+        publish(new Message(name, TypeOfMessage.PLAYER_UPDATED, this));
     }
 
 
@@ -62,6 +65,7 @@ public class Player extends Publisher<Message> {
         if (workers.size() > 0) id = workers.get(workers.size() - 1).getId() + 1;
         Worker worker = new Worker(id, color, this);
         workers.add(worker);
+        publish(new Message(name, TypeOfMessage.PLAYER_UPDATED, this));
         return worker;
     }
 
