@@ -93,19 +93,19 @@ public class CoolCLI {
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.THIRD_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.THIRD_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.SECOND_LEVEL);
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.THIRD_LEVEL);
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.DOME);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(3, 3));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(3, 3));
+        match.getIsland().addComponent(Component.THIRD_LEVEL, match.getIsland().getCell(3, 3));
+        match.getIsland().addComponent(Component.DOME, match.getIsland().getCell(3, 3));
 
         strategyBuild = new DefaultBuild(match);
         turnProperties = new TurnProperties();
@@ -118,7 +118,8 @@ public class CoolCLI {
      * just a method to build first blocks to test
      */
     public void build(int x, int y) throws CellOutOfBoundsException, BuildLowerComponentException {
-        match.getIsland().getCell(x, y).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(x, y));
+
     }
 
     public void userLogin() throws ParseException {

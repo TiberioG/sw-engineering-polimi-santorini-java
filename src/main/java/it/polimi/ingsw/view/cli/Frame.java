@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
-import org.davidmoten.text.utils.WordWrap;
+//import org.davidmoten.text.utils.WordWrap;
 
 public class Frame {
 
@@ -40,13 +40,15 @@ public class Frame {
 
 
     void writeln (String towrite){
-        String wrapped =
+        /*String wrapped =
                 WordWrap.from(towrite)
                         .maxWidth(rowSpan)
                         .insertHyphens(true) // true is the default
                         .wrap();
+
+         */
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
-        System.out.print(wrapped);
+       // System.out.print(wrapped);
     }
 
 }

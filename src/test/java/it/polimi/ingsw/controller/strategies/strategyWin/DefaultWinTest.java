@@ -88,27 +88,27 @@ public class DefaultWinTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 1).getTower().addComponent(Component.SECOND_LEVEL);
-        match.getIsland().getCell(1, 1).getTower().addComponent(Component.THIRD_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 1));
+        match.getIsland().addComponent(Component.THIRD_LEVEL , match.getIsland().getCell(1, 1));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.SECOND_LEVEL);
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.THIRD_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 2));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 2));
+        match.getIsland().addComponent(Component.THIRD_LEVEL , match.getIsland().getCell(1, 2));
 
-        match.getIsland().getCell(2, 2).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(2, 2).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(2, 2));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(2, 2));
 
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(3, 3));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(3, 3));
 
-        match.getIsland().getCell(1, 3).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 3));
 
         strategyWin = new DefaultWin(match);
         strategyMove1 = new DefaultMove(match);

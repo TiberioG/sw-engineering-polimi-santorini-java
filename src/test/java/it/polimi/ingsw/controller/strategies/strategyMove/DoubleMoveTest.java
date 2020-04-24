@@ -85,13 +85,13 @@ public class DoubleMoveTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
