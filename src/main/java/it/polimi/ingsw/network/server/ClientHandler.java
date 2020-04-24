@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 
 public class ClientHandler implements Runnable {
@@ -32,6 +34,9 @@ public class ClientHandler implements Runnable {
       inputStm = new ObjectInputStream(client.getInputStream());
       handleClientConnection();
     } catch (IOException e) {
+      if(e instanceof SocketTimeoutException) {
+        System.out.println(e.getClass().getCanonicalName() + " TIMEOUT SCADUTO");
+      }
       isConnected = false;
       server.userDisconnected(this.UUID);
       System.out.println("Client " + client.getInetAddress() + " connection dropped");
@@ -71,6 +76,7 @@ public class ClientHandler implements Runnable {
     } catch (ClassNotFoundException | ClassCastException e) {
       System.out.println("Invalid stream from client");
     }
+
     client.close();
   }
 

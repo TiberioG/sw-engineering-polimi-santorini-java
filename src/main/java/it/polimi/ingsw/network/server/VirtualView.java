@@ -11,7 +11,9 @@ import it.polimi.ingsw.model.Location;
 import it.polimi.ingsw.model.Match;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 //todo associazione player - client con .getconnection
@@ -40,7 +42,7 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
      *la chiama il Server
      *crea match
      */
-    public void initGame(List<String> matchUser){
+    public void initGame(Map<String, Date> matchUser){
         publish(new Message("ALL", TypeOfMessage.START_MATCH, matchUser)); //just send a message to controller to create the match;
     }
 

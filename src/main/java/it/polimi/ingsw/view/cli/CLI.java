@@ -2,10 +2,7 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Publisher;
-import it.polimi.ingsw.commons.messages.CoordinatesMessage;
-import it.polimi.ingsw.commons.messages.Message;
-import it.polimi.ingsw.commons.messages.Tupla;
-import it.polimi.ingsw.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.commons.messages.*;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Location;
@@ -34,7 +31,8 @@ public class CLI implements ViewInterface {
 
     /* ATTRIBUTES */
     private Client client;
-    private Date date;
+    private Date date = null;
+    private int numOfPlayers = 0;
     private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private List<Publisher> subscribers = new ArrayList<>(); //todo serve sta roba?
@@ -68,7 +66,7 @@ public class CLI implements ViewInterface {
         String ip = readIp(in);
 
         System.out.println("Port number?");
-        int port = readPort(in);
+        int port = validateIntInput(in, MIN_PORT, MAX_PORT);
 
         client.setServerIP(ip);
         client.setServerPort(port);
@@ -98,9 +96,11 @@ public class CLI implements ViewInterface {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        out.println("How many people do you want to play with?");
+        numOfPlayers = validateIntInput(in, 2, 3);
         client.setUsername(username);
-        client.sendToServer(new Message(TypeOfMessage.LOGIN, new Tupla(username, date)));
+        LoginMessage loginMessage = new LoginMessage(username, date, numOfPlayers, TypeOfMessage.LOGIN);
+        client.sendToServer(loginMessage);
     }
 
     @Override
@@ -109,11 +109,12 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayLoginFailure() {
-        out.println("I'm sorry, this username is already taken. Please try with a different username:");
+    public void displayLoginFailure(String details) {
+        out.println(details);
         String username = in.nextLine();
         client.setUsername(username);
-        client.sendToServer(new Message(TypeOfMessage.LOGIN, new Tupla(username, date)));
+        LoginMessage loginMessage = new LoginMessage(username, date, numOfPlayers, TypeOfMessage.LOGIN);
+        client.sendToServer(loginMessage);
     }
 
     @Override
@@ -269,28 +270,6 @@ public class CLI implements ViewInterface {
         return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
     }
 
-    private int readPort(Scanner stdin) {
-        int output;
-        try {
-            output = stdin.nextInt(); //Integer.parseInt(stdin.nextLine());
-        } catch (InputMismatchException e) {
-            output = MIN_PORT - 1;
-            stdin.nextLine();
-        }
-        while (output > MAX_PORT || output < MIN_PORT) {
-            System.out.println("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:");
-            try {
-                output = stdin.nextInt();
-            } catch (InputMismatchException e) {
-                output = MIN_PORT - 1;
-                stdin.nextLine();
-            }
-        }
-        stdin.nextLine(); // handle nextInt()
-        return output;
-    }
-
-
     /**
      * Manages the insertion of an integer on command line input,
      * asking it again until it not a valid value.
@@ -317,6 +296,8 @@ public class CLI implements ViewInterface {
                 stdin.nextLine();
             }
         }
+
+        stdin.nextLine(); // handle nextInt()
         return output;
     }
 }

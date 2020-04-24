@@ -6,10 +6,10 @@ import it.polimi.ingsw.commons.JsonAdapter;
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    private String username;
+    private String username = null;
     private TypeOfMessage typeOfMessage;
-    private String jsonMessage;
-    private String UUID;
+    private String jsonMessage = null;
+    private String UUID = null;
 
     public Message(String username, TypeOfMessage typeOfMessage, Object object) {
         this(username, typeOfMessage);

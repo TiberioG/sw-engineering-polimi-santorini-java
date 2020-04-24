@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
+import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.network.server.VirtualView;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

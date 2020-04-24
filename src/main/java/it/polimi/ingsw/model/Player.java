@@ -31,10 +31,15 @@ public class Player extends Publisher<Message> {
      * Constructor
      */
 
-    public Player(String name, Date birthday,VirtualView virtualView) {
+    public Player(String name, Date birthday, VirtualView virtualView) {
         addListener(virtualView);
         this.name = name;
         this.birthday = birthday;
+    }
+
+    // Constructor for testing
+    public Player(String name, Date birthday) {
+        this(name, birthday, null);
     }
 
     /* Methods */

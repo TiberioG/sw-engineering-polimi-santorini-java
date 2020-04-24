@@ -1,12 +1,10 @@
 package it.polimi.ingsw.commons;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 
 /**
  * This is an adapter class for {@link JsonReader} class and {@link Gson} class

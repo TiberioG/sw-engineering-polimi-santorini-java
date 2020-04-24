@@ -1,11 +1,14 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,6 +85,7 @@ public class Client implements ServerObserver {
       serverAdapter.addObserver(this);
       Thread serverAdapterThread = new Thread(serverAdapter);
       serverAdapterThread.start();
+      startHeartbeat();
       view.displayLogin();
     } catch (IOException e) {
       //System.out.println("Server unreachable");
@@ -120,7 +124,7 @@ public class Client implements ServerObserver {
         break;
 
       case LOGIN_FAILURE:
-        view.displayLoginFailure();
+        view.displayLoginFailure((String)message.getPayload(String.class));
         break;
 
       case HOW_MANY_PLAYERS:
@@ -144,6 +148,19 @@ public class Client implements ServerObserver {
         break;
 
     }
+  }
+
+  // Used to notify connection to the server
+  private void startHeartbeat() {
+    Timer timer = new Timer();
+
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        sendToServer(new Message(TypeOfMessage.HEARTBEAT));
+        System.out.println("PING");
+      }
+    }, 1000, 10*1000); // this must be lower than (half should be ok) the value used server side in setSoTimeout()
   }
 
   public void sendToServer(Message message) {

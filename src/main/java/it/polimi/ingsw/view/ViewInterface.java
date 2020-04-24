@@ -15,7 +15,7 @@ public interface ViewInterface {
     void displaySetupFailure();
     void displayLogin();
     void displayLoginSuccessful();
-    void displayLoginFailure();
+    void displayLoginFailure(String details);
     void displayHowManyPlayers();
     void displayUserJoined(String details);
     void displayAddedToQueue(String details);
