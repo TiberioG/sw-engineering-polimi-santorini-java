@@ -11,6 +11,8 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Worker;
 import it.polimi.ingsw.network.server.VirtualView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -59,11 +61,16 @@ public class Controller implements Listener<Message> {
     @Override
     public void update(Message message) {
         TypeOfMessage type = message.getTypeOfMessage();
-
         switch (type) {
             case START_MATCH: //if I receive this i'm ready to create a new match
                 createNewMatch();
-                ((Map<String, Date>)message.getPayload(Map.class)).forEach((username, date) -> addPlayerToMatch(username, date)); // todo modificare tutto mettendo che ricevo anche la data di nascita
+                ((Map<String, String>)message.getPayload(Map.class)).forEach((username, date) -> {
+                    try {
+                        addPlayerToMatch(username, new SimpleDateFormat("MMMM d, yyyy").parse(date));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                });
                 virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, cardManager.getCardMap())); // todo: scegliere il primo giocatore correttamente e decidere che payload mandare nel messaggio
                 break;
             case SET_CARDS_TO_GAME: //if i receive this
