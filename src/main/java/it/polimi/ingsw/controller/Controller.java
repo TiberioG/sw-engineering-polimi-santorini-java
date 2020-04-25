@@ -64,7 +64,7 @@ public class Controller implements Listener<Message> {
                 });
                 virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
                 break;
-            case SET_CARDS_TO_GAME: //if i receive this
+            case SETTED_CARDS_TO_GAME: //if i receive this, the card for the game have been chosen, now I have to associate them to players
                 List<Integer> listOfIdCard = (List) message.getPayload(List.class);
                 addCardToMatch(listOfIdCard);
                 virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_PLAYERS_CARD, match.getCards()));

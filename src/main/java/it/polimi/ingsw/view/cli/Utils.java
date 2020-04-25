@@ -3,10 +3,10 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringJoiner;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -76,6 +76,38 @@ public class Utils {
         } while (number < min || number > max);
         return number;
     }
+
+
+
+    public  Date readDate(String kind){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date  date = new Date();
+        Date today = new Date();
+
+        try {
+            Date oldest = dateFormat.parse("01/01/1900");
+        } catch (ParseException e) {
+            //it's impossible to trow excep here ehe
+        }
+
+        if (kind == null){
+            kind = "date";
+        }
+
+        out.println("Insert " + kind + " in format dd/MM/yyyy");
+        while (true) {
+            try {
+                date = dateFormat.parse(in.nextLine());
+                break;
+            } catch (ParseException e) {
+                out.println("Wrong format of date");
+            }
+        }
+        //todo comparare data
+        return date;
+    }
+
+
 
     public List<Integer> readNotSameNumbers(int min, int max, int howmany){
         List<Integer> numbers = new ArrayList<Integer>();

@@ -144,11 +144,8 @@ public class CoolCLI {
 
         String[] names = IntStream.range(0, cardMap.size()).mapToObj(i -> Colors.randomColor() + cardMap.get(i).getName() + Colors.reset()).toArray(String[]::new);
 
-
         utils.singleTableCool("Cards Available", names, 100);
-
         System.out.println("Select " + 3 + " cards");
-
 
         List<Integer> selections = utils.readNotSameNumbers(0, names.length - 1, 3 );
         String[] strSelections = new String[3];
@@ -156,11 +153,7 @@ public class CoolCLI {
        for (int i =0 ; i< selections.size()  ; i++){
            strSelections[i] = names[selections.get(i)];
        }
-
         utils.singleTableCool("Card selected", strSelections, 100);
-
-
-
 
     }
 

@@ -33,7 +33,6 @@ public class CLI implements ViewInterface {
     private Client client;
     private Date date = null;
     private int numOfPlayers = 0;
-    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private List<Publisher> subscribers = new ArrayList<>(); //todo serve sta roba?
     private static PrintWriter out = new PrintWriter(System.out, true);
@@ -59,18 +58,13 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displaySetup() {
-
         showTitle();
-
         out.println("IP address of server?");
         String ip = readIp(in);
-
         System.out.println("Port number?");
         int port = validateIntInput(in, MIN_PORT, MAX_PORT);
-
         client.setServerIP(ip);
         client.setServerPort(port);
-
         client.connectToServer();
     }
 
@@ -90,12 +84,8 @@ public class CLI implements ViewInterface {
 
         out.println("Choose your username:");
         String username = in.nextLine();
-        out.println("Birthdate format dd/MM/yyyy"); //todo ustils per parsare in modo fico
-        try {
-            date = dateFormat.parse(in.nextLine());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        utils.readDate("birthdate");
+
         out.println("How many people do you want to play with?");
         numOfPlayers = validateIntInput(in, 2, 3);
         client.setUsername(username);
@@ -150,7 +140,6 @@ public class CLI implements ViewInterface {
      */
     @Override
     public void displayCardSelection(HashMap<Integer,Card> cards, int numPlayers) {
-
         String[] names = cards.values().stream().map(Card::getName).toArray(String[]::new);
 
         try {
@@ -160,16 +149,31 @@ public class CLI implements ViewInterface {
         }
         System.out.println("Select " + numPlayers + " cards");
 
-        //todo cannot be the same card
         //String[] selectedCards = IntStream.range(0, numPlayers).mapToObj(i -> names[utils.readNumbers(0, names.length - 1)]).toArray(String[]::new);
         List<Integer> selections = utils.readNotSameNumbers(0, names.length - 1, numPlayers );
-        String[] strSelections = new String[numPlayers];
+        List<Integer> listOfIdCardSelected = new ArrayList<Integer>();
 
-        for (int i =0 ; i< selections.size()  ; i++){
-            strSelections[i] = names[selections.get(i)];
+        for (Integer selection : selections) {
+            String nameSelected = names[selection];
+            for (HashMap.Entry<Integer, Card> entry : cards.entrySet()) {
+                if (nameSelected.equals(entry.getValue().getName())) {
+                    listOfIdCardSelected.add(entry.getKey());
+                }
+            }
+        }
+        client.sendToServer(new Message( TypeOfMessage.SETTED_CARDS_TO_GAME, listOfIdCardSelected));
+    }
+
+    @Override
+    public void displayCardInGame(List<Card> cardInGame) {
+        String[] names = cardInGame.stream().map(Card::getName).toArray(String[]::new);
+
+        try {
+            utils.singleTableCool("Card selected", names, 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        //client.send2Server(new Message(username, TypeOfMessage.CARDS_SET_GAME, strSelections));
     }
 
     @Override

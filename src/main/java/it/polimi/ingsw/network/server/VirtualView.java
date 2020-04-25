@@ -5,10 +5,7 @@ import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.CardManager;
-import it.polimi.ingsw.model.Cell;
-import it.polimi.ingsw.model.Location;
-import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -46,6 +43,7 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
         publish(new Message("ALL", TypeOfMessage.START_MATCH, matchUser)); //just send a message to controller to create the match;
     }
 
+
     /**
      * Receives match changes
      * @param message
@@ -61,9 +59,9 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
                 Location location = match.getLocation();
                 displayMessage(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, location));
 
-            // todo è giusta questa logica? Che la virtualView riceva in questo modo un messaggio da server
-            case CHOOSE_GAME_CARDS:
-                // todo qua il payload di messaggio contiene le 2/3 carte scelte dal giocatore master. Andare a settare queste carte da qualche parte
+            case SETTED_CARDS_TO_GAME: //mando a far vedere le carte selezionate
+                List<Card> cardInGame = match.getCards();
+                displayMessage(new Message("ALL", TypeOfMessage.SETTED_CARDS_TO_GAME, cardInGame ));
         }
 
         if (message.getUsername() != null && message.getUsername().equals("VIRTUAL_VIEW")) {

@@ -19,7 +19,7 @@ public class Match extends Publisher<Message> {
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
     private Player currentPlayer ;
-    private List<Card> listCardsInGame = new ArrayList<>(); // todo: caricare qui le carte nel gioco
+    private List<Card> listCardsInGame = new ArrayList<>();
     private VirtualView virtualView;
 
     /**
