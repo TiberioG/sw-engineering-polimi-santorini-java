@@ -118,13 +118,6 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayHowManyPlayers() {
-        out.println("How many players?");
-        int numPlayers = validateIntInput(in, 2, 3);
-        client.sendToServer(new Message(TypeOfMessage.HOW_MANY_PLAYERS, numPlayers));
-    }
-
-    @Override
     public void displayUserJoined(String details) {
         out.println(details);
     }

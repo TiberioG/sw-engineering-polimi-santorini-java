@@ -16,7 +16,6 @@ public interface ViewInterface {
     void displayLogin();
     void displayLoginSuccessful();
     void displayLoginFailure(String details);
-    void displayHowManyPlayers();
     void displayUserJoined(String details);
     void displayAddedToQueue(String details);
     void displayStartingMatch();

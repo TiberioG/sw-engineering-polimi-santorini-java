@@ -128,10 +128,6 @@ public class Client implements ServerObserver {
         view.displayLoginFailure((String)message.getPayload(String.class));
         break;
 
-      case HOW_MANY_PLAYERS:
-        view.displayHowManyPlayers();
-        break;
-
       case USER_JOINED:
         view.displayUserJoined((String)message.getPayload(String.class));
         break;

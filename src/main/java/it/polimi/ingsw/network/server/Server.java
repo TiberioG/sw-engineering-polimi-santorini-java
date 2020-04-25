@@ -233,7 +233,8 @@ public class Server
         messageToSend = new Message("ALL", TypeOfMessage.START_MATCH);
         sendToClient(messageToSend);
         matchUsers.clear();
-        lobby.forEach( UUID -> matchUsers.put(username, birthdateMap.get(username)));
+        List<String> copyLobby = new ArrayList<>(lobby);
+        copyLobby.forEach( _username -> matchUsers.put(_username, birthdateMap.get(_username)));
         virtualView.initGame(matchUsers);
       }
     }
