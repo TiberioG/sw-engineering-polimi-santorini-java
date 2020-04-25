@@ -3,6 +3,7 @@ package it.polimi.ingsw.commons.messages;
 public enum TypeOfMessage {
     GENERIC_MESSAGE,
     HEARTBEAT,
+    SERVER_LOST,
     DISCONNECTED_SERVER_SIDE,
     LOGIN_SUCCESSFUL,
     LOGIN_FAILURE,

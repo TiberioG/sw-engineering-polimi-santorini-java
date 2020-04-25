@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 
@@ -24,6 +23,7 @@ public class ClientHandler implements Runnable {
     this.client = client;
     this.server = server;
     this.isConnected = true;
+    this.UUID = null;
   }
 
 
@@ -57,6 +57,7 @@ public class ClientHandler implements Runnable {
   private void handleClientConnection() throws IOException {
 
     System.out.println("Connected to " + client.getInetAddress());
+    server.addClient(this);
 
     try {
       while (true) {
@@ -66,7 +67,7 @@ public class ClientHandler implements Runnable {
         if(message.getTypeOfMessage() == TypeOfMessage.LOGIN && message.getUsername() != null && message.getUUID() == null) {
           String UUID = java.util.UUID.randomUUID().toString();
           this.UUID = UUID;
-          server.addClient(UUID, this);
+          server.associateClient(UUID, this);
           message.setUUID(UUID);
         }
 
@@ -88,5 +89,9 @@ public class ClientHandler implements Runnable {
       System.err.println(e.getMessage());
     }
     isConnected = false;
+  }
+
+  public boolean isConnected() {
+    return isConnected;
   }
 }

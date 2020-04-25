@@ -6,7 +6,9 @@ import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.ViewInterface;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -78,6 +80,7 @@ public class Client implements ServerObserver {
     Socket server;
     try {
       server = new Socket(getServerIP(), getServerPort());
+      server.setSoTimeout(10*1000); // milliseconds
 
       /* Create the adapter that will allow communication with the server
        * in background, and start running its thread */
@@ -88,12 +91,10 @@ public class Client implements ServerObserver {
       startHeartbeat();
       view.displayLogin();
     } catch (IOException e) {
-      //System.out.println("Server unreachable");
-      view.displaySetupFailure();
+        view.displaySetupFailure();
     }
   }
 
-  /* todo: SERVE?? Nel caso, implementarlo correttamente in serverAdapter */
   public void close() {
     serverAdapter.stop();
     System.exit(0);
@@ -145,6 +146,17 @@ public class Client implements ServerObserver {
 
       case DISCONNECTED_SERVER_SIDE:
         view.displayDisconnected((String)message.getPayload(String.class));
+        break;
+
+      case SERVER_LOST:
+        view.displayDisconnected("Connection lost"); // will close the socket and terminate the execution
+        break;
+
+      case HEARTBEAT:
+        //System.out.println("SERVER IS ALIVE");
+        break;
+
+      default:
         break;
 
     }

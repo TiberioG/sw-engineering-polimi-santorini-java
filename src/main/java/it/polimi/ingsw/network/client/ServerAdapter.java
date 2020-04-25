@@ -1,11 +1,13 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,6 @@ public class ServerAdapter implements Runnable
     }
   }
 
-  // todo: se serve, decidere come voler fare lo stop. Chiudere brutalmente il client oppure mandare prima un messaggio di stop al server?
   public synchronized void stop()
   {
     try {
@@ -59,10 +60,15 @@ public class ServerAdapter implements Runnable
       inputStm = new ObjectInputStream(server.getInputStream());
       handleServerConnection();
     } catch (IOException | ClassNotFoundException e) {
-      System.out.println("Server has died or protocol violation");
-      try {
-        server.close();
-      } catch (IOException ex) { }
+      if (e instanceof SocketTimeoutException) {
+        notifyServerLost();
+      } else {
+        System.out.println("Server has died or protocol violation");
+        try {
+          server.close();
+        } catch (IOException ex) {
+        }
+      }
     }
   }
 
@@ -100,6 +106,19 @@ public class ServerAdapter implements Runnable
       outputStm.flush();
     } catch (IOException e) {
       System.out.println(e.getMessage());
+    }
+  }
+
+  private void notifyServerLost() {
+    Message msg = new Message(TypeOfMessage.SERVER_LOST);
+    List<ServerObserver> observersCpy;
+    synchronized (observers) {
+      observersCpy = new ArrayList<>(observers);
+    }
+
+    /* notify the observers that we got a message from the server */
+    for (ServerObserver observer : observersCpy) {
+      observer.handleMessage(msg);
     }
   }
 

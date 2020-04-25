@@ -22,23 +22,24 @@ public class Server
 
   private VirtualView virtualView;
 
-  // todo salvare anche la data di nascita che ricevo dal client al login
   // todo: eventualmente fare una mappa apposita per gestire più partite in contemporanea
 
   // non molto bello, ma comunque mi assicuro che username e UUID siano in corrispondenza 1:1
-  private Map<String, String> usernameToUUIDMap = new HashMap<>();
-  private Map<String, String> UUIDtoUsernameMap = new HashMap<>();
-  private Map<String, Date> birthdateMap = new HashMap<>();
+  private Map<String, String> usernameToUUIDMap = new HashMap<>(); // key: username, value: UUID
+  private Map<String, String> UUIDtoUsernameMap = new HashMap<>(); // key: UUID, value: username
+  private Map<String, Date> birthdateMap = new HashMap<>(); // key: username, value: birthDate
 
-  private Map<String, ClientHandler> clientsMap = new HashMap<>();
-  private List<String> lobby = new ArrayList<>();
-  private Map<String, Date> matchUsers = new HashMap<>();
+  private List<ClientHandler> connectedClients = new ArrayList<>(); // List where will be stored all the connected clients, logged in or not (used for heartbeat messages)
+  private Map<String, ClientHandler> clientsMap = new HashMap<>(); // key: UUID, value: Client
+  private List<String> lobby = new ArrayList<>(); // usernames
+  private Map<String, Date> matchUsers = new HashMap<>(); // key: username, value: birthDate
   private int howManyPlayers = 0;
 
   private static Logger LOGGER = Logger.getLogger("server");
 
   public Server() {
     virtualView = new VirtualView(this);
+    startHeartbeat();
   }
 
 
@@ -136,14 +137,36 @@ public class Server
 
   }
 
+  // Used to notify connection to the clients
+  private void startHeartbeat() {
+    Timer timer = new Timer();
+
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        Message msg = new Message(TypeOfMessage.HEARTBEAT);
+        connectedClients.forEach( client -> {if(client != null) { client.sendMessage(msg); }});
+      }
+    }, 1000, 5*1000); // this must be lower than (half should be ok) the value used client side in setSoTimeout()
+  }
+
   /**
-   * Adds a client (player), using the UUID associated to him as identifier
+   * Associates a client to a UUID
    *
    * @param UUID UUID of the player to be added
    * @param client {@link ClientHandler} corresponding to the UUID
    */
-  public void addClient(String UUID, ClientHandler client) {
+  protected void associateClient(String UUID, ClientHandler client) {
     clientsMap.put(UUID, client);
+  }
+
+  /**
+   * Adds a client
+   *
+   * @param client {@link ClientHandler} to be added
+   */
+  protected void addClient(ClientHandler client) {
+    connectedClients.add(client);
   }
 
   private synchronized void handleLogin(LoginMessage message) {
@@ -156,19 +179,22 @@ public class Server
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this is not a valid username. Please try with a different username:");
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
-      clientsMap.remove(uuid);
+      ClientHandler removedClient = clientsMap.remove(uuid);
+      connectedClients.remove(removedClient);
     } else if(usernameAlreadyExists) {
       LOGGER.log(Level.INFO, "Username " + username + " already exists");
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this username is already taken. Please try with a different username:");
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
-      clientsMap.remove(uuid);
+      ClientHandler removedClient = clientsMap.remove(uuid);
+      connectedClients.remove(removedClient);
     } else if(message.getNumOfPlayers() < MIN_NUM_OF_PLAYERS || message.getNumOfPlayers() > MAX_NUM_OF_PLAYERS) { // server side check
       LOGGER.log(Level.WARNING, "Username " + username + " tried to create a " + message.getNumOfPlayers() + "-player match. Not allowed!");
       messageToSend = new Message(TypeOfMessage.NUM_PLAYERS_FAILURE, "I'm sorry, this number of players is not allowed. It must be between " + MIN_NUM_OF_PLAYERS + " and " + MAX_NUM_OF_PLAYERS);
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
-      clientsMap.remove(uuid);
+      ClientHandler removedClient = clientsMap.remove(uuid);
+      connectedClients.remove(removedClient);
     } else {
       addUser(uuid, username, message.getBirthDate());
       LOGGER.log(Level.INFO, "Player " + username + " has been added!");
@@ -178,7 +204,6 @@ public class Server
     }
   }
 
-  //todo sistemare lobby nel caso di disconnessioni o giocatore fermo su "how many players" che non risponde
   private synchronized void handleLobby(LoginMessage message) {
     String username = message.getUsername();
     lobby.add(username);
@@ -217,17 +242,23 @@ public class Server
 
   /**
    * Called when the server detects a disconnection
-   * @param UUID disconnected user's UUID
+   * @param UUID disconnected user's UUID, null if the user was not logged in
    */
   protected void userDisconnected(String UUID) {
-    String disconnectedUser = UUIDtoUsernameMap.get(UUID);
-    clientsMap.remove(UUID);
-    removeUser(UUID);
-    String details = "I'm sorry, " + disconnectedUser + " left the game.\nWe can't continue this match :(";
-    disconnectAllPlayers(details);
+    if(UUID != null) { // user was logged, so in a lobby or in game
+      ClientHandler removedClient = clientsMap.remove(UUID);
+      String disconnectedUser = UUIDtoUsernameMap.get(UUID);
+      connectedClients.remove(removedClient);
+      removeUser(UUID);
+      String details = "I'm sorry, " + disconnectedUser + " left the game.\nWe can't continue this match :(";
+      disconnectAllPlayers(details);
+    } else { // "user" was only connected to the client, but not logged
+      connectedClients.forEach( client -> {if(!client.isConnected()) connectedClients.remove(client);});
+    }
   }
 
   private void resetServer() {
+    connectedClients.clear();
     clientsMap.clear();
     usernameToUUIDMap.clear();
     UUIDtoUsernameMap.clear();
@@ -261,15 +292,36 @@ public class Server
    * @param playersUUID {@link List<String>} of UUID corresponding to the players to disconnect
    * @param details details to send to disconnected players (e.g.: reason about server-side disconnection)
    */
-  public synchronized void disconnectPlayers(List<String> playersUUID, String details) {
+  private synchronized void disconnectPlayers(List<String> playersUUID, String details) {
     if(playersUUID != null) {
       playersUUID.forEach(UUID -> {
-                        if (clientsMap.containsKey(UUID)) {
-                          clientsMap.remove(UUID).closeConnection(details); // close and remove connection
-                          removeUser(UUID);
-                          // todo: controllare se ero in fased di lobby o di game
-                        }
-                      });
+        if (clientsMap.containsKey(UUID)) {
+          ClientHandler clientToBeRemoved = clientsMap.remove(UUID);
+          connectedClients.remove(clientToBeRemoved);
+          clientToBeRemoved.closeConnection(details); // close connection
+          removeUser(UUID);
+        }
+      });
+    }
+  }
+
+  /**
+   * Disconnects a player and notify him with a message
+   *
+   * @param username username of to the player to disconnect
+   * @param details details to send to disconnected player (e.g.: player has lost)
+   */
+  public synchronized void disconnectPlayer(String username, String details) {
+    if(username != null) {
+      String UUID = usernameToUUIDMap.get(username);
+      if(UUID != null) {
+        if (clientsMap.containsKey(UUID)) {
+          ClientHandler clientToBeRemoved = clientsMap.remove(UUID);
+          connectedClients.remove(clientToBeRemoved);
+          clientToBeRemoved.closeConnection(details); // close connection
+          removeUser(UUID);
+        }
+      }
     }
   }
 
