@@ -53,7 +53,9 @@ public class DefaultBuildTest {
 
     @Before
     public void setUp() throws Exception {
-        match = new Match(66666, new VirtualView(new Server()));
+        VirtualView virtualView = new VirtualView(new Server());
+        match = new Match(66666, virtualView);
+        virtualView.setMatch(match);
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String birthDate1 = "22/03/1998";

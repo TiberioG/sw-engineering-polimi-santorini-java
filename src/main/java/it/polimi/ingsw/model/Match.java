@@ -31,7 +31,7 @@ public class Match extends Publisher<Message> {
         this.island = new Island();
         this.location = new Location(virtualView);
         this.virtualView = virtualView;
-        publish(new Message("ALL", TypeOfMessage.CREATED_MATCH, this));
+        publish(new Message("ALL", TypeOfMessage.CREATED_MATCH));
     }
 
 //todo remove after tests
