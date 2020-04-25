@@ -170,7 +170,7 @@ public class Client implements ServerObserver {
       @Override
       public void run() {
         sendToServer(new Message(TypeOfMessage.HEARTBEAT));
-        System.out.println("PING");
+        //System.out.println("PING");
       }
     }, 1000, 10*1000); // this must be lower than (half should be ok) the value used server side in setSoTimeout()
   }

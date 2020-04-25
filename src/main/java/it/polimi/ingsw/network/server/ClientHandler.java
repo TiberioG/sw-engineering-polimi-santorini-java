@@ -18,11 +18,13 @@ public class ClientHandler implements Runnable {
 
   private String UUID;
   private boolean isConnected;
+  private boolean isLogged;
 
   ClientHandler(Socket client, Server server) {
     this.client = client;
     this.server = server;
     this.isConnected = true;
+    this.isLogged = false;
     this.UUID = null;
   }
 
@@ -35,10 +37,10 @@ public class ClientHandler implements Runnable {
       handleClientConnection();
     } catch (IOException e) {
       if(e instanceof SocketTimeoutException) {
-        System.out.println(e.getClass().getCanonicalName() + " TIMEOUT SCADUTO");
+        System.out.println("TIMEOUT SCADUTO - Questo client non è più raggiungibile");
       }
       isConnected = false;
-      server.userDisconnected(this.UUID);
+      server.clientDisconnected(this);
       System.out.println("Client " + client.getInetAddress() + " connection dropped");
     }
   }
@@ -93,5 +95,17 @@ public class ClientHandler implements Runnable {
 
   public boolean isConnected() {
     return isConnected;
+  }
+
+  public boolean isLogged() {
+    return isLogged;
+  }
+
+  public void setLogged(boolean logged) {
+    isLogged = logged;
+  }
+
+  public String getUUID() {
+    return UUID;
   }
 }

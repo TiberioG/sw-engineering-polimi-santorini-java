@@ -145,7 +145,8 @@ public class Server
       @Override
       public void run() {
         Message msg = new Message(TypeOfMessage.HEARTBEAT);
-        connectedClients.forEach( client -> {if(client != null) { client.sendMessage(msg); }});
+        List<ClientHandler> copyConnectedClients = new ArrayList<>(connectedClients);
+        copyConnectedClients.forEach( client -> {if(client != null) { client.sendMessage(msg); }});
       }
     }, 1000, 5*1000); // this must be lower than (half should be ok) the value used client side in setSoTimeout()
   }
@@ -179,23 +180,21 @@ public class Server
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this is not a valid username. Please try with a different username:");
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
-      ClientHandler removedClient = clientsMap.remove(uuid);
-      connectedClients.remove(removedClient);
+      clientsMap.remove(uuid);
     } else if(usernameAlreadyExists) {
       LOGGER.log(Level.INFO, "Username " + username + " already exists");
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this username is already taken. Please try with a different username:");
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
-      ClientHandler removedClient = clientsMap.remove(uuid);
-      connectedClients.remove(removedClient);
+      clientsMap.remove(uuid);
     } else if(message.getNumOfPlayers() < MIN_NUM_OF_PLAYERS || message.getNumOfPlayers() > MAX_NUM_OF_PLAYERS) { // server side check
       LOGGER.log(Level.WARNING, "Username " + username + " tried to create a " + message.getNumOfPlayers() + "-player match. Not allowed!");
       messageToSend = new Message(TypeOfMessage.NUM_PLAYERS_FAILURE, "I'm sorry, this number of players is not allowed. It must be between " + MIN_NUM_OF_PLAYERS + " and " + MAX_NUM_OF_PLAYERS);
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
-      ClientHandler removedClient = clientsMap.remove(uuid);
-      connectedClients.remove(removedClient);
+      clientsMap.remove(uuid);
     } else {
+      clientsMap.get(uuid).setLogged(true);
       addUser(uuid, username, message.getBirthDate());
       LOGGER.log(Level.INFO, "Player " + username + " has been added!");
       messageToSend = new Message(username, TypeOfMessage.LOGIN_SUCCESSFUL);
@@ -242,18 +241,19 @@ public class Server
 
   /**
    * Called when the server detects a disconnection
-   * @param UUID disconnected user's UUID, null if the user was not logged in
+   * @param client disconnected client
    */
-  protected void userDisconnected(String UUID) {
-    if(UUID != null) { // user was logged, so in a lobby or in game
+  protected void clientDisconnected(ClientHandler client) {
+    if(client.isLogged()) { // user was logged, so in a lobby or in game
+      String UUID = client.getUUID();
       ClientHandler removedClient = clientsMap.remove(UUID);
       String disconnectedUser = UUIDtoUsernameMap.get(UUID);
       connectedClients.remove(removedClient);
       removeUser(UUID);
       String details = "I'm sorry, " + disconnectedUser + " left the game.\nWe can't continue this match :(";
       disconnectAllPlayers(details);
-    } else { // "user" was only connected to the client, but not logged
-      connectedClients.forEach( client -> {if(!client.isConnected()) connectedClients.remove(client);});
+    } else { // user was only connected to the server, but not logged
+      connectedClients.remove(client);
     }
   }
 
