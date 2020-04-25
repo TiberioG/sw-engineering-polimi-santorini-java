@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.commons.JsonAdapter;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 public class Message implements Serializable {
     private String username = null;
@@ -59,6 +60,11 @@ public class Message implements Serializable {
     public Object getPayload(Class classType) {
         Gson gson = new Gson();
         return gson.fromJson(this.jsonMessage, classType);
+    }
+
+    public Object getPayload(Type type) {
+        Gson gson = new Gson();
+        return gson.fromJson(this.jsonMessage, type);
     }
 
     @Override

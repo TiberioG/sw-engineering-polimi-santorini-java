@@ -1,22 +1,13 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.commons.Listener;
-import it.polimi.ingsw.commons.messages.Message;
-import it.polimi.ingsw.commons.messages.SelectWorkersMessage;
-import it.polimi.ingsw.commons.messages.Tupla;
-import it.polimi.ingsw.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.model.CardManager;
-import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Worker;
+import it.polimi.ingsw.commons.messages.*;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.network.server.VirtualView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Controller implements Listener<Message> {
     private Match match;
@@ -71,7 +62,7 @@ public class Controller implements Listener<Message> {
                         e.printStackTrace();
                     }
                 });
-                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, cardManager.getCardMap())); // todo: scegliere il primo giocatore correttamente e decidere che payload mandare nel messaggio
+                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
                 break;
             case SET_CARDS_TO_GAME: //if i receive this
                 List<Integer> listOfIdCard = (List) message.getPayload(List.class);

@@ -1,14 +1,15 @@
 package it.polimi.ingsw.network.client;
 
+import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.commons.messages.ChooseGameCardMessage;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.ViewInterface;
+import it.polimi.ingsw.view.cli.CLI;
 
 import java.io.IOException;
-import java.net.ConnectException;
+import java.lang.reflect.Type;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -150,6 +151,11 @@ public class Client implements ServerObserver {
 
       case HEARTBEAT:
         //System.out.println("SERVER IS ALIVE");
+        break;
+      case CHOOSE_GAME_CARDS:
+        Type type = new TypeToken<ChooseGameCardMessage>() {}.getType();
+        ChooseGameCardMessage chooseGameCardMessage = (ChooseGameCardMessage)message.getPayload(type);
+        view.displayCardSelection(chooseGameCardMessage.getCardMap(), chooseGameCardMessage.getNumberOfPlayer());
         break;
 
       default:

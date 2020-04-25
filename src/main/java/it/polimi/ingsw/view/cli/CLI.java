@@ -149,9 +149,10 @@ public class CLI implements ViewInterface {
      * @param numPlayers an int which is the number of player in ame which should equals to the number of selected cards
      */
     @Override
-    public void displayCardSelection(List<Card> cards, int numPlayers) {
+    public void displayCardSelection(HashMap<Integer,Card> cards, int numPlayers) {
 
-        String[] names = cards.stream().map(Card::getName).toArray(String[]::new);
+        String[] names = cards.values().stream().map(Card::getName).toArray(String[]::new);
+
         try {
             utils.singleTableCool("Cards Available", names, 100);
         } catch (InterruptedException e) {

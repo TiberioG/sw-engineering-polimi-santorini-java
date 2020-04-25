@@ -60,6 +60,7 @@ public class ServerAdapter implements Runnable
       inputStm = new ObjectInputStream(server.getInputStream());
       handleServerConnection();
     } catch (IOException | ClassNotFoundException e) {
+      e.printStackTrace();
       if (e instanceof SocketTimeoutException) {
         notifyServerLost();
       } else {

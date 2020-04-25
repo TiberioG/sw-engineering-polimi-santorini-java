@@ -1,7 +1,5 @@
 package it.polimi.ingsw.commons.messages;
 
-import java.util.Date;
-
 public class Tupla {
 
     public Tupla(Object first, Object second){
