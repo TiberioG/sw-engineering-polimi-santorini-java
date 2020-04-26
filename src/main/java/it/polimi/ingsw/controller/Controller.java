@@ -1,10 +1,13 @@
 package it.polimi.ingsw.controller;
 
+import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.commons.Configuration;
 import it.polimi.ingsw.commons.Listener;
 import it.polimi.ingsw.commons.messages.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.network.server.VirtualView;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,7 +41,7 @@ public class Controller implements Listener<Message> {
     }
 
     private void addCardToPlayer(String name, int cardId) {
-        String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> player.getCurrentCard().getId() == cardId).map(player -> player.getName()).findFirst().orElse(null);
+        String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> player.getCurrentCard() != null && player.getCurrentCard().getId() == cardId).map(player -> player.getName()).findFirst().orElse(null);
         if (nameOfOwnerPlayer == null) {
             match.getPlayerByName(name).setCurrentCard(cardManager.getCardById(cardId));
         }
@@ -49,14 +52,19 @@ public class Controller implements Listener<Message> {
     }
 
     private void sendSelectableCards (String nameOfPlayer) {
-        HashMap<Card, String> mapOfSelectableCards = new HashMap();
+        List<TuplaGenerics<Card, String>> listOfSelectableCards = new ArrayList<>();
 
         match.getCards().stream().forEach(card -> {
-            String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> player.getCurrentCard().getId() == card.getId()).map(player -> player.getName()).findFirst().orElse(null);
-            mapOfSelectableCards.put(card, nameOfOwnerPlayer);
+            String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> {
+                Card cardOfPlayer = player.getCurrentCard();
+                if (cardOfPlayer != null && cardOfPlayer.getId() == card.getId()) {
+                    return true;
+                } else return false;
+            }).map(player -> player.getName()).findFirst().orElse(null);
+            listOfSelectableCards.add(new TuplaGenerics<>(card, nameOfOwnerPlayer));
         });
 
-        virtualView.displayMessage(new Message(nameOfPlayer, TypeOfMessage.CHOOSE_PERSONAL_CARD, mapOfSelectableCards));
+        virtualView.displayMessage(new Message(nameOfPlayer, TypeOfMessage.CHOOSE_PERSONAL_CARD, listOfSelectableCards));
     }
 
 
@@ -68,26 +76,40 @@ public class Controller implements Listener<Message> {
                 createNewMatch();
                 ((Map<String, String>)message.getPayload(Map.class)).forEach((username, date) -> {
                     try {
-                        addPlayerToMatch(username, new SimpleDateFormat("MMMM d, yyyy").parse(date));
+                        addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 });
-                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
+                match.setCurrentPlayer(match.getPlayers().get(0));
+                virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
                 break;
             case SET_CARDS_TO_GAME: //if i receive this, the card for the game have been chosen, now I have to associate them to players
-                List<Integer> listOfIdCard = (List) message.getPayload(List.class);
+                List<Integer> listOfIdCard = (List) message.getPayload(new TypeToken<List<Integer>>() {}.getType());
                 addCardToMatch(listOfIdCard);
-                sendSelectableCards(match.getPlayers().get(0).getName());
+                sendSelectableCards(match.getPlayers().get(match.selectNextCurrentPlayer()).getName());
                 break;
             case SET_CARD_TO_PLAYER:
-                Tupla tuplaSetPlayer = (Tupla) message.getPayload(Tupla.class);
-                addCardToPlayer((String) tuplaSetPlayer.getFirst(), (Integer) tuplaSetPlayer.getSecond());
+                addCardToPlayer(message.getUsername(), (Integer) message.getPayload(Integer.class));
 
                 if (match.selectNextCurrentPlayer() != 0) {
                     sendSelectableCards(match.getCurrentPlayer().getName());
                 } else {
-                    virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));
+                    match.getCards().stream().forEach(card -> {
+                        String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> {
+                            Card cardOfPlayer = player.getCurrentCard();
+                            if (cardOfPlayer != null && cardOfPlayer.getId() == card.getId()) {
+                                return true;
+                            } else return false;
+                        }).map(player -> player.getName()).findFirst().orElse(null);
+
+                        if (nameOfOwnerPlayer != null) {
+                            match.getCurrentPlayer().setCurrentCard(card);
+                            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.GENERIC_MESSAGE, "Ti è stata assegnata la seguente carta: " + card.getName()));
+                        }
+                    });
+
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));
                 }
                 break;
             case SET_FIRST_PLAYER:

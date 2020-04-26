@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.commons.Configuration;
 import it.polimi.ingsw.commons.messages.LoginMessage;
 import it.polimi.ingsw.commons.messages.Message;
 import it.polimi.ingsw.commons.messages.TypeOfMessage;
@@ -64,7 +65,7 @@ public class Server
         /* accepts connections; for every connection we accept,
          * create a new Thread executing a ClientHandler */
         Socket client = socket.accept();
-        client.setSoTimeout(20*1000); // milliseconds
+        client.setSoTimeout(Configuration.serverTimeout *1000); // milliseconds
         ClientHandler clientHandler = new ClientHandler(client, server);
         Thread thread = new Thread(clientHandler, "server_" + client.getInetAddress());
         thread.start();
@@ -85,12 +86,8 @@ public class Server
       case LOGIN:
         handleLogin((LoginMessage)message);
         break;
-
-      case SET_CARDS_TO_GAME:
-        virtualView.update(message);
-        break;
-
       default:
+        virtualView.handleMessage(message);
         break;
     }
   }
@@ -148,7 +145,7 @@ public class Server
         List<ClientHandler> copyConnectedClients = new ArrayList<>(connectedClients);
         copyConnectedClients.forEach( client -> {if(client != null) { client.sendMessage(msg); }});
       }
-    }, 1000, 5*1000); // this must be lower than (half should be ok) the value used client side in setSoTimeout()
+    }, 1000, Configuration.clientTimeout / 2 *1000); // this must be lower than (half should be ok) the value used client side in setSoTimeout()
   }
 
   /**
@@ -235,7 +232,7 @@ public class Server
         matchUsers.clear();
         List<String> copyLobby = new ArrayList<>(lobby);
         copyLobby.forEach( _username -> matchUsers.put(_username, birthdateMap.get(_username)));
-        virtualView.initGame(matchUsers);
+        virtualView.handleMessage(new Message("ALL", TypeOfMessage.START_MATCH, matchUsers));
       }
     }
   }

@@ -121,7 +121,9 @@ public class JsonAdapter {
     };
 
     public static String toJsonClass(Object object) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
         return gson.toJson(object);
     }
+
+
 }

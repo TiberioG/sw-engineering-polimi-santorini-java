@@ -127,7 +127,7 @@ public class Match extends Publisher<Message> {
     public int selectNextCurrentPlayer() {
         if (listPlayers.size() == 0) return -1;
         int indexOfCurrentPlayer = listPlayers.indexOf(currentPlayer);
-        int indexOfNextCurrentPlayer = indexOfCurrentPlayer == listPlayers.size() - 1 ? indexOfCurrentPlayer + 1 : 0;
+        int indexOfNextCurrentPlayer = indexOfCurrentPlayer != listPlayers.size() - 1 ? indexOfCurrentPlayer + 1 : 0;
         currentPlayer = listPlayers.get(indexOfNextCurrentPlayer);
         return indexOfNextCurrentPlayer;
     }

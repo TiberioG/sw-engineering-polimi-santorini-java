@@ -35,12 +35,8 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
         addListener(controller);
     }
 
-    /**
-     *la chiama il Server
-     *crea match
-     */
-    public void initGame(Map<String, Date> matchUser){
-        publish(new Message("ALL", TypeOfMessage.START_MATCH, matchUser)); //just send a message to controller to create the match;
+    public void handleMessage(Message message){
+        publish(message); //just send a message to controller to create the match;
     }
 
 
@@ -59,9 +55,9 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
                 Location location = match.getLocation();
                 displayMessage(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, location));
 
-            case SET_CARDS_TO_GAME: //mando a far vedere le carte selezionate
+            case SETTED_CARDS_TO_GAME: //mando a far vedere le carte selezionate
                 List<Card> cardInGame = match.getCards();
-                displayMessage(new Message("ALL", TypeOfMessage.SET_CARDS_TO_GAME, cardInGame ));
+                displayMessage(new Message("ALL", TypeOfMessage.SETTED_CARDS_TO_GAME, cardInGame ));
         }
 
         if (message.getUsername() != null && message.getUsername().equals("VIRTUAL_VIEW")) {

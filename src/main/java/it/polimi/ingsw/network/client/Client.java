@@ -1,17 +1,16 @@
 package it.polimi.ingsw.network.client;
 
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.commons.messages.ChooseGameCardMessage;
-import it.polimi.ingsw.commons.messages.Message;
-import it.polimi.ingsw.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.commons.Configuration;
+import it.polimi.ingsw.commons.messages.*;
+import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.view.ViewInterface;
 import it.polimi.ingsw.view.cli.CLI;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.Socket;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +80,7 @@ public class Client implements ServerObserver {
     Socket server;
     try {
       server = new Socket(getServerIP(), getServerPort());
-      server.setSoTimeout(10*1000); // milliseconds
+      server.setSoTimeout(Configuration.clientTimeout *1000); // milliseconds
 
       /* Create the adapter that will allow communication with the server
        * in background, and start running its thread */
@@ -157,9 +156,20 @@ public class Client implements ServerObserver {
         ChooseGameCardMessage chooseGameCardMessage = (ChooseGameCardMessage)message.getPayload(type);
         view.displayCardSelection(chooseGameCardMessage.getCardMap(), chooseGameCardMessage.getNumberOfPlayer());
         break;
+      case CHOOSE_PERSONAL_CARD:
+        List<TuplaGenerics> listAvailableCardFromServer = (List<TuplaGenerics>) message.getPayload(new TypeToken<List<TuplaGenerics<Card,String>>>() {}.getType());
+        //todo migrate this to cli and gui for different logic
+        List<Card> availableCards = new ArrayList<Card>();
+        listAvailableCardFromServer.forEach(tupla -> {
+          if (tupla.getSecond() == null) {
+            availableCards.add((Card) tupla.getFirst());
+          }
+        });
+        view.displayChoicePersonalCard(availableCards);
+        break;
       case SET_CARDS_TO_GAME: // se ho selezionato correttamente le carte
         //TODO passargli la List<Card> cardInGame che non ho capto come si fa
-        view.displayCardInGame();
+        //view.displayCardInGame();
 
         break;
 
@@ -180,7 +190,7 @@ public class Client implements ServerObserver {
         sendToServer(new Message(TypeOfMessage.HEARTBEAT));
         //System.out.println("PING");
       }
-    }, 1000, 10*1000); // this must be lower than (half should be ok) the value used server side in setSoTimeout()
+    }, 1000, Configuration.serverTimeout / 2 *1000); // this must be lower than (half should be ok) the value used server side in setSoTimeout()
   }
 
   public void sendToServer(Message message) {

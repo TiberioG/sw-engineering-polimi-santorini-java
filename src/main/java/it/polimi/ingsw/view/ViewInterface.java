@@ -23,6 +23,8 @@ public interface ViewInterface {
     void displayDisconnected(String details);
     void displayGenericMessage(String message);
     void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers);
+    void displayChoicePersonalCard(List<Card> availableCards) ;
+
     void displayCardInGame(List<Card> cardInGame);
     void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList);
 }

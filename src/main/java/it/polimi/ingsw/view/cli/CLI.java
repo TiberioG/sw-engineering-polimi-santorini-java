@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
+import it.polimi.ingsw.commons.Configuration;
 import it.polimi.ingsw.commons.Publisher;
 import it.polimi.ingsw.commons.messages.*;
 import it.polimi.ingsw.model.Card;
@@ -151,7 +152,7 @@ public class CLI implements ViewInterface {
 
         //String[] selectedCards = IntStream.range(0, numPlayers).mapToObj(i -> names[utils.readNumbers(0, names.length - 1)]).toArray(String[]::new);
         List<Integer> selections = utils.readNotSameNumbers(0, names.length - 1, numPlayers );
-        List<Integer> listOfIdCardSelected = new ArrayList<Integer>();
+        List<Integer> listOfIdCardSelected = new ArrayList<>();
 
         for (Integer selection : selections) {
             String nameSelected = names[selection];
@@ -162,6 +163,30 @@ public class CLI implements ViewInterface {
             }
         }
         client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, listOfIdCardSelected));
+    }
+
+    @Override
+    public void displayChoicePersonalCard(List<Card> availableCards) {
+        String[] names = availableCards.stream().map(Card::getName).toArray(String[]::new);
+
+        try {
+            utils.singleTableCool("Cards Available", names, 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Choice your personal card");
+
+        int numberSelected = utils.readNumbers(0, names.length - 1);
+        int cardIdSelected = -1;
+        for (Card card : availableCards) {
+            if (card.getName().equals(names[numberSelected])) {
+                cardIdSelected = card.getId();
+            }
+        }
+
+        client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, cardIdSelected));
+
     }
 
     @Override

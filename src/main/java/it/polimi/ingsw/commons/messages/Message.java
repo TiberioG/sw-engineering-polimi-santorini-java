@@ -1,6 +1,8 @@
 package it.polimi.ingsw.commons.messages;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.commons.Configuration;
 import it.polimi.ingsw.commons.JsonAdapter;
 
 import java.io.Serializable;
@@ -58,12 +60,12 @@ public class Message implements Serializable {
     }
 
     public Object getPayload(Class classType) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
         return gson.fromJson(this.jsonMessage, classType);
     }
 
     public Object getPayload(Type type) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
         return gson.fromJson(this.jsonMessage, type);
     }
 

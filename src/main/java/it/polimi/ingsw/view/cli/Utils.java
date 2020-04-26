@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
+import it.polimi.ingsw.commons.Configuration;
 
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -79,9 +80,9 @@ public class Utils {
 
 
 
-    public  Date readDate(String kind){
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date  date = new Date();
+    public Date readDate(String kind){
+        DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
+        Date date = new Date();
         Date today = new Date();
 
         try {
@@ -94,7 +95,7 @@ public class Utils {
             kind = "date";
         }
 
-        out.println("Insert " + kind + " in format dd/MM/yyyy");
+        out.println("Insert " + kind + " in format " + Configuration.formatDate);
         while (true) {
             try {
                 date = dateFormat.parse(in.nextLine());
