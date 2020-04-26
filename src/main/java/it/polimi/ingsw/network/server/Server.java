@@ -86,7 +86,7 @@ public class Server
         handleLogin((LoginMessage)message);
         break;
 
-      case SETTED_CARDS_TO_GAME:
+      case SET_CARDS_TO_GAME:
         virtualView.update(message);
         break;
 

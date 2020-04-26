@@ -59,9 +59,9 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
                 Location location = match.getLocation();
                 displayMessage(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, location));
 
-            case SETTED_CARDS_TO_GAME: //mando a far vedere le carte selezionate
+            case SET_CARDS_TO_GAME: //mando a far vedere le carte selezionate
                 List<Card> cardInGame = match.getCards();
-                displayMessage(new Message("ALL", TypeOfMessage.SETTED_CARDS_TO_GAME, cardInGame ));
+                displayMessage(new Message("ALL", TypeOfMessage.SET_CARDS_TO_GAME, cardInGame ));
         }
 
         if (message.getUsername() != null && message.getUsername().equals("VIRTUAL_VIEW")) {

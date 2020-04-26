@@ -157,7 +157,7 @@ public class Client implements ServerObserver {
         ChooseGameCardMessage chooseGameCardMessage = (ChooseGameCardMessage)message.getPayload(type);
         view.displayCardSelection(chooseGameCardMessage.getCardMap(), chooseGameCardMessage.getNumberOfPlayer());
         break;
-      case SETTED_CARDS_TO_GAME: // se ho selezionato correttamente le carte
+      case SET_CARDS_TO_GAME: // se ho selezionato correttamente le carte
         //TODO passargli la List<Card> cardInGame che non ho capto come si fa
         view.displayCardInGame();
 

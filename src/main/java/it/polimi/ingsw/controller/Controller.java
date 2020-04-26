@@ -38,14 +38,25 @@ public class Controller implements Listener<Message> {
     }
 
     private void addCardToPlayer(String name, int cardId) {
-        //todo gestire controllo che la carta non sia associata ad altri player
-        for (Player player : match.getPlayers()) {
-            if (player.getName().equals(name)) player.setCurrentCard(cardManager.getCardById(cardId));
+        String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> player.getCurrentCard().getId() == cardId).map(player -> player.getName()).findFirst().orElse(null);
+        if (nameOfOwnerPlayer == null) {
+            match.getPlayerByName(name).setCurrentCard(cardManager.getCardById(cardId));
         }
     }
 
     private void initTurnManager() {
         turnManager = new TurnManager(match, virtualView);
+    }
+
+    private void sendSelectableCards (String nameOfPlayer) {
+        HashMap<Card, String> mapOfSelectableCards = new HashMap();
+
+        match.getCards().stream().forEach(card -> {
+            String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> player.getCurrentCard().getId() == card.getId()).map(player -> player.getName()).findFirst().orElse(null);
+            mapOfSelectableCards.put(card, nameOfOwnerPlayer);
+        });
+
+        virtualView.displayMessage(new Message(nameOfPlayer, TypeOfMessage.CHOOSE_PERSONAL_CARD, mapOfSelectableCards));
     }
 
 
@@ -64,17 +75,17 @@ public class Controller implements Listener<Message> {
                 });
                 virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
                 break;
-            case SETTED_CARDS_TO_GAME: //if i receive this, the card for the game have been chosen, now I have to associate them to players
+            case SET_CARDS_TO_GAME: //if i receive this, the card for the game have been chosen, now I have to associate them to players
                 List<Integer> listOfIdCard = (List) message.getPayload(List.class);
                 addCardToMatch(listOfIdCard);
-                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_PLAYERS_CARD, match.getCards()));
+                sendSelectableCards(match.getPlayers().get(0).getName());
                 break;
             case SET_CARD_TO_PLAYER:
                 Tupla tuplaSetPlayer = (Tupla) message.getPayload(Tupla.class);
                 addCardToPlayer((String) tuplaSetPlayer.getFirst(), (Integer) tuplaSetPlayer.getSecond());
 
                 if (match.selectNextCurrentPlayer() != 0) {
-                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_PLAYERS_CARD, match.getCards()));
+                    sendSelectableCards(match.getCurrentPlayer().getName());
                 } else {
                     virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));
                 }

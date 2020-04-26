@@ -161,7 +161,7 @@ public class CLI implements ViewInterface {
                 }
             }
         }
-        client.sendToServer(new Message( TypeOfMessage.SETTED_CARDS_TO_GAME, listOfIdCardSelected));
+        client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, listOfIdCardSelected));
     }
 
     @Override
