@@ -85,7 +85,7 @@ public class CLI implements ViewInterface {
 
         out.println("Choose your username:");
         String username = in.nextLine();
-        utils.readDate("birthdate");
+        date = utils.readDate("birthdate");
 
         out.println("How many people do you want to play with?");
         numOfPlayers = validateIntInput(in, 2, 3);

@@ -35,6 +35,7 @@ public class Server
   private List<String> lobby = new ArrayList<>(); // usernames
   private Map<String, Date> matchUsers = new HashMap<>(); // key: username, value: birthDate
   private int howManyPlayers = 0;
+  private boolean gameStarted = false;
 
   private static Logger LOGGER = Logger.getLogger("server");
 
@@ -172,7 +173,13 @@ public class Server
     String username = message.getUsername();
     boolean usernameAlreadyExists = usernameToUUIDMap.containsKey(username);
     Message messageToSend;
-    if(username.isBlank()) {
+    if(this.gameStarted) {
+      LOGGER.log(Level.INFO, message.getUsername() + "is trying to login while there is already a game in progress");
+      ClientHandler clientToBeRemoved = clientsMap.remove(uuid);
+      connectedClients.remove(clientToBeRemoved);
+      String details = "I'm sorry, there is already a game in progress. Try later :(";
+      clientToBeRemoved.closeConnection(details);
+    } else if(username.isBlank()) {
       LOGGER.log(Level.INFO, "Trying to register an empty username");
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this is not a valid username. Please try with a different username:");
       messageToSend.setUUID(uuid);
@@ -232,6 +239,7 @@ public class Server
         matchUsers.clear();
         List<String> copyLobby = new ArrayList<>(lobby);
         copyLobby.forEach( _username -> matchUsers.put(_username, birthdateMap.get(_username)));
+        this.gameStarted = true;
         virtualView.handleMessage(new Message("ALL", TypeOfMessage.START_MATCH, matchUsers));
       }
     }
@@ -264,6 +272,7 @@ public class Server
     lobby.clear();
     matchUsers.clear();
     howManyPlayers = 0;
+    gameStarted = false;
   }
 
   private synchronized void disconnectAllPlayers(String details) {
