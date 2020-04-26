@@ -20,6 +20,9 @@ public class SquareCell2 {
     private String internal;
     private int startRow;
     private int startCol;
+    private boolean selected;
+    private boolean movable;
+    private boolean buildable;
 
     /**
      *
@@ -31,9 +34,22 @@ public class SquareCell2 {
         this.color = color;
         this.worker = worker;
         this.level = level;
-
+        this.buildable = false;
+        this.selected = false;
+        this.movable = false;
     }
 
+    public void setBuildable(boolean buildable) {
+        this.buildable = buildable;
+    }
+
+    public void setMovable(boolean movable) {
+        this.movable = movable;
+    }
+
+    public void setSelected(boolean selected){
+        this.selected = selected;
+    }
 
     public void print(int startRow, int startCol) throws IOException, InterruptedException {
         this.startRow = startRow;
@@ -62,7 +78,6 @@ public class SquareCell2 {
                 this.noWorkerL4();
             }
         }
-
         else{
             if (level == 0) {
                 this.noWorkerL0();
@@ -90,16 +105,18 @@ public class SquareCell2 {
                 this.noWorkerL4();
                 this.yesWorker();
             }
-
         }
 
-    }
 
-
-    public void selected(int startRow, int startCol) throws IOException, InterruptedException {
-        this.startRow = startRow;
-        this.startCol = startCol;
-        this.higlited();
+        if(buildable){
+            this.special(27);
+        }
+        if(movable){
+            this.special(27);
+        }
+        if(selected){
+            this.special(202);
+        }
     }
 
     private void noWorkerL0 () throws IOException, InterruptedException {
@@ -160,14 +177,15 @@ public class SquareCell2 {
         }
     }
 
-    private void higlited () throws IOException, InterruptedException {
+    private void special (int colorbit) throws IOException, InterruptedException {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
             for (int j = 0; j < len; j++){
-                System.out.print("\u001b[48;5;202m" + " "); //rossino
+                System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");
             }
         }
     }
+
 
     public static int getLen(){
         return len;

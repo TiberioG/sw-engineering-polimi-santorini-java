@@ -1,9 +1,17 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.commons.Colors;
-//import org.davidmoten.text.utils.WordWrap;
+import org.davidmoten.text.utils.WordWrap;
 
-public class Frame {
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+/**
+ * This class is used to create a frame inside the CLI
+ */
+class Frame {
+    private PrintWriter out ;
+    private Scanner in ;
 
     private int[] absInit;
     private int[] absEnd;
@@ -12,13 +20,14 @@ public class Frame {
     private int colSpan;
 
 
-    Frame(int[] absInit, int[] absEnd){
+    Frame(int[] absInit, int[] absEnd, Scanner in, PrintWriter out ){
         this.absInit = absInit;
         this.absEnd = absEnd;
+        this.in = in;
+        this.out = out;
         rowSpan = absEnd[0] - absInit[0];
         colSpan = absEnd[1] - absInit[1];
     }
-
 
     void clear(){
         System.out.print(Colors.reset());
@@ -29,26 +38,38 @@ public class Frame {
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
     }
 
-    void print(){
+    void print(String string){
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        System.out.print(string);
+    }
+
+    void start(){
+        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+    }
+
+    void println(String string){
+        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        System.out.println(string);
+    }
+
+
+    void printWrapped (String towrite){
+        String wrapped =
+                WordWrap.from(towrite)
+                        .maxWidth(colSpan)
+                        .wrap();
+
+        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+       System.out.print(wrapped);
+    }
+
+    void border(){
 
     }
+
 
     public int[] getInit(){
         return this.absInit;
-    }
-
-
-    void writeln (String towrite){
-        /*String wrapped =
-                WordWrap.from(towrite)
-                        .maxWidth(rowSpan)
-                        .insertHyphens(true) // true is the default
-                        .wrap();
-
-         */
-        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
-       // System.out.print(wrapped);
     }
 
 }

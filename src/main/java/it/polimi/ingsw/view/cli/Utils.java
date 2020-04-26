@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @author tiberioG
  */
 public class Utils {
-    private  PrintWriter out ;
+    private PrintWriter out ;
     private Scanner in ;
 
     public Utils(Scanner in, PrintWriter out) {
@@ -84,9 +84,9 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
         Date date = new Date();
         Date today = new Date();
-
+        Date oldest = new Date();
         try {
-            Date oldest = dateFormat.parse("01/01/1900");
+            oldest = dateFormat.parse("01/01/1900");
         } catch (ParseException e) {
             //it's impossible to trow excep here ehe
         }
@@ -99,12 +99,24 @@ public class Utils {
         while (true) {
             try {
                 date = dateFormat.parse(in.nextLine());
-                break;
+                if (date.before(today) && date.after(oldest)){
+                    break;
+                }else{
+                    if (date.after(today)){
+                        out.println("you're too young to play this game");
+                    }
+                    if (date.before(oldest)) {
+                        out.println("you're too old to play this game");
+                    }
+
+                }
             } catch (ParseException e) {
                 out.println("Wrong format of date");
             }
         }
-        //todo comparare data
+
+
+
         return date;
     }
 

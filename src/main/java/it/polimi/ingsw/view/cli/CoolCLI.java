@@ -3,6 +3,8 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
+import it.polimi.ingsw.controller.strategies.strategyMove.DefaultMove;
+import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.controller.TurnProperties;
@@ -39,7 +41,7 @@ public class CoolCLI {
     private Random rand = new Random();
 
     private Match match;
-    private static Frame left = new Frame(new int[]{7,0}, new int[]{99, 58});
+    private static Frame left = new Frame(new int[]{7,0}, new int[]{99, 58}, in, out);
 
     private Utils utils = new Utils(in, out);
 
@@ -57,6 +59,7 @@ public class CoolCLI {
     Cell initCellWorker2_1;
     Cell initCellWorker2_2;
     StrategyBuild strategyBuild;
+    StrategyMove strategyMove;
     TurnProperties turnProperties;
 
 
@@ -66,7 +69,9 @@ public class CoolCLI {
      * just a method to build a ame to play for testing
      */
     public void init() throws WorkerAlreadyPresentException, CellOutOfBoundsException, ParseException, BuildLowerComponentException {
-        match = new Match(1234, new VirtualView(new Server() ));
+        VirtualView virtualView = new VirtualView(new Server());
+        match = new Match(66666, virtualView);
+        virtualView.setMatch(match);
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String birthDate1 = "22/03/1998";
@@ -108,10 +113,53 @@ public class CoolCLI {
         match.getIsland().addComponent(Component.DOME, match.getIsland().getCell(3, 3));
 
         strategyBuild = new DefaultBuild(match);
+        strategyMove = new DefaultMove(match);
         turnProperties = new TurnProperties();
         TurnProperties.resetAllParameter();
 
     }
+
+
+
+    public void init2() throws WorkerAlreadyPresentException, CellOutOfBoundsException, ParseException, BuildLowerComponentException {
+        VirtualView virtualView = new VirtualView(new Server());
+        match = new Match(66666, virtualView);
+        virtualView.setMatch(match);
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String birthDate1 = "22/03/1998";
+        String birthDate2 = "26/07/1997";
+        Date date1 = dateFormat.parse(birthDate1);
+        Date date2 = dateFormat.parse(birthDate2);
+        player1 = match.createPlayer("Mariossssss", date1);
+        player2 = match.createPlayer("Luigi", date2);
+
+        worker1_1 = player1.addWorker(Colors.RED);
+        worker1_2 = player1.addWorker(Colors.RED);
+        worker2_1 = player2.addWorker(Colors.BLUE);
+        worker2_2 = player2.addWorker(Colors.BLUE);
+
+        initCellWorker1_1 = match.getIsland().getCell(2, 2);
+        initCellWorker1_2 = match.getIsland().getCell(3, 3);
+        initCellWorker2_1 = match.getIsland().getCell(0, 0);
+        initCellWorker2_2 = match.getIsland().getCell(1, 1);
+        match.getLocation().setLocation(initCellWorker1_1, worker1_1);
+        match.getLocation().setLocation(initCellWorker1_2, worker1_2);
+        match.getLocation().setLocation(initCellWorker2_1, worker2_1);
+        match.getLocation().setLocation(initCellWorker2_2, worker2_2);
+
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
+
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
+
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
+
+        strategyMove = new DefaultMove(match);
+    }
+
+
 
 
     /**
@@ -123,6 +171,7 @@ public class CoolCLI {
     }
 
     public void userLogin() throws ParseException {
+        left.start();
         out.println("How many players?");
         int askedPlayers = Integer.parseInt(in.nextLine());
 
@@ -134,9 +183,11 @@ public class CoolCLI {
             dates.add( dateFormat.parse(in.nextLine()) );
             loggedUsers++;
         }
+        left.clear();
     }
 
     public void cardSelection() throws InterruptedException {
+        left.start();
         //get list of card names
         //todo invocare il controller qui, ho bisogno che mmi arrivi una copia della hashmap
         CardManager myCardManager = CardManager.initCardManager();
@@ -154,7 +205,7 @@ public class CoolCLI {
            strSelections[i] = names[selections.get(i)];
        }
         utils.singleTableCool("Card selected", strSelections, 100);
-
+       left.clear();
     }
 
 
@@ -189,21 +240,15 @@ public class CoolCLI {
 
 
     public void moveWorker() {
+        List<Cell> availableCells ;
         left.clear();
-        left.writeln("Scegli dove muoverti usando le frecce,\n usa il tasto B per costruire un primo livello, \n Q per continuare");
+        left.printWrapped("Scegli dove muoverti usando le frecce, usa il tasto B per costruire un primo livello, usa i numeri per sceliere il worker che vuoi, Q per continuare");
         Terminal.hideCursor();
         int curRow = 0;
         int curCol = 0;
         try {
             this.showIsland();
         } catch ( IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Terminal.moveAbsoluteCursor(7, 60);
-            myisland.higlight(curRow, curCol);
-        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -240,18 +285,63 @@ public class CoolCLI {
                                 }
                             }
                         }
-                        myisland.higlight(curRow, curCol);
+                        myisland.setSelected(curRow, curCol);
+                        myisland.print();
                     }//end arrow management
 
+                    //getting B for build
                     else if (c == 98){
                         build(curRow, curCol);
                         this.showIsland();
+                    }
+
+                    else if(c == 49){
+                        availableCells = strategyMove.getAvailableCells(worker1_1);
+                        curCol = match.getLocation().getLocation(worker1_1).getCoordX();
+                        curRow = match.getLocation().getLocation(worker1_1).getCoordY();
+                        myisland.setSelected(curRow, curCol);
+                        myisland.clearMovable();
+                        myisland.setMovable(availableCells);
+                        myisland.print();
+                    }
+
+                    else if(c == 50){
+                        availableCells = strategyMove.getAvailableCells(worker1_2);
+                        curCol = match.getLocation().getLocation(worker1_2).getCoordX();
+                        curRow = match.getLocation().getLocation(worker1_2).getCoordY();
+                        myisland.setSelected(curRow, curCol);
+                        myisland.clearMovable();
+                        myisland.setMovable(availableCells);
+                        myisland.print();
+                    }
+
+                    else if(c == 51){
+                        match.getLocation().setLocation(initCellWorker2_1, worker2_1);
+                        availableCells = strategyMove.getAvailableCells(worker2_1);
+                        curCol = match.getLocation().getLocation(worker2_1).getCoordX();
+                        curRow = match.getLocation().getLocation(worker2_1).getCoordY();
+                        myisland.setSelected(curRow, curCol);
+                        myisland.clearMovable();
+                        myisland.setMovable(availableCells);
+                        myisland.print();
+                    }
+
+                    else if(c == 52){
+                        availableCells = strategyMove.getAvailableCells(worker2_2);
+                        curCol = match.getLocation().getLocation(worker2_2).getCoordX();
+                        curRow = match.getLocation().getLocation(worker2_2).getCoordY();
+                        myisland.setSelected(curRow, curCol);
+                        myisland.clearMovable();
+                        myisland.setMovable(availableCells);
+                        myisland.print();
                     }
 
                 } //end system in available
             } catch (IOException | InterruptedException e) {
             } catch (CellOutOfBoundsException e) {
             } catch (BuildLowerComponentException e) {
+            } catch (WorkerAlreadyPresentException e) {
+                e.printStackTrace();
             }
         }// end while true
 
@@ -262,14 +352,10 @@ public class CoolCLI {
     public static void main(String[] args) throws ParseException, InterruptedException, IOException, CellOutOfBoundsException, BuildLowerComponentException, WorkerAlreadyPresentException {
         CoolCLI thiscli = new CoolCLI();
         thiscli.init();
-
         Terminal.resize(110, 150);
-
         Utils.maketitle();
 
-        left.print();
         thiscli.userLogin();
-        left.clear();
         thiscli.cardSelection();
 
         Terminal.noBuffer();
@@ -277,8 +363,7 @@ public class CoolCLI {
         thiscli.moveWorker();
         Terminal.showCursor();
 
-       left.clear();
-       left.print();
+
        Terminal.yesBuffer();
        thiscli.cardSelection();
 
