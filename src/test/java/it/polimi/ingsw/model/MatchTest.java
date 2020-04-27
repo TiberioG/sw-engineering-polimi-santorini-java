@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+
+import static junit.framework.TestCase.*;
 
 public class MatchTest {
-    /* declarations */
     private final int testID = 478939;
     private final String name1 = "Agrippina";
     private final String name2 = "Basilina";
@@ -77,12 +77,21 @@ public class MatchTest {
     }
 
     /**
-     * Test shows that if i try to set as current player one not preset in the list I get an exception
+     * Test shows that if i try to set as current player one not preset in the list i receive -1
      */
     @Test()
-    public void testGetCurrentPlayer_ExceptionPlayerNotPres() {
+    public void testGetCurrentPlayer_PlayerNotPres() {
         assertEquals(testMatch.setCurrentPlayer(playerNotAdded), -1);
     }
+
+    @Test()
+    public void selectNextCurrentPlayer_receiveNextPlayerOnTheList() {
+        List<Player> playerList = testMatch.getPlayers();
+        testMatch.setCurrentPlayer(player3);
+        int indexOfCurrentPlayer= testMatch.selectNextCurrentPlayer();
+        assertEquals(player1, playerList.get(indexOfCurrentPlayer));
+    }
+
 
     /**
      * Test shows I get exactly the same list of cards as input
@@ -111,15 +120,30 @@ public class MatchTest {
 
 
     @Test
-    public void testSetCurrentPlayer() {
+    public void testSetCurrentPlayer_WithPlayerInput() {
         testMatch.setCurrentPlayer(player2);
-        assertNotNull(testMatch.getCurrentPlayer());
-
+        assertEquals(testMatch.getCurrentPlayer(), player2);
     }
 
     @Test
-    public void testGetLocation(){
+    public void testSetCurrentPlayer_WithNameInput() {
+        testMatch.setCurrentPlayer(name1);
+        assertEquals(testMatch.getCurrentPlayer(), player1);
+    }
 
+    @Test
+    public void buildOrderedList_CompatorsInput() {
+        testMatch.buildOrderedList(Comparator.comparing(Player::getName).reversed());
+        List<Player> playerList = testMatch.getPlayers();
+        assertTrue(playerList.get(0).equals(player3) && playerList.get(1).equals(player2) && playerList.get(2).equals(player1));
+    }
+
+    @Test
+    public void removePlayer_NewListOfPlayerWithoutRemovedPlayer() {
+        List<Player> playerList = testMatch.getPlayers();
+        testMatch.removePlayer(player2.getName());
+        boolean checkNewListOfPlayers = !testMatch.getPlayers().contains(player2) && playerList.containsAll(testMatch.getPlayers());
+        assertEquals(true, (playerList.size() - 1) == testMatch.getPlayers().size() && checkNewListOfPlayers);
     }
 
 }

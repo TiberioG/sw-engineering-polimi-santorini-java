@@ -99,7 +99,7 @@ public class TurnManager {
     }
 
 
-    public void move(Worker worker, Cell cell) throws SantoriniException {
+    public void move(Cell cell) throws SantoriniException {
         if (checkForPermittedPhase("move")) {
             currentTurn.move(cell);
             updateCurrentPhase("move");
@@ -128,10 +128,7 @@ public class TurnManager {
     }
 
     private Boolean checkForPermittedPhase(String type) {
-        for(Phase phase : currentTurn.getCurrentPhase().getNextPhases()) {
-            if (phase.equals(type)) return true;
-        }
-        return false;
+        return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -> phase.getType().equals(type));
     }
 
     public List<Phase> getNextPhases() {
@@ -139,22 +136,19 @@ public class TurnManager {
     }
 
     public void selectWorker(Worker worker) {
-        if (checkForPermittedPhase("selectWorker")) currentTurn.setSelectedWorker(worker);
+        if (currentTurn.getCurrentPhase().getType().equals("selectWorker")) currentTurn.setSelectedWorker(worker);
     }
 
     private void updateCurrentPhase(String type) {
-        Phase currentPhaseOfTurn = currentTurn.getCurrentPhase();
-        if (currentPhaseOfTurn.getNeedCheckForVictory() && currentTurn.checkWin()) {
+        if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
             //richiamare la virtualview notificando la vittoria
         }
 
-        if (currentPhaseOfTurn.getNextPhases() == null) {
+        currentTurn.updateCurrentPhaseFromType(type);
+        if (currentTurn.getCurrentPhase().getNextPhases() == null) {
             //seleziono il prossimo turno
             selectNextTurn();
             //richiamare la virtual view per notificare la fine del turno
-        } else {
-            currentTurn.updateCurrentPhaseFromType(type);
-            //richiamare la virtual view per notificare le prossime mosse disponibili con le next phases
         }
     }
 

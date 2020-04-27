@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class VirtualView extends Publisher<Message> implements Listener<Message> {
 
-    Match match;
-    CardManager cardManager;
+    private Match match;
+    private CardManager cardManager;
     private Server server;
 
     /**

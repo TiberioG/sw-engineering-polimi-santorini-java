@@ -80,9 +80,9 @@ public class Turn {
     }
 
     public void updateCurrentPhaseFromType(String type) {
-        for(Phase nextPhase : currentPhase.getNextPhases()) {
-            if (nextPhase.equals(type)) currentPhase = nextPhase;
-        }
+        Phase tempCurrentPhase = currentPhase.getNextPhases().stream().filter(phase -> phase.getType().equals(type)).findFirst().orElse(null);
+        if (tempCurrentPhase == null) throw new RuntimeException("Cannot update CurrentPhase with a null phase");
+        else currentPhase = tempCurrentPhase;
     }
 
     public Phase getCurrentPhase() {

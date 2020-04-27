@@ -7,10 +7,10 @@ import it.polimi.ingsw.commons.messages.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.network.server.VirtualView;
 
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Controller implements Listener<Message> {
     private Match match;
@@ -95,19 +95,11 @@ public class Controller implements Listener<Message> {
                 if (match.selectNextCurrentPlayer() != 0) {
                     sendSelectableCards(match.getCurrentPlayer().getName());
                 } else {
-                    match.getCards().stream().forEach(card -> {
-                        String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -> {
-                            Card cardOfPlayer = player.getCurrentCard();
-                            if (cardOfPlayer != null && cardOfPlayer.getId() == card.getId()) {
-                                return true;
-                            } else return false;
-                        }).map(player -> player.getName()).findFirst().orElse(null);
+                    List<Integer> listOfIdCardsAlreadyAssigned = match.getPlayers().stream().filter(player -> player.getCurrentCard() != null).map(player -> player.getCurrentCard().getId()).collect(Collectors.toList());
+                    Card cardAvailable = match.getCards().stream().filter(card -> !listOfIdCardsAlreadyAssigned.contains(card.getId())).findFirst().orElse(null);
 
-                        if (nameOfOwnerPlayer != null) {
-                            match.getCurrentPlayer().setCurrentCard(card);
-                            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.GENERIC_MESSAGE, "Ti è stata assegnata la seguente carta: " + card.getName()));
-                        }
-                    });
+                    match.getCurrentPlayer().setCurrentCard(cardAvailable);
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.GENERIC_MESSAGE, "Ti è stata assegnata la seguente carta: " + cardAvailable.getName()));
 
                     virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));
                 }

@@ -69,4 +69,18 @@ public class LocationTest {
         assertNotEquals(worker1, locationInstance.getOccupant(cell2));
         assertEquals(worker1, locationInstance.getOccupant(cell1));
     }
+
+    @Test
+    public void removeLocation() {
+        Location locationInstance = testMatch.getLocation();
+        try {
+            locationInstance.setLocation(cell1, worker1);
+        }
+        catch (WorkerAlreadyPresentException except){
+            // no need to manage here
+        }
+        locationInstance.removeLocation(worker1);
+
+        assertEquals(null, locationInstance.getOccupant(cell1));
+    }
 }

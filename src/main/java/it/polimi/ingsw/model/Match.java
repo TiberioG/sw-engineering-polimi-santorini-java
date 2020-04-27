@@ -96,10 +96,11 @@ public class Match extends Publisher<Message> {
      * @return if the currentPlayer was successfully added, returns the index in the listPlayers, else returns -1
      */
     public int setCurrentPlayer(String name) {
-        if (getPlayerByName(name) == null){
+        Player player = getPlayerByName(name);
+        if (player == null){
             return -1;
         } else {
-            this.currentPlayer = currentPlayer;
+            this.currentPlayer = player;
             return listPlayers.indexOf(currentPlayer);
         }
     }
@@ -140,7 +141,7 @@ public class Match extends Publisher<Message> {
      */
     public List<Player> buildOrderedList(Comparator<Player> comparator) {
         //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
-        listPlayers = listPlayers.stream().sorted(comparator.reversed()).collect(Collectors.toList());
+        listPlayers = listPlayers.stream().sorted(comparator).collect(Collectors.toList());
         return getPlayers();
     }
 
