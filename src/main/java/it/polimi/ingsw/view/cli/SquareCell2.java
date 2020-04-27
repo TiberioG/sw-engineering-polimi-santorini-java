@@ -117,7 +117,18 @@ public class SquareCell2 {
         if(selected){
             this.special(202);
         }
+
     }
+
+    public void debug(int startRow, int startCol, int row, int col) throws IOException, InterruptedException {
+        this.startRow = startRow;
+        this.startCol = startCol;
+       this.coordinates(row, col);
+    }
+
+
+
+
 
     private void noWorkerL0 () throws IOException, InterruptedException {
         for (int i = 0; i < hei ; i ++){
@@ -175,6 +186,14 @@ public class SquareCell2 {
                 }
             }
         }
+    }
+
+
+    private void coordinates (int row, int col) throws IOException, InterruptedException {
+        System.out.print(Colors.reset());
+        Terminal.moveAbsoluteCursor(startRow + hei - 1  , startCol); // scendo di una riga ogni volta
+        System.out.print(row + "," + col);
+
     }
 
     private void special (int colorbit) throws IOException, InterruptedException {

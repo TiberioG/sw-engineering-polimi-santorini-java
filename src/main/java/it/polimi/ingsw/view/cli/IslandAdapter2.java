@@ -65,6 +65,19 @@ public class IslandAdapter2 {
         System.out.print(Colors.reset());
     }
 
+    void debug() throws IOException, InterruptedException {
+        //Terminal.noBuffer();
+        int initRow = cursor[0];
+        int initCol = cursor[1];
+
+        for (int row = 0; row < matrix.length; row ++) {
+            for (int col = 0; col < matrix.length; col++) {
+                matrix[row][col].debug(initRow + row*(hei + SPACING_H), initCol + col*(len + SPACING_V), row, col);
+            }
+        }
+        System.out.print(Colors.reset());
+    }
+
 
     void setSelected(int r, int c) {
         for (int row = 0; row < matrix.length; row ++) {
@@ -76,12 +89,11 @@ public class IslandAdapter2 {
     }
 
 
-
     public void setMovable (List<Cell> availableCells ) {
         for (Cell cell : availableCells) {
             for (int row = 0; row < matrix.length; row ++) {
                 for (int col = 0; col < matrix.length; col++) {
-                    if (row == cell.getCoordY() && col == cell.getCoordX()){
+                    if (row == cell.getCoordX() && col == cell.getCoordY()){
                         matrix[row][col].setMovable(true);
                     }
                 }

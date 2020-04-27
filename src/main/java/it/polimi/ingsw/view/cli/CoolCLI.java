@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public class CoolCLI {
+    private static String OS = System.getProperty("os.name").toLowerCase();
+
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
     private List<String > usernames  = new ArrayList<>();
@@ -240,19 +242,124 @@ public class CoolCLI {
 
 
     public void moveWorker() {
+
+        boolean debug = false;
         List<Cell> availableCells ;
         left.clear();
-        left.printWrapped("Scegli dove muoverti usando le frecce, usa il tasto B per costruire un primo livello, usa i numeri per sceliere il worker che vuoi, Q per continuare");
+        if (!OS.contains("win")) {
+            left.printWrapped("Scegli dove muoverti usando le frecce, usa il tasto B per costruire un primo livello, usa i numeri per sceliere il worker che vuoi muovere, in blu compariranno le celle disponibili per muoverti, D per attivare modalità debug, Q per uscire");
+        }
+        else {
+            left.printWrapped("Scegli dove muoverti usando WASD, usa il tasto B per costruire un primo livello, usa i numeri per sceliere il worker che vuoi muovere, in blu compariranno le celle disponibili per muoverti, shift D per attivare modalità debug, Q per uscire");
+        }
+
         Terminal.hideCursor();
         int curRow = 0;
         int curCol = 0;
         try {
             this.showIsland();
         } catch ( IOException | InterruptedException e) {
-            e.printStackTrace();
+            left.printWrapped(Arrays.toString(e.getStackTrace()));
         }
 
-        while (true) {
+        if (!OS.contains("win")) {
+            while (true) {
+                try {
+                    if (System.in.available() != 0) {
+                        int c = System.in.read();  //read one char at a time in ascii code
+
+                        //GETTING Q to quit
+                        if (c == 113) {   // if press Q -> quit this visualization
+                            break;
+                        }
+
+                        //getting an ARROW KEY
+                        else if (c == 27) { // first part of arrow key == ESC
+                            int next1 = System.in.read();
+                            int next2 = System.in.read();
+                            if (next1 == 91) { //  read [
+                                if (next2 == 65) {                     //UP  arrow
+                                    if (curRow > 0 && curRow <= 5) {
+                                        curRow--;
+                                    }
+                                } else if (next2 == 66) {              //DOWN arrow
+                                    if (curRow >= 0 && curRow < 4) {
+                                        curRow++;
+                                    }
+                                } else if (next2 == 67) {              //RIGHT arrow
+                                    if (curCol >= 0 && curCol < 4) {
+                                        curCol++;
+                                    }
+                                } else if (next2 == 68) {               //LEFT  arrow
+                                    if (curCol > 0 && curCol <= 5) {
+                                        curCol--;
+                                    }
+                                }
+                            }
+                            myisland.setSelected(curRow, curCol);
+                            myisland.print();
+                        }//end arrow management
+
+                        //getting B for build
+                        else if (c == 98) {
+                            build(curRow, curCol);
+                            this.showIsland();
+                        } else if (c == 49) {
+                            availableCells = strategyMove.getAvailableCells(worker1_1);
+                            curRow = match.getLocation().getLocation(worker1_1).getCoordX();
+                            curCol = match.getLocation().getLocation(worker1_1).getCoordY();
+                            myisland.setSelected(curRow, curCol);
+                            myisland.clearMovable();
+                            myisland.setMovable(availableCells);
+                            myisland.print();
+                        } else if (c == 50) {
+                            availableCells = strategyMove.getAvailableCells(worker1_2);
+                            curRow = match.getLocation().getLocation(worker1_2).getCoordX();
+                            curCol = match.getLocation().getLocation(worker1_2).getCoordY();
+                            myisland.setSelected(curRow, curCol);
+                            myisland.clearMovable();
+                            myisland.setMovable(availableCells);
+                            myisland.print();
+                        } else if (c == 51) {
+                            availableCells = strategyMove.getAvailableCells(worker2_1);
+                            curRow = match.getLocation().getLocation(worker2_1).getCoordX();
+                            curCol = match.getLocation().getLocation(worker2_1).getCoordY();
+                            myisland.setSelected(curRow, curCol);
+                            myisland.clearMovable();
+                            myisland.setMovable(availableCells);
+                            myisland.print();
+                        } else if (c == 52) {
+                            availableCells = strategyMove.getAvailableCells(worker2_2);
+                            curRow = match.getLocation().getLocation(worker2_2).getCoordX();
+                            curCol = match.getLocation().getLocation(worker2_2).getCoordY();
+                            myisland.setSelected(curRow, curCol);
+                            myisland.clearMovable();
+                            myisland.setMovable(availableCells);
+                            myisland.print();
+                        }
+
+                        // gettind D for debug option
+                        else if (c == 100) {
+                            debug = !debug;
+                            if (!debug) {
+                                myisland.print();
+                            }
+                        }
+
+                        if (debug) {
+                            myisland.debug();
+                        }
+
+                    } //end system in available
+                } catch (IOException | InterruptedException e) {
+                } catch (CellOutOfBoundsException e) {
+                } catch (BuildLowerComponentException e) {
+                    left.printWrapped(Arrays.toString(e.getStackTrace()));
+                }
+            }// end while true
+        }// end os not windsws
+        else{
+            while (true) {
             try {
                 if (System.in.available() != 0) {
                     int c = System.in.read();  //read one char at a time in ascii code
@@ -262,90 +369,101 @@ public class CoolCLI {
                         break;
                     }
 
-                    //getting an ARROW KEY
-                    else if (c == 27) { // first part of arrow key == ESC
-                        int next1 = System.in.read();
-                        int next2 = System.in.read();
-                        if (next1 == 91) { //  read [
-                            if (next2 == 65) {                     //UP  arrow
-                                if (curRow > 0 && curRow <= 5){
-                                    curRow --;
-                                }
-                            } else if (next2 == 66) {              //DOWN arrow
-                                if (curRow >= 0 && curRow < 4){
-                                    curRow ++;
-                                }
-                            } else if (next2 == 67) {              //RIGHT arrow
-                                if (curCol >= 0 && curCol < 4){
-                                    curCol ++;
-                                }
-                            } else if (next2 == 68) {               //LEFT  arrow
-                                if (curCol > 0 && curCol <= 5){
-                                    curCol --;
-                                }
-                            }
+                    else if (c == 119) {                     //UP  == W
+                        if (curRow > 0 && curRow <= 5) {
+                                 curRow--;
                         }
                         myisland.setSelected(curRow, curCol);
                         myisland.print();
-                    }//end arrow management
+                    }
+
+                    else if (c == 115) {              //DOWN == S
+                        if (curRow >= 0 && curRow < 4) {
+                                 curRow++;
+                        }
+                        myisland.setSelected(curRow, curCol);
+                        myisland.print();
+                    }
+
+                    else if (c == 100) {              //RIGHT == D
+                        if (curCol >= 0 && curCol < 4) {
+                            curCol++;
+                        }
+                        myisland.setSelected(curRow, curCol);
+                        myisland.print();
+                    }
+
+                    else if (c == 97) {               //LEFT  == A
+                        if (curCol > 0 && curCol <= 5) {
+                                 curCol--;
+                        }
+                        myisland.setSelected(curRow, curCol);
+                        myisland.print();
+                    }
+
+                //end WASD management
 
                     //getting B for build
-                    else if (c == 98){
+                    else if (c == 98) {
                         build(curRow, curCol);
                         this.showIsland();
-                    }
 
-                    else if(c == 49){
+                    } else if (c == 49) {
                         availableCells = strategyMove.getAvailableCells(worker1_1);
-                        curCol = match.getLocation().getLocation(worker1_1).getCoordX();
-                        curRow = match.getLocation().getLocation(worker1_1).getCoordY();
+                        curRow = match.getLocation().getLocation(worker1_1).getCoordX();
+                        curCol = match.getLocation().getLocation(worker1_1).getCoordY();
                         myisland.setSelected(curRow, curCol);
                         myisland.clearMovable();
                         myisland.setMovable(availableCells);
                         myisland.print();
-                    }
-
-                    else if(c == 50){
+                    } else if (c == 50) {
                         availableCells = strategyMove.getAvailableCells(worker1_2);
-                        curCol = match.getLocation().getLocation(worker1_2).getCoordX();
-                        curRow = match.getLocation().getLocation(worker1_2).getCoordY();
+                        curRow = match.getLocation().getLocation(worker1_2).getCoordX();
+                        curCol = match.getLocation().getLocation(worker1_2).getCoordY();
                         myisland.setSelected(curRow, curCol);
                         myisland.clearMovable();
                         myisland.setMovable(availableCells);
                         myisland.print();
-                    }
-
-                    else if(c == 51){
-                        match.getLocation().setLocation(initCellWorker2_1, worker2_1);
+                    } else if (c == 51) {
                         availableCells = strategyMove.getAvailableCells(worker2_1);
-                        curCol = match.getLocation().getLocation(worker2_1).getCoordX();
-                        curRow = match.getLocation().getLocation(worker2_1).getCoordY();
+                        curRow = match.getLocation().getLocation(worker2_1).getCoordX();
+                        curCol = match.getLocation().getLocation(worker2_1).getCoordY();
+                        myisland.setSelected(curRow, curCol);
+                        myisland.clearMovable();
+                        myisland.setMovable(availableCells);
+                        myisland.print();
+                    } else if (c == 52) {
+                        availableCells = strategyMove.getAvailableCells(worker2_2);
+                        curRow = match.getLocation().getLocation(worker2_2).getCoordX();
+                        curCol = match.getLocation().getLocation(worker2_2).getCoordY();
                         myisland.setSelected(curRow, curCol);
                         myisland.clearMovable();
                         myisland.setMovable(availableCells);
                         myisland.print();
                     }
 
-                    else if(c == 52){
-                        availableCells = strategyMove.getAvailableCells(worker2_2);
-                        curCol = match.getLocation().getLocation(worker2_2).getCoordX();
-                        curRow = match.getLocation().getLocation(worker2_2).getCoordY();
-                        myisland.setSelected(curRow, curCol);
-                        myisland.clearMovable();
-                        myisland.setMovable(availableCells);
-                        myisland.print();
+                    // gettind shift D for debug option
+                    else if (c == 68) {
+                        debug = !debug;
+                        if (!debug) {
+                            myisland.print();
+                        }
+                    }
+
+                    if (debug) {
+                        myisland.debug();
                     }
 
                 } //end system in available
             } catch (IOException | InterruptedException e) {
             } catch (CellOutOfBoundsException e) {
             } catch (BuildLowerComponentException e) {
-            } catch (WorkerAlreadyPresentException e) {
-                e.printStackTrace();
+                left.printWrapped(Arrays.toString(e.getStackTrace()));
             }
-        }// end while true
+            }// end while true
+        }// end windows
 
-    }
+    }//end moveworker
 
 
 
@@ -355,6 +473,7 @@ public class CoolCLI {
         Terminal.resize(110, 150);
         Utils.maketitle();
 
+        //left.border();
         thiscli.userLogin();
         thiscli.cardSelection();
 

@@ -126,7 +126,7 @@ public class Island extends Publisher<Message> {
         this.update();
         this.updateSpecific(cell);
     }
-    
+
 
 
     /**
