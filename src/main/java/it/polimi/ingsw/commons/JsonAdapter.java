@@ -1,12 +1,10 @@
 package it.polimi.ingsw.commons;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 
 /**
  * This is an adapter class for {@link JsonReader} class and {@link Gson} class
@@ -70,7 +68,7 @@ public class JsonAdapter {
     public static String getStringFromJsonObject(JsonObject jsonObject, String keyValue, String defaultValue) {
         JsonElement jsonElement = jsonObject.get(keyValue);
         if (jsonElement != null) {
-            return jsonElement.toString();
+            return jsonElement.getAsString();
         } else return defaultValue;
     };
 
@@ -83,7 +81,7 @@ public class JsonAdapter {
     public static String getStringFromJsonObject(JsonObject jsonObject, String keyValue) {
         JsonElement jsonElement = jsonObject.get(keyValue);
         if (jsonElement != null) {
-            return jsonElement.toString();
+            return jsonElement.getAsString();
         } else return null;
     };
 
@@ -113,4 +111,19 @@ public class JsonAdapter {
             return jsonElement.getAsInt();
         } else return 0;
     };
+
+
+    public static boolean getBooleanFromJson(JsonObject jsonObject, String keyValue) {
+        JsonElement jsonElement = jsonObject.get(keyValue);
+        if (jsonElement != null) {
+            return jsonElement.getAsBoolean();
+        } else return false;
+    };
+
+    public static String toJsonClass(Object object) {
+        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
+        return gson.toJson(object);
+    }
+
+
 }

@@ -8,22 +8,25 @@ import it.polimi.ingsw.commons.Colors;
  */
 public class Worker {
     /* Attributes */
-
+    private int id;
     private final Colors color;
-    private final Player owner;
+    transient private final Player owner;
 
     /* Constructor(s) */
 
     /**
      * Constructor
      */
-    public Worker(Colors color, Player owner) {
+    public Worker(int id, Colors color, Player owner) {
+        this.id = id;
         this.color = color;
         this.owner = owner;
     }
 
     /* Methods */
-
+    public int getId() {
+        return id;
+    }
     public Colors getColor() {
         return color;
     }

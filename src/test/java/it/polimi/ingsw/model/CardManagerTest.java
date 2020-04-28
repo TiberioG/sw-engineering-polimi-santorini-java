@@ -1,5 +1,7 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.CardManager;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,5 +21,14 @@ public class CardManagerTest {
         CardManager firstInstance = CardManager.initCardManager();
         Card card = firstInstance.getCardById(-1);
         assertEquals(card, null);
+    }
+
+    @Test
+    public void getCardMap_namesCardAreCorrect(){
+        CardManager firstInstance = CardManager.initCardManager();
+
+
+        assertEquals("Apollo", firstInstance.getCardMap().get(0).getName());
+
     }
 }

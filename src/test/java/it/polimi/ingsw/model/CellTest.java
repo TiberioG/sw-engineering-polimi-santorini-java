@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
+import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.network.server.VirtualView;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +22,7 @@ public class CellTest {
     @Before
     public void setUp() {
         cell = new Cell(x, y);
-        worker = new Worker(Colors.BLUE, new Player("Vespasiano", new Date(6666666)));
+        worker = new Worker(0, Colors.BLUE, new Player("Vespasiano", new Date(6666666)));
     }
 
     @After

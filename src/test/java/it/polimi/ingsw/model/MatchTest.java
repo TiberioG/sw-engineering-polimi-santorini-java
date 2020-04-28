@@ -1,19 +1,16 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.*;
+
+import static junit.framework.TestCase.*;
 
 public class MatchTest {
-    /* declarations */
     private final int testID = 478939;
     private final String name1 = "Agrippina";
     private final String name2 = "Basilina";
@@ -75,35 +72,38 @@ public class MatchTest {
      */
     @Test
     public void testGetCurrentPlayer() {
-        try {
-            testMatch.setCurrentPlayer(player2);
-        } catch (PlayerNotPresentException except) {
-            //no need to catch it here
-        }
+        testMatch.setCurrentPlayer(player2);
         assertEquals(player2, testMatch.getCurrentPlayer());
     }
 
     /**
-     * Test shows that if i try to set as current player one not preset in the list I get an exception
+     * Test shows that if i try to set as current player one not preset in the list i receive -1
      */
-    @Test(expected = PlayerNotPresentException.class)
-    public void testGetCurrentPlayer_ExceptionPlayerNotPres() throws PlayerNotPresentException {
-        testMatch.setCurrentPlayer(playerNotAdded);
+    @Test()
+    public void testGetCurrentPlayer_PlayerNotPres() {
+        assertEquals(testMatch.setCurrentPlayer(playerNotAdded), -1);
     }
+
+    @Test()
+    public void selectNextCurrentPlayer_receiveNextPlayerOnTheList() {
+        List<Player> playerList = testMatch.getPlayers();
+        testMatch.setCurrentPlayer(player3);
+        int indexOfCurrentPlayer= testMatch.selectNextCurrentPlayer();
+        assertEquals(player1, playerList.get(indexOfCurrentPlayer));
+    }
+
 
     /**
      * Test shows I get exactly the same list of cards as input
      */
     @Test
     public void testGetCards() {
+        CardManager cardManager = CardManager.initCardManager();
+        Card athenaCard = cardManager.getCardById(0);
 
-        testMatch.addCard("Athena");
-        testMatch.addCard("Demetra");
-        testMatch.addCard("Zeus");
+        testMatch.addCard(athenaCard);
 
-        assertEquals("Athena", testMatch.getCards().get(0));
-        assertEquals("Demetra", testMatch.getCards().get(1));
-        assertEquals("Zeus", testMatch.getCards().get(2));
+        assertEquals(athenaCard, testMatch.getCards().get(0));
     }
 
     /**
@@ -111,25 +111,39 @@ public class MatchTest {
      */
     @Test
     public void addCard() {
-        testMatch.addCard("Athena");
+        CardManager cardManager = CardManager.initCardManager();
+        Card athenaCard = cardManager.getCardById(0);
+        testMatch.addCard(athenaCard);
+
         assertNotNull(testMatch.getCards());
     }
 
 
     @Test
-    public void testSetCurrentPlayer() {
-        try {
-            testMatch.setCurrentPlayer(player2);
-        } catch (PlayerNotPresentException except) {
-            //no need to catch it here
-        }
-        assertNotNull(testMatch.getCurrentPlayer());
-
+    public void testSetCurrentPlayer_WithPlayerInput() {
+        testMatch.setCurrentPlayer(player2);
+        assertEquals(testMatch.getCurrentPlayer(), player2);
     }
 
     @Test
-    public void testGetLocation(){
+    public void testSetCurrentPlayer_WithNameInput() {
+        testMatch.setCurrentPlayer(name1);
+        assertEquals(testMatch.getCurrentPlayer(), player1);
+    }
 
+    @Test
+    public void buildOrderedList_CompatorsInput() {
+        testMatch.buildOrderedList(Comparator.comparing(Player::getName).reversed());
+        List<Player> playerList = testMatch.getPlayers();
+        assertTrue(playerList.get(0).equals(player3) && playerList.get(1).equals(player2) && playerList.get(2).equals(player1));
+    }
+
+    @Test
+    public void removePlayer_NewListOfPlayerWithoutRemovedPlayer() {
+        List<Player> playerList = testMatch.getPlayers();
+        testMatch.removePlayer(player2.getName());
+        boolean checkNewListOfPlayers = !testMatch.getPlayers().contains(player2) && playerList.containsAll(testMatch.getPlayers());
+        assertEquals(true, (playerList.size() - 1) == testMatch.getPlayers().size() && checkNewListOfPlayers);
     }
 
 }

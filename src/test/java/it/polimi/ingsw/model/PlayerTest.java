@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,10 +16,12 @@ import org.junit.Test;
 public class PlayerTest {
     private Player player;
     private String nameOfThePlayer = "NAME";
-    private Date birthdayOfThePlayer = new Date();
+    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private Date birthdayOfThePlayer;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ParseException {
+        birthdayOfThePlayer = dateFormat.parse("25/12/2010");
         this.player = new Player(nameOfThePlayer, birthdayOfThePlayer);
     }
 

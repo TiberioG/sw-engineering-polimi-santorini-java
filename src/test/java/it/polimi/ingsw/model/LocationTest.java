@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.commons.Colors;
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.exceptions.WorkerAlreadyPresentException;
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,17 +27,17 @@ public class LocationTest {
     public void setUp() {
         testMatch = new Match(testID);
         cell1 = new Cell(x1, y1);
-        worker1 = new Worker(Colors.BLUE, player);
+        worker1 = new Worker(0, Colors.BLUE, player);
     }
 
 
     @Test
     public void setLocation() throws WorkerAlreadyPresentException {
-        Location locationTest = testMatch.getLocation();
-        locationTest.setLocation(cell1,worker1);
+        Location location = testMatch.getLocation();
+        location.setLocation(cell1,worker1);
 
-        assertEquals(cell1, locationTest.getLocation(worker1));
-        assertEquals(worker1, locationTest.getOccupant(cell1));
+        assertEquals(cell1, location.getLocation(worker1));
+        assertEquals(worker1, location.getOccupant(cell1));
 
     }
 
@@ -70,5 +68,19 @@ public class LocationTest {
 
         assertNotEquals(worker1, locationInstance.getOccupant(cell2));
         assertEquals(worker1, locationInstance.getOccupant(cell1));
+    }
+
+    @Test
+    public void removeLocation() {
+        Location locationInstance = testMatch.getLocation();
+        try {
+            locationInstance.setLocation(cell1, worker1);
+        }
+        catch (WorkerAlreadyPresentException except){
+            // no need to manage here
+        }
+        locationInstance.removeLocation(worker1);
+
+        assertEquals(null, locationInstance.getOccupant(cell1));
     }
 }

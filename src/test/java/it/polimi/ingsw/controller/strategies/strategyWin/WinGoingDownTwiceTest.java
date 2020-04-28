@@ -2,13 +2,11 @@ package it.polimi.ingsw.controller.strategies.strategyWin;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.controller.TurnManager;
 import it.polimi.ingsw.controller.strategies.strategyMove.DefaultMove;
-import it.polimi.ingsw.controller.strategies.strategyMove.DoubleMove;
 import it.polimi.ingsw.controller.strategies.strategyMove.PushEnemyWorker;
 import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
-import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
-import it.polimi.ingsw.exceptions.PlayerNotPresentException;
 import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Match;
@@ -72,6 +70,11 @@ public class WinGoingDownTwiceTest {
         player1 = match.createPlayer("Mario", date1);
         player2 = match.createPlayer("Luigi", date2);
 
+        CardManager cardManager = CardManager.initCardManager();
+        player1.setCurrentCard(cardManager.getCardById(0));
+        player2.setCurrentCard(cardManager.getCardById(1));
+
+
         worker1_1 = player1.addWorker(Colors.RED);
         worker1_2 = player1.addWorker(Colors.RED);
         worker2_1 = player2.addWorker(Colors.BLUE);
@@ -86,27 +89,28 @@ public class WinGoingDownTwiceTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 1).getTower().addComponent(Component.SECOND_LEVEL);
-        match.getIsland().getCell(1, 1).getTower().addComponent(Component.THIRD_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.SECOND_LEVEL);
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.THIRD_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 1));
+        match.getIsland().addComponent(Component.THIRD_LEVEL , match.getIsland().getCell(1, 1));
 
-        match.getIsland().getCell(2, 2).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(2, 2).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 2));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 2));
+        match.getIsland().addComponent(Component.THIRD_LEVEL , match.getIsland().getCell(1, 2));
 
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(3, 3).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(2, 2));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(2, 2));
 
-        match.getIsland().getCell(1, 3).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(3, 3));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(3, 3));
+
+        match.getIsland().addComponent(Component.FIRST_LEVEL , match.getIsland().getCell(1, 3));
 
         strategyWin = new WinGoingDownTwice(match);
         strategyMove1 = new DefaultMove(match);
@@ -121,7 +125,6 @@ public class WinGoingDownTwiceTest {
     public void checkWin_defaultWin_true_defaultMove() throws SantoriniException {
         match.setCurrentPlayer(player2);
         TurnManager turnManager = new TurnManager(match);
-        turnManager.beginTurn();
 
         // go from LVL2 to LVL3
         Cell cellToMove2_2 = match.getIsland().getCell(1, 2);
@@ -133,7 +136,6 @@ public class WinGoingDownTwiceTest {
     public void checkWin_defaultWin_false_defaultMove() throws SantoriniException {
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
-        turnManager.beginTurn();
 
         // go from LVL0 to LVL1
         Cell cellToMove1_1 = match.getIsland().getCell(1, 3);
@@ -145,7 +147,6 @@ public class WinGoingDownTwiceTest {
     public void checkWin_winGoingDownTwice_defaultMove() throws SantoriniException {
         match.setCurrentPlayer(player2);
         TurnManager turnManager = new TurnManager(match);
-        turnManager.beginTurn();
 
         // go from LVL2 to LVL0
         Cell cellToMove2_2 = match.getIsland().getCell(3, 2);
@@ -158,7 +159,6 @@ public class WinGoingDownTwiceTest {
     public void checkWin_pushEnemyWorkerMove() throws SantoriniException {
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
-        turnManager.beginTurn();
 
         // go from LVL2 to LVL2 pushing an enemy worker. Enemy worker goes to LVL3 (and should not win!)
         Cell cellToMove1_2_first = initCellWorker2_2;

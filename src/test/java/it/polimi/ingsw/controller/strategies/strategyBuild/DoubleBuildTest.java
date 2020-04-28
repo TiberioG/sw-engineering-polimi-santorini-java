@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Worker;
+import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.network.server.VirtualView;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +54,9 @@ public class DoubleBuildTest {
 
     @Before
     public void setUp() throws Exception {
-        match = new Match(66666);
+        VirtualView virtualView = new VirtualView(new Server());
+        match = new Match(66666, virtualView);
+        virtualView.setMatch(match);
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String birthDate1 = "22/03/1998";
@@ -76,13 +80,13 @@ public class DoubleBuildTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyBuild = new DoubleBuild(match); //SET HERE STRATEGYY
         turnProperties = new TurnProperties();

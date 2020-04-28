@@ -54,7 +54,8 @@ public class DefaultBuild implements StrategyBuild {
                 {
                     throw new ComponentNotAllowed();
                 }
-                whereToBuild.getTower().addComponent(compToBuild); // here I finally add the component in the model
+                match.getIsland().addComponent(compToBuild, whereToBuild); // here I finally add the component in the model
+                //whereToBuild.getTower().addComponent(compToBuild);
                 TurnProperties.builtNow(worker, whereToBuild); // I also save that this worker has built here in the turnProp.
             }
         }

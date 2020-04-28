@@ -3,9 +3,131 @@
   "name": "Apollo",
   "type": "Tuo spostamento",
   "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
-  "permittedPhases":
-    {
-      "type": "selectWorker"
+  "strategySettings": {
+    "strategyMove": "SwapWorker"
+  }
+},
+  {
+    "id": 1,
+    "name": "Artemide",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi una volta in più, ma non può tornare nella casella da cui è partito",
+    "permittedPhases": {
+      "type": "selectWorker",
+      "nextPhases": [{
+        "type": "moveWorker",
+        "nextPhases": [{
+          "type": "buildComponent"
+        },
+          {
+            "type": "moveWorker",
+            "nextPhases": [{
+              "type": "buildComponent"
+            }]
+          }
+        ]
+      }]
+    },
+    "strategySettings": {
+      "strategyMove": "DoubleMove"
     }
-}
+  },
+  {
+    "id": 2,
+    "name": "Atena",
+    "type": "Turno dell'avversario",
+    "description": "Se nel tuo ultimo turno uno dei tuoi lavoratori è salito di livello, in questo turno gli lavoratori avversari non possono salire di livello"
+  },
+  {
+    "id": 3,
+    "name": "Atlante",
+    "type": "Tua costruzione",
+    "description": "Il tuo lavoratore può costruire una cupola su qualsiasi livello, compreso il terreno",
+    "strategySettings": {
+      "strategyBuild": "DomeAnywhere"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Demetra",
+    "type": "Tua costruzione",
+    "description": "Il tuo lavoratore può costruire una volta in più, ma non nella stessa cella",
+    "permittedPhases": {
+      "type": "selectWorker",
+      "nextPhases": [{
+        "type": "moveWorker",
+        "nextPhases": [{
+          "type": "buildComponent",
+          "nextPhases": [{
+            "type": "buildComponent"
+          }]
+        }]
+      }]
+    },
+    "strategySettings": {
+      "strategyBuild": "DoubleBuild"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Efesto",
+    "type": "Tua costruzione",
+    "description": "Il tuo lavoratore può costruire un blocco aggiuntivo (non una cupola) al di sopra del primo blocco",
+    "permittedPhases": {
+      "type": "selectWorker",
+      "nextPhases": [{
+        "type": "moveWorker",
+        "nextPhases": [{
+          "type": "buildComponent",
+          "nextPhases": [{
+            "type": "buildComponent"
+          }]
+        }]
+      }]
+    },
+    "strategySettings": {
+      "strategyBuild": "DoubleComponent"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Minotauro",
+    "type": "Tuo spostamento",
+    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (in base alle normali regole di spostamento) se la casella successiva nella stessa direzione è libera. Il lavoratore avversario è costretto a spostarti in quella casella (indipendentemente dal livello).",
+    "strategySettings": {
+      "strategyMove": "PushEnemyWorker"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Pan",
+    "type": "Condizione di vittoria",
+    "description": "Vinci anche se il tuo lavoratore è sceso di due o più livello",
+    "strategySettings": {
+      "strategyWin": "WinGoingDownTwice"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Prometeo",
+    "type": "Tuo turno",
+    "description": "Se il tuo lavoratore non può salire di livello può costruire sia prima, sia dopo essere stato mosso.",
+    "permittedPhases": {
+      "type": "selectWorker",
+      "nextPhases": [{
+        "type": "buildComponent",
+        "nextPhases": [{
+          "type": "moveWorker",
+          "nextPhases": [{
+            "type": "buildComponent"
+          }]
+        }]
+      }, {
+        "type": "moveWorker",
+        "nextPhases": [{
+          "type": "buildComponent"
+        }]
+      }]
+    }
+  }
 ]

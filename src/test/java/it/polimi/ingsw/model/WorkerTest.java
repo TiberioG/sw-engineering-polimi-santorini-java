@@ -6,7 +6,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class WorkerTest {
     private Worker worker;
@@ -14,12 +17,11 @@ public class WorkerTest {
 
     @Before
     public void setUp() {
-        worker = new Worker(colorBlue, new Player("domiziana", new Date(9999999)));
+        worker = new Worker(0,colorBlue, new Player("domiziana", new Date(9999999)));
     }
 
     @Test
     public void getColor() {
         Assert.assertSame(worker.getColor(), colorBlue);
     }
-
 }

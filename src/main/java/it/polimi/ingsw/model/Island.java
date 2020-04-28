@@ -1,15 +1,21 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
+import it.polimi.ingsw.exceptions.RemoveGroundLevelException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This is the class for the Island (billboard)
- * @author sup3rgiu
+ * @author sup3rgiu & modified by tiberioG
  */
-public class Island {
+public class Island extends Publisher<Message> {
 
     /* Attributes */
 
@@ -42,7 +48,7 @@ public class Island {
      */
     public Cell[][] getField() {
         return this.field;
-    }
+    } //todo fare una copia qui
 
     /**
      * Returns max coordinate X of the billboard
@@ -93,6 +99,49 @@ public class Island {
         }
         return adjacentCells;
 
+    }
+
+
+    /**
+     * the only public method to build things, this one calls the protected one in Tower.
+     * Then sends a message to the view
+     * @param component
+     * @param cell
+     * @throws BuildLowerComponentException
+     */
+    public  void addComponent(Component component, Cell cell) throws BuildLowerComponentException {
+       cell.getTower().addComponent(component);
+       this.update();
+       this.updateSpecific(cell);
+    }
+
+    /**
+     * the only public method to remove things, this one calls the protected one in Tower.
+     * Then sends a message to the view
+     * @param cell
+     */
+
+    public  void removeComponent( Cell cell) throws  RemoveGroundLevelException { //todo per me è inutile
+        cell.getTower().removeComponent();
+        this.update();
+        this.updateSpecific(cell);
+    }
+
+
+
+    /**
+     * sends to the view a copy of all the field
+     */
+    private void update (){
+        publish(new Message("ALL", TypeOfMessage.ISLAND_UPDATED, field));
+    }
+
+    /**
+     * sends the cell taht has just been modified with a new component
+     * @param cell
+     */
+    private void updateSpecific(Cell cell){
+        publish(new Message("ALL", TypeOfMessage.TOWER_UPDATED, cell));
     }
 
 

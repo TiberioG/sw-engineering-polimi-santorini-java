@@ -1,11 +1,18 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.commons.messages.Message;
+import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.controller.strategies.strategyWin.StrategyWin;
+import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.network.server.VirtualView;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -17,14 +24,10 @@ public class TurnManager {
     /* Attributes */
 
     private Match match;
-    private Player currentPlayer;
-    private CardManager cardManager;
-    //private Virtual View
+    private VirtualView virtualView;
 
-    //various strategy
-    private StrategyMove strategyMove;
-    private StrategyWin strategyWin;
-    private StrategyBuild strategyBuild;
+    private HashMap<String, Turn> turnsMap = new HashMap<>();
+    private Turn currentTurn;
 
     /* Constructor(s) */
 
@@ -32,17 +35,30 @@ public class TurnManager {
      * Constructor: init turnManager's instance
      * @param match the match of the turn
      */
+    public TurnManager(Match match, VirtualView virtualView) {
+        this(match);
+        this.virtualView = virtualView;
+        //richiamo la virtual view per notificargli l'inizio del turno con le fasi disponibili
+    }
 
+    /**
+     * Constructor for test
+     */
     public TurnManager(Match match) {
         this.match = match;
-        this.currentPlayer = this.match.getCurrentPlayer();
-        this.cardManager = CardManager.initCardManager();
-        buildStrategies();
-        TurnProperties.resetAllParameter();
+        createTurns();
     }
 
     /* Methods */
-
+    private void createTurns() {
+        for(Player player : match.getPlayers()) {
+            Turn turn = new Turn(player);
+            buildStrategies(turn);
+            turnsMap.put(player.getName(), turn);
+        }
+        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
+        inizializedCurrentTurn();
+    }
     /**
      * This method create strategy instances using reflection
      * @param className the name of the class of the desired istance
@@ -60,34 +76,113 @@ public class TurnManager {
     /**
      * This method create set the strategy of the turn from the card of the current player
      */
-    private void buildStrategies() {
+    private void buildStrategies(Turn turn) {
         //builder/factory
-        int cardId = this.currentPlayer.getCurrentCard();
-        Card card = cardManager.getCardById(cardId);
-
+        Card card = turn.getPlayer().getCurrentCard();
         //use reflection
         try {
             //make this for all strategies
-            strategyMove = (StrategyMove) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyMove." + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match});
-            strategyWin = (StrategyWin) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyWin." + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match});
-            //strategyBuild = (StrategyBuild) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyBuild." + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match});
+            turn.setStrategyMove((StrategyMove) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyMove." + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match}));
+            turn.setStrategyBuild((StrategyBuild) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyBuild." + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match}));
+            turn.setStrategyWin((StrategyWin) createStrategyWithReflection("it.polimi.ingsw.controller.strategies.strategyWin." + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match}));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * This method make all operation for init the turn
-     */
-    public void beginTurn() {
-        currentPlayer.getWorkers().forEach(worker -> {
-            TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
-            TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
-        });
+    public void getAvailableCellForMove() {
+        List<Cell> availableCell = null;
+        if (checkForPermittedPhase("move")) {
+            availableCell = currentTurn.getAvailableCellForMove();
+        }
+        //chiamare la virtual view con le celle disponibili
+    }
+
+
+    public void move(Cell cell) throws SantoriniException {
+        if (checkForPermittedPhase("move")) {
+            currentTurn.move(cell);
+            updateCurrentPhase("move");
+        }
     };
 
+    public void getAvailableCellForBuild() {
+        List<Cell> availableCell = null;
+        if (checkForPermittedPhase("build")) {
+            availableCell = currentTurn.getAvailableCellForBuild();
+        }
+        //chiamare la virtual view con le celle disponibili
+    }
+
+    public void build(Component component, Cell cell) throws SantoriniException {
+        if (checkForPermittedPhase("build")) {
+            currentTurn.build(component, cell);
+            updateCurrentPhase("build");
+        }
+    }
+
+    public void checkWin() {
+        if (currentTurn.checkWin()) {
+            //chiamare la view
+        }
+    }
+
+    private Boolean checkForPermittedPhase(String type) {
+        return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -> phase.getType().equals(type));
+    }
+
+    public List<Phase> getNextPhases() {
+        return currentTurn.getCurrentPhase().getNextPhases();
+    }
+
+    public void selectWorker(Worker worker) {
+        if (currentTurn.getCurrentPhase().getType().equals("selectWorker")) currentTurn.setSelectedWorker(worker);
+    }
+
+    private void updateCurrentPhase(String type) {
+        if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
+            //richiamare la virtualview notificando la vittoria
+        }
+
+        currentTurn.updateCurrentPhaseFromType(type);
+        if (currentTurn.getCurrentPhase().getNextPhases() == null) {
+            //seleziono il prossimo turno
+            selectNextTurn();
+            //richiamare la virtual view per notificare la fine del turno
+        }
+    }
+
+    private void selectNextTurn() {
+        match.selectNextCurrentPlayer();
+        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
+    }
+
+    private void inizializedCurrentTurn() {
+        TurnProperties.resetAllParameter();
+
+        //se non ci sono celle disponibili
+        if (currentTurn.noAvailableCellForWorkers()) {
+            //ricordarsi di gestire atena
+            String name = this.match.getCurrentPlayer().getName();
+            turnsMap.remove(name);
+            match.removePlayer(name);
+            //notificare la perdità
+            selectNextTurn();
+        } else {
+            this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
+                TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
+                TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
+            });
+            updateVirtualView(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN));
+        }
+    }
+
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return currentTurn.getPlayer();
+    }
+
+    private void updateVirtualView(Message message) {
+        if (virtualView != null) virtualView.displayMessage(message);
     }
 
 }

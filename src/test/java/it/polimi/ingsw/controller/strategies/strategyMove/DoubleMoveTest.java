@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.model.CardManager;
 import it.polimi.ingsw.controller.TurnManager;
 import it.polimi.ingsw.exceptions.SantoriniException;
 import it.polimi.ingsw.exceptions.WrongCellSelectedMoveException;
@@ -66,6 +67,10 @@ public class DoubleMoveTest {
         player1 = match.createPlayer("Mario", date1);
         player2 = match.createPlayer("Luigi", date2);
 
+        CardManager cardManager = CardManager.initCardManager();
+        player1.setCurrentCard(cardManager.getCardById(0));
+        player2.setCurrentCard(cardManager.getCardById(1));
+
         worker1_1 = player1.addWorker(Colors.RED);
         worker1_2 = player1.addWorker(Colors.RED);
         worker2_1 = player2.addWorker(Colors.BLUE);
@@ -80,17 +85,16 @@ public class DoubleMoveTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
-        turnManager.beginTurn();
         strategyMove = new DoubleMove(match);
     }
 

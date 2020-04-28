@@ -1,12 +1,16 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.commons.JsonAdapter;
+import it.polimi.ingsw.commons.Publisher;
+import it.polimi.ingsw.controller.Phase;
+import it.polimi.ingsw.controller.StrategySettings;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 /**
  * This is a Singleton class for retrieve the card information
@@ -15,7 +19,7 @@ import java.util.List;
 public class CardManager {
     /* Attributes */
     private static CardManager instance = null;
-    private static HashMap<Integer, Card> cardMap = new HashMap<>();
+    private static HashMap<Integer, Card> cardMap = new HashMap<>(); //
 
     /* Constructor(s) */
 
@@ -64,15 +68,26 @@ public class CardManager {
     private StrategySettings addStrategySettings(JsonObject jsonObject) {
         JsonObject strategySettingsJsonObject = jsonObject.getAsJsonObject("strategySettings");
         StrategySettings strategySettings = new StrategySettings();
-        if (strategySettingsJsonObject != null) {
-            strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
-            strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
-            strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
-        } else {
-            strategySettings.setStrategyMove("DefaultMove");
-            strategySettings.setStrategyBuild("DefaultBuild");
-            strategySettings.setStrategyWin("DefaultWin");
+        try {
+            if (strategySettingsJsonObject != null) {
+                strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
+                strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
+                strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
+
+                Class.forName("it.polimi.ingsw.controller.strategies.strategyMove." + strategySettings.getStrategyMove());
+                Class.forName("it.polimi.ingsw.controller.strategies.strategyBuild." + strategySettings.getStrategyBuild());
+                Class.forName("it.polimi.ingsw.controller.strategies.strategyWin." + strategySettings.getStrategyWin());
+
+            } else {
+                strategySettings.setStrategyMove("DefaultMove");
+                strategySettings.setStrategyBuild("DefaultBuild");
+                strategySettings.setStrategyWin("DefaultWin");
+            }
+
+        } catch( ClassNotFoundException e ) {
+            e.printStackTrace();
         }
+
         return strategySettings;
     }
 
@@ -86,10 +101,19 @@ public class CardManager {
         if (permittedPhasesJsonObject != null) {
             String type = JsonAdapter.getStringFromJsonObject(permittedPhasesJsonObject, "type");
             JsonArray nextPhases = permittedPhasesJsonObject.getAsJsonArray("nextPhases");
+            Boolean needCheckForVictory = JsonAdapter.getBooleanFromJson(permittedPhasesJsonObject, "checkVictory");
             List<Phase> nextPhasesTreeSet = null;
             if (nextPhases != null) nextPhasesTreeSet = buildTreeOfList(nextPhases);
-            return new Phase(type, nextPhasesTreeSet);
-        } else return null;
+            return new Phase(type, nextPhasesTreeSet, needCheckForVictory);
+        } else {
+            List<Phase> nextPhasesOfMove = new LinkedList<>();
+            nextPhasesOfMove.add(new Phase("build", null, false));
+
+            List<Phase> nextPhasesOfSelectWorker = new LinkedList<>();
+            nextPhasesOfSelectWorker.add(new Phase("move", nextPhasesOfMove , true));
+
+            return new Phase("selectWorker", nextPhasesOfSelectWorker, false);
+        }
     }
 
     /**
@@ -103,9 +127,10 @@ public class CardManager {
             JsonObject phaseObject = nextPhaseElement.getAsJsonObject();
             String type = JsonAdapter.getStringFromJsonObject(phaseObject, "type");
             JsonArray nextPhases = phaseObject.getAsJsonArray("nextPhases");
+            Boolean needCheckForVictory = JsonAdapter.getBooleanFromJson(phaseObject, "checkVictory");
             List<Phase> nextPhasesList = null;
             if (nextPhases != null) nextPhasesList = buildTreeOfList(nextPhases);
-            currentPhasesList.add(new Phase(type, nextPhasesList));
+            currentPhasesList.add(new Phase(type, nextPhasesList, needCheckForVictory));
         }
         return  currentPhasesList;
     }
@@ -118,4 +143,14 @@ public class CardManager {
     public Card getCardById(int id){
         return cardMap.get(id);
     }
+
+    /**
+     * Method to get the hashmap of all the cards
+     * @return the cardMap int, Card
+     */
+    public HashMap<Integer, Card> getCardMap(){
+        return cardMap;
+    }
+
+
 }

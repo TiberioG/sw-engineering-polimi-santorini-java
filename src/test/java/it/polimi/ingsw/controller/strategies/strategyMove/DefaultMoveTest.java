@@ -79,13 +79,13 @@ public class DefaultMoveTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(0, 1).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.FIRST_LEVEL);
-        match.getIsland().getCell(1, 0).getTower().addComponent(Component.SECOND_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
 
-        match.getIsland().getCell(1, 2).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyMove = new DefaultMove(match);
     }
@@ -119,7 +119,7 @@ public class DefaultMoveTest {
     public void move_moveSameLevel() throws SantoriniException {
 
         // add a level in that cell
-        match.getIsland().getCell(0, 2).getTower().addComponent(Component.FIRST_LEVEL);
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 2));
 
         // here we go from level 0 to level 1
         Cell cellToMove1_1_firstMove = match.getIsland().getCell(1, 2);
@@ -134,19 +134,19 @@ public class DefaultMoveTest {
         assertNull(match.getLocation().getOccupant(cellToMove1_1_firstMove));
     }
 
-    @Test (expected = ZeroCellsAvailableMoveException.class)
+    @Test(expected = ZeroCellsAvailableMoveException.class)
     public void move_workerCanNotMove_throwsZeroCellsAvailableMoveException() throws SantoriniException {
         Cell cellToMove2_1 = match.getIsland().getCell(1, 1);
         strategyMove.move(worker2_1, cellToMove2_1);
     }
 
-    @Test (expected = WrongCellSelectedMoveException.class)
+    @Test(expected = WrongCellSelectedMoveException.class)
     public void move_workerWantsToGoTooFar_throwsWrongCellSelectedMoveException() throws SantoriniException {
         Cell cellToMove1_1 = match.getIsland().getCell(2, 4);
         strategyMove.move(worker1_1, cellToMove1_1);
     }
 
-    @Test (expected = WrongCellSelectedMoveException.class)
+    @Test(expected = WrongCellSelectedMoveException.class)
     public void move_workerWantsToReplaceAnotherWorker_throwsWrongCellSelectedMoveException() throws SantoriniException {
         Cell cellToMove1_1 = match.getIsland().getCell(3, 3);
         strategyMove.move(worker1_1, cellToMove1_1);
@@ -157,19 +157,19 @@ public class DefaultMoveTest {
     public void thisIsNotATest_justPrintAvailableCells() {
         String newLine = System.getProperty("line.separator");
         int indexPlayer = 1;
-        for(Player player : match.getPlayers()) {
+        for (Player player : match.getPlayers()) {
             int indexWorker = 1;
-            for(Worker worker : player.getWorkers()) {
-                System.out.println(newLine+"Worker" + indexPlayer + "_" + indexWorker++);
+            for (Worker worker : player.getWorkers()) {
+                System.out.println(newLine + "Worker" + indexPlayer + "_" + indexWorker++);
                 List<Cell> availableCells = strategyMove.getAvailableCells(worker);
-                if(availableCells.size() == 0) { System.out.println("This worker can not move :("); }
-                for(Cell cell : availableCells) {
-                    System.out.println("x: " + cell.getCoordX() + ", y: " + cell.getCoordY() );
+                if (availableCells.size() == 0) {
+                    System.out.println("This worker can not move :(");
+                }
+                for (Cell cell : availableCells) {
+                    System.out.println("x: " + cell.getCoordX() + ", y: " + cell.getCoordY());
                 }
             }
             indexPlayer++;
         }
     }
-
-
 }
