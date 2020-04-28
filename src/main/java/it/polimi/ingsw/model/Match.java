@@ -145,6 +145,13 @@ public class Match extends Publisher<Message> {
         return getPlayers();
     }
 
+
+    public void rescaleListFromCurrentPlayer() {
+        List<Player> rescaledListOfPlayer = listPlayers.subList(listPlayers.indexOf(currentPlayer), listPlayers.size() - 1);
+        rescaledListOfPlayer.addAll(listPlayers.subList(0, listPlayers.indexOf(currentPlayer) - 1));
+        listPlayers = rescaledListOfPlayer;
+    }
+
     /**
      * Method to remove a player from the match
      * @param name player name that you want to remove

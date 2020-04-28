@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Publisher<T> {
-    private List<Listener<T>> listeners = new ArrayList<>();
+    transient private List<Listener<T>> listeners = new ArrayList<>();
 
     public void publish(T object) {
         for (Listener<T> listener : listeners) {

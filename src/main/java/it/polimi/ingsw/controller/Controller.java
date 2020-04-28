@@ -108,6 +108,7 @@ public class Controller implements Listener<Message> {
                 String nameOfFirstPlayer = (String)message.getPayload(String.class);
                 match.buildOrderedList(Comparator.comparing(Player::getBirthday)); //fa lista ordinata prima
                 match.setCurrentPlayer(nameOfFirstPlayer); //mette ilprimo player selezionato dalla view
+                match.rescaleListFromCurrentPlayer();
                 virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS)); //getting first player is the fist who position workers
                 break;
             case SET_POSITION_OF_WORKER:
