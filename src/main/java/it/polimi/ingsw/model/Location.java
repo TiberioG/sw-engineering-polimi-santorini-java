@@ -37,7 +37,7 @@ public class Location extends Publisher<Message> {
             this.map.put(getLocation(worker), null);
             this.map.put(cell, worker);
 
-            this.update();  //every time i change the location I send a copy of the complete updated location
+            this.update();  //every time i change the location I send a copy of the complete updated location bravo!
         }
     }
 

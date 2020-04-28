@@ -1,7 +1,12 @@
 package it.polimi.ingsw.view.cli;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.commons.Colors;
 import it.polimi.ingsw.commons.Component;
+import it.polimi.ingsw.commons.JsonAdapter;
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.controller.strategies.strategyMove.DefaultMove;
 import it.polimi.ingsw.controller.strategies.strategyMove.StrategyMove;
@@ -19,6 +24,9 @@ import it.polimi.ingsw.network.server.VirtualView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +35,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public class CoolCLI {
+
+    public CoolCLI(){
+        try {
+            // create Gson instance
+            Gson gson = new Gson();
+
+            // create a reader
+            Reader reader = Files.newBufferedReader(Paths.get("clitext.json"));
+
+            // convert JSON file to map
+            Map<String , String> messages = gson.fromJson(reader, Map.class);
+
+            // print map entries
+            for (Map.Entry<?, ?> entry : messages.entrySet()) {
+                System.out.println(entry.getKey() + "=" + entry.getValue());
+            }
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private static String OS = System.getProperty("os.name").toLowerCase();
 
     private static PrintWriter out = new PrintWriter(System.out, true);
@@ -47,7 +78,9 @@ public class CoolCLI {
 
     private Utils utils = new Utils(in, out);
 
-    IslandAdapter2 myisland;
+    private IslandAdapter2 myisland;
+
+
 
     //roba per test
     Player player1;

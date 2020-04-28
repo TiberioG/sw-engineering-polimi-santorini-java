@@ -8,4 +8,11 @@
 
 # Maven
 log/
-target/
+target
+
+#manifest files
+resources/META-INF
+resources/server.META-INF
+
+#built jars
+classes/artifacts

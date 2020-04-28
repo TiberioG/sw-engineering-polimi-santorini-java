@@ -23,12 +23,12 @@ public class Match extends Publisher<Message> {
     private VirtualView virtualView;
 
     /**
-     * Constructor
+     * Constructor completo
      */
     public Match(int matchID, VirtualView virtualView) {
         addListener(virtualView);
         this.matchID = matchID ;
-        this.island = new Island();
+        this.island = new Island(virtualView);
         this.location = new Location(virtualView);
         this.virtualView = virtualView;
         publish(new Message("ALL", TypeOfMessage.CREATED_MATCH));

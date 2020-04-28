@@ -7,6 +7,7 @@ import it.polimi.ingsw.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.exceptions.RemoveGroundLevelException;
+import it.polimi.ingsw.network.server.VirtualView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,13 @@ public class Island extends Publisher<Message> {
     private final static int maxX = numCol - 1;
     private final static int maxY = numRow - 1;
 
+
     /* Constructor(s) */
 
     /**
      * Constructor
      */
+
     public Island() {
         this.field = new Cell[numRow][numCol];
         for (int i = 0; i < this.field.length; i++) {
@@ -38,6 +41,18 @@ public class Island extends Publisher<Message> {
                 field[i][j] = new Cell(i, j);
             }
         }
+
+    }
+
+    /**
+     * Constructor to setup island as publisher
+     *
+     * @param virtualView
+     */
+    public Island(VirtualView virtualView){
+        this();
+        addListener(virtualView);
+        publish(new Message("ALL", TypeOfMessage.ISLAND_UPDATED, this.field));
     }
 
     /* Methods */

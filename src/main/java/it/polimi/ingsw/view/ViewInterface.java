@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,9 @@ public interface ViewInterface {
     void displayChoicePersonalCard(List<Card> availableCards) ;
 
     void displayCardInGame(List<Card> cardInGame);
-    void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList);
+    void displaySetInitialPosition(List<Player> playerList);
+
+    void displayAskFirstPlayer(List<Player> allPlayers);
 }
 
 

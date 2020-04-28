@@ -101,14 +101,14 @@ public class Controller implements Listener<Message> {
                     match.getCurrentPlayer().setCurrentCard(cardAvailable);
                     virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.GENERIC_MESSAGE, "Ti è stata assegnata la seguente carta: " + cardAvailable.getName()));
 
-                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getPlayers()));
                 }
                 break;
             case SET_FIRST_PLAYER:
                 String nameOfFirstPlayer = (String)message.getPayload(String.class);
-                match.buildOrderedList(Comparator.comparing(Player::getBirthday));
-                match.setCurrentPlayer(nameOfFirstPlayer);
-                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));
+                match.buildOrderedList(Comparator.comparing(Player::getBirthday)); //fa lista ordinata prima
+                match.setCurrentPlayer(nameOfFirstPlayer); //mette ilprimo player selezionato dalla view
+                virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS)); //getting first player is the fist who position workers
                 break;
             case SET_POSITION_OF_WORKER:
                 SelectWorkersMessage selectWorkersMessage = (SelectWorkersMessage) message.getPayload(SelectWorkersMessage.class);
@@ -120,7 +120,6 @@ public class Controller implements Listener<Message> {
                         e.printStackTrace();
                     }
                 });
-
 
                 if (match.selectNextCurrentPlayer() != 0) {
                     virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));

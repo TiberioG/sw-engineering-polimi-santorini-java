@@ -7,6 +7,7 @@ import it.polimi.ingsw.commons.messages.*;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Cell;
 import it.polimi.ingsw.model.Location;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.view.ViewInterface;
 
@@ -44,7 +45,7 @@ public class CLI implements ViewInterface {
 
     private Utils utils = new Utils(in, out);
 
-    Location location;
+
 
 
     /* METHODS*/
@@ -202,33 +203,64 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displaySetInitialPosition(List<CoordinatesMessage> coordinatesMessageList) {
+    public void displaySetInitialPosition(List<Player> playerList) {
+        int [][] available ;
 
-    }
+        List<String> colorsAvailable =  Arrays.asList(Colors.allNames());
 
+        playerList.forEach(player -> {
+            if (player.getWorkers().size() != 0){
+                colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
+            }
+        });
 
-    public void setWorkerColor() throws InterruptedException {
+        String[] colorsAvailableArry = (String[]) colorsAvailable.toArray();
+
         out.println("I's time to choose one color for your workers, choose from following list:");
-        utils.singleTableCool("options", Colors.allNamesColored(), 100);
-        int choice = utils.readNumbers(0,Colors.allNamesColored().length - 1 );
 
-        out.println("Wooow, you have selected color " + Colors.allNamesColored()[choice]+ " for your workers");
+        try {
+            utils.singleTableCool("options", colorsAvailableArry, 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        String colorName = Colors.allNames()[choice];
-        //client.send2Server(new Message(username, TypeOfMessage.SET_WORKER_COLOR, colorName) ); //passo una stringa col nome del color, poichè i color non possono avere costruttore pubblico per settare il colore del worker bisognerà fare switch case
+        int choice = utils.readNumbers(0,colorsAvailableArry.length - 1);
 
-    }
-    public void setWorkerPosition(int workNumb){
-        out.println(String.format("Now you can position your worker no. %d", workNumb));
+        out.println("Wooow, you have selected color " + colorsAvailableArry[choice]+ " for your workers");
+
+        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArry[choice])));
+
+        out.println(String.format("Now you can position your worker no. %d", 1));
 
         int[] position = utils.readPosition(0,4);
         CoordinatesMessage coord = new CoordinatesMessage(position[0], position[1]);
 
-        //client.send2Server(new Message(username, TypeOfMessage.SET_WORKER_POSITION, coord) );
+        client.sendToServer(new Message(TypeOfMessage.GENERIC_MESSAGE)); //todo send tupla
+
+        //todo check
+
 
     }
 
-    public void updateIsland(Cell[][] field, Location location) {
+    @Override
+    public void displayAskFirstPlayer(List<Player> allPlayers)  {
+        String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
+
+        try {
+            utils.singleTableCool("Players available", names, 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //todo double column for also card display
+
+        int selection = utils.readNumbers(0, names.length -1);
+        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, names[selection]));
+    }
+
+
+    public void updateIsland() {
+      Location location = client.getLocationCache();
+      Cell[][] field = client.getFieldCache();
 
         String[][] stringIsland = new String[field.length][field.length]; //initialize string version of the fields
 

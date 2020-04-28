@@ -4,6 +4,9 @@ import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.commons.Configuration;
 import it.polimi.ingsw.commons.messages.*;
 import it.polimi.ingsw.model.Card;
+import it.polimi.ingsw.model.Cell;
+import it.polimi.ingsw.model.Location;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.view.ViewInterface;
 import it.polimi.ingsw.view.cli.CLI;
 
@@ -15,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Client implements ServerObserver {
+
 
   /* Attributes */
 
@@ -31,6 +35,11 @@ public class Client implements ServerObserver {
   ServerAdapter serverAdapter;
 
   private static final Logger LOGGER = Logger.getLogger("Client");
+
+  private Cell[][] fieldCache;
+  private Location locationCache;
+
+
 
   /* Constructor(s) */
 
@@ -151,11 +160,13 @@ public class Client implements ServerObserver {
       case HEARTBEAT:
         //System.out.println("SERVER IS ALIVE");
         break;
+
       case CHOOSE_GAME_CARDS:
         Type type = new TypeToken<ChooseGameCardMessage>() {}.getType();
         ChooseGameCardMessage chooseGameCardMessage = (ChooseGameCardMessage)message.getPayload(type);
         view.displayCardSelection(chooseGameCardMessage.getCardMap(), chooseGameCardMessage.getNumberOfPlayer());
         break;
+
       case CHOOSE_PERSONAL_CARD:
         List<TuplaGenerics> listAvailableCardFromServer = (List<TuplaGenerics>) message.getPayload(new TypeToken<List<TuplaGenerics<Card,String>>>() {}.getType());
         //todo migrate this to cli and gui for different logic
@@ -167,12 +178,26 @@ public class Client implements ServerObserver {
         });
         view.displayChoicePersonalCard(availableCards);
         break;
-      case SET_CARDS_TO_GAME: // se ho selezionato correttamente le carte
-        //TODO passargli la List<Card> cardInGame che non ho capto come si fa
-        //view.displayCardInGame();
 
+      /* case used to choose the first player to position his workers, is selected by the current player */
+      case CHOOSE_FIRST_PLAYER:
+        List<Player> allPlayers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+        view.displayAskFirstPlayer(allPlayers);
         break;
 
+      case ISLAND_UPDATED:
+        this.fieldCache = (Cell[][]) message.getPayload(Cell[][].class); //siam sicuri gli piaccia?
+        break;
+
+      case LOCATION_UPDATED:
+        this.locationCache = (Location) message.getPayload(Location.class);
+        break;
+
+      case CHOOSE_POSITION_OF_WORKERS:
+        List<Player> allPlayers1 = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+        view.displaySetInitialPosition(allPlayers1);
+
+        break;
 
       default:
         break;
@@ -198,6 +223,9 @@ public class Client implements ServerObserver {
     message.setUUID(this.UUID); // add the UUID to each message. Used to validate the user server side
     serverAdapter.send(message);
   }
+
+  //setters
+
 
   public void setServerIP(String serverIP) {
     this.serverIP = serverIP;
@@ -238,4 +266,14 @@ public class Client implements ServerObserver {
   public void setUsername(String username) {
     this.username = username;
   }
+
+  public Location getLocationCache() {
+    return this.locationCache;
+  }
+
+  public Cell[][] getFieldCache() {
+    return fieldCache;
+  }
+
+  //todo local check
 }
