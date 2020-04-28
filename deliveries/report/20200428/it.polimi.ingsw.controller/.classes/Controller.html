@@ -1,0 +1,279 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Controller</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Controller (it.polimi.ingsw.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Controller</td>
+<td class="coverageStat">
+  <span class="percent">
+    41,7%
+  </span>
+  <span class="absValue">
+    (5/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (20/ 80)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Controller$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Controller$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    42,9%
+  </span>
+  <span class="absValue">
+    (6/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25,6%
+  </span>
+  <span class="absValue">
+    (21/ 82)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.gson.reflect.TypeToken;
+<i>4</i>&nbsp;import it.polimi.ingsw.commons.Configuration;
+<i>5</i>&nbsp;import it.polimi.ingsw.commons.Listener;
+<i>6</i>&nbsp;import it.polimi.ingsw.commons.messages.*;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>8</i>&nbsp;import it.polimi.ingsw.network.server.VirtualView;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.text.ParseException;
+<i>11</i>&nbsp;import java.text.SimpleDateFormat;
+<i>12</i>&nbsp;import java.util.*;
+<i>13</i>&nbsp;import java.util.stream.Collectors;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class Controller implements Listener&lt;Message&gt; {
+<i>16</i>&nbsp;    private Match match;
+<i>17</i>&nbsp;    private CardManager cardManager;
+<i>18</i>&nbsp;    private VirtualView virtualView;
+<i>19</i>&nbsp;    private TurnManager turnManager;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     *
+<i>23</i>&nbsp;     * @param virtualView npn
+<i>24</i>&nbsp;     */
+<b class="fc"><i>25</i>&nbsp;    public Controller(VirtualView virtualView) {</b>
+<b class="fc"><i>26</i>&nbsp;        this.virtualView = virtualView;</b>
+<b class="fc"><i>27</i>&nbsp;        cardManager = CardManager.initCardManager();</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    private void createNewMatch() {
+<b class="fc"><i>31</i>&nbsp;        match = new Match(new Date().hashCode(), this.virtualView);</b>
+<b class="fc"><i>32</i>&nbsp;        virtualView.setMatch(match);</b>
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    private void addPlayerToMatch(String name, Date birthday) {
+<b class="fc"><i>36</i>&nbsp;        match.createPlayer(name, birthday);</b>
+<b class="fc"><i>37</i>&nbsp;    }</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    private void addCardToMatch(List&lt;Integer&gt; cardIdList) {
+<b class="nc"><i>40</i>&nbsp;        cardIdList.stream().forEach(id -&gt; match.addCard(cardManager.getCardById(id)));</b>
+<b class="nc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    private void addCardToPlayer(String name, int cardId) {
+<b class="nc"><i>44</i>&nbsp;        String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -&gt; player.getCurrentCard() != null &amp;&amp; player.getCurrentCard().getId() == cardId).map(player -&gt; player.getName()).findFirst().orElse(null);</b>
+<b class="nc"><i>45</i>&nbsp;        if (nameOfOwnerPlayer == null) {</b>
+<b class="nc"><i>46</i>&nbsp;            match.getPlayerByName(name).setCurrentCard(cardManager.getCardById(cardId));</b>
+<i>47</i>&nbsp;        }
+<b class="nc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    private void initTurnManager() {
+<b class="nc"><i>51</i>&nbsp;        turnManager = new TurnManager(match, virtualView);</b>
+<b class="nc"><i>52</i>&nbsp;    }</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    private void sendSelectableCards (String nameOfPlayer) {
+<b class="nc"><i>55</i>&nbsp;        List&lt;TuplaGenerics&lt;Card, String&gt;&gt; listOfSelectableCards = new ArrayList&lt;&gt;();</b>
+<i>56</i>&nbsp;
+<b class="nc"><i>57</i>&nbsp;        match.getCards().stream().forEach(card -&gt; {</b>
+<b class="nc"><i>58</i>&nbsp;            String nameOfOwnerPlayer = match.getPlayers().stream().filter(player -&gt; {</b>
+<b class="nc"><i>59</i>&nbsp;                Card cardOfPlayer = player.getCurrentCard();</b>
+<b class="nc"><i>60</i>&nbsp;                if (cardOfPlayer != null &amp;&amp; cardOfPlayer.getId() == card.getId()) {</b>
+<b class="nc"><i>61</i>&nbsp;                    return true;</b>
+<b class="nc"><i>62</i>&nbsp;                } else return false;</b>
+<b class="nc"><i>63</i>&nbsp;            }).map(player -&gt; player.getName()).findFirst().orElse(null);</b>
+<b class="nc"><i>64</i>&nbsp;            listOfSelectableCards.add(new TuplaGenerics&lt;&gt;(card, nameOfOwnerPlayer));</b>
+<b class="nc"><i>65</i>&nbsp;        });</b>
+<i>66</i>&nbsp;
+<b class="nc"><i>67</i>&nbsp;        virtualView.displayMessage(new Message(nameOfPlayer, TypeOfMessage.CHOOSE_PERSONAL_CARD, listOfSelectableCards));</b>
+<b class="nc"><i>68</i>&nbsp;    }</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    @Override
+<i>72</i>&nbsp;    public void update(Message message) {
+<b class="fc"><i>73</i>&nbsp;        TypeOfMessage type = message.getTypeOfMessage();</b>
+<b class="fc"><i>74</i>&nbsp;        switch (type) {</b>
+<i>75</i>&nbsp;            case START_MATCH: //if I receive this i&#39;m ready to create a new match
+<b class="fc"><i>76</i>&nbsp;                createNewMatch();</b>
+<b class="fc"><i>77</i>&nbsp;                ((Map&lt;String, String&gt;)message.getPayload(Map.class)).forEach((username, date) -&gt; {</b>
+<i>78</i>&nbsp;                    try {
+<b class="fc"><i>79</i>&nbsp;                        addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));</b>
+<b class="nc"><i>80</i>&nbsp;                    } catch (ParseException e) {</b>
+<b class="nc"><i>81</i>&nbsp;                        e.printStackTrace();</b>
+<b class="fc"><i>82</i>&nbsp;                    }</b>
+<b class="fc"><i>83</i>&nbsp;                });</b>
+<b class="fc"><i>84</i>&nbsp;                match.setCurrentPlayer(match.getPlayers().get(0));</b>
+<b class="fc"><i>85</i>&nbsp;                virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));</b>
+<b class="fc"><i>86</i>&nbsp;                break;</b>
+<i>87</i>&nbsp;            case SET_CARDS_TO_GAME: //if i receive this, the card for the game have been chosen, now I have to associate them to players
+<b class="nc"><i>88</i>&nbsp;                List&lt;Integer&gt; listOfIdCard = (List) message.getPayload(new TypeToken&lt;List&lt;Integer&gt;&gt;() {}.getType());</b>
+<b class="nc"><i>89</i>&nbsp;                addCardToMatch(listOfIdCard);</b>
+<b class="nc"><i>90</i>&nbsp;                sendSelectableCards(match.getPlayers().get(match.selectNextCurrentPlayer()).getName());</b>
+<b class="nc"><i>91</i>&nbsp;                break;</b>
+<i>92</i>&nbsp;            case SET_CARD_TO_PLAYER:
+<b class="nc"><i>93</i>&nbsp;                addCardToPlayer(message.getUsername(), (Integer) message.getPayload(Integer.class));</b>
+<i>94</i>&nbsp;
+<b class="nc"><i>95</i>&nbsp;                if (match.selectNextCurrentPlayer() != 0) {</b>
+<b class="nc"><i>96</i>&nbsp;                    sendSelectableCards(match.getCurrentPlayer().getName());</b>
+<i>97</i>&nbsp;                } else {
+<b class="nc"><i>98</i>&nbsp;                    List&lt;Integer&gt; listOfIdCardsAlreadyAssigned = match.getPlayers().stream().filter(player -&gt; player.getCurrentCard() != null).map(player -&gt; player.getCurrentCard().getId()).collect(Collectors.toList());</b>
+<b class="nc"><i>99</i>&nbsp;                    Card cardAvailable = match.getCards().stream().filter(card -&gt; !listOfIdCardsAlreadyAssigned.contains(card.getId())).findFirst().orElse(null);</b>
+<i>100</i>&nbsp;
+<b class="nc"><i>101</i>&nbsp;                    match.getCurrentPlayer().setCurrentCard(cardAvailable);</b>
+<b class="nc"><i>102</i>&nbsp;                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.GENERIC_MESSAGE, &quot;Ti è stata assegnata la seguente carta: &quot; + cardAvailable.getName()));</b>
+<i>103</i>&nbsp;
+<b class="nc"><i>104</i>&nbsp;                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getCards()));</b>
+<i>105</i>&nbsp;                }
+<b class="nc"><i>106</i>&nbsp;                break;</b>
+<i>107</i>&nbsp;            case SET_FIRST_PLAYER:
+<b class="nc"><i>108</i>&nbsp;                String nameOfFirstPlayer = (String)message.getPayload(String.class);</b>
+<b class="nc"><i>109</i>&nbsp;                match.buildOrderedList(Comparator.comparing(Player::getBirthday));</b>
+<b class="nc"><i>110</i>&nbsp;                match.setCurrentPlayer(nameOfFirstPlayer);</b>
+<b class="nc"><i>111</i>&nbsp;                virtualView.displayMessage(new Message(match.getPlayers().get(0).getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));</b>
+<b class="nc"><i>112</i>&nbsp;                break;</b>
+<i>113</i>&nbsp;            case SET_POSITION_OF_WORKER:
+<b class="nc"><i>114</i>&nbsp;                SelectWorkersMessage selectWorkersMessage = (SelectWorkersMessage) message.getPayload(SelectWorkersMessage.class);</b>
+<b class="nc"><i>115</i>&nbsp;                selectWorkersMessage.getPositionOfWorkers().stream().forEach(position -&gt; {</b>
+<b class="nc"><i>116</i>&nbsp;                    Worker worker = match.getCurrentPlayer().addWorker(selectWorkersMessage.getColorOfWorkers());</b>
+<i>117</i>&nbsp;                    try {
+<b class="nc"><i>118</i>&nbsp;                        match.getLocation().setLocation(match.getIsland().getCell(position.getX(),position.getY()), worker);</b>
+<b class="nc"><i>119</i>&nbsp;                    } catch (Exception e) {</b>
+<b class="nc"><i>120</i>&nbsp;                        e.printStackTrace();</b>
+<b class="nc"><i>121</i>&nbsp;                    }</b>
+<b class="nc"><i>122</i>&nbsp;                });</b>
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;                if (match.selectNextCurrentPlayer() != 0) {</b>
+<b class="nc"><i>126</i>&nbsp;                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));</b>
+<i>127</i>&nbsp;                } else {
+<b class="nc"><i>128</i>&nbsp;                    initTurnManager();</b>
+<i>129</i>&nbsp;                }
+<b class="nc"><i>130</i>&nbsp;                break;</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;            case SELECT_WORKER:
+<b class="nc"><i>133</i>&nbsp;                Tupla tuplaSelectWorker = (Tupla) message.getPayload(Tupla.class);</b>
+<b class="nc"><i>134</i>&nbsp;                turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((int) tuplaSelectWorker.getSecond()));</b>
+<b class="nc"><i>135</i>&nbsp;                break;</b>
+<i>136</i>&nbsp;            case RETRIEVE_CELL_FOR_MOVE:
+<b class="nc"><i>137</i>&nbsp;                turnManager.getAvailableCellForMove();</b>
+<b class="nc"><i>138</i>&nbsp;                break;</b>
+<i>139</i>&nbsp;            case MOVE_WORKER:
+<i>140</i>&nbsp;                //turnManager.move();
+<b class="nc"><i>141</i>&nbsp;                break;</b>
+<i>142</i>&nbsp;            case RETRIEVE_CELL_FOR_BUILD:
+<b class="nc"><i>143</i>&nbsp;                turnManager.getAvailableCellForBuild();</b>
+<b class="nc"><i>144</i>&nbsp;                break;</b>
+<i>145</i>&nbsp;            case BUILD_CELL:
+<i>146</i>&nbsp;                //turnManager.build();
+<i>147</i>&nbsp;                break;
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;        }
+<b class="fc"><i>150</i>&nbsp;    }</b>
+<i>151</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-28 12:21</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,193 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: VirtualView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.network.server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: VirtualView (it.polimi.ingsw.network.server)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">VirtualView</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81%
+  </span>
+  <span class="absValue">
+    (17/ 21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">VirtualView$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    83,3%
+  </span>
+  <span class="absValue">
+    (5/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81,8%
+  </span>
+  <span class="absValue">
+    (18/ 22)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.network.server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.commons.Listener;
+<i>4</i>&nbsp;import it.polimi.ingsw.commons.messages.Message;
+<i>5</i>&nbsp;import it.polimi.ingsw.commons.Publisher;
+<i>6</i>&nbsp;import it.polimi.ingsw.commons.messages.TypeOfMessage;
+<i>7</i>&nbsp;import it.polimi.ingsw.controller.Controller;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.*;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.Calendar;
+<i>11</i>&nbsp;import java.util.Date;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.Map;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;//todo associazione player - client con .getconnection
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;/**
+<i>20</i>&nbsp; * it&#39;s both publisher -&gt;controller and Listener &lt;- Model
+<i>21</i>&nbsp; */
+<i>22</i>&nbsp;public class VirtualView extends Publisher&lt;Message&gt; implements Listener&lt;Message&gt; {
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    private Match match;
+<i>25</i>&nbsp;    private CardManager cardManager;
+<i>26</i>&nbsp;    private Server server;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Constructor
+<i>30</i>&nbsp;     * @param server
+<i>31</i>&nbsp;     */
+<b class="fc"><i>32</i>&nbsp;    public VirtualView( Server server){</b>
+<b class="fc"><i>33</i>&nbsp;        this.server = server;</b>
+<b class="fc"><i>34</i>&nbsp;        Controller controller = new Controller(this);</b>
+<b class="fc"><i>35</i>&nbsp;        addListener(controller);</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public void handleMessage(Message message){
+<b class="nc"><i>39</i>&nbsp;        publish(message); //just send a message to controller to create the match;</b>
+<b class="nc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * Receives match changes
+<i>45</i>&nbsp;     * @param message
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    public void update(Message message) {
+<b class="fc"><i>49</i>&nbsp;        switch (message.getTypeOfMessage()){</b>
+<i>50</i>&nbsp;            case TOWER_UPDATED:
+<b class="nc"><i>51</i>&nbsp;                Cell[][] island = match.getIsland().getField();</b>
+<b class="nc"><i>52</i>&nbsp;                displayMessage(new Message(&quot;ALL&quot;,TypeOfMessage.TOWER_UPDATED, island));</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;            case LOCATION_UPDATED:
+<b class="fc"><i>55</i>&nbsp;                Location location = match.getLocation();</b>
+<b class="fc"><i>56</i>&nbsp;                displayMessage(new Message(&quot;ALL&quot;, TypeOfMessage.LOCATION_UPDATED, location));</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;            case SETTED_CARDS_TO_GAME: //mando a far vedere le carte selezionate
+<b class="fc"><i>59</i>&nbsp;                List&lt;Card&gt; cardInGame = match.getCards();</b>
+<b class="fc"><i>60</i>&nbsp;                displayMessage(new Message(&quot;ALL&quot;, TypeOfMessage.SETTED_CARDS_TO_GAME, cardInGame ));</b>
+<i>61</i>&nbsp;        }
+<i>62</i>&nbsp;
+<b class="fc"><i>63</i>&nbsp;        if (message.getUsername() != null &amp;&amp; message.getUsername().equals(&quot;VIRTUAL_VIEW&quot;)) {</b>
+<i>64</i>&nbsp;
+<b class="fc"><i>65</i>&nbsp;        } else displayMessage(message);</b>
+<b class="fc"><i>66</i>&nbsp;    }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * Sends message to the client
+<i>70</i>&nbsp;     * @param message
+<i>71</i>&nbsp;     */
+<i>72</i>&nbsp;    public void displayMessage(Message message) {
+<b class="fc"><i>73</i>&nbsp;        server.sendToClient(message);</b>
+<b class="fc"><i>74</i>&nbsp;    }</b>
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    /**
+<i>77</i>&nbsp;     * just a setter of match
+<i>78</i>&nbsp;     * @param match
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public void setMatch(Match match){
+<b class="fc"><i>81</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;}
+<i>84</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-28 12:21</div>
+</div>
+</body>
+</html>

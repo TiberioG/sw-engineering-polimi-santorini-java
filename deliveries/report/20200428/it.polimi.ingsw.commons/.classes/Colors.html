@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Colors</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.commons</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Colors (it.polimi.ingsw.commons)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Colors</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (6/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    67,9%
+  </span>
+  <span class="absValue">
+    (19/ 28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.commons;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;import java.util.Collections;
+<i>5</i>&nbsp;import java.util.Random;
+<i>6</i>&nbsp;
+<b class="fc"><i>7</i>&nbsp;public enum Colors {</b>
+<b class="fc"><i>8</i>&nbsp;    WHITE (&quot;\u001B[97m&quot;),</b>
+<b class="fc"><i>9</i>&nbsp;    BLACK (&quot;\u001B[30m&quot;),</b>
+<b class="fc"><i>10</i>&nbsp;    BLUE(&quot;\u001B[34m&quot;),</b>
+<b class="fc"><i>11</i>&nbsp;    RED (&quot;\u001B[31m&quot;),</b>
+<b class="fc"><i>12</i>&nbsp;    GREEN(&quot;\u001B[32m&quot;),</b>
+<b class="fc"><i>13</i>&nbsp;    YELLOW(&quot;\u001B[33m&quot;),</b>
+<b class="fc"><i>14</i>&nbsp;    MAGENTA(&quot;\u001B[35m&quot;),</b>
+<b class="fc"><i>15</i>&nbsp;    CYAN(&quot;\u001B[36m&quot;),</b>
+<b class="fc"><i>16</i>&nbsp;    GREY(&quot;\u001B[37m&quot;);</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    private final String ansiCode;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Constructor
+<i>22</i>&nbsp;     * @param ansiCode
+<i>23</i>&nbsp;     */
+<b class="fc"><i>24</i>&nbsp;    Colors(String ansiCode) {</b>
+<b class="fc"><i>25</i>&nbsp;        this.ansiCode = ansiCode;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * Method to get the ansi code of a color
+<i>30</i>&nbsp;     * @return a String containing the AnsiCode
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    public String getAnsiCode() {
+<b class="fc"><i>33</i>&nbsp;        return ansiCode;</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public static String[] allNames(){
+<b class="nc"><i>37</i>&nbsp;        String [] list = new String[Colors.values().length];</b>
+<b class="nc"><i>38</i>&nbsp;        for (int i = 0; i &lt; Colors.values().length; i++){</b>
+<b class="nc"><i>39</i>&nbsp;            list[i] = Colors.values()[i].toString();</b>
+<i>40</i>&nbsp;        }
+<b class="nc"><i>41</i>&nbsp;        return list;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     * Method used to retireve the a string of all the names of colors, each one colored
+<i>46</i>&nbsp;     * @return an array of strings constaining the NAME of color plus the ansi code
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    public static String[] allNamesColored(){
+<b class="fc"><i>49</i>&nbsp;        String [] list = new String[Colors.values().length];</b>
+<b class="fc"><i>50</i>&nbsp;        for (int i = 0; i &lt; Colors.values().length; i++){</b>
+<b class="fc"><i>51</i>&nbsp;            list[i] = Colors.values()[i].getAnsiCode() + Colors.values()[i].toString() + Colors.reset() ;</b>
+<i>52</i>&nbsp;        }
+<b class="fc"><i>53</i>&nbsp;        return list;</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /**
+<i>57</i>&nbsp;     *
+<i>58</i>&nbsp;     * @return the resetcolor ANSI code
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;      public static String reset(){
+<b class="fc"><i>61</i>&nbsp;        return  &quot;\u001B[0m&quot;;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    public static String randomColor(){
+<b class="nc"><i>65</i>&nbsp;        ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();</b>
+<i>66</i>&nbsp;
+<b class="nc"><i>67</i>&nbsp;        for (int i = 0; i &lt; Colors.values().length; i++){</b>
+<b class="nc"><i>68</i>&nbsp;            list.add(Colors.values()[i].getAnsiCode());</b>
+<i>69</i>&nbsp;        }
+<b class="nc"><i>70</i>&nbsp;        Random rand = new Random();</b>
+<b class="nc"><i>71</i>&nbsp;        return list.get(rand.nextInt(list.size()));</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;}
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-28 12:21</div>
+</div>
+</body>
+</html>
