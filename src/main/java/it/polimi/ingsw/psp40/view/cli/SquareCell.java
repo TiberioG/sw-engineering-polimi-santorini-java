@@ -10,7 +10,7 @@ import java.io.IOException;
  * This class represents a cell in the CLI
  */
 
-public class SquareCell2 {
+public class SquareCell {
 
     private boolean worker;
     private Colors color;
@@ -30,7 +30,7 @@ public class SquareCell2 {
      * @param color the {@link Colors} of the worker, if not present must be null
      * @param level the level (int) of the tower at that cell
      */
-    public SquareCell2(boolean worker, Colors color, int level){
+    public SquareCell(boolean worker, Colors color, int level){
         this.color = color;
         this.worker = worker;
         this.level = level;

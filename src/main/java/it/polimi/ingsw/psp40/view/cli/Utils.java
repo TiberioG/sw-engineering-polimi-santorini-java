@@ -78,6 +78,36 @@ public class Utils {
         return number;
     }
 
+    /**
+     * Manages the insertion of an integer on command line input,
+     * asking it again until it not a valid value.
+     *
+     * @param stdin          is the input scanner
+     * @param minValue       is the minimum acceptable value of the input
+     * @param maxValue       is the maximum acceptable value of the input
+     * @return the value of the input
+     */
+
+    public int validateIntInput( int minValue, int maxValue) {
+        int output;
+        try {
+            output = in.nextInt();
+        } catch (InputMismatchException e) {
+            output = minValue - 1;
+            in.nextLine();
+        }
+        while (output > maxValue || output < minValue) {
+            System.out.println("Value must be between " + minValue + " and " + maxValue + ". Please, try again:");
+            try {
+                output = in.nextInt();
+            } catch (InputMismatchException e) {
+                output = minValue - 1;
+                in.nextLine();
+            }
+        }
+        in.nextLine(); // handle nextInt()
+        return output;
+    }
 
 
     public Date readDate(String kind){
@@ -214,6 +244,10 @@ public class Utils {
         }
     }
 
+    public void form(String title){
+
+    }
+
 
     public void printMap(String[][] stringIsland ){
         String lineSplit = "";
@@ -243,6 +277,33 @@ public class Utils {
      */
     public static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
+    }
+
+
+    String readnames() {
+        String name = in.nextLine();
+
+        while (name.equals("All") || name.isEmpty() || name.matches("^\\s*$")){
+            out.println("\nThis username is not allowed, sorry! :(\n\n" +
+                    "INSERT ANOTHER ONE:\n");
+            name = in.nextLine();
+        }
+        return name;
+    }
+
+    String readIp() {
+        String ip;
+        ip = in.nextLine();
+
+        while (!isValidIp(ip)) {
+            System.out.println("This is not a valid IPv4 address. Please, try again:");
+            ip = in.nextLine();
+        }
+        return ip;
+    }
+
+    private static boolean isValidIp(String input) {
+        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
     }
 
 

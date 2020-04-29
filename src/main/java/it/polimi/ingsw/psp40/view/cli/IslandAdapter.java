@@ -11,11 +11,14 @@ import java.util.List;
 /**
  * This class is used to transform the field of cells and the location form the model to a matrix of
  */
-public class IslandAdapter2 {
+public class IslandAdapter {
 
     //make singleton??
 
-    private SquareCell2[][] matrix ;
+    /**
+     *
+     */
+    private SquareCell[][] matrix ;
     private int len;
     private int hei;
     private int[] cursor = {7, 60};
@@ -29,19 +32,19 @@ public class IslandAdapter2 {
      * @param field from the model, a matrix of {@link Cell}
      * @param location from the model {@link Location}
      */
-    IslandAdapter2(Cell[][] field, Location location){
-        matrix = new SquareCell2[field.length][field.length];
-        len = SquareCell2.getLen();
-        hei = SquareCell2.getHei();
+    IslandAdapter(Cell[][] field, Location location){
+        matrix = new SquareCell[field.length][field.length];
+        len = SquareCell.getLen();
+        hei = SquareCell.getHei();
 
         for (int row = 0; row < field.length ; row++) {
             for (int col = 0; col < field.length ; col++) {
                 if (location.getOccupant(field[row][col]) != null) {
                     //case cell is with worker
-                    matrix[row][col] = new SquareCell2(true, location.getOccupant(field[row][col]).getColor(), field[row][col].getTower().getTopComponent().getComponentCode());
+                    matrix[row][col] = new SquareCell(true, location.getOccupant(field[row][col]).getColor(), field[row][col].getTower().getTopComponent().getComponentCode());
                 } else {
                     //case cell WITHOUT worker
-                    matrix[row][col] = new SquareCell2(false, null, field[row][col].getTower().getTopComponent().getComponentCode());
+                    matrix[row][col] = new SquareCell(false, null, field[row][col].getTower().getTopComponent().getComponentCode());
                 }
             }
         }
@@ -80,9 +83,9 @@ public class IslandAdapter2 {
 
 
     void setSelected(int r, int c) {
-        for (SquareCell2[] squareCell2s : matrix) {
+        for (SquareCell[] squareCells : matrix) {
             for (int col = 0; col < matrix.length; col++) {
-                squareCell2s[col].setSelected(false);
+                squareCells[col].setSelected(false);
             }
         }
         matrix[r][c].setSelected(true);
@@ -102,11 +105,15 @@ public class IslandAdapter2 {
     }
 
     void clearMovable() {
-        for (SquareCell2[] squareCell2s : matrix) {
+        for (SquareCell[] squareCells : matrix) {
             for (int col = 0; col < matrix.length; col++) {
-                squareCell2s[col].setMovable(false);
+                squareCells[col].setMovable(false);
             }
         }
+    }
+
+    public SquareCell[][] getMatrix(){
+        return this.matrix;
     }
 
 }

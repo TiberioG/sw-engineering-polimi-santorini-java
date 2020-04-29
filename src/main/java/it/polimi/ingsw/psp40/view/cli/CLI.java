@@ -2,15 +2,12 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Publisher;
+import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Location;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
-import it.polimi.ingsw.psp40.commons.messages.CoordinatesMessage;
-import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
-import it.polimi.ingsw.psp40.commons.messages.Message;
-import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 
 import java.io.PrintWriter;
@@ -61,9 +58,9 @@ public class CLI implements ViewInterface {
     public void displaySetup() {
         showTitle();
         out.println("IP address of server?");
-        String ip = readIp(in);
+        String ip = utils.readIp();
         System.out.println("Port number?");
-        int port = validateIntInput(in, MIN_PORT, MAX_PORT);
+        int port = utils.validateIntInput(MIN_PORT, MAX_PORT);
         client.setServerIP(ip);
         client.setServerPort(port);
         client.connectToServer();
@@ -87,7 +84,8 @@ public class CLI implements ViewInterface {
         date = utils.readDate("birthdate");
 
         out.println("How many people do you want to play with?");
-        numOfPlayers = validateIntInput(in, 2, 3);
+        numOfPlayers = utils.validateIntInput( 2, 3);
+
         client.setUsername(username);
         LoginMessage loginMessage = new LoginMessage(username, date, numOfPlayers, TypeOfMessage.LOGIN);
         client.sendToServer(loginMessage);
@@ -202,20 +200,16 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
-        int [][] available ;
+        List<String> colorsAvailable =  Arrays.asList(Colors.allNames()); //list of NAMES of all colors available
 
-        List<String> colorsAvailable =  Arrays.asList(Colors.allNames());
-
+        //remove colors already used by other players
         playerList.forEach(player -> {
-            if (player.getWorkers().size() != 0){
+            if (player.getWorkers().size() != 0){ //check if there is at least one player with workers
                 colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
             }
         });
-
-        String[] colorsAvailableArry = (String[]) colorsAvailable.toArray();
-
+        String[] colorsAvailableArry = (String[]) colorsAvailable.toArray(); //conversion to string
         out.println("I's time to choose one color for your workers, choose from following list:");
-
         try {
             utils.singleTableCool("options", colorsAvailableArry, 100);
         } catch (InterruptedException e) {
@@ -223,20 +217,28 @@ public class CLI implements ViewInterface {
         }
 
         int choice = utils.readNumbers(0,colorsAvailableArry.length - 1);
-
         out.println("Wooow, you have selected color " + colorsAvailableArry[choice]+ " for your workers");
-
         client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArry[choice])));
 
+        /* section to position the workers */
+        this.showIsland();
+
+        int[] position2;
+        int[] position1;
+
         out.println(String.format("Now you can position your worker no. %d", 1));
+        do{
+            position1 = utils.readPosition(0,4);
+        }while (!occupiedCoord().contains(position1));
 
-        int[] position = utils.readPosition(0,4);
-        CoordinatesMessage coord = new CoordinatesMessage(position[0], position[1]);
+        out.println(String.format("Now you can position your worker no. %d", 2));
+        do{
+             position2 = utils.readPosition(0,4);
+        }while (!Arrays.equals(position1, position2) && !occupiedCoord().contains(position1));
 
-        client.sendToServer(new Message(TypeOfMessage.GENERIC_MESSAGE)); //todo send tupla
+        Tupla doublecoord = new Tupla(new CoordinatesMessage(position1[0], position1[1]), new CoordinatesMessage(position2[0], position2[1]));
 
-        //todo check
-
+        client.sendToServer(new Message(TypeOfMessage.GENERIC_MESSAGE, doublecoord) );
 
     }
 
@@ -256,7 +258,7 @@ public class CLI implements ViewInterface {
     }
 
 
-    public void updateIsland() {
+    private void showIsland() {
       Location location = client.getLocationCache();
       Cell[][] field = client.getFieldCache();
 
@@ -283,7 +285,10 @@ public class CLI implements ViewInterface {
 
 
     public void moveWorker() {
-        //utils.readPosition();
+
+
+        out.println(String.format("Now you can position your worker no. %d", 2));
+        int[] position1 = utils.readPosition(0,4);
 
 
 
@@ -295,63 +300,16 @@ public class CLI implements ViewInterface {
         //client.send2Server(new Message(username, TypeOfMessage.BUILD_BLOCK, coord) );
     }
 
-    /*
-    //TODO e che ci sta qua?
-    @Override
-    public void update(Message message) {
-        TypeOfMessage type = message.getTypeOfMessage();
 
-        switch (type) {
-            case LOCATION_UPDATED: //se la location è cambiata, modifico la cache locale in ogni client
-                this.location = (Location) message.getObjectFromJson(Location.class);
-
-        }
-    }*/
-
-    private String readIp(Scanner stdin) {
-        String ip;
-        ip = stdin.nextLine();
-
-        while (!isValidIp(ip)) {
-            System.out.println("This is not a valid IPv4 address. Please, try again:");
-            ip = stdin.nextLine();
-        }
-        return ip;
-    }
-
-    private static boolean isValidIp(String input) {
-        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
-    }
-
-    /**
-     * Manages the insertion of an integer on command line input,
-     * asking it again until it not a valid value.
-     *
-     * @param stdin          is the input scanner
-     * @param minValue       is the minimum acceptable value of the input
-     * @param maxValue       is the maximum acceptable value of the input
-     * @return the value of the input
-     */
-    private static int validateIntInput(Scanner stdin, int minValue, int maxValue) {
-        int output;
-        try {
-            output = stdin.nextInt();
-        } catch (InputMismatchException e) {
-            output = minValue - 1;
-            stdin.nextLine();
-        }
-        while (output > maxValue || output < minValue) {
-            System.out.println("Value must be between " + minValue + " and " + maxValue + ". Please, try again:");
-            try {
-                output = stdin.nextInt();
-            } catch (InputMismatchException e) {
-                output = minValue - 1;
-                stdin.nextLine();
+    private List<int[]> occupiedCoord (){
+        List<Cell> occupiedCells = client.getLocationCache().getAllOccupied();
+        List<int[]> occupiedCoord = new ArrayList<>();
+        if(occupiedCells.size() != 0) {
+            for (Cell occupiedCell : occupiedCells) {
+                occupiedCoord.add(new int[]{occupiedCell.getCoordX(), occupiedCell.getCoordY()});
             }
         }
-
-        stdin.nextLine(); // handle nextInt()
-        return output;
+        return occupiedCoord;
     }
 }
 

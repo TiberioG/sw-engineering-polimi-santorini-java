@@ -36,6 +36,7 @@ class Frame {
             System.out.print("\u001b[1K");
         }
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        in.reset();
     }
 
     void print(String string){
@@ -58,7 +59,6 @@ class Frame {
                 WordWrap.from(towrite)
                         .maxWidth(colSpan)
                         .wrap();
-
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
        System.out.print(wrapped);
     }
@@ -67,6 +67,13 @@ class Frame {
 
     }
 
+    public int getRowSpan(){
+        return rowSpan;
+    }
+
+    public int getColSpan() {
+        return colSpan;
+    }
 
     public int[] getInit(){
         return this.absInit;

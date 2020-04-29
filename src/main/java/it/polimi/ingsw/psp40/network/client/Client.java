@@ -2,16 +2,14 @@ package it.polimi.ingsw.psp40.network.client;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.psp40.commons.Configuration;
-import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.Cell;
-import it.polimi.ingsw.psp40.model.Location;
-import it.polimi.ingsw.psp40.model.Player;
+import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.commons.messages.ChooseGameCardMessage;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.cli.CLI;
+import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -73,7 +71,8 @@ public class Client implements ServerObserver {
     }
 
     if (cli) {
-      CLI view = new CLI(client);
+      //CLI view = new CLI(client);
+      CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }

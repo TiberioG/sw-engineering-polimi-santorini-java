@@ -7,13 +7,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
- * This class is used to change the terminal type in linux, switching from line buffered input to byte
- * using the comand stty https://linux.die.net/man/1/stty
- *
+ * Class used to manage the appearence of Terminal using mainly ansi codes and stty command
+ * @author tiberioG
  */
 public class Terminal {
-
     private static String ttyConfig;
+
     /**
      *
      * @throws IOException
@@ -48,9 +47,15 @@ public class Terminal {
     }
 
 
-
-    public static void resize(int rows, int cols) throws IOException, InterruptedException {
-        System.out.print("\u001b[8;50;200t");
+    /**
+     * Method to resize the terminal
+     * To enable these in XTerm, set the following resource to true: allowWindowOps
+     * To enable these in iTerm2, deselect the following: Preferences > Profiles > [profile] > Terminal > Disable session-initiated window resizing
+     * @param rows
+     * @param cols
+     */
+    public static void resize(int rows, int cols){
+        System.out.print("\u001b[8;"+ rows + ";" + cols + "t");
 
     }
 
@@ -62,9 +67,16 @@ public class Terminal {
     }
 
 
+    /**
+     * Method to enable showing the cursor in Terminal
+     */
     public static void showCursor() {
         System.out.print("\u001b[?25h");
     }
+
+    /**
+     * Method to disable showing the cursor in Terminal
+     */
     public static void hideCursor() {
         System.out.print("\u001b[?25l");
     }

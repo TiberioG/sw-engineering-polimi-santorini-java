@@ -6,7 +6,9 @@ import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class represents the location
@@ -90,6 +92,15 @@ public class Location extends Publisher<Message> {
      */
     public  Worker getOccupant(Cell cell) {
         return this.map.get(cell);
+    }
+
+    /**
+     * Method to get a list of all the occupied cells
+     * @return
+     */
+
+    public List<Cell> getAllOccupied(){
+        return new ArrayList<>(this.map.keySet());
     }
 
 
