@@ -117,95 +117,107 @@ public class Client implements ServerObserver {
    * @param message message received from the server
    */
   public void handleMessage(Message message){
-    switch (message.getTypeOfMessage()) {
-      /*case CARD_GET:
-        //deserializzare qui
-        view.cardSelection();
-        //todo passare una lista di carte
 
-      case REQUEST_INITIAL_POSITION:
-        //deserial
-        view.setInitialPositionco(List < CoordinatesMessage >); //ci piace??*/
+      switch (message.getTypeOfMessage()) {
+    /*case CARD_GET:
+      //deserializzare qui
+      view.cardSelection();
+      //todo passare una lista di carte
 
-      case GENERIC_MESSAGE:
-        view.displayGenericMessage((String)message.getPayload(String.class));
-        break;
+    case REQUEST_INITIAL_POSITION:
+      //deserial
+      view.setInitialPositionco(List < CoordinatesMessage >); //ci piace??*/
 
-      case LOGIN_SUCCESSFUL:
-        setUUID(message.getUUID());
-        view.displayLoginSuccessful();
-        break;
+        case GENERIC_MESSAGE:
+          view.displayGenericMessage((String) message.getPayload(String.class));
+          break;
 
-      case LOGIN_FAILURE:
-        view.displayLoginFailure((String)message.getPayload(String.class));
-        break;
+        case LOGIN_SUCCESSFUL:
+          setUUID(message.getUUID());
+          view.displayLoginSuccessful();
+          break;
 
-      case USER_JOINED:
-        view.displayUserJoined((String)message.getPayload(String.class));
-        break;
+        case LOGIN_FAILURE:
+          view.displayLoginFailure((String) message.getPayload(String.class));
+          break;
 
-      case ADDED_TO_QUEUE:
-        view.displayAddedToQueue((String)message.getPayload(String.class));
-        break;
+        case USER_JOINED:
+          view.displayUserJoined((String) message.getPayload(String.class));
+          break;
 
-      case START_MATCH:
-        view.displayStartingMatch();
-        break;
+        case ADDED_TO_QUEUE:
+          view.displayAddedToQueue((String) message.getPayload(String.class));
+          break;
 
-      case DISCONNECTED_SERVER_SIDE:
-        view.displayDisconnected((String)message.getPayload(String.class));
-        break;
+        case START_MATCH:
+          view.displayStartingMatch();
+          break;
 
-      case SERVER_LOST:
-        view.displayDisconnected("Connection lost"); // will close the socket and terminate the execution
-        break;
+        case DISCONNECTED_SERVER_SIDE:
+          view.displayDisconnected((String) message.getPayload(String.class));
+          break;
 
-      case HEARTBEAT:
-        //System.out.println("SERVER IS ALIVE");
-        break;
+        case SERVER_LOST:
+          view.displayDisconnected("Connection lost"); // will close the socket and terminate the execution
+          break;
 
-      case CHOOSE_GAME_CARDS:
-        Type type = new TypeToken<ChooseGameCardMessage>() {}.getType();
-        ChooseGameCardMessage chooseGameCardMessage = (ChooseGameCardMessage)message.getPayload(type);
-        view.displayCardSelection(chooseGameCardMessage.getCardMap(), chooseGameCardMessage.getNumberOfPlayer());
-        break;
+        case HEARTBEAT:
+          //System.out.println("SERVER IS ALIVE");
+          break;
 
-      case CHOOSE_PERSONAL_CARD:
-        List<TuplaGenerics> listAvailableCardFromServer = (List<TuplaGenerics>) message.getPayload(new TypeToken<List<TuplaGenerics<Card,String>>>() {}.getType());
-        //todo migrate this to cli and gui for different logic
-        List<Card> availableCards = new ArrayList<>();
-        listAvailableCardFromServer.forEach(tupla -> {
-          if (tupla.getSecond() == null) {
-            availableCards.add((Card) tupla.getFirst());
-          }
-        });
-        view.displayChoicePersonalCard(availableCards);
-        break;
+        case CHOOSE_GAME_CARDS:
+          Type type = new TypeToken<ChooseGameCardMessage>() {
+          }.getType();
+          ChooseGameCardMessage chooseGameCardMessage = (ChooseGameCardMessage) message.getPayload(type);
+          view.displayCardSelection(chooseGameCardMessage.getCardMap(), chooseGameCardMessage.getNumberOfPlayer());
+          break;
 
-      /* case used to choose the first player to position his workers, is selected by the current player */
-      case CHOOSE_FIRST_PLAYER:
-        List<Player> allPlayers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
-        view.displayAskFirstPlayer(allPlayers);
-        break;
+        case CHOOSE_PERSONAL_CARD:
+          List<TuplaGenerics> listAvailableCardFromServer = (List<TuplaGenerics>) message.getPayload(new TypeToken<List<TuplaGenerics<Card, String>>>() {}.getType());
+          //todo migrate this to cli and gui for different logic
+          List<Card> availableCards = new ArrayList<>();
+          listAvailableCardFromServer.forEach(tupla -> {
+            if (tupla.getSecond() == null) {
+              availableCards.add((Card) tupla.getFirst());
+            }
+          });
+          view.displayChoicePersonalCard(availableCards);
+          break;
 
-      case ISLAND_UPDATED:
-        this.fieldCache = (Cell[][]) message.getPayload(Cell[][].class); //siam sicuri gli piaccia?
-        break;
+        /* case used to choose the first player to position his workers, is selected by the current player */
+        case CHOOSE_FIRST_PLAYER:
+          List<Player> allPlayers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+          view.displayAskFirstPlayer(allPlayers);
+          break;
 
-      case LOCATION_UPDATED:
-        this.locationCache = (Location) message.getPayload(Location.class);
-        break;
+        case ISLAND_UPDATED:
+          //this.fieldCache =  (Cell[][]) message.getPayload(Cell[][].class); //siam sicuri gli piaccia?
+          setFieldCache((Cell[][]) message.getPayload(Cell[][].class));
+          break;
 
-      case CHOOSE_POSITION_OF_WORKERS:
-        List<Player> allPlayers1 = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
-        view.displaySetInitialPosition(allPlayers1);
+        case LOCATION_UPDATED:
+          //this.locationCache = (Location) message.getPayload(Location.class);
+          setLocationCache((Location) message.getPayload(Location.class));
+          break;
 
-        break;
+        case CHOOSE_POSITION_OF_WORKERS:
+          List<Player> allPlayers1 = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+          view.displaySetInitialPosition(allPlayers1);
+          break;
 
-      default:
-        break;
+        default:
+          break;
 
-    }
+      }
+
+  }
+
+  public synchronized void setFieldCache(Cell[][] fieldCache) {
+    this.fieldCache = fieldCache;
+  }
+
+  public synchronized void setLocationCache(Location locationCache) {
+    this.locationCache = locationCache;
   }
 
   // Used to notify connection to the server

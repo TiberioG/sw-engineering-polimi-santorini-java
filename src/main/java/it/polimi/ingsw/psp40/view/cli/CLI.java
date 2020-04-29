@@ -61,9 +61,11 @@ public class CLI implements ViewInterface {
     public void displaySetup() {
         showTitle();
         out.println("IP address of server?");
-        String ip = readIp(in);
+//String ip = readIp(in);
+String ip = "localhost";
         System.out.println("Port number?");
-        int port = validateIntInput(in, MIN_PORT, MAX_PORT);
+//int port = validateIntInput(in, MIN_PORT, MAX_PORT);
+int port = 1001;
         client.setServerIP(ip);
         client.setServerPort(port);
         client.connectToServer();
@@ -83,8 +85,10 @@ public class CLI implements ViewInterface {
     public void displayLogin() {
 
         out.println("Choose your username:");
-        String username = in.nextLine();
-        date = utils.readDate("birthdate");
+//String username = in.nextLine();
+String username = new Date().toString();
+//date = utils.readDate("birthdate");
+date = new Date();
 
         out.println("How many people do you want to play with?");
         numOfPlayers = validateIntInput(in, 2, 3);

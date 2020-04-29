@@ -13,6 +13,7 @@ public class Message implements Serializable {
     private TypeOfMessage typeOfMessage;
     private String jsonMessage = null;
     private String UUID = null;
+    private int matchID = 0;
 
     public Message(String username, TypeOfMessage typeOfMessage, Object object) {
         this(username, typeOfMessage);
@@ -49,6 +50,14 @@ public class Message implements Serializable {
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    public int getMatchID() {
+        return matchID;
+    }
+
+    public void setMatchID(int matchID) {
+        this.matchID = matchID;
     }
 
     public TypeOfMessage getTypeOfMessage() {

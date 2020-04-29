@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp40.network.client;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -80,18 +81,23 @@ public class ServerAdapter implements Runnable
    */
   private void handleServerConnection() throws IOException, ClassNotFoundException {
     while (true) {
-      Message msg = (Message) inputStm.readObject();
+      try {
+        Message msg = (Message) inputStm.readObject();
 
-      /* copy the list of observers in case some observers changes it from inside
-       * the notification method */
-      List<ServerObserver> observersCpy;
-      synchronized (observers) {
-        observersCpy = new ArrayList<>(observers);
-      }
+        /* copy the list of observers in case some observers changes it from inside
+         * the notification method */
+        List<ServerObserver> observersCpy;
+        synchronized (observers) {
+          observersCpy = new ArrayList<>(observers);
+        }
 
-      /* notify the observers that we got a message from the server */
-      for (ServerObserver observer : observersCpy) {
-        observer.handleMessage(msg);
+        /* notify the observers that we got a message from the server */
+        for (ServerObserver observer : observersCpy) {
+          new Thread(() -> {
+            observer.handleMessage(msg);
+          }).start();
+        }
+      } catch (EOFException e) {
       }
     }
   }

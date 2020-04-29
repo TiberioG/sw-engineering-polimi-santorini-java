@@ -27,8 +27,9 @@ public class Controller implements Listener<Message> {
         cardManager = CardManager.initCardManager();
     }
 
-    private void createNewMatch() {
-        match = new Match(new Date().hashCode(), this.virtualView);
+    private void createNewMatch(int matchID) {
+        virtualView.setMatchID(matchID);
+        match = new Match(matchID, this.virtualView);
         virtualView.setMatch(match);
     }
 
@@ -73,7 +74,7 @@ public class Controller implements Listener<Message> {
         TypeOfMessage type = message.getTypeOfMessage();
         switch (type) {
             case START_MATCH: //if I receive this i'm ready to create a new match
-                createNewMatch();
+                createNewMatch(message.getMatchID());
                 ((Map<String, String>)message.getPayload(Map.class)).forEach((username, date) -> {
                     try {
                         addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
@@ -84,11 +85,13 @@ public class Controller implements Listener<Message> {
                 match.setCurrentPlayer(match.getPlayers().get(0));
                 virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
                 break;
+
             case SET_CARDS_TO_GAME: //if i receive this, the card for the game have been chosen, now I have to associate them to players
                 List<Integer> listOfIdCard = (List<Integer>) message.getPayload(new TypeToken<List<Integer>>() {}.getType());
                 addCardToMatch(listOfIdCard);
                 sendSelectableCards(match.getPlayers().get(match.selectNextCurrentPlayer()).getName());
                 break;
+
             case SET_CARD_TO_PLAYER:
                 addCardToPlayer(message.getUsername(), (Integer) message.getPayload(Integer.class));
 
@@ -104,6 +107,7 @@ public class Controller implements Listener<Message> {
                     virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getPlayers()));
                 }
                 break;
+
             case SET_FIRST_PLAYER:
                 String nameOfFirstPlayer = (String)message.getPayload(String.class);
                 match.buildOrderedList(Comparator.comparing(Player::getBirthday)); //fa lista ordinata prima
@@ -111,6 +115,7 @@ public class Controller implements Listener<Message> {
                 match.rescaleListFromCurrentPlayer();
                 virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS)); //getting first player is the fist who position workers
                 break;
+
             case SET_POSITION_OF_WORKER:
                 SelectWorkersMessage selectWorkersMessage = (SelectWorkersMessage) message.getPayload(SelectWorkersMessage.class);
                 selectWorkersMessage.getPositionOfWorkers().forEach(position -> {
@@ -133,15 +138,19 @@ public class Controller implements Listener<Message> {
                 Tupla tuplaSelectWorker = (Tupla) message.getPayload(Tupla.class);
                 turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((int) tuplaSelectWorker.getSecond()));
                 break;
+
             case RETRIEVE_CELL_FOR_MOVE:
                 turnManager.getAvailableCellForMove();
                 break;
+
             case MOVE_WORKER:
                 //turnManager.move();
                 break;
+
             case RETRIEVE_CELL_FOR_BUILD:
                 turnManager.getAvailableCellForBuild();
                 break;
+
             case BUILD_CELL:
                 //turnManager.build();
                 break;
