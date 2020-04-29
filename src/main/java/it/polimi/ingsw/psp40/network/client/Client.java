@@ -183,21 +183,21 @@ public class Client implements ServerObserver {
 
       /* case used to choose the first player to position his workers, is selected by the current player */
       case CHOOSE_FIRST_PLAYER:
-        List<Player> allPlayers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
-        view.displayAskFirstPlayer(allPlayers);
+        List<Player> payloadOfChooseFirstPlayer = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+        view.displayAskFirstPlayer(payloadOfChooseFirstPlayer);
         break;
 
       case ISLAND_UPDATED:
-        this.fieldCache = (Cell[][]) message.getPayload(Cell[][].class); //siam sicuri gli piaccia?
+        fieldCache = (Cell[][]) message.getPayload(Cell[][].class); //siam sicuri gli piaccia?
         break;
 
       case LOCATION_UPDATED:
-        this.locationCache = (Location) message.getPayload(Location.class);
+        locationCache = (Location) message.getPayload(Location.class);
         break;
 
       case CHOOSE_POSITION_OF_WORKERS:
-        List<Player> allPlayers1 = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
-        view.displaySetInitialPosition(allPlayers1);
+        List<Player> payloadOfChoosePositionOfWorkers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+        view.displaySetInitialPosition(payloadOfChoosePositionOfWorkers);
 
         break;
 

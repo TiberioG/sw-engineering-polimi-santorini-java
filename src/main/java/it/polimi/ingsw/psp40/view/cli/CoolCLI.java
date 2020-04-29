@@ -214,20 +214,20 @@ public class CoolCLI implements ViewInterface {
                 colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
             }
         });
-        String[] colorsAvailableArry = (String[]) colorsAvailable.toArray();
+        String[] colorsAvailableArray = colorsAvailable.stream().toArray(String[]::new);
 
         left.start();
         out.println("It's time to choose one color for your workers, choose from following list:");
 
         try {
-            utils.singleTableCool("options", colorsAvailableArry, 100);
+            utils.singleTableCool("options", colorsAvailableArray, 100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        int choice = utils.readNumbers(0,colorsAvailableArry.length - 1);
+        int choice = utils.readNumbers(0,colorsAvailableArray.length - 1);
 
-        out.println("Wooow, you have selected color " + colorsAvailableArry[choice]+ " for your workers");
+        out.println("Wooow, you have selected color " + colorsAvailableArray[choice]+ " for your workers");
 
 
         //START ISLAND

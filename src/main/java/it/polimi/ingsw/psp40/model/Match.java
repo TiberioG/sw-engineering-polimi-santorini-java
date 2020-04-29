@@ -143,11 +143,15 @@ public class Match extends Publisher<Message> {
         return getPlayers();
     }
 
-
+    /**
+     * Method to translate the index of the currentPlayer to 0 translating all other players as well
+     */
     public void rescaleListFromCurrentPlayer() {
-        List<Player> rescaledListOfPlayer = listPlayers.subList(listPlayers.indexOf(currentPlayer), listPlayers.size() - 1);
-        rescaledListOfPlayer.addAll(listPlayers.subList(0, listPlayers.indexOf(currentPlayer) - 1));
-        listPlayers = rescaledListOfPlayer;
+        if (listPlayers.indexOf(currentPlayer) > 0) {
+            List<Player> rescaledListOfPlayer = listPlayers.subList(listPlayers.indexOf(currentPlayer), listPlayers.size() - 1);
+            rescaledListOfPlayer.addAll(listPlayers.subList(0, listPlayers.indexOf(currentPlayer) - 1));
+            listPlayers = rescaledListOfPlayer;
+        }
     }
 
     /**

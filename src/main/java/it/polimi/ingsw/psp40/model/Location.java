@@ -30,6 +30,7 @@ public class Location extends Publisher<Message> {
      */
     public Location(VirtualView virtualView) {
         addListener(virtualView);
+        update();
     }
 
     // Constructor for testing

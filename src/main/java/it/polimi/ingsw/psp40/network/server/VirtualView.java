@@ -48,10 +48,6 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
                 Cell[][] island = match.getIsland().getField();
                 displayMessage(new Message("ALL", TypeOfMessage.TOWER_UPDATED, island));
 
-            case LOCATION_UPDATED:
-                Location location = match.getLocation();
-                displayMessage(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, location));
-
             case SETTED_CARDS_TO_GAME: //mando a far vedere le carte selezionate
                 List<Card> cardInGame = match.getCards();
                 displayMessage(new Message("ALL", TypeOfMessage.SETTED_CARDS_TO_GAME, cardInGame ));
