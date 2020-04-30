@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.model.Card;
@@ -257,6 +258,27 @@ public class CoolCLI implements ViewInterface {
         int selection = utils.readNumbers(0, names.length -1);
         client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, names[selection]));
 
+    }
+
+    @Override
+    public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
+        Phase selectedPhase = null;
+        if (phaseList.size() == 1) {
+            selectedPhase = phaseList.get(0);
+        } else {
+            //logica per far seleziona all'utente la fase fra quelle disponibili
+        }
+
+        switch (selectedPhase.getType()) {
+            case SELECT_WORKER:
+                displayChoiceSelectionOfWorker();
+                break;
+        }
+    }
+
+    @Override
+    public void displayChoiceSelectionOfWorker() {
+        out.println(String.format("Seleziona il worker"));
     }
 
 

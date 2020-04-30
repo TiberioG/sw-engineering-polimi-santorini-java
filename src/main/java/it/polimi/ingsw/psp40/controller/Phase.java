@@ -1,18 +1,20 @@
 package it.polimi.ingsw.psp40.controller;
 
+import it.polimi.ingsw.psp40.commons.PhaseType;
+
 import java.util.List;
 
 public class Phase {
-    private String type;
+    private PhaseType type;
     private List<Phase> nextPhases;
     private boolean needCheckForVictory;
 
-    public Phase(String type, List<Phase> nextPhases, boolean needCheckForVictory) {
+    public Phase(PhaseType type, List<Phase> nextPhases, boolean needCheckForVictory) {
         this.type = type;
         this.nextPhases = nextPhases;
     }
 
-    public String getType() {
+    public PhaseType getType() {
         return type;
     }
 

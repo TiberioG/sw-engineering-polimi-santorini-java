@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.network.client;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.commons.messages.ChooseGameCardMessage;
 import it.polimi.ingsw.psp40.commons.messages.Message;
@@ -198,7 +199,11 @@ public class Client implements ServerObserver {
       case CHOOSE_POSITION_OF_WORKERS:
         List<Player> payloadOfChoosePositionOfWorkers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
         view.displaySetInitialPosition(payloadOfChoosePositionOfWorkers);
-
+        break;
+      case INIT_TURN:
+        List<Phase> phaseList = new ArrayList<>();
+        phaseList.add((Phase) message.getPayload(new TypeToken<Phase>() {}.getType()));
+        view.displayChoiceOfAvailablePhases(phaseList);
         break;
 
       default:

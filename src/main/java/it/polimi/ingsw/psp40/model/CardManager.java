@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.JsonAdapter;
+import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.controller.StrategySettings;
 
@@ -92,6 +93,18 @@ public class CardManager {
         return strategySettings;
     }
 
+    private PhaseType retrievePhaseTypeForString(String string) {
+        PhaseType phaseType = null;
+        if (string.equals("selectWorker")) {
+            phaseType = PhaseType.SELECT_WORKER;
+        } else if (string.equals("moveWorker")) {
+            phaseType = PhaseType.MOVE_WORKER;
+        } else if (string.equals("buildComponent")) {
+            phaseType = PhaseType.BUILD_COMPONENT;
+        }
+        return phaseType;
+    }
+
     /**
      * This method create @link Phase object from a @link JsonObject instance
      * @param jsonObject the json with the information needed to create the @link Phase object
@@ -105,15 +118,15 @@ public class CardManager {
             boolean needCheckForVictory = JsonAdapter.getBooleanFromJson(permittedPhasesJsonObject, "checkVictory");
             List<Phase> nextPhasesTreeSet = null;
             if (nextPhases != null) nextPhasesTreeSet = buildTreeOfList(nextPhases);
-            return new Phase(type, nextPhasesTreeSet, needCheckForVictory);
+            return new Phase(retrievePhaseTypeForString(type), nextPhasesTreeSet, needCheckForVictory);
         } else {
             List<Phase> nextPhasesOfMove = new LinkedList<>();
-            nextPhasesOfMove.add(new Phase("build", null, false));
+            nextPhasesOfMove.add(new Phase(PhaseType.BUILD_COMPONENT, null, false));
 
             List<Phase> nextPhasesOfSelectWorker = new LinkedList<>();
-            nextPhasesOfSelectWorker.add(new Phase("move", nextPhasesOfMove , true));
+            nextPhasesOfSelectWorker.add(new Phase(PhaseType.MOVE_WORKER, nextPhasesOfMove , true));
 
-            return new Phase("selectWorker", nextPhasesOfSelectWorker, false);
+            return new Phase(PhaseType.SELECT_WORKER, nextPhasesOfSelectWorker, false);
         }
     }
 
@@ -131,7 +144,7 @@ public class CardManager {
             boolean needCheckForVictory = JsonAdapter.getBooleanFromJson(phaseObject, "checkVictory");
             List<Phase> nextPhasesList = null;
             if (nextPhases != null) nextPhasesList = buildTreeOfList(nextPhases);
-            currentPhasesList.add(new Phase(type, nextPhasesList, needCheckForVictory));
+            currentPhasesList.add(new Phase(retrievePhaseTypeForString(type), nextPhasesList, needCheckForVictory));
         }
         return  currentPhasesList;
     }

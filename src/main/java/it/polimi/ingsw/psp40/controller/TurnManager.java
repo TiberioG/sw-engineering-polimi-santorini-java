@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.controller;
 
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
@@ -37,8 +38,9 @@ public class TurnManager {
      * @param match the match of the turn
      */
     public TurnManager(Match match, VirtualView virtualView) {
-        this(match);
         this.virtualView = virtualView;
+        this.match = match;
+        createTurns();
         //richiamo la virtual view per notificargli l'inizio del turno con le fasi disponibili
     }
 
@@ -137,7 +139,7 @@ public class TurnManager {
     }
 
     public void selectWorker(Worker worker) {
-        if (currentTurn.getCurrentPhase().getType().equals("selectWorker")) currentTurn.setSelectedWorker(worker);
+        if (currentTurn.getCurrentPhase().getType().equals(PhaseType.SELECT_WORKER)) currentTurn.setSelectedWorker(worker);
     }
 
     private void updateCurrentPhase(String type) {
@@ -174,7 +176,7 @@ public class TurnManager {
                 TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
                 TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
             });
-            updateVirtualView(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN));
+            updateVirtualView(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN, currentTurn.getCurrentPhase()));
         }
     }
 

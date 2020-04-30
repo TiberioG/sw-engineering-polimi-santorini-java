@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.view;
 
 
+import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.Player;
 
@@ -27,8 +28,9 @@ public interface ViewInterface {
 
     void displayCardInGame(List<Card> cardInGame);
     void displaySetInitialPosition(List<Player> playerList);
-
     void displayAskFirstPlayer(List<Player> allPlayers);
+    void displayChoiceOfAvailablePhases(List<Phase> phaseList);
+    void displayChoiceSelectionOfWorker();
 }
 
 
