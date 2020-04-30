@@ -120,7 +120,7 @@ public class JsonAdapter {
     }
 
     public static String toJsonClass(Object object) {
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
+        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().enableComplexMapKeySerialization().create();
         return gson.toJson(object);
     }
 

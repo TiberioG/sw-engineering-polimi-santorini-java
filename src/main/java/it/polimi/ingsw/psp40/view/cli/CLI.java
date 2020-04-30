@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -228,14 +229,9 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
-        List<String> colorsAvailable =  Arrays.asList(Colors.allNames()); //list of NAMES of all colors available
+        List<String> colorAlreadyUsed = playerList.stream().flatMap(player -> player.getWorkers().stream()).map(worker -> worker.getColor().toString()).distinct().collect(Collectors.toList());
+        List<String> colorsAvailable = Arrays.asList(Colors.allNames()).stream().filter(colorAvailable -> colorAlreadyUsed.indexOf(colorAvailable) == -1).collect(Collectors.toList());
 
-        //remove colors already used by other players
-        playerList.forEach(player -> {
-            if (player.getWorkers().size() != 0){ //check if there is at least one player with workers
-                colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
-            }
-        });
         String[] colorsAvailableArray = colorsAvailable.toArray(new String[0]);//conversion to string
         out.println("I's time to choose one color for your workers, choose from following list:");
         try {
