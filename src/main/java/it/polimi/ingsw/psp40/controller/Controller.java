@@ -123,7 +123,7 @@ public class Controller implements Listener<Message> {
                 });
 
                 if (match.selectNextCurrentPlayer() != 0) {
-                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getCards()));
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getPlayers()));
                 } else {
                     initTurnManager();
                 }

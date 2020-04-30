@@ -41,7 +41,7 @@ public class CoolCLI implements ViewInterface {
      */
     public CoolCLI(Client client){
         this.client = client;
-        Terminal.resize(110, 150);
+        Terminal.resize(110, 200);
 
         try {
             Utils.maketitle();
@@ -56,13 +56,14 @@ public class CoolCLI implements ViewInterface {
     public void displaySetup() {
         center.clear();
         center.start();
-        center.print(Utils.centerString(center.getColSpan(), "Enter address of server"));
+        //center.print(Utils.centerString(center.getColSpan(), "Enter address of server"));
         String ip = utils.readIp();
         System.out.println("Port number?");
         int port = utils.readNumbers( MIN_PORT, MAX_PORT);
         client.setServerIP(ip);
         client.setServerPort(port);
         client.connectToServer();
+        center.clear();
     }
 
     @Override
@@ -75,7 +76,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayLogin() {
-        left.clear();
+        left.start();
         out.println("Choose your username:   ");
         in.nextLine();
         String username = utils.readnames();
@@ -105,7 +106,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayUserJoined(String details) {
-        left.clear();
+
         left.start();
         out.println(details);
     }
@@ -113,20 +114,19 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayAddedToQueue(String details) {
         left.clear();
-        left.start();
         out.println(details);
     }
 
     @Override
     public void displayStartingMatch() {
-        left.clear();
+
         left.start();
         out.println("MATCH IS STARTING!!!!");
     }
 
     @Override
     public void displayGenericMessage(String message) {
-        left.clear();
+
         left.start();
         out.println(message);
     }
@@ -139,7 +139,6 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        left.clear();
         left.start();
         String[] names = cards.values().stream().map(Card::getName).toArray(String[]::new);
 
@@ -168,7 +167,6 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        left.clear();
         left.start();
         String[] names = availableCards.stream().map(Card::getName).toArray(String[]::new);
 
@@ -208,17 +206,17 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
-        List<String> colorsAvailable =  Arrays.asList(Colors.allNames());
+        left.start();
+        List<String> colorsAvailable =  Arrays.asList(Colors.allNames()); //list of NAMES of all colors available
+
+        //remove colors already used by other players
         playerList.forEach(player -> {
-            if (player.getWorkers().size() != 0){
+            if (player.getWorkers().size() != 0){ //check if there is at least one player with workers
                 colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
             }
         });
-        String[] colorsAvailableArray = colorsAvailable.stream().toArray(String[]::new);
-
-        left.start();
-        out.println("It's time to choose one color for your workers, choose from following list:");
-
+        String[] colorsAvailableArray = colorsAvailable.toArray(new String[0]);//conversion to string
+        left.println("I's time to choose one color for your workers, choose from following list:");
         try {
             utils.singleTableCool("options", colorsAvailableArray, 100);
         } catch (InterruptedException e) {
@@ -226,11 +224,51 @@ public class CoolCLI implements ViewInterface {
         }
 
         int choice = utils.readNumbers(0,colorsAvailableArray.length - 1);
-
         out.println("Wooow, you have selected color " + colorsAvailableArray[choice]+ " for your workers");
-
+        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArray[choice])));
 
         //START ISLAND
+
+        left.printWrapped("position your first worker with arrows, when done, press q");
+        int[] work1 =position();
+
+        left.printWrapped("position your second worker with arrows, when done, press q");
+
+        int[] work2 = position();
+
+        left.clear();
+        left.println(Integer.toString(work1[0]) + " " + Integer.toString(work1[1]));
+        left.println(Integer.toString(work2[0]) + " " + Integer.toString(work2[1]));
+
+
+    }
+
+    @Override
+    public void displayAskFirstPlayer(List<Player> allPlayers) {
+        String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
+
+        try {
+            utils.singleTableCool("Players available", names, 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //todo double column for also card display
+
+        int selection = utils.readNumbers(0, names.length -1);
+        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, names[selection]));
+
+    }
+
+
+    public void showIsland() throws IOException, InterruptedException {
+        myisland = new IslandAdapter(client.getFieldCache(), client.getLocationCache() );
+        Terminal.noBuffer();
+        Terminal.hideCursor();
+        myisland.print();
+    }
+
+
+    private int[] position(){
         boolean debug = false;
         int curRow = 0;
         int curCol = 0;
@@ -297,34 +335,8 @@ public class CoolCLI implements ViewInterface {
             }
         }// end while true
 
-
-
+        return new int[]{curRow, curCol};
     }
-
-    @Override
-    public void displayAskFirstPlayer(List<Player> allPlayers) {
-        String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
-
-        try {
-            utils.singleTableCool("Players available", names, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //todo double column for also card display
-
-        int selection = utils.readNumbers(0, names.length -1);
-        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, names[selection]));
-
-    }
-
-
-    public void showIsland() throws IOException, InterruptedException {
-        myisland = new IslandAdapter(client.getFieldCache(), client.getLocationCache() );
-        Terminal.noBuffer();
-        Terminal.hideCursor();
-        myisland.print();
-    }
-
 
 
 }

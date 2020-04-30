@@ -16,6 +16,8 @@ class Frame {
     private int[] absInit;
     private int[] absEnd;
 
+    private int[] lastRowRitten;
+
     private int rowSpan;
     private int colSpan;
 

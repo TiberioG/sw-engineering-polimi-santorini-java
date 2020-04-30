@@ -246,7 +246,6 @@ public class CLI implements ViewInterface {
 
         int choice = utils.readNumbers(0,colorsAvailableArray.length - 1);
         out.println("Wooow, you have selected color " + colorsAvailableArray[choice]+ " for your workers");
-        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArray[choice])));
 
         /* section to position the workers */
         this.showIsland();
@@ -259,8 +258,8 @@ public class CLI implements ViewInterface {
         do{
             out.println("Now you can position your worker no. 1");
             position1 = utils.readPosition(0,4);
-        }while (occupy.contains(position1));
 
+        }while (occupy.contains(position1));
 
         do{
             out.println("Now you can position your worker no. 2");
@@ -270,8 +269,13 @@ public class CLI implements ViewInterface {
              }
         }while (occupy.contains(position2) || Arrays.equals(position2, position1));
 
-        Tupla doublecoord = new Tupla(new CoordinatesMessage(position1[0], position1[1]), new CoordinatesMessage(position1[0], position1[1]));
-        client.sendToServer(new Message(TypeOfMessage.GENERIC_MESSAGE, doublecoord) );
+        List<CoordinatesMessage> workercord = new ArrayList<>();
+
+        workercord.add(new CoordinatesMessage(position1[0], position1[1]));
+        workercord.add(new CoordinatesMessage(position2[0], position2[1]));
+
+        client.sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.valueOf(colorsAvailableArray[choice]), workercord)) );
+        out.println("done");
 
     }
 

@@ -49,9 +49,8 @@ public class Location extends Publisher<Message> {
         if (this.map.get(cell) != null) {
             throw new WorkerAlreadyPresentException();
         } else {
-            this.map.put(getLocation(worker), null);
+            //this.map.put(getLocation(worker), null);
             this.map.put(cell, worker);
-
             this.update();  //every time i change the location I send a copy of the complete updated location bravo!
         }
     }
