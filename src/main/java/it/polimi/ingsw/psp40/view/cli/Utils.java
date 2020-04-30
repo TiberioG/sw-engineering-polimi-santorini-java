@@ -82,7 +82,6 @@ public class Utils {
      * Manages the insertion of an integer on command line input,
      * asking it again until it not a valid value.
      *
-     * @param stdin          is the input scanner
      * @param minValue       is the minimum acceptable value of the input
      * @param maxValue       is the maximum acceptable value of the input
      * @return the value of the input
@@ -165,7 +164,7 @@ public class Utils {
     }
 
 
-    public int[] readPosition(int min, int max){
+    public int[] readPosition_old(int min, int max){
         int[] coord = new int[2];
         do {
             out.println("Insert coordinates in format x,y:");
@@ -182,6 +181,24 @@ public class Utils {
         } while (coord[0] < min || coord[0] > max || coord[1] < min || coord[1] > max);
         return coord;
     }
+
+
+    public int[] readPosition(int min, int max){
+        int[] coord = new int[2];
+        String input;
+        do {
+            input = in.nextLine(); //todo non capisco perchè la prima volta mi leggel la linea vuota, mi aiutate pliz?
+            while (!input.matches("([0-9]),([0-9])")) {
+                out.println("This is not an allowed coordinate");
+                input = in.nextLine();
+            }
+            String[] ints = input.split(",");
+            coord[0] = Integer.parseInt(ints[0]);
+            coord[1] = Integer.parseInt(ints[0]);
+        }while (coord[0] < min || coord[0] > max || coord[1] < min || coord[1] > max);
+        return coord;
+    }
+
 
 
     public void singleTableCool(String title, String[] inputList, int delay) throws InterruptedException {

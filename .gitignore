@@ -11,8 +11,7 @@ log/
 target
 
 #manifest files
-resources/META-INF
-resources/server.META-INF
+resources/manifest
 
 #built jars
 classes/artifacts

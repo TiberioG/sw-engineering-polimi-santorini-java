@@ -50,9 +50,16 @@ public class Server
 
   public static void main(String[] args)
   {
+    int SOCKET_PORT;
     Scanner stdin = new Scanner(System.in);
-    System.out.println("Port number?");
-    int SOCKET_PORT = validateIntInput(stdin, MIN_PORT, MAX_PORT);
+
+    if (Configuration.DEBUG){
+      System.out.println("Starting DEBUG server port 1234");
+      SOCKET_PORT = 1234;
+    }else {
+      System.out.println("Port number?");
+      SOCKET_PORT = validateIntInput(stdin, MIN_PORT, MAX_PORT);
+    }
     ServerSocket socket;
     try {
       socket = new ServerSocket(SOCKET_PORT);

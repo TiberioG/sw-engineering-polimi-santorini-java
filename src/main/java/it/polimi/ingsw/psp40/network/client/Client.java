@@ -71,8 +71,8 @@ public class Client implements ServerObserver {
     }
 
     if (cli) {
-      //CLI view = new CLI(client);
-      CoolCLI view = new CoolCLI(client);
+      CLI view = new CLI(client);
+      //CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }

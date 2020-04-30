@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
+import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.Publisher;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.model.Card;
@@ -11,7 +12,10 @@ import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 
 import java.io.PrintWriter;
+import java.security.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,6 +45,8 @@ public class CLI implements ViewInterface {
 
     private final Utils utils = new Utils(in, out);
 
+    private boolean debug = Configuration.DEBUG;
+
 
 
 
@@ -56,11 +62,20 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displaySetup() {
+        int port;
+        String ip;
         showTitle();
-        out.println("IP address of server?");
-        String ip = utils.readIp();
-        System.out.println("Port number?");
-        int port = utils.validateIntInput(MIN_PORT, MAX_PORT);
+
+        if (debug){
+            ip = "localhost";
+            port = 1234;
+            out.println("DEBUG server localhost:1234");
+        }else {
+            out.println("IP address of server?");
+            ip = utils.readIp();
+            System.out.println("Port number?");
+            port = utils.validateIntInput(MIN_PORT, MAX_PORT);
+        }
         client.setServerIP(ip);
         client.setServerPort(port);
         client.connectToServer();
@@ -78,13 +93,26 @@ public class CLI implements ViewInterface {
      */
     @Override
     public void displayLogin() {
+        String username;
 
         out.println("Choose your username:");
-        String username = in.nextLine();
-        date = utils.readDate("birthdate");
+        if (debug){
+            username = new Date().toString();
+            DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
+            try {
+                date =  dateFormat.parse("01/01/1900");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            numOfPlayers = 2;
+        }else{
+            username = in.nextLine();
+            date = utils.readDate("birthdate");
 
-        out.println("How many people do you want to play with?");
-        numOfPlayers = utils.validateIntInput( 2, 3);
+            out.println("How many people do you want to play with?");
+            numOfPlayers = utils.validateIntInput( 2, 3);
+        }
+
 
         client.setUsername(username);
         LoginMessage loginMessage = new LoginMessage(username, date, numOfPlayers, TypeOfMessage.LOGIN);
@@ -208,17 +236,17 @@ public class CLI implements ViewInterface {
                 colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
             }
         });
-        String[] colorsAvailableArry = (String[]) colorsAvailable.toArray(); //conversion to string
+        String[] colorsAvailableArray = colorsAvailable.toArray(new String[0]);//conversion to string
         out.println("I's time to choose one color for your workers, choose from following list:");
         try {
-            utils.singleTableCool("options", colorsAvailableArry, 100);
+            utils.singleTableCool("options", colorsAvailableArray, 100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        int choice = utils.readNumbers(0,colorsAvailableArry.length - 1);
-        out.println("Wooow, you have selected color " + colorsAvailableArry[choice]+ " for your workers");
-        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArry[choice])));
+        int choice = utils.readNumbers(0,colorsAvailableArray.length - 1);
+        out.println("Wooow, you have selected color " + colorsAvailableArray[choice]+ " for your workers");
+        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArray[choice])));
 
         /* section to position the workers */
         this.showIsland();
@@ -226,18 +254,23 @@ public class CLI implements ViewInterface {
         int[] position2;
         int[] position1;
 
-        out.println(String.format("Now you can position your worker no. %d", 1));
+        List<int[]> occupy = occupiedCoord() ;
+
         do{
+            out.println("Now you can position your worker no. 1");
             position1 = utils.readPosition(0,4);
-        }while (!occupiedCoord().contains(position1));
+        }while (occupy.contains(position1));
 
-        out.println(String.format("Now you can position your worker no. %d", 2));
+
         do{
+            out.println("Now you can position your worker no. 2");
              position2 = utils.readPosition(0,4);
-        }while (!Arrays.equals(position1, position2) && !occupiedCoord().contains(position1));
+             if(Arrays.equals(position1, position2)){
+                 out.println("You cannot use the same position");
+             }
+        }while (occupy.contains(position2) || Arrays.equals(position2, position1));
 
-        Tupla doublecoord = new Tupla(new CoordinatesMessage(position1[0], position1[1]), new CoordinatesMessage(position2[0], position2[1]));
-
+        Tupla doublecoord = new Tupla(new CoordinatesMessage(position1[0], position1[1]), new CoordinatesMessage(position1[0], position1[1]));
         client.sendToServer(new Message(TypeOfMessage.GENERIC_MESSAGE, doublecoord) );
 
     }
