@@ -21,4 +21,9 @@ public class WorkerTest {
     public void getColor() {
         Assert.assertSame(worker.getColor(), colorBlue);
     }
+
+    @Test
+    public void getPlayerName(){
+        Assert.assertEquals("domiziana", worker.getPlayerName());
+    }
 }

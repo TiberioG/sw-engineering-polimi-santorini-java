@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 
+import java.awt.*;
 import java.io.IOException;
 
 
@@ -14,6 +15,7 @@ public class SquareCell {
 
     private boolean worker;
     private Colors color;
+    private Colors tempWorkerColor;
     private int level;
     private final  static int len = 13;
     private final  static int hei = 7;
@@ -49,6 +51,10 @@ public class SquareCell {
 
     public void setSelected(boolean selected){
         this.selected = selected;
+    }
+
+    public void setTempWorker(Colors color){
+        this.tempWorkerColor = color;
     }
 
     public void print(int startRow, int startCol) throws IOException, InterruptedException {
@@ -105,6 +111,10 @@ public class SquareCell {
                 this.noWorkerL4();
                 this.yesWorker();
             }
+        }
+
+        if(tempWorkerColor != null){
+            this.yesWorkerTemp();
         }
 
 
@@ -189,6 +199,18 @@ public class SquareCell {
     }
 
 
+    private void yesWorkerTemp () throws IOException, InterruptedException {
+        for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
+            Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
+            for (int j = 0; j < len - 6 ; j++){
+                if (i == j) {
+                    System.out.print(tempWorkerColor.getAnsiCode() + "   ▙");
+                }
+            }
+        }
+    }
+
+
     private void coordinates (int row, int col) throws IOException, InterruptedException {
         System.out.print(Colors.reset());
         Terminal.moveAbsoluteCursor(startRow + hei - 1  , startCol); // scendo di una riga ogni volta
@@ -204,6 +226,7 @@ public class SquareCell {
             }
         }
     }
+
 
 
     public static int getLen(){

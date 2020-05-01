@@ -39,9 +39,9 @@ public class IslandAdapter {
 
         for (int row = 0; row < field.length ; row++) {
             for (int col = 0; col < field.length ; col++) {
-                if (location.getOccupant(field[row][col]) != null) {
+                if (location.getOccupant(row, col) != null) {
                     //case cell is with worker
-                    matrix[row][col] = new SquareCell(true, location.getOccupant(field[row][col]).getColor(), field[row][col].getTower().getTopComponent().getComponentCode());
+                    matrix[row][col] = new SquareCell(true, location.getOccupant(row, col).getColor(), field[row][col].getTower().getTopComponent().getComponentCode());
                 } else {
                     //case cell WITHOUT worker
                     matrix[row][col] = new SquareCell(false, null, field[row][col].getTower().getTopComponent().getComponentCode());
@@ -89,6 +89,10 @@ public class IslandAdapter {
             }
         }
         matrix[r][c].setSelected(true);
+    }
+
+    void setWorker(int r, int c, Colors color) {
+        matrix[r][c].setTempWorker(color);
     }
 
 

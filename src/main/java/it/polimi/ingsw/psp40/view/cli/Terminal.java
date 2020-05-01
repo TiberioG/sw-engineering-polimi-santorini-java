@@ -61,11 +61,12 @@ public class Terminal {
 
 
     public static void clearAll(){
-        System.out.print("\u001b[3J"); //clear
-        System.out.print("\u001b[H"); //set cursor at top left
-        System.out.print("\u001b[J"); //clear
-    }
+        System.out.print("\u001b[3J"); //clear entire screen and delete all lines saved in the scrollback buffer
+     }
 
+    public static void clearScreen(){
+        System.out.print("\u001b[2J"); // clear entire screen (and moves cursor to upper left
+    }
 
     /**
      * Method to enable showing the cursor in Terminal

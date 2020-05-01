@@ -1,9 +1,8 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
-import it.polimi.ingsw.psp40.commons.messages.Message;
-import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
@@ -15,69 +14,129 @@ import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import jdk.jshell.execution.Util;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class CoolCLI implements ViewInterface {
     private final Client client;
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
+    Colors colorWorker;
 
     private Date date = null;
     private int numOfPlayers = 0;
 
     private static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
     private static final int MAX_PORT = 50000;
+    private static final int ROWS = 50;
+    private static final int COLS = 150;
 
     private final Utils utils = new Utils(in, out);
+    private static Frame upper = new Frame(new int[]{0,0}, new int[]{8, COLS}, in, out);
+    private static Frame center = new Frame(new int[]{10,0}, new int[]{ROWS, COLS}, in, out);
+    private static Frame center2 = new Frame(new int[]{15,0}, new int[]{ROWS, COLS}, in, out);
+    private static Frame lower = new Frame (new int[]{ROWS - 4 ,0}, new int[]{ROWS, COLS}, in, out);
 
-    private static Frame left = new Frame(new int[]{7,0}, new int[]{99, 58}, in, out);
-    private static Frame center = new Frame(new int[]{7,58}, new int[]{99, 150}, in, out);
+    private static Frame left = new Frame(new int[]{10,0}, new int[]{99, 58}, in, out);
+
+
+
+
     private IslandAdapter myisland;
+
 
     /**
      * Constructor
      * @param client
      */
-    public CoolCLI(Client client){
+    public CoolCLI(Client client) {
         this.client = client;
-        Terminal.resize(110, 200);
+        Terminal.resize(ROWS, COLS);
+
+        Terminal.clearAll();
+        Terminal.clearScreen();
+        center.clear();
+
 
         try {
-            Utils.maketitle();
+            maketitle();
         } catch (InterruptedException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
+
+
     }
 
 
 
     @Override
     public void displaySetup() {
+        int port = 0;
         center.clear();
-        center.start();
-        //center.print(Utils.centerString(center.getColSpan(), "Enter address of server"));
-        String ip = utils.readIp();
-        System.out.println("Port number?");
-        int port = utils.readNumbers( MIN_PORT, MAX_PORT);
+       // center.centerAppend( "Enter address of server", 0);
+
+        center.center(utils.form("enter address of server", 30), 0);
+        Terminal.moveRelativeCursor(-1, - 29);
+
+        String ip = in.nextLine();
+
+        while (!Utils.isValidIp(ip)) {
+            lower.print("This is not a valid IPv4 address. Please, try again:");
+            center.center(utils.form("enter address of server", 30), 0);
+            Terminal.moveRelativeCursor(-1, - 29);
+            ip = in.nextLine();
+        }
+
+        lower.clear();
+
+        center2.center(utils.form("enter port number", 30), 0);
+        Terminal.moveRelativeCursor(-1, - 29);
+
+        try {
+            port = in.nextInt();
+        } catch (InputMismatchException e) {
+            center2.center(utils.form("enter port number", 30), 0);
+            Terminal.moveRelativeCursor(-1, - 29);
+            in.nextLine();
+        }
+
+        while (port < MIN_PORT || port > MAX_PORT) {
+            lower.print("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:");
+            center2.center(utils.form("enter port number", 30), 0);
+            Terminal.moveRelativeCursor(-1, - 29);
+            try {
+                port = in.nextInt();
+            } catch (InputMismatchException e) {
+                center2.center(utils.form("enter port number", 30), 0);
+                Terminal.moveRelativeCursor(-1, - 29);
+                in.nextLine();
+            }
+        }
         client.setServerIP(ip);
         client.setServerPort(port);
         client.connectToServer();
-        center.clear();
+
     }
 
     @Override
     public void displaySetupFailure() {
         left.clear();
-
         out.println("Can not reach the server, please try again");
         displaySetup();
     }
 
     @Override
     public void displayLogin() {
-        left.start();
+        center.clear();
+        center2.clear();
+
+        left.clear();//importante sia l'ultimo clear
+
         out.println("Choose your username:   ");
         in.nextLine();
         String username = utils.readnames();
@@ -108,7 +167,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayUserJoined(String details) {
 
-        left.start();
+        left.clear();
         out.println(details);
     }
 
@@ -121,15 +180,15 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayStartingMatch() {
 
-        left.start();
+        left.clear();
         out.println("MATCH IS STARTING!!!!");
     }
 
     @Override
     public void displayGenericMessage(String message) {
 
-        left.start();
-        out.println(message);
+        left.clear();
+        lower.println(message);
     }
 
     @Override
@@ -140,7 +199,11 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        left.start();
+        center.clear();
+        center2.clear();
+        lower.clear();
+
+        left.clear();//importante sia ultimo
         String[] names = cards.values().stream().map(Card::getName).toArray(String[]::new);
 
         try {
@@ -168,7 +231,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        left.start();
+        left.clear();
         String[] names = availableCards.stream().map(Card::getName).toArray(String[]::new);
 
         try {
@@ -193,7 +256,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayCardInGame(List<Card> cardInGame) {
         //todo frame fisso?
-        left.start();
+        left.clear();
         String[] names = cardInGame.stream().map(Card::getName).toArray(String[]::new);
 
         try {
@@ -207,17 +270,13 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
-        left.start();
-        List<String> colorsAvailable =  Arrays.asList(Colors.allNames()); //list of NAMES of all colors available
+        left.clear();
 
-        //remove colors already used by other players
-        playerList.forEach(player -> {
-            if (player.getWorkers().size() != 0){ //check if there is at least one player with workers
-                colorsAvailable.remove(player.getWorkers().get(0).getColor().name());
-            }
-        });
+        List<String> colorAlreadyUsed = playerList.stream().flatMap(player -> player.getWorkers().stream()).map(worker -> worker.getColor().toString()).distinct().collect(Collectors.toList());
+        List<String> colorsAvailable = Arrays.asList(Colors.allNames()).stream().filter(colorAvailable -> colorAlreadyUsed.indexOf(colorAvailable) == -1).collect(Collectors.toList());
+
         String[] colorsAvailableArray = colorsAvailable.toArray(new String[0]);//conversion to string
-        left.println("I's time to choose one color for your workers, choose from following list:");
+        left.println("I's time to choose one color for your workers, \n choose from following list:");
         try {
             utils.singleTableCool("options", colorsAvailableArray, 100);
         } catch (InterruptedException e) {
@@ -225,27 +284,38 @@ public class CoolCLI implements ViewInterface {
         }
 
         int choice = utils.readNumbers(0,colorsAvailableArray.length - 1);
-        out.println("Wooow, you have selected color " + colorsAvailableArray[choice]+ " for your workers");
-        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, Colors.valueOf(colorsAvailableArray[choice])));
+        colorWorker = Colors.valueOf(colorsAvailableArray[choice]);
+        out.println("Wooow, you have selected color " + colorWorker.getAnsiCode() + colorWorker.name() +  Colors.reset() + " for your workers");
+        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, colorWorker));
+
 
         //START ISLAND
 
-        left.printWrapped("position your first worker with arrows, when done, press q");
+        left.clear();
+
+        left.printWrapped("position your first worker with arrows, \n when done, press q");
         int[] work1 =position();
 
-        left.printWrapped("position your second worker with arrows, when done, press q");
+        left.clear();
+        left.printWrapped("position your second worker with arrows, \n when done, press q");
 
         int[] work2 = position();
-
         left.clear();
-        left.println(Integer.toString(work1[0]) + " " + Integer.toString(work1[1]));
-        left.println(Integer.toString(work2[0]) + " " + Integer.toString(work2[1]));
+
+        List<CoordinatesMessage> workercord = new ArrayList<>();
+
+        workercord.add(new CoordinatesMessage(work1[0], work1[1]));
+        workercord.add(new CoordinatesMessage(work2[0], work2[1]));
+
+        client.sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.valueOf(colorsAvailableArray[choice]), workercord)) );
+        //out.println("done");
 
 
     }
 
     @Override
     public void displayAskFirstPlayer(List<Player> allPlayers) {
+        left.clear();
         String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
 
         try {
@@ -262,20 +332,26 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
-        Phase selectedPhase = null;
-        if (phaseList.size() == 1) {
-            selectedPhase = phaseList.get(0);
-        } else {
-            //logica per far seleziona all'utente la fase fra quelle disponibili
-        }
 
-        switch (selectedPhase.getType()) {
-            case SELECT_WORKER:
-                displayChoiceSelectionOfWorker();
-                break;
-        }
     }
 
+    /*
+        @Override
+        public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
+            Phase selectedPhase = null;
+            if (phaseList.size() == 1) {
+                selectedPhase = phaseList.get(0);
+            } else {
+                //logica per far seleziona all'utente la fase fra quelle disponibili
+            }
+
+            switch (selectedPhase.getType()) {
+                case SELECT_WORKER:
+                    displayChoiceSelectionOfWorker();
+                    break;
+            }
+        }
+    */
     @Override
     public void displayChoiceSelectionOfWorker() {
         out.println(String.format("Seleziona il worker"));
@@ -308,6 +384,8 @@ public class CoolCLI implements ViewInterface {
 
                     //GETTING Q to quit
                     if (c == 113) {   // if press Q -> quit this visualization
+                        myisland.setWorker(curRow, curCol, colorWorker);
+                        this.showIsland();
                         break;
                     }
 
@@ -359,6 +437,61 @@ public class CoolCLI implements ViewInterface {
 
         return new int[]{curRow, curCol};
     }
+
+
+    private void maketitle() throws InterruptedException {
+        Terminal.hideCursor();
+        String welcome =
+                        "oooo     oooo ooooooooooo ooooo         oooooooo8   ooooooo  oooo     oooo ooooooooooo\n" +
+                        " 88   88  88   888    88   888        o888     88 o888   888o 8888o   888   888    88 \n" +
+                        "  88 888 88    888ooo8     888        888         888     888 88 888o8 88   888ooo8   \n" +
+                        "   888 888     888    oo   888      o 888o     oo 888o   o888 88  888  88   888    oo \n" +
+                        "    8   8     o888ooo8888 o888ooooo88  888oooo88    88ooo88  o88o  8  o88o o888ooo8888" ;
+
+        String to =
+                "ooooooooooo   ooooooo  \n" +
+                "88  888  88 o888   888o\n" +
+                "    888     888     888\n" +
+                "    888     888o   o888\n" +
+                "   o888o      88ooo88  " ;
+        String santorini =
+                        " oooooooo8      o      oooo   oooo ooooooooooo   ooooooo  oooooooooo  ooooo oooo   oooo ooooo\n" +
+                        "888            888      8888o  88  88  888  88 o888   888o 888    888  888   8888o  88   888 \n" +
+                        " 888oooooo    8  88     88 888o88      888     888     888 888oooo88   888   88 888o88   888 \n" +
+                        "        888  8oooo88    88   8888      888     888o   o888 888  88o    888   88   8888   888 \n" +
+                        "o88oooo888 o88o  o888o o88o    88     o888o      88ooo88  o888o  88o8 o888o o88o    88  o888o" ;
+
+        final int DELAY = 200;
+        upper.clear();
+        upper.center(welcome, DELAY);
+        TimeUnit.MILLISECONDS.sleep(DELAY);
+        upper.clear();
+        upper.center(to, DELAY);
+        TimeUnit.MILLISECONDS.sleep(DELAY);
+        upper.clear();
+        upper.center(santorini, DELAY);
+        TimeUnit.MILLISECONDS.sleep(DELAY);
+        Terminal.showCursor();
+    }
+
+
+    String readIpNew() {
+        String ip;
+        ip = in.nextLine();
+
+        while (!Utils.isValidIp(ip)) {
+            lower.print("This is not a valid IPv4 address. Please, try again:");
+            ip = in.nextLine();
+        }
+        return ip;
+    }
+
+
+    public void build(int x, int y, Color color) {
+
+
+    }
+
 
 
 }

@@ -332,7 +332,7 @@ public class CoolCliTestable {
 
                         //getting B for build
                         else if (c == 98) {
-                            build(curRow, curCol);
+                            myisland.setWorker(curRow, curCol, Colors.BLUE);
                             this.showIsland();
                         } else if (c == 49) {
                             availableCells = strategyMove.getAvailableCells(worker1_1);
@@ -382,9 +382,6 @@ public class CoolCliTestable {
 
                     } //end system in available
                 } catch (IOException | InterruptedException e) {
-                } catch (CellOutOfBoundsException e) {
-                } catch (BuildLowerComponentException e) {
-                    left.printWrapped(Arrays.toString(e.getStackTrace()));
                 }
             }// end while true
         }// end os not windsws
@@ -501,7 +498,7 @@ public class CoolCliTestable {
         CoolCliTestable thiscli = new CoolCliTestable();
         thiscli.init();
         Terminal.resize(110, 150);
-        Utils.maketitle();
+        //Utils.maketitle();
 
         //left.border();
         //thiscli.userLogin();

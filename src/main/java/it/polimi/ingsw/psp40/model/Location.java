@@ -97,6 +97,22 @@ public class Location extends Publisher<Message> {
     }
 
     /**
+     * Method to get which worker is in a specific coordinate, this works because we have ony one worker per cell
+     * @param x coordinate x
+     * @param y coordinate y
+     * @return worker in that position
+     */
+    public  Worker getOccupant(int x, int y) {
+        Worker worker = null;
+        for (HashMap.Entry<Cell, Worker> entry : this.map.entrySet()) {
+            if (entry.getKey().getCoordX() == x && entry.getKey().getCoordY() == y) {
+                worker = entry.getValue();
+            }
+        }
+        return worker;
+    }
+
+    /**
      * Method to get a list of all the occupied cells
      * @return
      */
