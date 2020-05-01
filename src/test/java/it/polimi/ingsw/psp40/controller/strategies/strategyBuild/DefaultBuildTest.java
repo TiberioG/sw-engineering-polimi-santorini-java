@@ -143,7 +143,7 @@ public class DefaultBuildTest {
             for (int j = 0; j < field.length; j++) {
                 stringIsland[i][j] = "  LEV" + field[i][j].getTower().getTopComponent().getComponentCode() + " ";
                 if (location.getOccupant(field[i][j]) != null) {
-                    String owner = location.getOccupant(field[i][j]).getOwner().getName();
+                    String owner = location.getOccupant(field[i][j]).getPlayerName();
                     String trimOwner = owner.substring(0, Math.min(owner.length(), 3));
                     String workerCol = location.getOccupant(field[i][j]).getColor().getAnsiCode();
                     stringIsland[i][j] = Colors.reset() + workerCol + stringIsland[i][j] + trimOwner + Colors.reset() + "  ";

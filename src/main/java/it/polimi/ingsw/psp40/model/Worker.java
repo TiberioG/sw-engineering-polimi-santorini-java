@@ -13,6 +13,7 @@ public class Worker {
     private int id;
     private final Colors color;
     transient private final Player owner;
+    private String playerName;
 
     /* Constructor(s) */
 
@@ -23,6 +24,7 @@ public class Worker {
         this.id = id;
         this.color = color;
         this.owner = owner;
+        this.playerName = owner.getName();
     }
 
     /* Methods */
@@ -35,6 +37,9 @@ public class Worker {
     }
     public Player getOwner() {
         return owner;
+    }
+    public String getPlayerName(){
+        return playerName;
     }
 
 }

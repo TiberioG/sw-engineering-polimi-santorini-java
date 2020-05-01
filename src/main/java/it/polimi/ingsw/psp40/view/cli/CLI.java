@@ -1,9 +1,11 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
+import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.Publisher;
 import it.polimi.ingsw.psp40.commons.messages.*;
+import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.Cell;
@@ -250,7 +252,7 @@ public class CLI implements ViewInterface {
         int[] position2;
         int[] position1;
 
-        List<int[]> occupy = occupiedCoord() ;
+        List<int[]> occupy = cellAdapter(client.getLocationCache().getAllOccupied()) ;
 
         do{
             out.println("Now you can position your worker no. 1");
@@ -306,15 +308,45 @@ public class CLI implements ViewInterface {
                 break;
         }
     }
-
     @Override
     public void displayChoiceSelectionOfWorker() {
         out.println(String.format("Seleziona il worker"));
     }
 
+
+
+    public void moveWorker(List<Cell> availableCells) {
+        int[] position;
+
+        List<int[]> available = cellAdapter(availableCells) ;
+        do{
+            out.println("Now you can mover your worker");
+            position = utils.readPosition(0,4);
+
+        }while (available.contains(position));
+
+        CoordinatesMessage moveCoord = new CoordinatesMessage(position[0], position[1]);
+        client.sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
+    }
+
+
+    public void buildBlock(){
+        out.println("Choose one of the following blocks to build:");
+
+        try {
+            utils.singleTableCool("Blocks available", Component.allNames(), 100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        utils.readNumbers(0, Component.allNames().length -1 );
+
+
+    }
+
     private void showIsland() {
-      Location location = client.getLocationCache();
-      Cell[][] field = client.getFieldCache();
+        Location location = client.getLocationCache();
+        Cell[][] field = client.getFieldCache();
 
         String[][] stringIsland = new String[field.length][field.length]; //initialize string version of the fields
 
@@ -322,11 +354,12 @@ public class CLI implements ViewInterface {
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field.length; j++) {
                 stringIsland[i][j] = "  LEV" + field[i][j].getTower().getTopComponent().getComponentCode() + " ";
-                if (location.getOccupant(field[i][j]) != null) {
+                Worker occupant = location.getOccupant(i, j);
+                if (occupant != null) {
                     //case cell is with worker
-                    String owner = location.getOccupant(field[i][j]).getOwner().getName();
+                    String owner = location.getOccupant(i, j).getPlayerName();
                     String trimOwner = owner.substring(0, Math.min(owner.length(), 3)); // trim to 3 chars the name of player
-                    String workerCol = location.getOccupant(field[i][j]).getColor().getAnsiCode(); //get color of worker
+                    String workerCol = location.getOccupant(i,j).getColor().getAnsiCode(); //get color of worker
                     stringIsland[i][j] = Colors.reset() + workerCol + stringIsland[i][j] + trimOwner + Colors.reset() + "  ";
                 } else {
                     //case cell WITHOUT worker
@@ -338,32 +371,17 @@ public class CLI implements ViewInterface {
     }
 
 
-    public void moveWorker() {
-
-
-        out.println(String.format("Now you can position your worker no. %d", 2));
-        int[] position1 = utils.readPosition(0,4);
-
-
-
-    }
-
-
-    public void buildBlock(){
-
-        //client.send2Server(new Message(username, TypeOfMessage.BUILD_BLOCK, coord) );
-    }
-
-
-    private List<int[]> occupiedCoord (){
-        List<Cell> occupiedCells = client.getLocationCache().getAllOccupied();
-        List<int[]> occupiedCoord = new ArrayList<>();
-        if(occupiedCells.size() != 0) {
-            for (Cell occupiedCell : occupiedCells) {
-                occupiedCoord.add(new int[]{occupiedCell.getCoordX(), occupiedCell.getCoordY()});
-            }
+    /**
+     * This private method is used to convert a list of Cells into a list of thei location as arrays of CoordX,CoordY
+     * @param cellList
+     * @return
+     */
+    private List<int[]> cellAdapter(List<Cell> cellList){
+        List<int[]> coord = new ArrayList<>();
+        if(cellList.size() != 0) {
+            coord = cellList.stream().map(Cell::getCoordXY).collect(Collectors.toList());
         }
-        return occupiedCoord;
+        return coord;
     }
 }
 

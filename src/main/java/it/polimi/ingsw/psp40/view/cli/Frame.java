@@ -5,6 +5,7 @@ import org.davidmoten.text.utils.WordWrap;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class is used to create a frame inside the CLI
@@ -16,7 +17,7 @@ class Frame {
     private int[] absInit;
     private int[] absEnd;
 
-    private int[] lastRowRitten;
+    private int lastRowRitten = 1;
 
     private int rowSpan;
     private int colSpan;
@@ -29,6 +30,7 @@ class Frame {
         this.out = out;
         rowSpan = absEnd[0] - absInit[0];
         colSpan = absEnd[1] - absInit[1];
+        lastRowRitten = absInit[0];
     }
 
     void clear(){
@@ -68,6 +70,50 @@ class Frame {
     void border(){
 
     }
+
+    void center (String toWrite, int delay){
+        String[] lines = toWrite.split("\\r?\\n");
+        for (int i = 0; i<lines.length; i++){
+            int len = lines[i].length();
+            int diff = (colSpan - len) / 2;
+            if (diff < 0){
+                diff = 0;
+            }
+            Terminal.moveAbsoluteCursor(absInit[0]+ i + 1, absInit[1] + diff);
+            System.out.print(lines[i]);
+            if (delay != 0) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        lastRowRitten = lastRowRitten + lines.length + 1;
+    }
+
+
+    void centerAppend (String toWrite, int delay){
+        String[] lines = toWrite.split("\\r?\\n");
+        for (int i = 0; i<lines.length; i++){
+            int len = lines[i].length();
+            int diff = (colSpan - len) / 2;
+            if (diff < 0){
+                diff = 0;
+            }
+            Terminal.moveAbsoluteCursor(lastRowRitten+ i + 1, absInit[1] + diff);
+            System.out.print(lines[i]);
+            if (delay != 0) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        lastRowRitten = lastRowRitten + lines.length + 1;
+    }
+
 
     public int getRowSpan(){
         return rowSpan;

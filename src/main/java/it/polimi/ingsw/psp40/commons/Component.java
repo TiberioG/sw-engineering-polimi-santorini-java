@@ -20,4 +20,12 @@ public enum Component {
     public int getComponentCode() {
         return componentCode;
     }
+
+    public static String[] allNames(){
+        String [] list = new String[Component.values().length];
+        for (int i = 0; i < Component.values().length; i++){
+            list[i] = Component.values()[i].toString();
+        }
+        return list;
+    }
 }

@@ -261,8 +261,103 @@ public class Utils {
         }
     }
 
-    public void form(String title){
 
+    public String  tableString(String title, String[] inputList)  {
+        final  int SPACEADD = 5;
+        int height = inputList.length;
+
+        int width = Math.max(Utils.longestArray(inputList), title.length()) + SPACEADD;
+        int innerwidth = width - 4;
+
+        String titleString = centerString(width, title);
+
+        StringBuilder table = new StringBuilder();
+        //top line
+        table.append("╔");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╗\n");
+
+        //title line
+        table.append("║").append(titleString.replaceAll("\n", " ").toUpperCase()).append("║\n");
+
+        //close tile line
+        table.append("╠");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╣\n");
+
+        //middle item lines
+        for (int i = 0; i < height; i++ ){
+            String nonewline = inputList[i].replaceAll("\n", " ");
+            String output = String.format(". %-" + innerwidth + "s", nonewline);
+
+            if (nonewline.length() > Colors.reset().length()) { // if length is less than the colorreset length it means cannot be colored for sure
+                if (!Colors.reset().equals(nonewline.substring(nonewline.length() - Colors.reset().length()))) { //then I check if it contains a color reset at the end
+                    table.append("║ ").append(i).append(output).append("║\n"); //if not
+                } else { // it there is colorreset at the end: FIX needed!
+                    table.append("║ ").append(i).append(output).append("         ║\n");  //sorry for magic numbers of spaces but just works
+
+                }
+            }
+            else {
+                table.append("║ ").append(i).append(output).append("║\n");
+            }
+        }
+
+        //closeline
+        table.append("╚");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╝\n");
+
+       return  table.toString();
+
+    }
+
+
+
+
+    public String form(String title, int width){
+        String titleString = centerString(width, title);
+
+
+        StringBuilder table = new StringBuilder();
+        //top line
+        table.append("╔");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╗\n");
+
+        //title line
+        table.append("║").append(titleString.replaceAll("\n", " ").toUpperCase()).append("║\n");
+
+        //close tile line
+        table.append("╠");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╣\n");
+
+        //formarea
+           int centerwidth = width - 2;
+            String empty = String.format("%0" + centerwidth + "d", 0).replace('0', ' ');
+            table.append("║ ").append(empty).append(" ║\n");
+
+
+
+        //closeline
+        table.append("╚");
+        for (int i = 0; i< (width ); i++ ){
+            table.append("═");
+        }
+        table.append("╝\n");
+
+        return  table.toString();
     }
 
 
@@ -319,45 +414,21 @@ public class Utils {
         return ip;
     }
 
-    private static boolean isValidIp(String input) {
+
+    String readIpNew() {
+        String ip;
+        ip = in.nextLine();
+
+        while (!isValidIp(ip)) {
+            System.out.println("This is not a valid IPv4 address. Please, try again:");
+            ip = in.nextLine();
+        }
+        return ip;
+    }
+
+    public static boolean isValidIp(String input) {
         return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
     }
-
-
-    public static void maketitle() throws InterruptedException {
-        final int DELAY = 2000;
-        Terminal.clearAll();
-        TimeUnit.MILLISECONDS.sleep(100);
-        System.out.println(
-                        "                                                oooo     oooo ooooooooooo ooooo         oooooooo8   ooooooo  oooo     oooo ooooooooooo               \n" +
-                        "                                                 88   88  88   888    88   888        o888     88 o888   888o 8888o   888   888    88                \n" +
-                        "                                                  88 888 88    888ooo8     888        888         888     888 88 888o8 88   888ooo8                  \n" +
-                        "                                                   888 888     888    oo   888      o 888o     oo 888o   o888 88  888  88   888    oo                \n" +
-                        "                                                    8   8     o888ooo8888 o888ooooo88  888oooo88    88ooo88  o88o  8  o88o o888ooo8888"              );
-        TimeUnit.MILLISECONDS.sleep(DELAY);
-        Terminal.clearAll();
-        System.out.println(
-                        "                                                                                ooooooooooo   ooooooo                                                   \n" +
-                        "                                                                                88  888  88 o888   888o                                                 \n" +
-                        "                                                                                    888     888     888                                                 \n" +
-                        "                                                                                    888     888o   o888                                                 \n" +
-                        "                                                                                   o888o      88ooo88                                                   \n" +
-                        "                                                                                                                   ");
-
-
-        TimeUnit.MILLISECONDS.sleep(DELAY);
-        Terminal.clearAll();
-        System.out.println(
-                        "                                               oooooooo8      o      oooo   oooo ooooooooooo   ooooooo  oooooooooo  ooooo oooo   oooo ooooo           \n" +
-                        "                                              888            888      8888o  88  88  888  88 o888   888o 888    888  888   8888o  88   888            \n" +
-                        "                                               888oooooo    8  88     88 888o88      888     888     888 888oooo88   888   88 888o88   888            \n" +
-                        "                                                      888  8oooo88    88   8888      888     888o   o888 888  88o    888   88   8888   888            \n" +
-                        "                                              o88oooo888 o88o  o888o o88o    88     o888o      88ooo88  o888o  88o8 o888o o88o    88  o888o           \n" +
-                        "                                                                                                                   \n");
-
-    }
-
-
 
 
 
