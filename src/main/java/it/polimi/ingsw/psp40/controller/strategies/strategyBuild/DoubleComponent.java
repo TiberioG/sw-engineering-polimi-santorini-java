@@ -23,7 +23,7 @@ public class DoubleComponent extends DefaultBuild {
      * @return a list of integers that represent the {@link Component} code of the buildable components
      */
     @Override
-    public List<Integer>getComponentsBuildable(Cell cell){
+    public List<Integer> getComponentsBuildable(Cell cell) {
         List<Integer> comps = new ArrayList<>();
         Component current = cell.getTower().getTopComponent();
         if (current == Component.DOME){ // if tower is already complete

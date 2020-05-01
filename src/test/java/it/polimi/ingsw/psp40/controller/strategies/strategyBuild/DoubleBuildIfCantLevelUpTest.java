@@ -2,6 +2,8 @@ package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.commons.PhaseType;
+import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.controller.TurnProperties;
 import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
@@ -17,6 +19,7 @@ import org.junit.Test;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.StringJoiner;
 
 import static org.junit.Assert.*;
@@ -38,7 +41,7 @@ Initial Map:
 ╚═════╩═══════════╧═══════════╧═══════════╧═══════════╧═══════════╝
  */
 
-public class DefaultBuildTest {
+public class DoubleBuildIfCantLevelUpTest {
     private Match match;
     private Player player1;
     private Player player2;
@@ -54,6 +57,7 @@ public class DefaultBuildTest {
 
     @Before
     public void setUp() throws Exception {
+
         match = new Match(66666);
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -78,6 +82,10 @@ public class DefaultBuildTest {
         match.getLocation().setLocation(initCellWorker2_1, worker2_1);
         match.getLocation().setLocation(initCellWorker2_2, worker2_2);
 
+        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 0));
+        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 0));
+        match.getIsland().addComponent(Component.THIRD_LEVEL, match.getIsland().getCell(0, 0));
+
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
         match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
 
@@ -86,10 +94,27 @@ public class DefaultBuildTest {
 
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
-        strategyBuild = new DefaultBuild(match);
+        strategyBuild = new DoubleBuildIfCantLevelUp(match);
         TurnProperties.resetAllParameter();
+        TurnProperties.getPerformedPhases().add(new Phase(PhaseType.MOVE_WORKER, null, false));
     }
 
+    @Test
+    public void build_beforeMove_shouldReturnSomeAvailableCells() throws SantoriniException {
+        TurnProperties.getPerformedPhases().clear(); // remove the move phase
+        List<Cell> buildableCells = strategyBuild.getBuildableCells(worker2_1);
+        assertEquals(2, buildableCells.size());
+        assertTrue(buildableCells.contains(match.getIsland().getCell(0,1)));
+        assertTrue(buildableCells.contains(match.getIsland().getCell(1,0)));
+    }
+
+    @Test
+    public void build_beforeMove_shouldReturnEmptyAvailableCells() throws SantoriniException {
+        match.getIsland().removeComponent(match.getIsland().getCell(0,0)); // reduce level: level 3 --> level 2
+        match.getIsland().removeComponent(match.getIsland().getCell(0,0)); // reduce level: level 2 --> level 1
+        TurnProperties.getPerformedPhases().clear(); // remove the move phase
+        assertEquals(0, strategyBuild.getBuildableCells(worker2_1).size());
+    }
 
     @Test
     public void build_levelZero_shouldBeSuccessful() throws SantoriniException {

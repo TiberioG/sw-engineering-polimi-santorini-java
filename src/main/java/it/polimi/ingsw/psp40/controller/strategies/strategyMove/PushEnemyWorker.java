@@ -14,16 +14,12 @@ import java.util.stream.Collectors;
 
 // MINOTAURO
 
-public class PushEnemyWorker implements StrategyMove {
-
-    /* Attributes */
-
-    private Match match;
+public class PushEnemyWorker extends DefaultMove {
 
     /* Constructor(s) */
 
     public PushEnemyWorker(Match match) {
-        this.match = match;
+        super(match);
     }
 
     /* Methods */
@@ -44,6 +40,7 @@ public class PushEnemyWorker implements StrategyMove {
         }
     }
 
+    @Override
     public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
         List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);

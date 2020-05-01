@@ -85,7 +85,7 @@ public class DefaultBuild implements StrategyBuild {
      * @param cell is the {@link Cell} where you want to know which is the next buildable component
      * @return a list of integers that represent the {@link Component} code. In this DefaultBuild the list is always made out of only one element
      */
-    public List<Integer>getComponentsBuildable(Cell cell){
+    public List<Integer> getComponentsBuildable(Cell cell) {
         List<Integer> comps = new ArrayList<>();
         Component current = cell.getTower().getTopComponent();
         if (current == Component.DOME){ // if tower is already complete

@@ -56,9 +56,7 @@ Initial Map:
 
         @Before
         public void setUp() throws Exception {
-            VirtualView virtualView =  new VirtualView(new Server());
-            match = new Match(66666, virtualView);
-            virtualView.setMatch(match);
+            match = new Match(66666);
 
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String birthDate1 = "22/03/1998";

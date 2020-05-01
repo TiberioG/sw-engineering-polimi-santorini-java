@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedMoveException;
 import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableMoveException;
@@ -15,7 +16,7 @@ public class DefaultMove implements StrategyMove {
 
     /* Attributes */
 
-    private Match match;
+    protected Match match;
 
     /* Constructor(s) */
 
@@ -26,7 +27,7 @@ public class DefaultMove implements StrategyMove {
     /* Methods */
 
     @Override
-    public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException {
+    public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException, CellOutOfBoundsException {
         List<Cell> availableCells = getAvailableCells(worker);
         if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }
         else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }
@@ -35,6 +36,7 @@ public class DefaultMove implements StrategyMove {
         }
     }
 
+    @Override
     public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
         List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);

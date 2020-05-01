@@ -3,13 +3,16 @@ package it.polimi.ingsw.psp40.controller;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Worker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TurnProperties {
     private static int currentTurnId = -1;
     private static HashMap<Worker, Cell> initialPositionMap = new HashMap<>();
     private static HashMap<Worker, Integer> initialLevels = new HashMap<>();
     private static HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
+    private static List<Phase> performedPhases = new ArrayList<>();
 
 
 
@@ -19,6 +22,7 @@ public class TurnProperties {
         initialPositionMap = new HashMap<>();
         initialLevels = new HashMap<>();
         builtInThisTurn = new HashMap<>();
+        performedPhases = new ArrayList<>();
     }
 
     public static HashMap<Worker, Cell> getInitialPositionMap() {
@@ -27,6 +31,10 @@ public class TurnProperties {
 
     public static HashMap<Worker, Integer> getInitialLevels() {
         return initialLevels;
+    }
+
+    public static List<Phase> getPerformedPhases() {
+        return performedPhases;
     }
 
     public static int getCurrentTurnId() {

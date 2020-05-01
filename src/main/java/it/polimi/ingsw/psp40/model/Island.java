@@ -122,7 +122,7 @@ public class Island extends Publisher<Message> {
      * @param cell
      * @throws BuildLowerComponentException
      */
-    public  void addComponent(Component component, Cell cell) throws BuildLowerComponentException {
+    public void addComponent(Component component, Cell cell) throws BuildLowerComponentException {
        cell.getTower().addComponent(component);
        this.update();
        this.updateSpecific(cell);
@@ -133,7 +133,7 @@ public class Island extends Publisher<Message> {
      * Then sends a message to the view
      * @param cell
      */
-    public  void removeComponent(Cell cell) throws  RemoveGroundLevelException {
+    public void removeComponent(Cell cell) throws  RemoveGroundLevelException {
         cell.getTower().removeComponent();
         this.update();
         this.updateSpecific(cell);

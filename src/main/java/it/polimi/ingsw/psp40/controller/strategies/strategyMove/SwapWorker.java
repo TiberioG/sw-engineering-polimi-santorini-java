@@ -13,16 +13,12 @@ import java.util.stream.Collectors;
 
 // APOLLO
 
-public class SwapWorker implements StrategyMove {
-
-    /* Attributes */
-
-    private Match match;
+public class SwapWorker extends DefaultMove {
 
     /* Constructor(s) */
 
     public SwapWorker(Match match) {
-        this.match = match;
+        super(match);
     }
 
     /* Methods */
@@ -40,6 +36,7 @@ public class SwapWorker implements StrategyMove {
         }
     }
 
+    @Override
     public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
         List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);

@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.controller.TurnProperties;
+import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedMoveException;
 import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableMoveException;
@@ -14,37 +15,20 @@ import java.util.stream.Collectors;
 
 // ARTEMIDE
 
-public class DoubleMove implements StrategyMove {
-
-    /* Attributes */
-
-    private Match match;
+public class DoubleMove extends DefaultMove {
 
     /* Constructor(s) */
 
     public DoubleMove(Match match) {
-        this.match = match;
+        super(match);
     }
 
     /* Methods */
 
     @Override
-    public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException {
-        List<Cell> availableCells = getAvailableCells(worker);
-        if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }
-        else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }
-        else {
-            match.getLocation().setLocation(cell, worker);
-        }
-    }
-
     public List<Cell> getAvailableCells(Worker worker) {
-        Cell workerCell = match.getLocation().getLocation(worker);
-        List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);
-        return adjCells.stream()
-                .filter(cell -> !(cell.getTower().getTopComponent().getComponentCode() == workerCell.getTower().getTopComponent().getComponentCode() + 2)) // remove cells where tower is 2 or more level higher than where the worker is
-                .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
-                .filter(cell -> match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker
+        List<Cell> defaultAvailableCells = super.getAvailableCells(worker);
+        return defaultAvailableCells.stream()
                 .filter(cell -> cell != TurnProperties.getInitialPositionMap().get(worker)) // removes initial position cell
                 .collect(Collectors.toList());
     }
