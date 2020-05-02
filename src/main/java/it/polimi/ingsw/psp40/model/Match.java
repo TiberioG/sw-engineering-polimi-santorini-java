@@ -119,8 +119,7 @@ public class Match extends Publisher<Message> {
     public Player createPlayer(String name, Date birthday) {
         Player playToAdd = new Player(name,birthday, virtualView);
         this.listPlayers.add(playToAdd);
-        //TODO togliere commento che sminckia la view, mi printa il json se lo lascio
-        //publish(new Message("ALL", TypeOfMessage.CREATED_PLAYER, playToAdd));
+        publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         return playToAdd;
     }
 
@@ -146,6 +145,7 @@ public class Match extends Publisher<Message> {
     public List<Player> buildOrderedList(Comparator<Player> comparator) {
         //example of comparator Comparator<Player> comparator = Comparator.comparing(Player::getBirthday);
         listPlayers = listPlayers.stream().sorted(comparator).collect(Collectors.toList());
+        publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         return getPlayers();
     }
 
@@ -157,6 +157,7 @@ public class Match extends Publisher<Message> {
             List<Player> rescaledListOfPlayer = listPlayers.subList(listPlayers.indexOf(currentPlayer), listPlayers.size() - 1);
             rescaledListOfPlayer.addAll(listPlayers.subList(0, listPlayers.indexOf(currentPlayer) - 1));
             listPlayers = rescaledListOfPlayer;
+            publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         }
     }
 
@@ -171,6 +172,7 @@ public class Match extends Publisher<Message> {
             player.getWorkers().forEach(worker -> location.removeLocation(worker));
             listPlayers.remove(player);
         }
+        publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         return getPlayers();
     }
 }
