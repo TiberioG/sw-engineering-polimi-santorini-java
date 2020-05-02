@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Client implements ServerObserver {
 
@@ -201,7 +202,7 @@ public class Client implements ServerObserver {
         Player playerFromServer = (Player) message.getPayload(Player.class);
         Player playerToUpdate = playerListCache.stream().filter(player -> player.getName().equals(playerFromServer.getName())).findFirst().orElse(null);
         if (playerToUpdate != null) {
-          playerListCache.set(playerListCache.indexOf(playerFromServer), playerFromServer);
+          playerListCache.set(playerListCache.indexOf(playerToUpdate), playerFromServer);
         }
         break;
 
@@ -213,11 +214,19 @@ public class Client implements ServerObserver {
         List<Player> payloadOfChoosePositionOfWorkers = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
         view.displaySetInitialPosition(payloadOfChoosePositionOfWorkers);
         break;
+
       case INIT_TURN:
         List<Phase> phaseList = new ArrayList<>();
         phaseList.add((Phase) message.getPayload(new TypeToken<Phase>() {}.getType()));
         view.displayChoiceOfAvailablePhases(phaseList);
         break;
+
+      case NEXT_PHASE_AVAILABLE:
+        view.displayChoiceOfAvailablePhases((List<Phase>) message.getPayload(new TypeToken<List<Phase>>() {}.getType()));
+      break;
+
+      case AVAILABLE_CELL_FOR_MOVE:
+        view.displayChoiceOfAvailableCellForMove((List<Cell>) message.getPayload(new TypeToken<List<Cell>>() {}.getType()));
 
       default:
         break;
@@ -296,15 +305,9 @@ public class Client implements ServerObserver {
     return playerListCache;
   }
 
-
-  public List<Worker> getMywokerChace(){
-    List<Worker> myworkers = null;
-    for (Player player : playerListCache) {
-      if (player.getName().equals(username)) {
-       myworkers = player.getWorkers();
-      }
-    }
-    return myworkers;
+  public List<Worker> getMyWorkerCached(){
+    List<Worker> myWorkers = playerListCache.stream().filter(player -> player.getName().equals(username)).flatMap(player -> player.getWorkers().stream()).collect(Collectors.toList());
+    return myWorkers;
   }
 
   //todo local check

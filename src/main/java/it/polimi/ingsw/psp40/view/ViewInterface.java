@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp40.view;
 
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
+import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public interface ViewInterface {
     void displaySetInitialPosition(List<Player> playerList);
     void displayAskFirstPlayer(List<Player> allPlayers);
     void displayChoiceOfAvailablePhases(List<Phase> phaseList);
+    void displayChoiceOfAvailableCellForMove(List<Cell> availableCellList);
     void displayChoiceSelectionOfWorker();
 }
 

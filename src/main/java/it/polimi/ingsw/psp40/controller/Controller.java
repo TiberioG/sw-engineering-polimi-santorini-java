@@ -130,8 +130,7 @@ public class Controller implements Listener<Message> {
                 break;
 
             case SELECT_WORKER:
-                Tupla tuplaSelectWorker = (Tupla) message.getPayload(Tupla.class);
-                turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((int) tuplaSelectWorker.getSecond()));
+                turnManager.selectWorker(match.getCurrentPlayer().getWorkers().get((Integer) message.getPayload(Integer.class)));
                 break;
             case RETRIEVE_CELL_FOR_MOVE:
                 turnManager.getAvailableCellForMove();

@@ -97,6 +97,7 @@ public class TurnManager {
         List<Cell> availableCell = null;
         if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {
             availableCell = currentTurn.getAvailableCellForMove();
+            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_MOVE, availableCell));
         }
         // todo chiamare la virtual view con le celle disponibili
     }
@@ -139,7 +140,10 @@ public class TurnManager {
     }
 
     public void selectWorker(Worker worker) {
-        if (currentTurn.getCurrentPhase().getType().equals(PhaseType.SELECT_WORKER)) currentTurn.setSelectedWorker(worker);
+        if (currentTurn.getCurrentPhase().getType().equals(PhaseType.SELECT_WORKER)) {
+            currentTurn.setSelectedWorker(worker);
+            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));
+        }
     }
 
     private void updateCurrentPhase(PhaseType type) {

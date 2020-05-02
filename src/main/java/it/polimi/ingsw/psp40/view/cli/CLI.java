@@ -304,21 +304,29 @@ public class CLI implements ViewInterface {
             case SELECT_WORKER:
                 displayChoiceSelectionOfWorker();
                 break;
+            case MOVE_WORKER:
+                client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+                break;
         }
     }
     @Override
     public void displayChoiceSelectionOfWorker() {
         showIsland();
 
-        out.println(String.format("Seleziona il worker indicando il suo id "));
+        out.println(String.format("Seleziona il worker indicando il suo id:"));
 
-        for (HashMap.Entry<Integer, Integer[]> entry : getMyworkers().entrySet()) {
-          out.println(entry.getKey() + Integer.toString(entry.getValue()[0]) + "," + Integer.toString(entry.getValue()[1]) );
-        }
+        getMyWorkers().entrySet().forEach(entry -> {
+            out.println("id: " + entry.getKey() + ", Posizione: " + entry.getValue()[0] + "," + entry.getValue()[1]);
+        });
 
-       int id = utils.readNumbers(0, getMyworkers().size() -1);
+       int id = utils.readNumbers(0, getMyWorkers().size() -1);
 
-        client.sendToServer(new Message(TypeOfMessage.SELECT_WORKER, id ));
+        client.sendToServer(new Message(TypeOfMessage.SELECT_WORKER, id));
+
+    }
+
+    @Override
+    public void displayChoiceOfAvailableCellForMove(List<Cell> availableCellList) {
 
     }
 
@@ -379,21 +387,21 @@ public class CLI implements ViewInterface {
         utils.printMap(stringIsland);
     }
 
-    private HashMap<Integer, Integer[]> getMyworkers() {
+    private HashMap<Integer, Integer[]> getMyWorkers() {
         Location location = client.getLocationCache();
         Cell[][] field = client.getFieldCache();
 
-        HashMap<Integer, Integer[]> workerinfo = new HashMap<>();
+        HashMap<Integer, Integer[]> workerInfo = new HashMap<>();
 
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field.length; j++) {
                 Worker occupant = location.getOccupant(i, j);
                 if (occupant != null && occupant.getPlayerName().equals(client.getUsername())){
-                    workerinfo.put(occupant.getId(), new Integer[]{i, j});
+                    workerInfo.put(occupant.getId(), new Integer[]{i, j});
                 }
             }
         }
-        return workerinfo;
+        return workerInfo;
     }
 
 
