@@ -3,7 +3,6 @@ package it.polimi.ingsw.psp40.view.cli;
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
-import it.polimi.ingsw.psp40.commons.Publisher;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.controller.Phase;
@@ -15,7 +14,6 @@ import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 
 import java.io.PrintWriter;
-import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -310,7 +308,18 @@ public class CLI implements ViewInterface {
     }
     @Override
     public void displayChoiceSelectionOfWorker() {
-        out.println(String.format("Seleziona il worker"));
+        showIsland();
+
+        out.println(String.format("Seleziona il worker indicando il suo id "));
+
+        for (HashMap.Entry<Integer, Integer[]> entry : getMyworkers().entrySet()) {
+          out.println(entry.getKey() + Integer.toString(entry.getValue()[0]) + "," + Integer.toString(entry.getValue()[1]) );
+        }
+
+       int id = utils.readNumbers(0, getMyworkers().size() -1);
+
+        client.sendToServer(new Message(TypeOfMessage.SELECT_WORKER, id ));
+
     }
 
 
@@ -369,6 +378,24 @@ public class CLI implements ViewInterface {
         }
         utils.printMap(stringIsland);
     }
+
+    private HashMap<Integer, Integer[]> getMyworkers() {
+        Location location = client.getLocationCache();
+        Cell[][] field = client.getFieldCache();
+
+        HashMap<Integer, Integer[]> workerinfo = new HashMap<>();
+
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field.length; j++) {
+                Worker occupant = location.getOccupant(i, j);
+                if (occupant != null && occupant.getPlayerName().equals(client.getUsername())){
+                    workerinfo.put(occupant.getId(), new Integer[]{i, j});
+                }
+            }
+        }
+        return workerinfo;
+    }
+
 
 
     /**

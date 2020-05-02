@@ -43,6 +43,7 @@ public class Client implements ServerObserver {
 
 
 
+
   /* Constructor(s) */
 
   public Client() {}
@@ -289,6 +290,21 @@ public class Client implements ServerObserver {
 
   public Cell[][] getFieldCache() {
     return fieldCache;
+  }
+
+  public List<Player> getPlayerListCache(){
+    return playerListCache;
+  }
+
+
+  public List<Worker> getMywokerChace(){
+    List<Worker> myworkers = null;
+    for (Player player : playerListCache) {
+      if (player.getName().equals(username)) {
+       myworkers = player.getWorkers();
+      }
+    }
+    return myworkers;
   }
 
   //todo local check
