@@ -7,8 +7,6 @@ import it.polimi.ingsw.psp40.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.DefaultMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
-import it.polimi.ingsw.psp40.controller.TurnProperties;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.DefaultBuild;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
@@ -28,7 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 public class CoolCliTestable {
 
@@ -91,7 +88,6 @@ public class CoolCliTestable {
     Cell initCellWorker2_2;
     StrategyBuild strategyBuild;
     StrategyMove strategyMove;
-    TurnProperties turnProperties;
 
 
     /* METHODS*/
@@ -145,8 +141,7 @@ public class CoolCliTestable {
 
         strategyBuild = new DefaultBuild(match);
         strategyMove = new DefaultMove(match);
-        turnProperties = new TurnProperties();
-        TurnProperties.resetAllParameter();
+        match.getMatchProperties().resetAllParameter();
 
     }
 

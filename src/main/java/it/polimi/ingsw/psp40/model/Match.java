@@ -23,6 +23,7 @@ public class Match extends Publisher<Message> {
     private Player currentPlayer ;
     private List<Card> listCardsInGame = new ArrayList<>();
     private VirtualView virtualView;
+    private MatchProperties matchProperties;
 
     /**
      * Constructor
@@ -32,6 +33,7 @@ public class Match extends Publisher<Message> {
         this.matchID = matchID ;
         this.island = new Island(virtualView);
         this.location = new Location(virtualView);
+        this.matchProperties = new MatchProperties();
         this.virtualView = virtualView;
         publish(new Message("ALL", TypeOfMessage.CREATED_MATCH));
     }
@@ -41,6 +43,7 @@ public class Match extends Publisher<Message> {
         this.matchID = matchID ;
         this.island = new Island();
         this.location = new Location();
+        this.matchProperties = new MatchProperties();
     }
 
 
@@ -66,6 +69,9 @@ public class Match extends Publisher<Message> {
     }
     public Location getLocation() {
         return location;
+    }
+    public MatchProperties getMatchProperties() {
+        return matchProperties;
     }
 
     /**

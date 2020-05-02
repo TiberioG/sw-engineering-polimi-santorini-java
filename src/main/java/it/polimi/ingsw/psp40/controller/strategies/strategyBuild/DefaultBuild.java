@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
 import it.polimi.ingsw.psp40.commons.Component;
-import it.polimi.ingsw.psp40.controller.TurnProperties;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedBuildException;
@@ -60,7 +59,7 @@ public class DefaultBuild implements StrategyBuild {
                 }
                 match.getIsland().addComponent(compToBuild, whereToBuild); // here I finally add the component in the model
                 //whereToBuild.getTower().addComponent(compToBuild);
-                TurnProperties.builtNow(worker, whereToBuild); // I also save that this worker has built here in the turnProp.
+                match.getMatchProperties().builtNow(worker, whereToBuild); // I also save that this worker has built here in the turnProp.
             }
         }
 

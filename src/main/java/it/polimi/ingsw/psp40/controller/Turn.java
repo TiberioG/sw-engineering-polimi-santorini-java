@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.controller;
 
 import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
@@ -79,7 +80,7 @@ public class Turn {
         return player.getWorkers().stream().filter(worker -> strategyMove.getAvailableCells(worker).size() > 0).count() == 0;
     }
 
-    public void updateCurrentPhaseFromType(String type) {
+    public void updateCurrentPhaseFromType(PhaseType type) {
         Phase tempCurrentPhase = currentPhase.getNextPhases().stream().filter(phase -> phase.getType().equals(type)).findFirst().orElse(null);
         if (tempCurrentPhase == null) throw new RuntimeException("Cannot update CurrentPhase with a null phase");
         else currentPhase = tempCurrentPhase;

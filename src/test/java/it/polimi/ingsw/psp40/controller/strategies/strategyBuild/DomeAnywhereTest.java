@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
-import it.polimi.ingsw.psp40.controller.TurnProperties;
 import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedBuildException;
@@ -10,8 +9,6 @@ import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Match;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.model.Worker;
-import it.polimi.ingsw.psp40.network.server.Server;
-import it.polimi.ingsw.psp40.network.server.VirtualView;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -93,7 +90,7 @@ Initial Map:
 
 
             strategyBuild = new DomeAnywhere(match); //SET HERE STRATEGYY
-            TurnProperties.resetAllParameter();
+            match.getMatchProperties().resetAllParameter();
         }
 
         @Test

@@ -1,5 +1,6 @@
-package it.polimi.ingsw.psp40.controller;
+package it.polimi.ingsw.psp40.model;
 
+import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Worker;
 
@@ -7,17 +8,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TurnProperties {
-    private static int currentTurnId = -1;
-    private static HashMap<Worker, Cell> initialPositionMap = new HashMap<>();
-    private static HashMap<Worker, Integer> initialLevels = new HashMap<>();
-    private static HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
-    private static List<Phase> performedPhases = new ArrayList<>();
+public class MatchProperties {
+    private int currentTurnId = -1;
+    private HashMap<Worker, Cell> initialPositionMap = new HashMap<>();
+    private HashMap<Worker, Integer> initialLevels = new HashMap<>();
+    private HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
+    private List<PhaseType> performedPhases = new ArrayList<>();
 
 
 
 
-    public static void resetAllParameter() {
+    public void resetAllParameter() {
         currentTurnId = -1;
         initialPositionMap = new HashMap<>();
         initialLevels = new HashMap<>();
@@ -25,19 +26,19 @@ public class TurnProperties {
         performedPhases = new ArrayList<>();
     }
 
-    public static HashMap<Worker, Cell> getInitialPositionMap() {
+    public HashMap<Worker, Cell> getInitialPositionMap() {
         return initialPositionMap;
     }
 
-    public static HashMap<Worker, Integer> getInitialLevels() {
+    public HashMap<Worker, Integer> getInitialLevels() {
         return initialLevels;
     }
 
-    public static List<Phase> getPerformedPhases() {
+    public List<PhaseType> getPerformedPhases() {
         return performedPhases;
     }
 
-    public static int getCurrentTurnId() {
+    public int getCurrentTurnId() {
         return currentTurnId;
     }
 
@@ -46,7 +47,7 @@ public class TurnProperties {
      * @param worker is the {@link Worker} that has built
      * @param cell is the {@link Cell} where the worker has built
      */
-    public static void builtNow(Worker worker, Cell cell){
+    public void builtNow(Worker worker, Cell cell){
         builtInThisTurn.put(worker, cell);
     }
 
@@ -55,7 +56,7 @@ public class TurnProperties {
      * @param worker is the {@link Worker} that has built
      * @return the {@link Cell} where the worker has built
      */
-    public static Cell getPreviousBuild(Worker worker){
+    public Cell getPreviousBuild(Worker worker){
         return builtInThisTurn.get(worker);
     }
 
