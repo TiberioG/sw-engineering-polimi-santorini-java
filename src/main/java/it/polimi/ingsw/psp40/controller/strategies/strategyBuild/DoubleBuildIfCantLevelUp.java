@@ -2,10 +2,8 @@ package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.PhaseType;
-import it.polimi.ingsw.psp40.controller.TurnProperties;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.DefaultMove;
 import it.polimi.ingsw.psp40.model.Cell;
-import it.polimi.ingsw.psp40.model.Location;
 import it.polimi.ingsw.psp40.model.Match;
 import it.polimi.ingsw.psp40.model.Worker;
 
@@ -31,7 +29,7 @@ public class DoubleBuildIfCantLevelUp extends DefaultBuild {
      */
     @Override
     public List<Cell> getBuildableCells(Worker worker) {
-        boolean alreadyMoved = TurnProperties.getPerformedPhases().stream().anyMatch( phase -> phase.getType() == PhaseType.MOVE_WORKER);
+        boolean alreadyMoved = match.getMatchProperties().getPerformedPhases().stream().anyMatch(phase -> phase == PhaseType.MOVE_WORKER);
 
         if(!alreadyMoved) {
             DefaultMove defaultMove = new DefaultMove(match);

@@ -95,7 +95,7 @@ public class TurnManager {
 
     public void getAvailableCellForMove() {
         List<Cell> availableCell = null;
-        if (checkForPermittedPhase("move")) {
+        if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {
             availableCell = currentTurn.getAvailableCellForMove();
         }
         // todo chiamare la virtual view con le celle disponibili
@@ -103,24 +103,24 @@ public class TurnManager {
 
 
     public void move(Cell cell) throws SantoriniException {
-        if (checkForPermittedPhase("move")) {
+        if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {
             currentTurn.move(cell);
-            updateCurrentPhase("move");
+            updateCurrentPhase(PhaseType.MOVE_WORKER);
         }
     }
 
     public void getAvailableCellForBuild() {
         List<Cell> availableCell = null;
-        if (checkForPermittedPhase("build")) {
+        if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
             availableCell = currentTurn.getAvailableCellForBuild();
         }
         // todo chiamare la virtual view con le celle disponibili
     }
 
     public void build(Component component, Cell cell) throws SantoriniException {
-        if (checkForPermittedPhase("build")) {
+        if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
             currentTurn.build(component, cell);
-            updateCurrentPhase("build");
+            updateCurrentPhase(PhaseType.BUILD_COMPONENT);
         }
     }
 
@@ -130,7 +130,7 @@ public class TurnManager {
         }
     }
 
-    private Boolean checkForPermittedPhase(String type) {
+    private Boolean checkForPermittedPhase(PhaseType type) {
         return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -> phase.getType().equals(type));
     }
 
@@ -142,12 +142,13 @@ public class TurnManager {
         if (currentTurn.getCurrentPhase().getType().equals(PhaseType.SELECT_WORKER)) currentTurn.setSelectedWorker(worker);
     }
 
-    private void updateCurrentPhase(String type) {
+    private void updateCurrentPhase(PhaseType type) {
         if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
             //richiamare la virtualview notificando la vittoria
         }
 
         currentTurn.updateCurrentPhaseFromType(type);
+        match.getMatchProperties().getPerformedPhases().add(type);
         if (currentTurn.getCurrentPhase().getNextPhases() == null) {
             //seleziono il prossimo turno
             selectNextTurn();
@@ -161,7 +162,7 @@ public class TurnManager {
     }
 
     private void inizializedCurrentTurn() {
-        TurnProperties.resetAllParameter();
+        match.getMatchProperties().resetAllParameter();
 
         //se non ci sono celle disponibili
         if (currentTurn.noAvailableCellForWorkers()) {
@@ -173,8 +174,8 @@ public class TurnManager {
             selectNextTurn();
         } else {
             this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
-                TurnProperties.getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
-                TurnProperties.getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
+                match.getMatchProperties().getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
+                match.getMatchProperties().getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
             });
             updateVirtualView(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN, currentTurn.getCurrentPhase()));
         }

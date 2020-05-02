@@ -35,6 +35,7 @@ public enum TypeOfMessage {
 
     TOWER_UPDATED,
     ISLAND_UPDATED,
+    LIST_PLAYER_UPDATED,
     PLAYER_UPDATED,
     SET_WORKERS_COLOR,
     LOCATION_UPDATED  //obj_type : Location

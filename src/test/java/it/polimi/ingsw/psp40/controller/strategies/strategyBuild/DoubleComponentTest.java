@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
-import it.polimi.ingsw.psp40.controller.TurnProperties;
 import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.Cell;
@@ -85,7 +84,7 @@ public class DoubleComponentTest {
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyBuild = new DoubleComponent(match); //Here setup specific
-        TurnProperties.resetAllParameter();
+        match.getMatchProperties().resetAllParameter();
     }
 
     @Test

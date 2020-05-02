@@ -10,7 +10,6 @@ import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.cli.CLI;
-import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -40,6 +39,7 @@ public class Client implements ServerObserver {
 
   private Cell[][] fieldCache;
   private Location locationCache;
+  private List<Player> playerListCache;
 
 
 
@@ -190,6 +190,18 @@ public class Client implements ServerObserver {
 
       case ISLAND_UPDATED:
         fieldCache = (Cell[][]) message.getPayload(Cell[][].class); //siam sicuri gli piaccia?
+        break;
+
+      case LIST_PLAYER_UPDATED:
+        playerListCache = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+        break;
+
+      case PLAYER_UPDATED:
+        Player playerFromServer = (Player) message.getPayload(Player.class);
+        Player playerToUpdate = playerListCache.stream().filter(player -> player.getName().equals(playerFromServer.getName())).findFirst().orElse(null);
+        if (playerToUpdate != null) {
+          playerListCache.set(playerListCache.indexOf(playerFromServer), playerFromServer);
+        }
         break;
 
       case LOCATION_UPDATED:
