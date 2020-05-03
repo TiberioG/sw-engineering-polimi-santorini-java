@@ -1,9 +1,12 @@
 package it.polimi.ingsw.psp40.controller;
 
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.Listener;
 import it.polimi.ingsw.psp40.commons.messages.*;
+import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
+import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
@@ -136,13 +139,23 @@ public class Controller implements Listener<Message> {
                 turnManager.getAvailableCellForMove();
                 break;
             case MOVE_WORKER:
-                //turnManager.move();
+                CoordinatesMessage coordinatesMessage = (CoordinatesMessage) message.getPayload(CoordinatesMessage.class);
+                try {
+                    turnManager.move(match.getIsland().getCell(coordinatesMessage.getX(), coordinatesMessage.getY()));
+                } catch (SantoriniException e) {
+                    e.printStackTrace();
+                }
                 break;
             case RETRIEVE_CELL_FOR_BUILD:
                 turnManager.getAvailableCellForBuild();
                 break;
             case BUILD_CELL:
-                //turnManager.build();
+                TuplaGenerics<Component, CoordinatesMessage> tuplaForBuildComponent = (TuplaGenerics<Component, CoordinatesMessage>) message.getPayload(new TypeToken<TuplaGenerics<Component,CoordinatesMessage>>() {}.getType());
+                try {
+                    turnManager.build(tuplaForBuildComponent.getFirst(), match.getIsland().getCell(tuplaForBuildComponent.getSecond().getX(), tuplaForBuildComponent.getSecond().getY()));
+                } catch (SantoriniException e) {
+                    e.printStackTrace();
+                }
                 break;
 
         }

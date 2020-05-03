@@ -352,9 +352,14 @@ public class CoolCLI implements ViewInterface {
             }
         }
     */
+
     @Override
     public void displayChoiceSelectionOfWorker() {
         out.println(String.format("Seleziona il worker"));
+    }
+
+    @Override
+    public void displayChoiceOfAvailableCellForMove(List<Cell> availableCellList) {
     }
 
 

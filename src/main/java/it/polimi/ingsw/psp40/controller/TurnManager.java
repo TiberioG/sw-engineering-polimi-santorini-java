@@ -34,7 +34,7 @@ public class TurnManager {
     /* Constructor(s) */
 
     /**
-     * Constructor: init turnManager's instance
+     * Constructor to init turnManager's instance
      * @param match the match of the turn
      */
     public TurnManager(Match match, VirtualView virtualView) {
@@ -53,6 +53,11 @@ public class TurnManager {
     }
 
     /* Methods */
+
+
+    /**
+     * This method create and inizialize a turn for every player in the match
+     */
     private void createTurns() {
         for(Player player : match.getPlayers()) {
             Turn turn = new Turn(player);
@@ -62,6 +67,7 @@ public class TurnManager {
         currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
         inizializedCurrentTurn();
     }
+
     /**
      * This method create strategy instances using reflection
      * @param className the name of the class of the desired istance
@@ -78,6 +84,7 @@ public class TurnManager {
 
     /**
      * This method create set the strategy of the turn from the card of the current player
+     * @param turn the turn to add strategy to it
      */
     private void buildStrategies(Turn turn) {
         //builder/factory
@@ -93,16 +100,21 @@ public class TurnManager {
         }
     }
 
+    /**
+     * This method call the getAvailableCellForMove method of the strategyMove of the current turn and update the virtualView with a message which contains the available cells
+     */
     public void getAvailableCellForMove() {
         List<Cell> availableCell = null;
         if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {
             availableCell = currentTurn.getAvailableCellForMove();
             updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_MOVE, availableCell));
         }
-        // todo chiamare la virtual view con le celle disponibili
     }
 
-
+    /**
+     * This method call the move method of the strategyMove of the current turn and and call the updateCurrentPhase method to update the current phase
+     * @param cell the cell destination of the selectedWorker
+     */
     public void move(Cell cell) throws SantoriniException {
         if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {
             currentTurn.move(cell);
@@ -110,14 +122,22 @@ public class TurnManager {
         }
     }
 
+    /**
+     * This method call the getAvailableCellForBuild method of the strategyMove of the current turn and update the virtualView with a message which contains the available cells
+     */
     public void getAvailableCellForBuild() {
-        List<Cell> availableCell = null;
+        List<Cell> availableCell;
         if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
             availableCell = currentTurn.getAvailableCellForBuild();
+            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_BUILD, availableCell));
         }
-        // todo chiamare la virtual view con le celle disponibili
     }
 
+    /**
+     * This method call the build method of the strategyBuild of the current turn and and call the updateCurrentPhase method to update the current phase
+     * @param component the component to build on the selected cell
+     * @param cell the cell where to build the component
+     */
     public void build(Component component, Cell cell) throws SantoriniException {
         if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
             currentTurn.build(component, cell);
@@ -125,20 +145,34 @@ public class TurnManager {
         }
     }
 
+    /**
+     * This method call the checkWin method of the strategyWin of the current turn and update the virtualView with a message for notify the winning
+     */
     public void checkWin() {
         if (currentTurn.checkWin()) {
             // todo chiamare la view
         }
     }
 
+    /**
+     * This method check if the list of the next phases contains the phase type in the param
+     * @param type the type of phase to check
+     * @return a boolean which indicate if the next phases list contains the phase in the param
+     */
     private Boolean checkForPermittedPhase(PhaseType type) {
         return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -> phase.getType().equals(type));
     }
 
+    /*
     public List<Phase> getNextPhases() {
         return currentTurn.getCurrentPhase().getNextPhases();
     }
+    */
 
+    /**
+     * This method call the setSelectedWorker method of the current turn and update the virtual view with a message which contains the next phase available
+     * @param worker the worker to select
+     */
     public void selectWorker(Worker worker) {
         if (currentTurn.getCurrentPhase().getType().equals(PhaseType.SELECT_WORKER)) {
             currentTurn.setSelectedWorker(worker);
@@ -146,6 +180,10 @@ public class TurnManager {
         }
     }
 
+    /**
+     * This method update the currentPhase with the phase of the same type in the nextPhases list with a check if the player has won or if the turn is over
+     * @param type the type of the phase to update
+     */
     private void updateCurrentPhase(PhaseType type) {
         if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
             //richiamare la virtualview notificando la vittoria
@@ -154,17 +192,26 @@ public class TurnManager {
         currentTurn.updateCurrentPhaseFromType(type);
         match.getMatchProperties().getPerformedPhases().add(type);
         if (currentTurn.getCurrentPhase().getNextPhases() == null) {
+            //richiamare la virtual view per notificare la fine del turno
             //seleziono il prossimo turno
             selectNextTurn();
-            //richiamare la virtual view per notificare la fine del turno
+        } else {
+            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));
         }
     }
 
+    /**
+     * This method update the current player of the match and consequently makes his turn as the current turn
+     */
     private void selectNextTurn() {
         match.selectNextCurrentPlayer();
         currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
+        inizializedCurrentTurn();
     }
 
+    /**
+     * this method initializes the current round by resetting the match properties related to the rounds and checking a player's loss, also notifies the virtual view of the start of the turn
+     */
     private void inizializedCurrentTurn() {
         match.getMatchProperties().resetAllParameter();
 
@@ -174,10 +221,10 @@ public class TurnManager {
             String name = this.match.getCurrentPlayer().getName();
             turnsMap.remove(name);
             match.removePlayer(name);
-            //notificare la perdità
+            //notificare la perdità e gestire il caso che rimanga solo un giocatore
             selectNextTurn();
         } else {
-            this.match.getCurrentPlayer().getWorkers().forEach(worker -> {
+            getCurrentPlayer().getWorkers().forEach(worker -> {
                 match.getMatchProperties().getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));
                 match.getMatchProperties().getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());
             });
@@ -185,10 +232,18 @@ public class TurnManager {
         }
     }
 
+    /**
+     * this method return the player of the current turn
+     * @return the player of the current turn
+     */
     public Player getCurrentPlayer() {
         return currentTurn.getPlayer();
     }
 
+    /**
+     * this method call the displayMessage of the virtualView
+     * @param message the message to sent
+     */
     private void updateVirtualView(Message message) {
         if (virtualView != null) virtualView.displayMessage(message);
     }

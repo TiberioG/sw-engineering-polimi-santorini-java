@@ -34,8 +34,8 @@ public class TurnManagerTest {
         try {
             match.getLocation().setLocation(match.getIsland().getCell(0,0), firstPlayer.addWorker(Colors.BLUE));
             match.getLocation().setLocation(match.getIsland().getCell(0,1), firstPlayer.addWorker(Colors.BLUE));
-            match.getLocation().setLocation(match.getIsland().getCell(2,0), firstPlayer.addWorker(Colors.RED));
-            match.getLocation().setLocation(match.getIsland().getCell(2,1), firstPlayer.addWorker(Colors.RED));
+            match.getLocation().setLocation(match.getIsland().getCell(3,0), secondPlayer.addWorker(Colors.RED));
+            match.getLocation().setLocation(match.getIsland().getCell(3,1), secondPlayer.addWorker(Colors.RED));
         } catch (Exception e) {
             e.printStackTrace();
         }
