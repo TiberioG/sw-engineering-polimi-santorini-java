@@ -31,8 +31,10 @@ public interface ViewInterface {
     void displaySetInitialPosition(List<Player> playerList);
     void displayAskFirstPlayer(List<Player> allPlayers);
     void displayChoiceOfAvailablePhases(List<Phase> phaseList);
-    void displayChoiceOfAvailableCellForMove(List<Cell> availableCellList);
+    void displayChoiceOfAvailableCellForMove();
     void displayChoiceSelectionOfWorker();
+    void displayMoveWorker();
+    public void displayBuildBlock();
 }
 
 

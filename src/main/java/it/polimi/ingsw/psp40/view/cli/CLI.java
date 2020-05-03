@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -256,7 +257,7 @@ public class CLI implements ViewInterface {
             out.println("Now you can position your worker no. 1");
             position1 = utils.readPosition(0,4);
 
-        }while (occupy.contains(position1));
+        }while (occupy.contains(position1)); //todo debuggami
 
         do{
             out.println("Now you can position your worker no. 2");
@@ -296,8 +297,20 @@ public class CLI implements ViewInterface {
         Phase selectedPhase = null;
         if (phaseList.size() == 1) {
             selectedPhase = phaseList.get(0);
+            out.println("there is only available this phase: " + selectedPhase.getType().toString());
         } else {
-            //logica per far seleziona all'utente la fase fra quelle disponibili
+            String[] phases = new String[phaseList.size()];
+            for (int i = 0; i < phaseList.size(); i++) {
+                phases[i] = phaseList.get(i).toString();
+            }
+            try {
+                utils.singleTableCool("Phases available", phases, 100 );
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            int index = utils.readNumbers(0, phaseList.size());
+            selectedPhase = phaseList.get(index);
         }
 
         switch (selectedPhase.getType()) {
@@ -313,10 +326,10 @@ public class CLI implements ViewInterface {
     public void displayChoiceSelectionOfWorker() {
         showIsland();
 
-        out.println(String.format("Seleziona il worker indicando il suo id:"));
+        out.println("Choose worker selecting the id:");
 
         getMyWorkers().entrySet().forEach(entry -> {
-            out.println("id: " + entry.getKey() + ", Posizione: " + entry.getValue()[0] + "," + entry.getValue()[1]);
+            out.println("id: " + entry.getKey() + ", coordinates: " + entry.getValue()[0] + "," + entry.getValue()[1]);
         });
 
        int id = utils.readNumbers(0, getMyWorkers().size() -1);
@@ -326,16 +339,23 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayChoiceOfAvailableCellForMove(List<Cell> availableCellList) {
+    public void displayChoiceOfAvailableCellForMove() {
+        List<int[]> available = cellAdapter(client.getAvailableMoveCells()) ;
+
+        out.println("These are the cells available for move");
+        for(int i= 0; i<available.size(); i++){
+            out.println(available.get(i)[0] + "," + available.get(i)[1] );
+        }
+
 
     }
 
 
-
-    public void moveWorker(List<Cell> availableCells) {
+    @Override
+    public void displayMoveWorker() {
         int[] position;
 
-        List<int[]> available = cellAdapter(availableCells) ;
+        List<int[]> available = cellAdapter(client.getAvailableMoveCells()) ;
         do{
             out.println("Now you can mover your worker");
             position = utils.readPosition(0,4);
@@ -347,7 +367,9 @@ public class CLI implements ViewInterface {
     }
 
 
-    public void buildBlock(){
+    @Override
+    public void displayBuildBlock(){
+        int[] position;
         out.println("Choose one of the following blocks to build:");
 
         try {
@@ -356,7 +378,13 @@ public class CLI implements ViewInterface {
             e.printStackTrace();
         }
 
-        utils.readNumbers(0, Component.allNames().length -1 );
+        int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
+
+        out.println("Now you can mover your worker");
+        position = utils.readPosition(0,4);
+        CoordinatesMessage buildCoord = new CoordinatesMessage(position[0], position[1]);
+
+        TuplaGenerics<Component, CoordinatesMessage> message = new TuplaGenerics<>(Component.valueOf(Component.allNames()[componentCode]), buildCoord);
 
 
     }

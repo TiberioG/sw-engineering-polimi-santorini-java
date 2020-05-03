@@ -226,7 +226,18 @@ public class Client implements ServerObserver {
       break;
 
       case AVAILABLE_CELL_FOR_MOVE:
-        view.displayChoiceOfAvailableCellForMove((List<Cell>) message.getPayload(new TypeToken<List<Cell>>() {}.getType()));
+        availableMoveCells =  (List<Cell>) message.getPayload(new TypeToken<List<Cell>>() {}.getType());
+        view.displayChoiceOfAvailableCellForMove();
+        break;
+
+      case BUILD_CELL:
+        view.displayBuildBlock();
+        break;
+
+      case MOVE_WORKER:
+        view.displayMoveWorker();
+        break;
+
 
       default:
         break;
@@ -308,6 +319,10 @@ public class Client implements ServerObserver {
   public List<Worker> getMyWorkerCached(){
     List<Worker> myWorkers = playerListCache.stream().filter(player -> player.getName().equals(username)).flatMap(player -> player.getWorkers().stream()).collect(Collectors.toList());
     return myWorkers;
+  }
+
+  public List<Cell> getAvailableMoveCells() {
+    return availableMoveCells;
   }
 
   //todo local check

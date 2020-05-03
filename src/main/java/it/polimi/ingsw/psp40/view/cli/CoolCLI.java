@@ -332,6 +332,50 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
+        left.clear();
+        Phase selectedPhase = null;
+        if (phaseList.size() == 1) {
+            selectedPhase = phaseList.get(0);
+            left.println("there is only available this phase: " + selectedPhase.getType().toString());
+        } else {
+            String[] phases = new String[phaseList.size()];
+            for (int i = 0; i < phaseList.size(); i++) {
+                phases[i] = phaseList.get(i).toString();
+            }
+            try {
+                utils.singleTableCool("Phases available", phases, 100 );
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            int index = utils.readNumbers(0, phaseList.size());
+            selectedPhase = phaseList.get(index);
+        }
+
+        switch (selectedPhase.getType()) {
+            case SELECT_WORKER:
+                displayChoiceSelectionOfWorker();
+                break;
+            case MOVE_WORKER:
+                client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+                break;
+        }
+
+    }
+
+    @Override
+    public void displayChoiceOfAvailableCellForMove() {
+        try {
+            showIsland();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        myisland.setMovable(client.getAvailableMoveCells());
+        try {
+            myisland.print();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -359,8 +403,16 @@ public class CoolCLI implements ViewInterface {
     }
 
     @Override
-    public void displayChoiceOfAvailableCellForMove(List<Cell> availableCellList) {
+    public void displayMoveWorker() {
+
     }
+
+    @Override
+    public void displayBuildBlock() {
+
+    }
+
+
 
 
     public void showIsland() throws IOException, InterruptedException {
