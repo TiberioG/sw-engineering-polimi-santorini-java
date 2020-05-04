@@ -195,7 +195,7 @@ public class Utils {
             }
             String[] ints = input.split(",");
             coord[0] = Integer.parseInt(ints[0]);
-            coord[1] = Integer.parseInt(ints[0]);
+            coord[1] = Integer.parseInt(ints[1]);
         }while (coord[0] < min || coord[0] > max || coord[1] < min || coord[1] > max);
         return coord;
     }

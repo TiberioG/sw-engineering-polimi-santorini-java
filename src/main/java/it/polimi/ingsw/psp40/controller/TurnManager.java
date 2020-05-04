@@ -129,7 +129,12 @@ public class TurnManager {
         List<Cell> availableCell;
         if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
             availableCell = currentTurn.getAvailableCellForBuild();
-            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_BUILD, availableCell));
+
+            HashMap<Cell, List<Integer>>  mapOfAvailableCell = new HashMap<>();
+            for (Cell cell: availableCell) {
+                mapOfAvailableCell.put(cell, currentTurn.getComponentsBuildable(cell));
+            }
+            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_BUILD, mapOfAvailableCell));
         }
     }
 

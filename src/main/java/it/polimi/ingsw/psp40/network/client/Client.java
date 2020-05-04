@@ -42,7 +42,7 @@ public class Client implements ServerObserver {
   private Location locationCache;
   private List<Player> playerListCache;
   private List<Cell> availableMoveCells;
-  private List<Cell> availableBuildCells;
+  private HashMap<Cell, List<Integer>> availableBuildCells;
 
 
 
@@ -232,7 +232,7 @@ public class Client implements ServerObserver {
         break;
 
       case AVAILABLE_CELL_FOR_BUILD:
-        availableBuildCells =  (List<Cell>) message.getPayload(new TypeToken<List<Cell>>() {}.getType());
+        availableBuildCells =  (HashMap<Cell, List<Integer>>) message.getPayload(new TypeToken<HashMap<Cell, List<Integer>>>() {}.getType());
         view.displayChoiceOfAvailableCellForBuild();
         break;
 
@@ -321,7 +321,7 @@ public class Client implements ServerObserver {
   public List<Cell> getAvailableMoveCells() {
     return availableMoveCells;
   }
-  public List<Cell> getAvailableBuildCells() {
+  public HashMap<Cell, List<Integer>> getAvailableBuildCells() {
     return availableBuildCells;
   }
 

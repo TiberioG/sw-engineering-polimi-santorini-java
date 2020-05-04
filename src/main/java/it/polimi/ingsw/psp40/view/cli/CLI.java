@@ -349,8 +349,9 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
-        List<int[]> availableCells = cellAdapter(client.getAvailableBuildCells()) ;
-        out.println("These are the cells available for move");
+        client.getAvailableBuildCells().keySet();
+        List<int[]> availableCells = cellAdapter(client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList()));
+        out.println("These are the cells available for build");
         availableCells.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
         displayBuildBlock();
     }
@@ -373,24 +374,25 @@ public class CLI implements ViewInterface {
     @Override
     public void displayBuildBlock(){
         out.println("what cell would you like to build in?");
-        List<Cell> availableCell = client.getAvailableBuildCells();
+        List<Cell> availableCell = client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList());
         Cell cellToBuild = null;
-        while (cellToBuild != null) {
+        while (cellToBuild == null) {
             int[] position = utils.readPosition(0,4);
             cellToBuild = availableCell.stream().filter(cell -> cell.getCoordX() == position[0] && cell.getCoordX() == position[1]).findFirst().orElse(null);
             if (cellToBuild == null) out.println("This cell is not valid! enter the coordinates of an available cell");
         }
 
-        /*out.println("Choose one of the following blocks to build:");
+        out.println("Choose one of the following blocks to build:");
 
+        List<Integer> listOfAvailableComponents = client.getAvailableBuildCells().get(cellToBuild);
+        List<String> listOfStringComponent = Arrays.asList(Component.allNames());
+        String[] nameOfAvailableComponents = listOfStringComponent.stream().filter(component -> listOfAvailableComponents.indexOf(component) != -1).toArray(String[]::new);
         try {
-            utils.singleTableCool("Blocks available", client.getAvailableMoveCells().allNames(), 100);
+            utils.singleTableCool("Blocks available", nameOfAvailableComponents, 100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
-        //int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
-        int componentCode = cellToBuild.getTower().getTopComponent().getComponentCode() + 1;
+        int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
         CoordinatesMessage buildCoord = new CoordinatesMessage(cellToBuild.getCoordX(), cellToBuild.getCoordY());
 
         client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(componentCode, buildCoord)));

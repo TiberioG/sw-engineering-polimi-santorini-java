@@ -101,6 +101,14 @@ public class Turn {
     }
 
     /**
+     * This method call the getComponentsBuildable of the strategyMove for retrieve the components available for specified cell
+     * @return an {@link List<Integer>} which rappresent the specified {@link Component}
+     */
+    public List<Integer> getComponentsBuildable(Cell cell) {
+        return this.strategyBuild.getComponentsBuildable(cell);
+    }
+
+    /**
      * This method call the build of the strategyBuild
      * @param component the component to build
      * @param cell the cell to build on
