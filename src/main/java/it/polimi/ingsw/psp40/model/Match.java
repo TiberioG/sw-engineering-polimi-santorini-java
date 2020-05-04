@@ -153,9 +153,10 @@ public class Match extends Publisher<Message> {
      * Method to translate the index of the currentPlayer to 0 translating all other players as well
      */
     public void rescaleListFromCurrentPlayer() {
-        if (listPlayers.indexOf(currentPlayer) > 0) {
-            List<Player> rescaledListOfPlayer = listPlayers.subList(listPlayers.indexOf(currentPlayer), listPlayers.size() - 1);
-            rescaledListOfPlayer.addAll(listPlayers.subList(0, listPlayers.indexOf(currentPlayer) - 1));
+        int indexOfCurrentPlayer = listPlayers.indexOf(currentPlayer);
+        if (indexOfCurrentPlayer > 0) {
+            List<Player> rescaledListOfPlayer = listPlayers.subList(indexOfCurrentPlayer, listPlayers.size());
+            rescaledListOfPlayer.addAll(listPlayers.subList(0, indexOfCurrentPlayer));
             listPlayers = rescaledListOfPlayer;
             publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         }

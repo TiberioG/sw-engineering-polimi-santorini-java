@@ -359,14 +359,15 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displayMoveWorker() {
-        int[] position;
-        List<int[]> available = cellAdapter(client.getAvailableMoveCells());
-        do{
-            out.println("Now you can mover your worker");
-            position = utils.readPosition(0,4);
-        } while (available.contains(position));
+        out.println("Now you can mover your worker");
+        Cell cellToMove = null;
+        while (cellToMove == null) {
+            int[] position = utils.readPosition(0,4);
+            cellToMove = client.getAvailableMoveCells().stream().filter(cell -> cell.getCoordX() == position[0] && cell.getCoordY() == position[1]).findFirst().orElse(null);
+            if (cellToMove == null) out.println("This cell is not valid! enter the coordinates of an available cell");
+        }
 
-        CoordinatesMessage moveCoord = new CoordinatesMessage(position[0], position[1]);
+        CoordinatesMessage moveCoord = new CoordinatesMessage(cellToMove.getCoordX(), cellToMove.getCoordY());
         client.sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
     }
 
@@ -378,7 +379,7 @@ public class CLI implements ViewInterface {
         Cell cellToBuild = null;
         while (cellToBuild == null) {
             int[] position = utils.readPosition(0,4);
-            cellToBuild = availableCell.stream().filter(cell -> cell.getCoordX() == position[0] && cell.getCoordX() == position[1]).findFirst().orElse(null);
+            cellToBuild = availableCell.stream().filter(cell -> cell.getCoordX() == position[0] && cell.getCoordY() == position[1]).findFirst().orElse(null);
             if (cellToBuild == null) out.println("This cell is not valid! enter the coordinates of an available cell");
         }
 
@@ -402,7 +403,7 @@ public class CLI implements ViewInterface {
         int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
         CoordinatesMessage buildCoord = new CoordinatesMessage(cellToBuild.getCoordX(), cellToBuild.getCoordY());
 
-        client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(componentCode, buildCoord)));
+        client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.valueOf(nameOfAvailableComponents[componentCode]), buildCoord)));
 
     }
 

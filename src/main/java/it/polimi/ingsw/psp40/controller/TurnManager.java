@@ -219,6 +219,7 @@ public class TurnManager {
      */
     private void inizializedCurrentTurn() {
         match.getMatchProperties().resetAllParameter();
+        currentTurn.initializeTurn();
 
         //se non ci sono celle disponibili
         if (currentTurn.noAvailableCellForWorkers()) {
