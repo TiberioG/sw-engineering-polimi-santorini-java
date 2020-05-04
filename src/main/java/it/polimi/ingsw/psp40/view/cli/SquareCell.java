@@ -14,8 +14,9 @@ import java.io.IOException;
 public class SquareCell {
 
     private boolean worker;
+    private boolean tempWork;
     private Colors color;
-    private Colors tempWorkerColor;
+
     private int level;
     private final  static int len = 13;
     private final  static int hei = 7;
@@ -54,67 +55,66 @@ public class SquareCell {
     }
 
     public void setTempWorker(Colors color){
-        this.tempWorkerColor = color;
+        this.color = color;
+        this.tempWork = true;
+        //System.out.println("TENPWORKPOOO");
     }
 
     public void print(int startRow, int startCol) throws IOException, InterruptedException {
         this.startRow = startRow;
         this.startCol = startCol;
         //Terminal.noBuffer();
-        if (!worker) {
+        if (worker  || tempWork ) {
             if (level == 0) {
                 this.noWorkerL0();
+                this.yesWorker();
             } else if (level == 1) {       //white
                 this.noWorkerL0();
                 this.noWorkerL1();
+                this.yesWorker();
             } else if (level == 2) {       //light grey
                 this.noWorkerL0();
                 this.noWorkerL1();
                 this.noWorkerL2();
+                this.yesWorker();
             } else if (level == 3) {      //dark grey
                 this.noWorkerL0();
                 this.noWorkerL1();
                 this.noWorkerL2();
                 this.noWorkerL3();
+                this.yesWorker();
             } else if (level == 4) {      //blue
                 this.noWorkerL0();
                 this.noWorkerL1();
                 this.noWorkerL2();
                 this.noWorkerL3();
                 this.noWorkerL4();
+                this.yesWorker();
             }
+
         }
         else{
             if (level == 0) {
                 this.noWorkerL0();
-                this.yesWorker();
             } else if (level == 1) {       //white
                 this.noWorkerL0();
                 this.noWorkerL1();
-                this.yesWorker();
             } else if (level == 2) {       //light grey
                 this.noWorkerL0();
                 this.noWorkerL1();
                 this.noWorkerL2();
-                this.yesWorker();
             } else if (level == 3) {      //dark grey
                 this.noWorkerL0();
                 this.noWorkerL1();
                 this.noWorkerL2();
                 this.noWorkerL3();
-                this.yesWorker();
             } else if (level == 4) {      //blue
                 this.noWorkerL0();
                 this.noWorkerL1();
                 this.noWorkerL2();
                 this.noWorkerL3();
                 this.noWorkerL4();
-                this.yesWorker();
             }
-        }
-
-        if(tempWorkerColor != null){
-            this.yesWorkerTemp();
         }
 
 
@@ -135,9 +135,6 @@ public class SquareCell {
         this.startCol = startCol;
        this.coordinates(row, col);
     }
-
-
-
 
 
     private void noWorkerL0 () throws IOException, InterruptedException {
@@ -198,17 +195,6 @@ public class SquareCell {
         }
     }
 
-
-    private void yesWorkerTemp () throws IOException, InterruptedException {
-        for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
-            Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
-            for (int j = 0; j < len - 6 ; j++){
-                if (i == j) {
-                    System.out.print(tempWorkerColor.getAnsiCode() + "   ▙");
-                }
-            }
-        }
-    }
 
 
     private void coordinates (int row, int col) throws IOException, InterruptedException {

@@ -56,7 +56,8 @@ public class IslandAdapter {
      * @throws InterruptedException
      */
     void print() throws IOException, InterruptedException {
-        //Terminal.noBuffer();
+        Terminal.noBuffer();
+        Terminal.hideCursor();
         int initRow = cursor[0];
         int initCol = cursor[1];
 
@@ -83,12 +84,16 @@ public class IslandAdapter {
 
 
     void setSelected(int r, int c) {
+      clearSelected();
+      matrix[r][c].setSelected(true);
+    }
+
+    void clearSelected() {
         for (SquareCell[] squareCells : matrix) {
             for (int col = 0; col < matrix.length; col++) {
                 squareCells[col].setSelected(false);
             }
         }
-        matrix[r][c].setSelected(true);
     }
 
     void setWorker(int r, int c, Colors color) {
@@ -97,6 +102,7 @@ public class IslandAdapter {
 
 
     public void setMovable (List<Cell> availableCells ) {
+        matrix[1][1].setMovable(true);
         for (Cell cell : availableCells) {
             for (int row = 0; row < matrix.length; row ++) {
                 for (int col = 0; col < matrix.length; col++) {

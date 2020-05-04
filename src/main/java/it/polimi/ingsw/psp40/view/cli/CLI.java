@@ -257,7 +257,7 @@ public class CLI implements ViewInterface {
             out.println("Now you can position your worker no. 1");
             position1 = utils.readPosition(0,4);
 
-        }while (occupy.contains(position1)); //todo debuggami
+        }while (contains(occupy, position1));
 
         do{
             out.println("Now you can position your worker no. 2");
@@ -265,7 +265,7 @@ public class CLI implements ViewInterface {
              if(Arrays.equals(position1, position2)){
                  out.println("You cannot use the same position");
              }
-        }while (occupy.contains(position2) || Arrays.equals(position2, position1));
+        }while (contains(occupy, position2) || Arrays.equals(position2, position1));
 
         List<CoordinatesMessage> workercord = new ArrayList<>();
 
@@ -386,7 +386,14 @@ public class CLI implements ViewInterface {
 
         List<Integer> listOfAvailableComponents = client.getAvailableBuildCells().get(cellToBuild);
         List<String> listOfStringComponent = Arrays.asList(Component.allNames());
-        String[] nameOfAvailableComponents = listOfStringComponent.stream().filter(component -> listOfAvailableComponents.indexOf(component) != -1).toArray(String[]::new);
+        //String[] nameOfAvailableComponents = listOfStringComponent.stream().filter(component -> listOfAvailableComponents.indexOf(component) != -1).toArray(String[]::new);
+
+        //mia versione più brutta ma funziona
+        String[] nameOfAvailableComponents = new String[listOfAvailableComponents.size()];
+        for(int i=0; i<listOfAvailableComponents.size(); i++){
+            nameOfAvailableComponents[i] = listOfStringComponent.get(listOfAvailableComponents.get(i));
+        }
+
         try {
             utils.singleTableCool("Blocks available", nameOfAvailableComponents, 100);
         } catch (InterruptedException e) {
@@ -455,6 +462,18 @@ public class CLI implements ViewInterface {
             coord = cellList.stream().map(Cell::getCoordXY).collect(Collectors.toList());
         }
         return coord;
+    }
+
+
+    private boolean contains (List<int[]> lista, int[] candidate){
+        boolean bool = false;
+        for(int i= 0; i< lista.size(); i++){
+            if(lista.get(i)[0] == candidate[0] && lista.get(i)[1] == candidate[1]){
+                bool = true;
+            }
+        }
+
+        return bool;
     }
 }
 
