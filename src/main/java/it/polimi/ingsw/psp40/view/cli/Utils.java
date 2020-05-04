@@ -75,6 +75,7 @@ public class Utils {
             }
             number = in.nextInt();
         } while (number < min || number > max);
+        in.nextLine();
         return number;
     }
 
@@ -188,7 +189,7 @@ public class Utils {
         String input;
         do {
             input = in.nextLine(); //todo non capisco perchè la prima volta mi leggel la linea vuota, mi aiutate pliz?
-            while (!input.matches("([0-9]),([0-9])")) {
+            while (!input.matches("([" + min + "-" + max + "]),([" + min + "-" + max + "])")) {
                 out.println("This is not an allowed coordinate");
                 input = in.nextLine();
             }

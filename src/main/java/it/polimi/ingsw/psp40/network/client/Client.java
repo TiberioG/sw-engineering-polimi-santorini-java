@@ -41,7 +41,8 @@ public class Client implements ServerObserver {
   private Cell[][] fieldCache;
   private Location locationCache;
   private List<Player> playerListCache;
-
+  private List<Cell> availableMoveCells;
+  private List<Cell> availableBuildCells;
 
 
 
@@ -230,14 +231,10 @@ public class Client implements ServerObserver {
         view.displayChoiceOfAvailableCellForMove();
         break;
 
-      case BUILD_CELL:
-        view.displayBuildBlock();
+      case AVAILABLE_CELL_FOR_BUILD:
+        availableBuildCells =  (List<Cell>) message.getPayload(new TypeToken<List<Cell>>() {}.getType());
+        view.displayChoiceOfAvailableCellForBuild();
         break;
-
-      case MOVE_WORKER:
-        view.displayMoveWorker();
-        break;
-
 
       default:
         break;
@@ -323,6 +320,9 @@ public class Client implements ServerObserver {
 
   public List<Cell> getAvailableMoveCells() {
     return availableMoveCells;
+  }
+  public List<Cell> getAvailableBuildCells() {
+    return availableBuildCells;
   }
 
   //todo local check

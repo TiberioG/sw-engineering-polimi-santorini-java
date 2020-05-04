@@ -33,8 +33,9 @@ public interface ViewInterface {
     void displayChoiceOfAvailablePhases(List<Phase> phaseList);
     void displayChoiceOfAvailableCellForMove();
     void displayChoiceSelectionOfWorker();
+    void displayChoiceOfAvailableCellForBuild();
     void displayMoveWorker();
-    public void displayBuildBlock();
+    void displayBuildBlock();
 }
 
 

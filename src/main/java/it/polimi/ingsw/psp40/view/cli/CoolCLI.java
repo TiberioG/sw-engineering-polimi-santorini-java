@@ -412,6 +412,10 @@ public class CoolCLI implements ViewInterface {
 
     }
 
+    @Override
+    public void displayChoiceOfAvailableCellForBuild() {
+
+    }
 
 
 

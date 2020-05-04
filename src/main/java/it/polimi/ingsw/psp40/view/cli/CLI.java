@@ -299,10 +299,8 @@ public class CLI implements ViewInterface {
             selectedPhase = phaseList.get(0);
             out.println("there is only available this phase: " + selectedPhase.getType().toString());
         } else {
-            String[] phases = new String[phaseList.size()];
-            for (int i = 0; i < phaseList.size(); i++) {
-                phases[i] = phaseList.get(i).toString();
-            }
+            String[] phases = phaseList.stream().map(phase -> phase.getType().toString()).toArray(String[]::new);
+
             try {
                 utils.singleTableCool("Phases available", phases, 100 );
             } catch (InterruptedException e) {
@@ -319,6 +317,9 @@ public class CLI implements ViewInterface {
                 break;
             case MOVE_WORKER:
                 client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+                break;
+            case BUILD_COMPONENT:
+                client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
                 break;
         }
     }
@@ -340,27 +341,29 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-        List<int[]> available = cellAdapter(client.getAvailableMoveCells()) ;
-
+        List<int[]> availableCells = cellAdapter(client.getAvailableMoveCells()) ;
         out.println("These are the cells available for move");
-        for(int i= 0; i<available.size(); i++){
-            out.println(available.get(i)[0] + "," + available.get(i)[1] );
-        }
+        availableCells.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
+        displayMoveWorker();
+    }
 
-
+    @Override
+    public void displayChoiceOfAvailableCellForBuild() {
+        List<int[]> availableCells = cellAdapter(client.getAvailableBuildCells()) ;
+        out.println("These are the cells available for move");
+        availableCells.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
+        displayBuildBlock();
     }
 
 
     @Override
     public void displayMoveWorker() {
         int[] position;
-
-        List<int[]> available = cellAdapter(client.getAvailableMoveCells()) ;
+        List<int[]> available = cellAdapter(client.getAvailableMoveCells());
         do{
             out.println("Now you can mover your worker");
             position = utils.readPosition(0,4);
-
-        }while (available.contains(position));
+        } while (available.contains(position));
 
         CoordinatesMessage moveCoord = new CoordinatesMessage(position[0], position[1]);
         client.sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
@@ -369,23 +372,28 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displayBuildBlock(){
-        int[] position;
-        out.println("Choose one of the following blocks to build:");
+        out.println("what cell would you like to build in?");
+        List<Cell> availableCell = client.getAvailableBuildCells();
+        Cell cellToBuild = null;
+        while (cellToBuild != null) {
+            int[] position = utils.readPosition(0,4);
+            cellToBuild = availableCell.stream().filter(cell -> cell.getCoordX() == position[0] && cell.getCoordX() == position[1]).findFirst().orElse(null);
+            if (cellToBuild == null) out.println("This cell is not valid! enter the coordinates of an available cell");
+        }
+
+        /*out.println("Choose one of the following blocks to build:");
 
         try {
-            utils.singleTableCool("Blocks available", Component.allNames(), 100);
+            utils.singleTableCool("Blocks available", client.getAvailableMoveCells().allNames(), 100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        */
+        //int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
+        int componentCode = cellToBuild.getTower().getTopComponent().getComponentCode() + 1;
+        CoordinatesMessage buildCoord = new CoordinatesMessage(cellToBuild.getCoordX(), cellToBuild.getCoordY());
 
-        int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
-
-        out.println("Now you can mover your worker");
-        position = utils.readPosition(0,4);
-        CoordinatesMessage buildCoord = new CoordinatesMessage(position[0], position[1]);
-
-        TuplaGenerics<Component, CoordinatesMessage> message = new TuplaGenerics<>(Component.valueOf(Component.allNames()[componentCode]), buildCoord);
-
+        client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(componentCode, buildCoord)));
 
     }
 
@@ -435,7 +443,7 @@ public class CLI implements ViewInterface {
 
 
     /**
-     * This private method is used to convert a list of Cells into a list of thei location as arrays of CoordX,CoordY
+     * This private method is used to convert a list of Cells into a list of their location as arrays of CoordX,CoordY
      * @param cellList
      * @return
      */
