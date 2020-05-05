@@ -11,6 +11,7 @@ import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.cli.CLI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
+import javafx.application.Application;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -24,6 +25,10 @@ public class Client implements ServerObserver {
 
 
   /* Attributes */
+
+  // todo rimuovere quelli in CLI
+  public static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
+  public static final int MAX_PORT = 50000;
 
   private ViewInterface view;
 
@@ -56,8 +61,7 @@ public class Client implements ServerObserver {
 
   public static void main( String[] args )
   {
-    Client client = new Client();
-    boolean cli = true;
+    boolean cli = false;
 
     if (args.length > 0) {
 
@@ -76,15 +80,16 @@ public class Client implements ServerObserver {
     }
 
     if (cli) {
+      Client client = new Client();
       CLI view = new CLI(client);
       //CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }
 
-    /*else {
+    else {
       Application.launch(GUI.class, args);
-    }*/
+    }
 
   }
 

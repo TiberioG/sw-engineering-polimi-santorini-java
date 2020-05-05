@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.network.client.Client;
 
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -429,6 +430,10 @@ public class Utils {
 
     public static boolean isValidIp(String input) {
         return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
+    }
+
+    public static boolean isValidPort(Integer input) {
+        return (input >= Client.MIN_PORT && input <= Client.MAX_PORT);
     }
 
 

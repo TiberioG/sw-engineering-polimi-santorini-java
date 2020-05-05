@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="setup-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.SetupScreenController">
+   <children>
+      <ImageView fitHeight="131.0" fitWidth="411.0" layoutX="394.0" layoutY="49.0" opacity="0.85" pickOnBounds="true">
+         <image>
+            <Image url="@../images/santorini-logo.png" />
+         </image></ImageView>
+      <VBox alignment="CENTER" layoutX="455.0" layoutY="218.0" prefHeight="364.0" prefWidth="290.0" spacing="50.0">
+         <children>
+            <TextField fx:id="ipAddressTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#ipAddressChanged" prefHeight="30.0" promptText="IP Address" />
+            <TextField fx:id="portTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#portChanged" prefHeight="30.0" promptText="Port" />
+            <Button fx:id="connectButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleConnectButton" prefWidth="124.0" styleClass="connect-button" text="Connect" textAlignment="CENTER">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
+         </children></VBox>
+   </children>
+</AnchorPane>

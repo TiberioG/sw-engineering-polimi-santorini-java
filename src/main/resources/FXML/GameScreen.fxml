@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="1000.0" prefWidth="1200.0" styleClass="game-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.GameScreenController">
+   <children>
+      <ImageView fx:id="island_dx" fitHeight="706.0" fitWidth="1053.0" layoutX="74.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/island_dx.png" />
+         </image></ImageView>
+      <ImageView fx:id="island_sx" fitHeight="706.0" fitWidth="1053.0" layoutX="60.0" layoutY="246.0" pickOnBounds="true" preserveRatio="true" rotate="-1.0" visible="false">
+         <image>
+            <Image url="@../images/island_sx.png" />
+         </image>
+      </ImageView>
+      <Pane fx:id="myPane_sx" layoutX="507.0" layoutY="315.0" prefHeight="200.0" prefWidth="186.0" rotate="-1.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="-50.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="-101.5">
+               <image>
+                  <Image url="@../images/level2_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="-117.5">
+               <image>
+                  <Image url="@../images/level3_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="106.5">
+               <image>
+                  <Image url="@../images/level2_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
+               <image>
+                  <Image url="@../images/level3_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="332.0" y="158.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="347.0" y="106.5">
+               <image>
+                  <Image url="@../images/level2_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="347.0" y="90.5">
+               <image>
+                  <Image url="@../images/level3_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="366.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="314.5">
+               <image>
+                  <Image url="@../images/level2_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="298.5">
+               <image>
+                  <Image url="@../images/level3_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="-11.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" visible="false" x="352.0" y="160.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="-3.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" visible="false" y="370.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="4.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" visible="false" x="-352.0" y="160.0">
+               <image>
+                  <Image url="@../images/level1_sx.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane fx:id="myPane_dx" layoutX="511.0" layoutY="310.0" prefHeight="200.0" prefWidth="186.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
+               <image>
+                  <Image url="@../images/level1_dx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="14.5" y="94.0">
+               <image>
+                  <Image url="@../images/level2_dx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true" visible="false" x="17.0" y="75.0">
+               <image>
+                  <Image url="@../images/level3_dx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
+               <image>
+                  <Image url="@../images/level1_dx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="106.5">
+               <image>
+                  <Image url="@../images/level2_dx.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
+               <image>
+                  <Image url="@../images/level3_dx.png" />
+               </image>
+            </ImageView>
+         </children></Pane>
+      <Circle fx:id="originLeft" fill="DODGERBLUE" layoutX="179.0" layoutY="571.0" opacity="0.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="originUpper" fill="DODGERBLUE" layoutX="589.0" layoutY="311.0" opacity="0.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="originRight" fill="DODGERBLUE" layoutX="1009.0" layoutY="564.0" opacity="0.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="originBottom" fill="DODGERBLUE" layoutX="599.0" layoutY="828.0" opacity="0.0" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
+      <Button fx:id="rightViewButton" layoutX="151.0" layoutY="31.0" mnemonicParsing="false" onAction="#rightViewButtonClicked" text="Right" />
+      <Button fx:id="leftViewButton" layoutX="48.0" layoutY="31.0" mnemonicParsing="false" onAction="#leftViewButtonClicked" text="Left" />
+      <Button fx:id="topViewButton" layoutX="97.0" layoutY="31.0" mnemonicParsing="false" onAction="#topViewButtonClicked" text="Top" />
+   </children>
+</AnchorPane>
