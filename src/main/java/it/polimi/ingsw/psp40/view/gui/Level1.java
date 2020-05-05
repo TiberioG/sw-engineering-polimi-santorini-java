@@ -12,7 +12,7 @@ public class Level1 extends Block {
         this(row, col, GUIProperties.CameraType.RIGHT);
     }
 
-    Level1(int row, int col, GUIProperties.CameraType cameraType) {
+    private Level1(int row, int col, GUIProperties.CameraType cameraType) {
         super(row, col, 1);
         this.setPreserveRatio(true);
         this.setFitWidth(GUIProperties.level1Width);
@@ -30,11 +30,11 @@ public class Level1 extends Block {
     void loadImage(GUIProperties.CameraType cameraType) {
         switch (cameraType) {
             case RIGHT:
-                this.setImage(new Image(getClass().getResource("/images/level1_dx.png").toString()));
+                this.setImage(GUIProperties.image_level1_dx);
                 break;
 
             case LEFT:
-                this.setImage(new Image(getClass().getResource("/images/level1_sx.png").toString()));
+                this.setImage(GUIProperties.image_level1_sx);
                 break;
 
             case TOP:

@@ -48,6 +48,11 @@ public class GameScreenController {
     private Button topViewButton;
 
     @FXML
+    public Button placeWorkerButton;
+    @FXML
+    public Button moveButton;
+
+    @FXML
     private Pane myPane_dx;
     @FXML
     private Pane myPane_sx;
@@ -60,9 +65,13 @@ public class GameScreenController {
 
     private static final List<Block> levels_dx = new ArrayList<>();
     private static final List<Block> levels_sx = new ArrayList<>();
-    
+
     private static Map map_dx;
     private static Map map_sx;
+
+    private static boolean wantMove = false;
+    private static boolean wantPlaceWorker = false;
+    private static Worker selectedWorker = null;
 
     /* Methods */
 
@@ -72,11 +81,13 @@ public class GameScreenController {
         levelsMap_dx.put(1, new ArrayList<>());
         levelsMap_dx.put(2, new ArrayList<>());
         levelsMap_dx.put(3, new ArrayList<>());
+        levelsMap_dx.put(4, new ArrayList<>());
 
         levelsMap_sx.put(0, new ArrayList<>());
         levelsMap_sx.put(1, new ArrayList<>());
         levelsMap_sx.put(2, new ArrayList<>());
         levelsMap_sx.put(3, new ArrayList<>());
+        levelsMap_sx.put(4, new ArrayList<>());
 
         map_dx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.RIGHT);
         map_sx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.LEFT);
@@ -91,11 +102,23 @@ public class GameScreenController {
 
     // todo implementare fase --> build o move
     public static void blockClicked(int x, int y, int z) {
-        System.out.println("Clicked: "+ x + ", " + y + ", " + z);
-       if(z == 0) {
+       System.out.println("Clicked: "+ x + ", " + y + ", " + z);
+       if(selectedWorker != null && wantMove) {
+           if(z != 4)
+            moveWorker(x, y, z);
+       }
+       else if(wantPlaceWorker) {
+           if(z == 0) {
+               Worker worker = new Worker(x, y);
+               wantPlaceWorker = false;
+               addAndRefresh(worker);
+           }
+       }
+       else if(z == 0) {
            Level1 level1 = new Level1(x, y);
            addAndRefresh(level1);
        }
+
        else if (z == 1) {
            Level2 level2 = new Level2(x, y);
            addAndRefresh(level2);
@@ -105,6 +128,44 @@ public class GameScreenController {
            Level3 level3 = new Level3(x, y);
            addAndRefresh(level3);
        }
+
+       else if (z == 3) {
+           Dome dome = new Dome(x, y);
+           addAndRefresh(dome);
+       }
+    }
+
+    public static void workerClicked(Worker worker) {
+        System.out.println("Worker clicked! " + worker.row + ", " + worker.col + ", " + worker.z);
+        selectedWorker = worker.copy();
+    }
+
+    private static void moveWorker(int x, int y, int z) {
+        moveWorkerInView(x, y , z, levels_dx); // no per favore no! Fare più dinamico!!
+        moveWorkerInView(x, y , z, levels_sx);
+        selectedWorker = null;
+        wantMove = false;
+        refresh();
+    }
+
+    // BRRR brividi questa funzione
+    private static void moveWorkerInView(int x, int y, int z, List<Block> levels) {
+        levels.forEach( level -> {
+            if(level instanceof Worker) { // OH DIO NO!
+                if(level.row == selectedWorker.row && level.col == selectedWorker.col && level.z == selectedWorker.z)
+                    ((Worker) level).move(x, y, z);
+            }
+        });
+    }
+
+    @FXML
+    public void placeWorkerButtonClicked(ActionEvent actionEvent) {
+        wantPlaceWorker = true;
+    }
+
+    @FXML
+    public void moveButtonClicked(ActionEvent actionEvent) {
+        wantMove = true;
     }
 
     private static void addAndRefresh(Block block) {
@@ -115,6 +176,10 @@ public class GameScreenController {
         levelsMap_sx.get(block.z).add(block_sx);
         levels_sx.add(block_sx);
 
+        refresh();
+    }
+
+    private static void refresh() {
         reorderLevels(levels_dx);
         reorderLevels(levels_sx);
 
@@ -253,4 +318,6 @@ public class GameScreenController {
     public void topViewButtonClicked(ActionEvent actionEvent) {
         // todo
     }
+
+
 }

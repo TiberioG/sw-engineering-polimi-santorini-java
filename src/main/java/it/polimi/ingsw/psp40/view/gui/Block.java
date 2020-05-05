@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
  * @author sup3rgiu
  */
 
-public abstract class Block extends ImageView implements Cloneable {
+public abstract class Block extends ImageView {
     protected int row;
     protected int col;
     protected int z;
@@ -32,11 +32,11 @@ public abstract class Block extends ImageView implements Cloneable {
     abstract Block copyAndSetCamera(GUIProperties.CameraType cameraType);
 
     protected void setXPosition(double x) {
-        this.setX( x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera) ); // fix X position depending on row and col values
+        this.setX( x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera) ); // fix X position depending row, col and CameraType values
     }
 
     protected void setYPosition(double y) {
-        this.setY( y + GUIProperties.getIncrementalFix_y(this.row, this.col, currentCamera) ); // fix Y position depending on row and col values
+        this.setY( y + GUIProperties.getIncrementalFix_y(this.row, this.col, currentCamera) ); // fix Y position depending row, col and CameraType values
     }
 
     protected final void setCamera(GUIProperties.CameraType cameraType) {
@@ -58,6 +58,8 @@ public abstract class Block extends ImageView implements Cloneable {
                     // todo
                     break;
             }
+            System.out.println("x: " + this.getX() + ", y:" + this.getY());
         }
     }
+
 }

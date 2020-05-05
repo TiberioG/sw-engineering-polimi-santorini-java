@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import javafx.scene.image.Image;
+
 /**
  * @author sup3rgiu
  */
@@ -32,11 +34,40 @@ public class GUIProperties {
     protected static double level3XFix = level2XFix ;
     protected static double level3YFix = level2YFix - 16;
 
+    protected static double domeWidth = 80;
+    protected static double domeHeight = blockHeight;
+    protected static double domeXFix = 26 ;
+    protected static double domeYFix = -11;
+
+    protected static double workerWidth = 80;
+    protected static double worker_lvl3_Width = 76;
+    protected static double workerHeight = blockHeight;
+
     protected enum CameraType {
         RIGHT, // DEFAULT/ABSOLUTE VIEW
         LEFT,
         TOP
     }
+
+    /* IMAGES */
+
+    protected static Image image_ground_dx = new Image(GUIProperties.class.getResource("/images/tile_dx.png").toString());
+    protected static Image image_ground_sx = new Image(GUIProperties.class.getResource("/images/tile_sx.png").toString());
+    protected static Image image_level1_dx = new Image(GUIProperties.class.getResource("/images/level1_dx.png").toString());
+    protected static Image image_level1_sx = new Image(GUIProperties.class.getResource("/images/level1_sx.png").toString());
+    protected static Image image_level2_dx = new Image(GUIProperties.class.getResource("/images/level2_dx.png").toString());
+    protected static Image image_level2_sx = new Image(GUIProperties.class.getResource("/images/level2_sx.png").toString());
+    protected static Image image_level3_dx = new Image(GUIProperties.class.getResource("/images/level3_dx.png").toString());
+    protected static Image image_level3_sx = new Image(GUIProperties.class.getResource("/images/level3_sx.png").toString());
+    protected static Image image_dome_dx = new Image(GUIProperties.class.getResource("/images/dome_dx.png").toString());
+    protected static Image image_dome_sx = new Image(GUIProperties.class.getResource("/images/dome_sx.png").toString());
+    protected static Image image_worker_dx = new Image(GUIProperties.class.getResource("/images/worker_dx.png").toString());
+    protected static Image image_worker_cut_dx = new Image(GUIProperties.class.getResource("/images/worker_cut_dx.png").toString());
+    protected static Image image_worker_cut_lvl3_dx = new Image(GUIProperties.class.getResource("/images/worker_cut_lvl3_dx.png").toString());
+    protected static Image image_worker_sx = new Image(GUIProperties.class.getResource("/images/worker_sx.png").toString());
+    protected static Image image_worker_cut_sx = new Image(GUIProperties.class.getResource("/images/worker_cut_sx.png").toString());
+    protected static Image image_worker_cut_lvl3_sx = new Image(GUIProperties.class.getResource("/images/worker_cut_lvl3_sx.png").toString());
+
 
       protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
         if(cameraType == CameraType.LEFT) {

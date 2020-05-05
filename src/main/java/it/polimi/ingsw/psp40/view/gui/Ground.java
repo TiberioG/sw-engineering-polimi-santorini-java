@@ -12,7 +12,7 @@ public class Ground extends Block {
         this(row, col, GUIProperties.CameraType.RIGHT);
     }
 
-    Ground(int row, int col, GUIProperties.CameraType cameraType) {
+    private Ground(int row, int col, GUIProperties.CameraType cameraType) {
         super(row, col, 0);
         this.setOpacity(0);
         this.setFitWidth(GUIProperties.tileWidth);
@@ -30,11 +30,11 @@ public class Ground extends Block {
     void loadImage(GUIProperties.CameraType cameraType) {
         switch (cameraType) {
             case RIGHT:
-                this.setImage(new Image(getClass().getResource("/images/tile_dx.png").toString()));
+                this.setImage(GUIProperties.image_ground_dx);
                 break;
 
             case LEFT:
-                this.setImage(new Image(getClass().getResource("/images/tile_sx.png").toString()));
+                this.setImage(GUIProperties.image_ground_sx);
                 break;
 
             case TOP:
