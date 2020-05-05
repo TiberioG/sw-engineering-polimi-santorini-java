@@ -102,7 +102,6 @@ public class IslandAdapter {
 
 
     public void setMovable (List<Cell> availableCells ) {
-        matrix[1][1].setMovable(true);
         for (Cell cell : availableCells) {
             for (int row = 0; row < matrix.length; row ++) {
                 for (int col = 0; col < matrix.length; col++) {

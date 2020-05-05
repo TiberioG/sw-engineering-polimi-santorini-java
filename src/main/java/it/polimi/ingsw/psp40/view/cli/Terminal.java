@@ -59,6 +59,11 @@ public class Terminal {
 
     }
 
+    public static void superClear(){
+        System.out.print("\u001b[3J"); //clear
+        System.out.print("\u001b[H"); //set cursor at top left
+        System.out.print("\u001b[J"); //clear
+    }
 
     public static void clearAll(){
         System.out.print("\u001b[3J"); //clear entire screen and delete all lines saved in the scrollback buffer

@@ -191,15 +191,19 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void displayChoiceOfAvailableCellForMove() {
+
+    }
+
+    @Override
     public void displayChoiceSelectionOfWorker() {
 
     }
 
     @Override
-    public void displayBuildBlock() {
+    public void displayChoiceOfAvailableCellForBuild() {
 
     }
-
 
     @Override
     public void displayMoveWorker() {
@@ -207,12 +211,7 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void displayChoiceOfAvailableCellForMove() {
-
-    }
-
-    @Override
-    public void displayChoiceOfAvailableCellForBuild() {
+    public void displayBuildBlock() {
 
     }
 }

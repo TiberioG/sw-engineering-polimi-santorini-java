@@ -60,6 +60,7 @@ public class CoolCLI implements ViewInterface {
         this.client = client;
         Terminal.resize(ROWS, COLS);
 
+        Terminal.superClear();
         Terminal.clearAll();
         Terminal.clearScreen();
         center.clear();
@@ -208,7 +209,7 @@ public class CoolCLI implements ViewInterface {
     public void displayStartingMatch() {
 
         left.clear();
-        out.println("MATCH IS STARTING!!!!");
+        left.println("MATCH IS STARTING!!!!");
     }
 
     @Override
@@ -328,14 +329,16 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+        List<int[]> occupy = cellAdapter(client.getLocationCache().getAllOccupied()) ;
 
         left.printWrapped("Use arrow keys to select where you want to position your worker, ehen selected press ENTER");
-        int[] work1 =position();
+        int[] work1 =position(occupy);
 
         left.clear();
         left.printWrapped("position your second worker with arrows, \n when done, press q");
 
-        int[] work2 = position();
+        occupy.add(work1);
+        int[] work2 = position(occupy);
         left.clear();
 
         List<CoordinatesMessage> workercord = new ArrayList<>();
@@ -424,6 +427,8 @@ public class CoolCLI implements ViewInterface {
         List<int[]> availableCellsCoord = cellAdapter(availableCells) ;
         left.println("These are the cells available for move");
         availableCellsCoord.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
+
+        displayMoveWorker();
     }
 
     /*
@@ -471,6 +476,8 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayMoveWorker() {
 
+        position(cellAdapter(client.getAvailableMoveCells()));
+
     }
 
     @Override
@@ -491,7 +498,7 @@ public class CoolCLI implements ViewInterface {
     }
 
 
-    private int[] position(){
+    private int[] position(List<int[]> occupied ){
         boolean debug = false;
         int curRow = 0;
         int curCol = 0;
@@ -503,10 +510,12 @@ public class CoolCLI implements ViewInterface {
 
                     //GETTING P to positiom
                     if (c == 112) {   // if press P -> quit this visualization
-                        myisland.setWorker(curRow, curCol, colorWorker);
-                        myisland.clearSelected();
-                        myisland.print();
-                        break;
+                        if (!contains(occupied, curRow, curCol)) {
+                            myisland.setWorker(curRow, curCol, colorWorker);
+                            myisland.clearSelected();
+                            myisland.print();
+                            break;
+                        }
                     }
 
                     //getting an ARROW KEY
@@ -560,9 +569,7 @@ public class CoolCLI implements ViewInterface {
         return new int[]{curRow, curCol};
     }
 
-
-
-    private int[] positionRestricted(int[] allowed){
+    private int[] positionAllowed(List<int[]> allowed ){
         boolean debug = false;
         int curRow = 0;
         int curCol = 0;
@@ -574,10 +581,11 @@ public class CoolCLI implements ViewInterface {
 
                     //GETTING P to positiom
                     if (c == 112) {   // if press P -> quit this visualization
-                        myisland.setWorker(curRow, curCol, colorWorker);
-                        myisland.clearSelected();
-                        myisland.print();
-                        break;
+                            myisland.setWorker(curRow, curCol, colorWorker);
+                            myisland.clearSelected();
+                            myisland.print();
+                            break;
+
                     }
 
                     //getting an ARROW KEY
@@ -586,19 +594,19 @@ public class CoolCLI implements ViewInterface {
                         int next2 = System.in.read();
                         if (next1 == 91) { //  read [
                             if (next2 == 65) {                     //UP  arrow
-                                if (curRow > 0 && curRow <= 5) {
+                                if (contains(allowed, curRow - 1, curCol)) {
                                     curRow--;
                                 }
                             } else if (next2 == 66) {              //DOWN arrow
-                                if (curRow >= 0 && curRow < 4) {
+                                if (contains(allowed, curRow + 1, curCol)) {
                                     curRow++;
                                 }
                             } else if (next2 == 67) {              //RIGHT arrow
-                                if (curCol >= 0 && curCol < 4) {
+                                if (contains(allowed, curRow , curCol + 1)) {
                                     curCol++;
                                 }
                             } else if (next2 == 68) {               //LEFT  arrow
-                                if (curCol > 0 && curCol <= 5) {
+                                if (contains(allowed, curRow, curCol- 1 )) {
                                     curCol--;
                                 }
                             }
@@ -716,7 +724,30 @@ public class CoolCLI implements ViewInterface {
         return workerInfo;
     }
 
+    private boolean contains (List<int[]> lista, int[] candidate){
+        boolean bool = false;
+        for (int[] ints : lista) {
+            if (ints[0] == candidate[0] && ints[1] == candidate[1]) {
+                bool = true;
+                break;
+            }
+        }
 
+        return bool;
+    }
+
+
+    private boolean contains (List<int[]> lista, int x, int y){
+        boolean bool = false;
+        for (int[] ints : lista) {
+            if (ints[0] == x && ints[1] == y) {
+                bool = true;
+                break;
+            }
+        }
+
+        return bool;
+    }
 
 
 }
