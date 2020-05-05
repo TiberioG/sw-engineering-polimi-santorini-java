@@ -1,0 +1,340 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TurnManager</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TurnManager (it.polimi.ingsw.psp40.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TurnManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,4%
+  </span>
+  <span class="absValue">
+    (17/ 18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    89,4%
+  </span>
+  <span class="absValue">
+    (76/ 85)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.Configuration;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.PhaseType;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
+<i>9</i>&nbsp;import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
+<i>10</i>&nbsp;import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
+<i>11</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.SantoriniException;
+<i>12</i>&nbsp;import it.polimi.ingsw.psp40.network.server.VirtualView;
+<i>13</i>&nbsp;import it.polimi.ingsw.psp40.model.*;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import java.lang.reflect.Constructor;
+<i>16</i>&nbsp;import java.util.HashMap;
+<i>17</i>&nbsp;import java.util.List;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;/**
+<i>21</i>&nbsp; * This class manage all operation of a turn of the current player of the match
+<i>22</i>&nbsp; * @author Vito96
+<i>23</i>&nbsp; */
+<i>24</i>&nbsp;public class TurnManager {
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /* Attributes */
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    private Match match;
+<i>29</i>&nbsp;    private VirtualView virtualView;
+<i>30</i>&nbsp;
+<b class="fc"><i>31</i>&nbsp;    private HashMap&lt;String, Turn&gt; turnsMap = new HashMap&lt;&gt;();</b>
+<i>32</i>&nbsp;    private Turn currentTurn;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /* Constructor(s) */
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    /**
+<i>37</i>&nbsp;     * Constructor to init turnManager&#39;s instance
+<i>38</i>&nbsp;     * @param match the match of the turn
+<i>39</i>&nbsp;     */
+<b class="fc"><i>40</i>&nbsp;    public TurnManager(Match match, VirtualView virtualView) {</b>
+<b class="fc"><i>41</i>&nbsp;        this.virtualView = virtualView;</b>
+<b class="fc"><i>42</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>43</i>&nbsp;        createTurns();</b>
+<i>44</i>&nbsp;        //richiamo la virtual view per notificargli l&#39;inizio del turno con le fasi disponibili
+<b class="fc"><i>45</i>&nbsp;    }</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**
+<i>48</i>&nbsp;     * Constructor for test
+<i>49</i>&nbsp;     */
+<b class="fc"><i>50</i>&nbsp;    public TurnManager(Match match) {</b>
+<b class="fc"><i>51</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>52</i>&nbsp;        createTurns();</b>
+<b class="fc"><i>53</i>&nbsp;    }</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /* Methods */
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * This method create and inizialize a turn for every player in the match
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    private void createTurns() {
+<b class="fc"><i>62</i>&nbsp;        for(Player player : match.getPlayers()) {</b>
+<b class="fc"><i>63</i>&nbsp;            Turn turn = new Turn(player);</b>
+<b class="fc"><i>64</i>&nbsp;            buildStrategies(turn);</b>
+<b class="fc"><i>65</i>&nbsp;            turnsMap.put(player.getName(), turn);</b>
+<b class="fc"><i>66</i>&nbsp;        }</b>
+<b class="fc"><i>67</i>&nbsp;        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());</b>
+<b class="fc"><i>68</i>&nbsp;        inizializedCurrentTurn();</b>
+<b class="fc"><i>69</i>&nbsp;    }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /**
+<i>72</i>&nbsp;     * This method create strategy instances using reflection
+<i>73</i>&nbsp;     * @param className the name of the class of the desired istance
+<i>74</i>&nbsp;     * @param types the class of the params for the costructor of the desired instance
+<i>75</i>&nbsp;     * @param parameters the parameters of the params for the constructor of the desired instance
+<i>76</i>&nbsp;     * @return the desidered istance
+<i>77</i>&nbsp;     * @throws Exception for errors while creating the instance
+<i>78</i>&nbsp;     */
+<i>79</i>&nbsp;    private Object createStrategyWithReflection(String className, Class[] types, Object[] parameters) throws Exception {
+<b class="fc"><i>80</i>&nbsp;        Class clazz = Class.forName(className);</b>
+<b class="fc"><i>81</i>&nbsp;        Constructor constructor =  clazz.getConstructor(types);</b>
+<b class="fc"><i>82</i>&nbsp;        return constructor.newInstance(parameters);</b>
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     * This method create set the strategy of the turn from the card of the current player
+<i>87</i>&nbsp;     * @param turn the turn to add strategy to it
+<i>88</i>&nbsp;     */
+<i>89</i>&nbsp;    private void buildStrategies(Turn turn) {
+<i>90</i>&nbsp;        //builder/factory
+<b class="fc"><i>91</i>&nbsp;        Card card = turn.getPlayer().getCurrentCard();</b>
+<i>92</i>&nbsp;        //use reflection
+<i>93</i>&nbsp;        try {
+<i>94</i>&nbsp;            //make this for all strategies
+<b class="fc"><i>95</i>&nbsp;            turn.setStrategyMove((StrategyMove) createStrategyWithReflection(Configuration.strategyMovePackage + &quot;.&quot; + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match}));</b>
+<b class="fc"><i>96</i>&nbsp;            turn.setStrategyBuild((StrategyBuild) createStrategyWithReflection(Configuration.strategyBuildPackage + &quot;.&quot; + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match}));</b>
+<b class="fc"><i>97</i>&nbsp;            turn.setStrategyWin((StrategyWin) createStrategyWithReflection(Configuration.strategyWinPackage + &quot;.&quot; + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match}));</b>
+<b class="nc"><i>98</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>99</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>100</i>&nbsp;        }</b>
+<b class="fc"><i>101</i>&nbsp;    }</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    /**
+<i>104</i>&nbsp;     * This method call the getAvailableCellForMove method of the strategyMove of the current turn and update the virtualView with a message which contains the available cells
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;    public void getAvailableCellForMove() {
+<b class="fc"><i>107</i>&nbsp;        List&lt;Cell&gt; availableCell = null;</b>
+<b class="fc"><i>108</i>&nbsp;        if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {</b>
+<b class="fc"><i>109</i>&nbsp;            availableCell = currentTurn.getAvailableCellForMove();</b>
+<b class="fc"><i>110</i>&nbsp;            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_MOVE, availableCell));</b>
+<i>111</i>&nbsp;        }
+<b class="fc"><i>112</i>&nbsp;    }</b>
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    /**
+<i>115</i>&nbsp;     * This method call the move method of the strategyMove of the current turn and and call the updateCurrentPhase method to update the current phase
+<i>116</i>&nbsp;     * @param cell the cell destination of the selectedWorker
+<i>117</i>&nbsp;     */
+<i>118</i>&nbsp;    public void move(Cell cell) throws SantoriniException {
+<b class="fc"><i>119</i>&nbsp;        if (checkForPermittedPhase(PhaseType.MOVE_WORKER)) {</b>
+<b class="fc"><i>120</i>&nbsp;            currentTurn.move(cell);</b>
+<b class="fc"><i>121</i>&nbsp;            updateCurrentPhase(PhaseType.MOVE_WORKER);</b>
+<i>122</i>&nbsp;        }
+<b class="fc"><i>123</i>&nbsp;    }</b>
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;    /**
+<i>126</i>&nbsp;     * This method call the getAvailableCellForBuild method of the strategyMove of the current turn and update the virtualView with a message which contains the available cells
+<i>127</i>&nbsp;     */
+<i>128</i>&nbsp;    public void getAvailableCellForBuild() {
+<i>129</i>&nbsp;        List&lt;Cell&gt; availableCell;
+<b class="fc"><i>130</i>&nbsp;        if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {</b>
+<b class="fc"><i>131</i>&nbsp;            availableCell = currentTurn.getAvailableCellForBuild();</b>
+<i>132</i>&nbsp;
+<b class="fc"><i>133</i>&nbsp;            HashMap&lt;Cell, List&lt;Integer&gt;&gt;  mapOfAvailableCell = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>134</i>&nbsp;            for (Cell cell: availableCell) {</b>
+<b class="fc"><i>135</i>&nbsp;                mapOfAvailableCell.put(cell, currentTurn.getComponentsBuildable(cell));</b>
+<b class="fc"><i>136</i>&nbsp;            }</b>
+<b class="fc"><i>137</i>&nbsp;            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_BUILD, mapOfAvailableCell));</b>
+<i>138</i>&nbsp;        }
+<b class="fc"><i>139</i>&nbsp;    }</b>
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * This method call the build method of the strategyBuild of the current turn and and call the updateCurrentPhase method to update the current phase
+<i>143</i>&nbsp;     * @param component the component to build on the selected cell
+<i>144</i>&nbsp;     * @param cell the cell where to build the component
+<i>145</i>&nbsp;     */
+<i>146</i>&nbsp;    public void build(Component component, Cell cell) throws SantoriniException {
+<b class="fc"><i>147</i>&nbsp;        if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {</b>
+<b class="fc"><i>148</i>&nbsp;            currentTurn.build(component, cell);</b>
+<b class="fc"><i>149</i>&nbsp;            updateCurrentPhase(PhaseType.BUILD_COMPONENT);</b>
+<i>150</i>&nbsp;        }
+<b class="fc"><i>151</i>&nbsp;    }</b>
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * This method call the checkWin method of the strategyWin of the current turn and update the virtualView with a message for notify the winning
+<i>155</i>&nbsp;     */
+<i>156</i>&nbsp;    public void checkWin() {
+<b class="nc"><i>157</i>&nbsp;        if (currentTurn.checkWin()) {</b>
+<i>158</i>&nbsp;            // todo chiamare la view
+<i>159</i>&nbsp;        }
+<b class="nc"><i>160</i>&nbsp;    }</b>
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    /**
+<i>163</i>&nbsp;     * This method check if the list of the next phases contains the phase type in the param
+<i>164</i>&nbsp;     * @param type the type of phase to check
+<i>165</i>&nbsp;     * @return a boolean which indicate if the next phases list contains the phase in the param
+<i>166</i>&nbsp;     */
+<i>167</i>&nbsp;    private Boolean checkForPermittedPhase(PhaseType type) {
+<b class="fc"><i>168</i>&nbsp;        return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -&gt; phase.getType().equals(type));</b>
+<i>169</i>&nbsp;    }
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    /*
+<i>172</i>&nbsp;    public List&lt;Phase&gt; getNextPhases() {
+<i>173</i>&nbsp;        return currentTurn.getCurrentPhase().getNextPhases();
+<i>174</i>&nbsp;    }
+<i>175</i>&nbsp;    */
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    /**
+<i>178</i>&nbsp;     * This method call the setSelectedWorker method of the current turn and update the virtual view with a message which contains the next phase available
+<i>179</i>&nbsp;     * @param worker the worker to select
+<i>180</i>&nbsp;     */
+<i>181</i>&nbsp;    public void selectWorker(Worker worker) {
+<b class="fc"><i>182</i>&nbsp;        if (currentTurn.getCurrentPhase().getType().equals(PhaseType.SELECT_WORKER)) {</b>
+<b class="fc"><i>183</i>&nbsp;            currentTurn.setSelectedWorker(worker);</b>
+<b class="fc"><i>184</i>&nbsp;            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));</b>
+<i>185</i>&nbsp;        }
+<b class="fc"><i>186</i>&nbsp;    }</b>
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    /**
+<i>189</i>&nbsp;     * This method update the currentPhase with the phase of the same type in the nextPhases list with a check if the player has won or if the turn is over
+<i>190</i>&nbsp;     * @param type the type of the phase to update
+<i>191</i>&nbsp;     */
+<i>192</i>&nbsp;    private void updateCurrentPhase(PhaseType type) {
+<b class="fc"><i>193</i>&nbsp;        if (currentTurn.getCurrentPhase().getNeedCheckForVictory() &amp;&amp; currentTurn.checkWin()) {</b>
+<i>194</i>&nbsp;            //richiamare la virtualview notificando la vittoria
+<i>195</i>&nbsp;        }
+<i>196</i>&nbsp;
+<b class="fc"><i>197</i>&nbsp;        currentTurn.updateCurrentPhaseFromType(type);</b>
+<b class="fc"><i>198</i>&nbsp;        match.getMatchProperties().getPerformedPhases().add(type);</b>
+<b class="fc"><i>199</i>&nbsp;        if (currentTurn.getCurrentPhase().getNextPhases() == null) {</b>
+<i>200</i>&nbsp;            //richiamare la virtual view per notificare la fine del turno
+<i>201</i>&nbsp;            //seleziono il prossimo turno
+<b class="fc"><i>202</i>&nbsp;            selectNextTurn();</b>
+<i>203</i>&nbsp;        } else {
+<b class="fc"><i>204</i>&nbsp;            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));</b>
+<i>205</i>&nbsp;        }
+<b class="fc"><i>206</i>&nbsp;    }</b>
+<i>207</i>&nbsp;
+<i>208</i>&nbsp;    /**
+<i>209</i>&nbsp;     * This method update the current player of the match and consequently makes his turn as the current turn
+<i>210</i>&nbsp;     */
+<i>211</i>&nbsp;    private void selectNextTurn() {
+<b class="fc"><i>212</i>&nbsp;        match.selectNextCurrentPlayer();</b>
+<b class="fc"><i>213</i>&nbsp;        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());</b>
+<b class="fc"><i>214</i>&nbsp;        inizializedCurrentTurn();</b>
+<b class="fc"><i>215</i>&nbsp;    }</b>
+<i>216</i>&nbsp;
+<i>217</i>&nbsp;    /**
+<i>218</i>&nbsp;     * this method initializes the current round by resetting the match properties related to the rounds and checking a player&#39;s loss, also notifies the virtual view of the start of the turn
+<i>219</i>&nbsp;     */
+<i>220</i>&nbsp;    private void inizializedCurrentTurn() {
+<b class="fc"><i>221</i>&nbsp;        match.getMatchProperties().resetAllParameter();</b>
+<b class="fc"><i>222</i>&nbsp;        currentTurn.initializeTurn();</b>
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;        //se non ci sono celle disponibili
+<b class="fc"><i>225</i>&nbsp;        if (currentTurn.noAvailableCellForWorkers()) {</b>
+<i>226</i>&nbsp;            // todo ricordarsi di gestire atena
+<b class="nc"><i>227</i>&nbsp;            String name = this.match.getCurrentPlayer().getName();</b>
+<b class="nc"><i>228</i>&nbsp;            turnsMap.remove(name);</b>
+<b class="nc"><i>229</i>&nbsp;            match.removePlayer(name);</b>
+<i>230</i>&nbsp;            //notificare la perdità e gestire il caso che rimanga solo un giocatore
+<b class="nc"><i>231</i>&nbsp;            selectNextTurn();</b>
+<b class="nc"><i>232</i>&nbsp;        } else {</b>
+<b class="fc"><i>233</i>&nbsp;            getCurrentPlayer().getWorkers().forEach(worker -&gt; {</b>
+<b class="fc"><i>234</i>&nbsp;                match.getMatchProperties().getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));</b>
+<b class="fc"><i>235</i>&nbsp;                match.getMatchProperties().getInitialLevels().put(worker, this.match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode());</b>
+<b class="fc"><i>236</i>&nbsp;            });</b>
+<b class="fc"><i>237</i>&nbsp;            updateVirtualView(new Message(currentTurn.getPlayer().getName(), TypeOfMessage.INIT_TURN, currentTurn.getCurrentPhase()));</b>
+<i>238</i>&nbsp;        }
+<b class="fc"><i>239</i>&nbsp;    }</b>
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    /**
+<i>242</i>&nbsp;     * this method return the player of the current turn
+<i>243</i>&nbsp;     * @return the player of the current turn
+<i>244</i>&nbsp;     */
+<i>245</i>&nbsp;    public Player getCurrentPlayer() {
+<b class="fc"><i>246</i>&nbsp;        return currentTurn.getPlayer();</b>
+<i>247</i>&nbsp;    }
+<i>248</i>&nbsp;
+<i>249</i>&nbsp;    /**
+<i>250</i>&nbsp;     * this method call the displayMessage of the virtualView
+<i>251</i>&nbsp;     * @param message the message to sent
+<i>252</i>&nbsp;     */
+<i>253</i>&nbsp;    private void updateVirtualView(Message message) {
+<b class="fc"><i>254</i>&nbsp;        if (virtualView != null) virtualView.displayMessage(message);</b>
+<b class="fc"><i>255</i>&nbsp;    }</b>
+<i>256</i>&nbsp;
+<i>257</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-05 14:25</div>
+</div>
+</body>
+</html>

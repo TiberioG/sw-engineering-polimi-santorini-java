@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PushEnemyWorker</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.controller.strategies.strategyMove</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PushEnemyWorker (it.polimi.ingsw.psp40.controller.strategies.strategyMove)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PushEnemyWorker</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,6%
+  </span>
+  <span class="absValue">
+    (25/ 27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.controller.strategies.strategyMove;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedMoveException;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableMoveException;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.model.Cell;
+<i>9</i>&nbsp;import it.polimi.ingsw.psp40.model.Match;
+<i>10</i>&nbsp;import it.polimi.ingsw.psp40.model.Worker;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.stream.Collectors;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;// MINOTAURO
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;public class PushEnemyWorker extends DefaultMove {
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /* Constructor(s) */
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    public PushEnemyWorker(Match match) {
+<b class="fc"><i>22</i>&nbsp;        super(match);</b>
+<b class="fc"><i>23</i>&nbsp;    }</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /* Methods */
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    @Override
+<i>28</i>&nbsp;    public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException, CellOutOfBoundsException {
+<b class="fc"><i>29</i>&nbsp;        List&lt;Cell&gt; availableCells = getAvailableCells(worker);</b>
+<b class="fc"><i>30</i>&nbsp;        if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }</b>
+<b class="fc"><i>31</i>&nbsp;        else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }</b>
+<i>32</i>&nbsp;        else {
+<b class="fc"><i>33</i>&nbsp;            if(match.getLocation().getOccupant(cell) != null) { // if the cell is occupied by an enemy worker, shift him</b>
+<b class="fc"><i>34</i>&nbsp;                int xBehind = getCoordinateXBehind(worker, cell);</b>
+<b class="fc"><i>35</i>&nbsp;                int yBehind = getCoordinateYBehind(worker, cell);</b>
+<b class="fc"><i>36</i>&nbsp;                Cell cellBehind = match.getIsland().getCell(xBehind, yBehind); // throws Exception can not happen here because cells are already checked in getAvailableCells()</b>
+<b class="fc"><i>37</i>&nbsp;                match.getLocation().setLocation(cellBehind, match.getLocation().getOccupant(cell)); // moves enemy worker in the cell behind. That cell is free for sure thanks to the previous checks</b>
+<i>38</i>&nbsp;            }
+<b class="fc"><i>39</i>&nbsp;            match.getLocation().setLocation(cell, worker);</b>
+<i>40</i>&nbsp;        }
+<b class="fc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    @Override
+<i>44</i>&nbsp;    public List&lt;Cell&gt; getAvailableCells(Worker worker) {
+<b class="fc"><i>45</i>&nbsp;        Cell workerCell = match.getLocation().getLocation(worker);</b>
+<b class="fc"><i>46</i>&nbsp;        List&lt;Cell&gt; adjCells = match.getIsland().getAdjCells(workerCell);</b>
+<b class="fc"><i>47</i>&nbsp;        return adjCells.stream()</b>
+<b class="fc"><i>48</i>&nbsp;                .filter(cell -&gt; !(cell.getTower().getTopComponent().getComponentCode() == workerCell.getTower().getTopComponent().getComponentCode() + 2)) // remove cells where tower is 2 or more level higher than where the worker is</b>
+<b class="fc"><i>49</i>&nbsp;                .filter(cell -&gt; cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete</b>
+<b class="fc"><i>50</i>&nbsp;                .filter(cell -&gt; (match.getLocation().getOccupant(cell) == null || ((match.getLocation().getOccupant(cell).getOwner() != worker.getOwner()) &amp;&amp; checkPositionBehind(worker, cell)) )) // removes cells where there is an allied worker or where there is an enemy worker and the cell behind him is occupied (or doesn&#39;t exist)</b>
+<b class="fc"><i>51</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    private boolean checkPositionBehind(Worker worker, Cell cell) {
+<i>55</i>&nbsp;        // calculates coordinates of the cell behind &quot;cell&quot; (the passed argument) in the movement direction.
+<i>56</i>&nbsp;        // Ex: Worker is in (x,y)=(2,2), cell is in (x,y)=(2,3), the calculus gives (x,y)=(2,4)
+<b class="fc"><i>57</i>&nbsp;        int xBehind = getCoordinateXBehind(worker, cell);</b>
+<b class="fc"><i>58</i>&nbsp;        int yBehind = getCoordinateYBehind(worker, cell);</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;        try {
+<b class="fc"><i>61</i>&nbsp;            Cell cellBehind = match.getIsland().getCell(xBehind, yBehind);</b>
+<b class="fc"><i>62</i>&nbsp;            return (cellBehind.getTower().getTopComponent() != Component.DOME) &amp;&amp; (match.getLocation().getOccupant(cellBehind) == null);</b>
+<b class="nc"><i>63</i>&nbsp;        } catch (CellOutOfBoundsException e) {</b>
+<b class="nc"><i>64</i>&nbsp;            return false;</b>
+<i>65</i>&nbsp;        }
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    private int getCoordinateXBehind(Worker worker, Cell cell) {
+<b class="fc"><i>69</i>&nbsp;        return cell.getCoordX() + (cell.getCoordX() - match.getLocation().getLocation(worker).getCoordX());</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    private int getCoordinateYBehind(Worker worker, Cell cell) {
+<b class="fc"><i>73</i>&nbsp;        return cell.getCoordY() + (cell.getCoordY() - match.getLocation().getLocation(worker).getCoordY());</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-05 14:25</div>
+</div>
+</body>
+</html>

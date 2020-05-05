@@ -1,0 +1,502 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Server</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.network.server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Server (it.polimi.ingsw.psp40.network.server)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Server</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (4/ 20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13,6%
+  </span>
+  <span class="absValue">
+    (26/ 191)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Server$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">Server$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    26,1%
+  </span>
+  <span class="absValue">
+    (6/ 23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15,7%
+  </span>
+  <span class="absValue">
+    (31/ 197)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.network.server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Configuration;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.io.IOException;
+<i>9</i>&nbsp;import java.net.ServerSocket;
+<i>10</i>&nbsp;import java.net.Socket;
+<i>11</i>&nbsp;import java.util.*;
+<i>12</i>&nbsp;import java.util.logging.Level;
+<i>13</i>&nbsp;import java.util.logging.Logger;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; *
+<i>17</i>&nbsp; * @author sup3rgiu
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;public class Server
+<i>20</i>&nbsp;{
+<i>21</i>&nbsp;  private static final int MIN_PORT = 1000;
+<i>22</i>&nbsp;  private static final int MAX_PORT = 50000;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;  private static final int MIN_NUM_OF_PLAYERS = 2;
+<i>25</i>&nbsp;  private static final int MAX_NUM_OF_PLAYERS = 3;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;  private VirtualView virtualView;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;  // todo: eventualmente fare una mappa apposita per gestire più partite in contemporanea
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;  // non molto bello, ma comunque mi assicuro che username e UUID siano in corrispondenza 1:1
+<b class="fc"><i>32</i>&nbsp;  private Map&lt;String, String&gt; usernameToUUIDMap = new HashMap&lt;&gt;(); // key: username, value: UUID</b>
+<b class="fc"><i>33</i>&nbsp;  private Map&lt;String, String&gt; UUIDtoUsernameMap = new HashMap&lt;&gt;(); // key: UUID, value: username</b>
+<b class="fc"><i>34</i>&nbsp;  private Map&lt;String, Date&gt; birthdateMap = new HashMap&lt;&gt;(); // key: username, value: birthDate</b>
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;  private List&lt;ClientHandler&gt; connectedClients = new ArrayList&lt;&gt;(); // List where will be stored all the connected clients, logged in or not (used for heartbeat messages)</b>
+<b class="fc"><i>37</i>&nbsp;  private Map&lt;String, ClientHandler&gt; clientsMap = new HashMap&lt;&gt;(); // key: UUID, value: Client</b>
+<b class="fc"><i>38</i>&nbsp;  private List&lt;String&gt; lobby = new ArrayList&lt;&gt;(); // usernames</b>
+<b class="fc"><i>39</i>&nbsp;  private Map&lt;String, Date&gt; matchUsers = new HashMap&lt;&gt;(); // key: username, value: birthDate</b>
+<b class="fc"><i>40</i>&nbsp;  private int howManyPlayers = 0;</b>
+<b class="fc"><i>41</i>&nbsp;  private boolean gameStarted = false;</b>
+<i>42</i>&nbsp;
+<b class="fc"><i>43</i>&nbsp;  private static Logger LOGGER = Logger.getLogger(&quot;server&quot;);</b>
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;  public Server() {</b>
+<b class="fc"><i>46</i>&nbsp;    virtualView = new VirtualView(this);</b>
+<b class="fc"><i>47</i>&nbsp;    startHeartbeat();</b>
+<b class="fc"><i>48</i>&nbsp;  }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;  public static void main(String[] args)
+<i>52</i>&nbsp;  {
+<i>53</i>&nbsp;    int SOCKET_PORT;
+<b class="nc"><i>54</i>&nbsp;    Scanner stdin = new Scanner(System.in);</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    if (Configuration.DEBUG){
+<b class="nc"><i>57</i>&nbsp;      System.out.println(&quot;Starting DEBUG server port 1234&quot;);</b>
+<b class="nc"><i>58</i>&nbsp;      SOCKET_PORT = 1234;</b>
+<i>59</i>&nbsp;    }else {
+<i>60</i>&nbsp;      System.out.println(&quot;Port number?&quot;);
+<i>61</i>&nbsp;      SOCKET_PORT = validateIntInput(stdin, MIN_PORT, MAX_PORT);
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;    ServerSocket socket;
+<i>64</i>&nbsp;    try {
+<b class="nc"><i>65</i>&nbsp;      socket = new ServerSocket(SOCKET_PORT);</b>
+<b class="nc"><i>66</i>&nbsp;      System.out.println(&quot;Waiting for connections...&quot;);</b>
+<b class="nc"><i>67</i>&nbsp;    } catch (IOException e) {</b>
+<b class="nc"><i>68</i>&nbsp;      System.out.println(&quot;Cannot open server socket&quot;);</b>
+<b class="nc"><i>69</i>&nbsp;      System.exit(1);</b>
+<b class="nc"><i>70</i>&nbsp;      return;</b>
+<b class="nc"><i>71</i>&nbsp;    }</b>
+<i>72</i>&nbsp;
+<b class="nc"><i>73</i>&nbsp;    Server server = new Server();</b>
+<i>74</i>&nbsp;    while (true) {
+<i>75</i>&nbsp;      try {
+<i>76</i>&nbsp;        /* accepts connections; for every connection we accept,
+<i>77</i>&nbsp;         * create a new Thread executing a ClientHandler */
+<b class="nc"><i>78</i>&nbsp;        Socket client = socket.accept();</b>
+<b class="nc"><i>79</i>&nbsp;        client.setSoTimeout(Configuration.serverTimeout *1000); // milliseconds</b>
+<b class="nc"><i>80</i>&nbsp;        ClientHandler clientHandler = new ClientHandler(client, server);</b>
+<b class="nc"><i>81</i>&nbsp;        Thread thread = new Thread(clientHandler, &quot;server_&quot; + client.getInetAddress());</b>
+<b class="nc"><i>82</i>&nbsp;        thread.start();</b>
+<b class="nc"><i>83</i>&nbsp;      } catch (IOException e) {</b>
+<b class="nc"><i>84</i>&nbsp;        System.out.println(e.getClass().getCanonicalName());</b>
+<b class="nc"><i>85</i>&nbsp;        System.out.println(&quot;Connection dropped&quot;);</b>
+<b class="nc"><i>86</i>&nbsp;      }</b>
+<i>87</i>&nbsp;    }
+<i>88</i>&nbsp;  }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;  /**
+<i>91</i>&nbsp;   * Called when the server receive a message from a client
+<i>92</i>&nbsp;   *
+<i>93</i>&nbsp;   * @param message message received
+<i>94</i>&nbsp;   */
+<i>95</i>&nbsp;  public void receivedMessage(Message message) {
+<b class="nc"><i>96</i>&nbsp;    switch (message.getTypeOfMessage()) {</b>
+<i>97</i>&nbsp;      case LOGIN:
+<b class="nc"><i>98</i>&nbsp;        handleLogin((LoginMessage)message);</b>
+<b class="nc"><i>99</i>&nbsp;        break;</b>
+<i>100</i>&nbsp;      default:
+<b class="nc"><i>101</i>&nbsp;        virtualView.handleMessage(message);</b>
+<i>102</i>&nbsp;        break;
+<i>103</i>&nbsp;    }
+<b class="nc"><i>104</i>&nbsp;  }</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;  /**
+<i>107</i>&nbsp;   * Sends a message to one or all clients, depending on {@link Message#getUsername()} or {@link Message#getUUID()} values.
+<i>108</i>&nbsp;   * Priority is given to {@link Message#getUUID()}, if it is null then {@link Message#getUsername()} will be used.
+<i>109</i>&nbsp;   * If one of these values is set to &quot;ALL&quot;, the message will be sent to all clients (still considering the priority)
+<i>110</i>&nbsp;   *
+<i>111</i>&nbsp;   * @param message message to be sent
+<i>112</i>&nbsp;   */
+<i>113</i>&nbsp;  public void sendToClient(Message message) {
+<b class="fc"><i>114</i>&nbsp;    String username = message.getUsername() != null ? message.getUsername() : &quot;&quot;;</b>
+<b class="fc"><i>115</i>&nbsp;    String UUID = message.getUUID() != null ? message.getUUID() : &quot;&quot;;</b>
+<b class="fc"><i>116</i>&nbsp;    if(!UUID.equals(&quot;&quot;) || !username.equals(&quot;&quot;)) {</b>
+<b class="fc"><i>117</i>&nbsp;      if (UUID.equals(&quot;ALL&quot;) || username.equals(&quot;ALL&quot;)) {</b>
+<b class="nc"><i>118</i>&nbsp;        clientsMap.forEach((uu_id, client) -&gt; client.sendMessage(message));</b>
+<i>119</i>&nbsp;      } else {
+<b class="fc"><i>120</i>&nbsp;        String UUIDforUser = !UUID.equals(&quot;&quot;) ? UUID : usernameToUUIDMap.get(username);</b>
+<b class="fc"><i>121</i>&nbsp;        if (UUIDforUser != null &amp;&amp; clientsMap.containsKey(UUIDforUser)) {</b>
+<b class="nc"><i>122</i>&nbsp;          clientsMap.get(UUIDforUser).sendMessage(message);</b>
+<i>123</i>&nbsp;        } else {
+<b class="fc"><i>124</i>&nbsp;          LOGGER.log(Level.WARNING, &quot;We are trying to send a message to a User that doesn&#39;t exist&quot;);</b>
+<i>125</i>&nbsp;        }
+<b class="fc"><i>126</i>&nbsp;      }</b>
+<i>127</i>&nbsp;    } else {
+<b class="nc"><i>128</i>&nbsp;      LOGGER.log(Level.SEVERE, &quot;Probably we are trying to send a message without an UUID or an username set\n&quot; + message.toString());</b>
+<i>129</i>&nbsp;    }
+<b class="fc"><i>130</i>&nbsp;  }</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;  /**
+<i>133</i>&nbsp;   * Sends a message to all clients except for those whose UUID is in the uuidExcept parameter
+<i>134</i>&nbsp;   * @param message message to be sent
+<i>135</i>&nbsp;   * @param uuidExcept {@link List} of UUIDs corresponding to the clients to whom not to send the message
+<i>136</i>&nbsp;   */
+<i>137</i>&nbsp;  public void sendToClientExcept(Message message, List&lt;String&gt; uuidExcept) {
+<b class="nc"><i>138</i>&nbsp;    HashMap&lt;String, ClientHandler&gt; tmpClientsMap = new HashMap&lt;&gt;(clientsMap);</b>
+<i>139</i>&nbsp;    try {
+<b class="nc"><i>140</i>&nbsp;      tmpClientsMap.keySet().removeAll(uuidExcept);</b>
+<b class="nc"><i>141</i>&nbsp;      tmpClientsMap.forEach((UUID, client) -&gt; client.sendMessage(message));</b>
+<b class="nc"><i>142</i>&nbsp;    } catch (NullPointerException e) {</b>
+<b class="nc"><i>143</i>&nbsp;      LOGGER.log(Level.WARNING, &quot;You passed a null list&quot;);</b>
+<b class="nc"><i>144</i>&nbsp;    }</b>
+<i>145</i>&nbsp;
+<b class="nc"><i>146</i>&nbsp;  }</b>
+<i>147</i>&nbsp;
+<i>148</i>&nbsp;  // Used to notify connection to the clients
+<i>149</i>&nbsp;  private void startHeartbeat() {
+<b class="fc"><i>150</i>&nbsp;    Timer timer = new Timer();</b>
+<i>151</i>&nbsp;
+<b class="fc"><i>152</i>&nbsp;    timer.schedule(new TimerTask() {</b>
+<i>153</i>&nbsp;      @Override
+<i>154</i>&nbsp;      public void run() {
+<b class="fc"><i>155</i>&nbsp;        Message msg = new Message(TypeOfMessage.HEARTBEAT);</b>
+<b class="fc"><i>156</i>&nbsp;        List&lt;ClientHandler&gt; copyConnectedClients = new ArrayList&lt;&gt;(connectedClients);</b>
+<b class="fc"><i>157</i>&nbsp;        copyConnectedClients.forEach( client -&gt; {if(client != null) { client.sendMessage(msg); }});</b>
+<b class="fc"><i>158</i>&nbsp;      }</b>
+<i>159</i>&nbsp;    }, 1000, Configuration.clientTimeout / 2 *1000); // this must be lower than (half should be ok) the value used client side in setSoTimeout()
+<b class="fc"><i>160</i>&nbsp;  }</b>
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;  /**
+<i>163</i>&nbsp;   * Associates a client to a UUID
+<i>164</i>&nbsp;   *
+<i>165</i>&nbsp;   * @param UUID UUID of the player to be added
+<i>166</i>&nbsp;   * @param client {@link ClientHandler} corresponding to the UUID
+<i>167</i>&nbsp;   */
+<i>168</i>&nbsp;  protected void associateClient(String UUID, ClientHandler client) {
+<b class="nc"><i>169</i>&nbsp;    clientsMap.put(UUID, client);</b>
+<b class="nc"><i>170</i>&nbsp;  }</b>
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;  /**
+<i>173</i>&nbsp;   * Adds a client
+<i>174</i>&nbsp;   *
+<i>175</i>&nbsp;   * @param client {@link ClientHandler} to be added
+<i>176</i>&nbsp;   */
+<i>177</i>&nbsp;  protected void addClient(ClientHandler client) {
+<b class="nc"><i>178</i>&nbsp;    connectedClients.add(client);</b>
+<b class="nc"><i>179</i>&nbsp;  }</b>
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;  private synchronized void handleLogin(LoginMessage message) {
+<b class="nc"><i>182</i>&nbsp;    String uuid = message.getUUID();</b>
+<b class="nc"><i>183</i>&nbsp;    String username = message.getUsername();</b>
+<b class="nc"><i>184</i>&nbsp;    boolean usernameAlreadyExists = usernameToUUIDMap.containsKey(username);</b>
+<i>185</i>&nbsp;    Message messageToSend;
+<b class="nc"><i>186</i>&nbsp;    if(this.gameStarted) {</b>
+<b class="nc"><i>187</i>&nbsp;      LOGGER.log(Level.INFO, message.getUsername() + &quot;is trying to login while there is already a game in progress&quot;);</b>
+<b class="nc"><i>188</i>&nbsp;      ClientHandler clientToBeRemoved = clientsMap.remove(uuid);</b>
+<b class="nc"><i>189</i>&nbsp;      connectedClients.remove(clientToBeRemoved);</b>
+<b class="nc"><i>190</i>&nbsp;      String details = &quot;I&#39;m sorry, there is already a game in progress. Try later :(&quot;;</b>
+<b class="nc"><i>191</i>&nbsp;      clientToBeRemoved.closeConnection(details);</b>
+<b class="nc"><i>192</i>&nbsp;    } else if(username.isBlank()) {</b>
+<b class="nc"><i>193</i>&nbsp;      LOGGER.log(Level.INFO, &quot;Trying to register an empty username&quot;);</b>
+<b class="nc"><i>194</i>&nbsp;      messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, &quot;I&#39;m sorry, this is not a valid username. Please try with a different username:&quot;);</b>
+<b class="nc"><i>195</i>&nbsp;      messageToSend.setUUID(uuid);</b>
+<b class="nc"><i>196</i>&nbsp;      sendToClient(messageToSend);</b>
+<b class="nc"><i>197</i>&nbsp;      clientsMap.remove(uuid);</b>
+<b class="nc"><i>198</i>&nbsp;    } else if(usernameAlreadyExists) {</b>
+<b class="nc"><i>199</i>&nbsp;      LOGGER.log(Level.INFO, &quot;Username &quot; + username + &quot; already exists&quot;);</b>
+<b class="nc"><i>200</i>&nbsp;      messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, &quot;I&#39;m sorry, this username is already taken. Please try with a different username:&quot;);</b>
+<b class="nc"><i>201</i>&nbsp;      messageToSend.setUUID(uuid);</b>
+<b class="nc"><i>202</i>&nbsp;      sendToClient(messageToSend);</b>
+<b class="nc"><i>203</i>&nbsp;      clientsMap.remove(uuid);</b>
+<b class="nc"><i>204</i>&nbsp;    } else if(message.getNumOfPlayers() &lt; MIN_NUM_OF_PLAYERS || message.getNumOfPlayers() &gt; MAX_NUM_OF_PLAYERS) { // server side check</b>
+<b class="nc"><i>205</i>&nbsp;      LOGGER.log(Level.WARNING, &quot;Username &quot; + username + &quot; tried to create a &quot; + message.getNumOfPlayers() + &quot;-player match. Not allowed!&quot;);</b>
+<b class="nc"><i>206</i>&nbsp;      messageToSend = new Message(TypeOfMessage.NUM_PLAYERS_FAILURE, &quot;I&#39;m sorry, this number of players is not allowed. It must be between &quot; + MIN_NUM_OF_PLAYERS + &quot; and &quot; + MAX_NUM_OF_PLAYERS);</b>
+<b class="nc"><i>207</i>&nbsp;      messageToSend.setUUID(uuid);</b>
+<b class="nc"><i>208</i>&nbsp;      sendToClient(messageToSend);</b>
+<b class="nc"><i>209</i>&nbsp;      clientsMap.remove(uuid);</b>
+<i>210</i>&nbsp;    } else {
+<b class="nc"><i>211</i>&nbsp;      clientsMap.get(uuid).setLogged(true);</b>
+<b class="nc"><i>212</i>&nbsp;      addUser(uuid, username, message.getBirthDate());</b>
+<b class="nc"><i>213</i>&nbsp;      LOGGER.log(Level.INFO, &quot;Player &quot; + username + &quot; has been added!&quot;);</b>
+<b class="nc"><i>214</i>&nbsp;      messageToSend = new Message(username, TypeOfMessage.LOGIN_SUCCESSFUL);</b>
+<b class="nc"><i>215</i>&nbsp;      sendToClient(messageToSend);</b>
+<b class="nc"><i>216</i>&nbsp;      handleLobby(message);</b>
+<i>217</i>&nbsp;    }
+<b class="nc"><i>218</i>&nbsp;  }</b>
+<i>219</i>&nbsp;
+<i>220</i>&nbsp;  private synchronized void handleLobby(LoginMessage message) {
+<b class="nc"><i>221</i>&nbsp;    String username = message.getUsername();</b>
+<b class="nc"><i>222</i>&nbsp;    lobby.add(username);</b>
+<i>223</i>&nbsp;    Message messageToSend;
+<i>224</i>&nbsp;    String details;
+<b class="nc"><i>225</i>&nbsp;    if(howManyPlayers == 0) {</b>
+<b class="nc"><i>226</i>&nbsp;      howManyPlayers = message.getNumOfPlayers();</b>
+<b class="nc"><i>227</i>&nbsp;      LOGGER.log(Level.INFO, &quot;Notifying the first user that the lobby has been created and is waiting for new players...&quot;);</b>
+<b class="nc"><i>228</i>&nbsp;      details = &quot;Lobby created! Waiting for &quot; + (howManyPlayers-1) + &quot; other(s) player(s)...&quot;;</b>
+<b class="nc"><i>229</i>&nbsp;      messageToSend = new Message(username, TypeOfMessage.GENERIC_MESSAGE, details);</b>
+<b class="nc"><i>230</i>&nbsp;      sendToClient(messageToSend);</b>
+<i>231</i>&nbsp;    } else {
+<b class="nc"><i>232</i>&nbsp;      LOGGER.log(Level.INFO, &quot;Notifying other users about new user joined to the queue&quot;);</b>
+<b class="nc"><i>233</i>&nbsp;      details = username + &quot; joined!\n&quot;;</b>
+<b class="nc"><i>234</i>&nbsp;      details += howManyPlayers == lobby.size() ? &quot;Match starting soon...&quot; : &quot;Waiting for &quot; + (howManyPlayers - lobby.size()) + &quot; other(s) player(s)...&quot;;</b>
+<b class="nc"><i>235</i>&nbsp;      messageToSend = new Message(TypeOfMessage.USER_JOINED, details);</b>
+<b class="nc"><i>236</i>&nbsp;      sendToClientExcept(messageToSend, Arrays.asList(usernameToUUIDMap.get(username)));</b>
+<i>237</i>&nbsp;
+<b class="nc"><i>238</i>&nbsp;      LOGGER.log(Level.INFO, &quot;Notifying the user about he has been added to a queue&quot;);</b>
+<b class="nc"><i>239</i>&nbsp;      details = &quot;There was already a lobby created. You joined a &quot; + howManyPlayers + &quot;-player match.\n&quot;;</b>
+<b class="nc"><i>240</i>&nbsp;      details += howManyPlayers == lobby.size() ? &quot;You were the last player required! Match starting soon...&quot; : &quot;Waiting for &quot; + (howManyPlayers - lobby.size()) + &quot; other(s) player(s)...&quot;;</b>
+<b class="nc"><i>241</i>&nbsp;      messageToSend = new Message(username, TypeOfMessage.ADDED_TO_QUEUE, details);</b>
+<b class="nc"><i>242</i>&nbsp;      sendToClient(messageToSend);</b>
+<i>243</i>&nbsp;
+<b class="nc"><i>244</i>&nbsp;      if (lobby.size() == howManyPlayers) {</b>
+<b class="nc"><i>245</i>&nbsp;        LOGGER.log(Level.INFO, &quot;The desired number of players has been reached. Starting the match!&quot;);</b>
+<i>246</i>&nbsp;        // todo: controllare se nel frattempo qualcuno si è disconnesso
+<b class="nc"><i>247</i>&nbsp;        messageToSend = new Message(&quot;ALL&quot;, TypeOfMessage.START_MATCH);</b>
+<b class="nc"><i>248</i>&nbsp;        sendToClient(messageToSend);</b>
+<b class="nc"><i>249</i>&nbsp;        matchUsers.clear();</b>
+<b class="nc"><i>250</i>&nbsp;        List&lt;String&gt; copyLobby = new ArrayList&lt;&gt;(lobby);</b>
+<b class="nc"><i>251</i>&nbsp;        copyLobby.forEach( _username -&gt; matchUsers.put(_username, birthdateMap.get(_username)));</b>
+<b class="nc"><i>252</i>&nbsp;        this.gameStarted = true;</b>
+<b class="nc"><i>253</i>&nbsp;        virtualView.handleMessage(new Message(&quot;ALL&quot;, TypeOfMessage.START_MATCH, matchUsers));</b>
+<i>254</i>&nbsp;      }
+<i>255</i>&nbsp;    }
+<b class="nc"><i>256</i>&nbsp;  }</b>
+<i>257</i>&nbsp;
+<i>258</i>&nbsp;  /**
+<i>259</i>&nbsp;   * Called when the server detects a disconnection
+<i>260</i>&nbsp;   * @param client disconnected client
+<i>261</i>&nbsp;   */
+<i>262</i>&nbsp;  protected void clientDisconnected(ClientHandler client) {
+<b class="nc"><i>263</i>&nbsp;    if(client.isLogged()) { // user was logged, so in a lobby or in game</b>
+<b class="nc"><i>264</i>&nbsp;      String UUID = client.getUUID();</b>
+<b class="nc"><i>265</i>&nbsp;      ClientHandler removedClient = clientsMap.remove(UUID);</b>
+<b class="nc"><i>266</i>&nbsp;      String disconnectedUser = UUIDtoUsernameMap.get(UUID);</b>
+<b class="nc"><i>267</i>&nbsp;      connectedClients.remove(removedClient);</b>
+<b class="nc"><i>268</i>&nbsp;      removeUser(UUID);</b>
+<b class="nc"><i>269</i>&nbsp;      String details = &quot;I&#39;m sorry, &quot; + disconnectedUser + &quot; left the game.\nWe can&#39;t continue this match :(&quot;;</b>
+<b class="nc"><i>270</i>&nbsp;      disconnectAllPlayers(details);</b>
+<b class="nc"><i>271</i>&nbsp;    } else { // user was only connected to the server, but not logged</b>
+<b class="nc"><i>272</i>&nbsp;      connectedClients.remove(client);</b>
+<i>273</i>&nbsp;    }
+<b class="nc"><i>274</i>&nbsp;  }</b>
+<i>275</i>&nbsp;
+<i>276</i>&nbsp;  private void resetServer() {
+<b class="nc"><i>277</i>&nbsp;    connectedClients.clear();</b>
+<b class="nc"><i>278</i>&nbsp;    clientsMap.clear();</b>
+<b class="nc"><i>279</i>&nbsp;    usernameToUUIDMap.clear();</b>
+<b class="nc"><i>280</i>&nbsp;    UUIDtoUsernameMap.clear();</b>
+<b class="nc"><i>281</i>&nbsp;    birthdateMap.clear();</b>
+<b class="nc"><i>282</i>&nbsp;    lobby.clear();</b>
+<b class="nc"><i>283</i>&nbsp;    matchUsers.clear();</b>
+<b class="nc"><i>284</i>&nbsp;    howManyPlayers = 0;</b>
+<b class="nc"><i>285</i>&nbsp;    gameStarted = false;</b>
+<b class="nc"><i>286</i>&nbsp;  }</b>
+<i>287</i>&nbsp;
+<i>288</i>&nbsp;  private synchronized void disconnectAllPlayers(String details) {
+<b class="nc"><i>289</i>&nbsp;    disconnectPlayers(new ArrayList&lt;&gt;(clientsMap.keySet()), details);</b>
+<b class="nc"><i>290</i>&nbsp;    resetServer();</b>
+<b class="nc"><i>291</i>&nbsp;  }</b>
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;  private void removeUser(String UUID) {
+<b class="nc"><i>294</i>&nbsp;    String username = UUIDtoUsernameMap.get(UUID);</b>
+<b class="nc"><i>295</i>&nbsp;    usernameToUUIDMap.remove(username);</b>
+<b class="nc"><i>296</i>&nbsp;    birthdateMap.remove(username);</b>
+<b class="nc"><i>297</i>&nbsp;    UUIDtoUsernameMap.remove(UUID);</b>
+<b class="nc"><i>298</i>&nbsp;  }</b>
+<i>299</i>&nbsp;
+<i>300</i>&nbsp;  private void addUser(String UUID, String username, Date birthdate) {
+<b class="nc"><i>301</i>&nbsp;    UUIDtoUsernameMap.put(UUID, username);</b>
+<b class="nc"><i>302</i>&nbsp;    usernameToUUIDMap.put(username, UUID);</b>
+<b class="nc"><i>303</i>&nbsp;    birthdateMap.put(username, birthdate);</b>
+<b class="nc"><i>304</i>&nbsp;  }</b>
+<i>305</i>&nbsp;
+<i>306</i>&nbsp;  /**
+<i>307</i>&nbsp;   * Disconnects one or more players and notify those with a message
+<i>308</i>&nbsp;   *
+<i>309</i>&nbsp;   * @param playersUUID {@link List&lt;String&gt;} of UUID corresponding to the players to disconnect
+<i>310</i>&nbsp;   * @param details details to send to disconnected players (e.g.: reason about server-side disconnection)
+<i>311</i>&nbsp;   */
+<i>312</i>&nbsp;  private synchronized void disconnectPlayers(List&lt;String&gt; playersUUID, String details) {
+<b class="nc"><i>313</i>&nbsp;    if(playersUUID != null) {</b>
+<b class="nc"><i>314</i>&nbsp;      playersUUID.forEach(UUID -&gt; {</b>
+<b class="nc"><i>315</i>&nbsp;        if (clientsMap.containsKey(UUID)) {</b>
+<b class="nc"><i>316</i>&nbsp;          ClientHandler clientToBeRemoved = clientsMap.remove(UUID);</b>
+<b class="nc"><i>317</i>&nbsp;          connectedClients.remove(clientToBeRemoved);</b>
+<b class="nc"><i>318</i>&nbsp;          clientToBeRemoved.closeConnection(details); // close connection</b>
+<b class="nc"><i>319</i>&nbsp;          removeUser(UUID);</b>
+<i>320</i>&nbsp;        }
+<b class="nc"><i>321</i>&nbsp;      });</b>
+<i>322</i>&nbsp;    }
+<b class="nc"><i>323</i>&nbsp;  }</b>
+<i>324</i>&nbsp;
+<i>325</i>&nbsp;  /**
+<i>326</i>&nbsp;   * Disconnects a player and notify him with a message
+<i>327</i>&nbsp;   *
+<i>328</i>&nbsp;   * @param username username of to the player to disconnect
+<i>329</i>&nbsp;   * @param details details to send to disconnected player (e.g.: player has lost)
+<i>330</i>&nbsp;   */
+<i>331</i>&nbsp;  public synchronized void disconnectPlayer(String username, String details) {
+<b class="nc"><i>332</i>&nbsp;    if(username != null) {</b>
+<b class="nc"><i>333</i>&nbsp;      String UUID = usernameToUUIDMap.get(username);</b>
+<b class="nc"><i>334</i>&nbsp;      if(UUID != null) {</b>
+<b class="nc"><i>335</i>&nbsp;        if (clientsMap.containsKey(UUID)) {</b>
+<b class="nc"><i>336</i>&nbsp;          ClientHandler clientToBeRemoved = clientsMap.remove(UUID);</b>
+<b class="nc"><i>337</i>&nbsp;          connectedClients.remove(clientToBeRemoved);</b>
+<b class="nc"><i>338</i>&nbsp;          clientToBeRemoved.closeConnection(details); // close connection</b>
+<b class="nc"><i>339</i>&nbsp;          removeUser(UUID);</b>
+<i>340</i>&nbsp;        }
+<i>341</i>&nbsp;      }
+<i>342</i>&nbsp;    }
+<b class="nc"><i>343</i>&nbsp;  }</b>
+<i>344</i>&nbsp;
+<i>345</i>&nbsp;  /**
+<i>346</i>&nbsp;   * Manages the insertion of an integer on command line input,
+<i>347</i>&nbsp;   * asking it again until it not a valid value.
+<i>348</i>&nbsp;   *
+<i>349</i>&nbsp;   * @param stdin          is the input scanner
+<i>350</i>&nbsp;   * @param minValue       is the minimum acceptable value of the input
+<i>351</i>&nbsp;   * @param maxValue       is the maximum acceptable value of the input
+<i>352</i>&nbsp;   * @return the value of the input
+<i>353</i>&nbsp;   */
+<i>354</i>&nbsp;  private static int validateIntInput(Scanner stdin, int minValue, int maxValue) {
+<i>355</i>&nbsp;    int output;
+<i>356</i>&nbsp;    try {
+<b class="nc"><i>357</i>&nbsp;      output = stdin.nextInt();</b>
+<b class="nc"><i>358</i>&nbsp;    } catch (InputMismatchException e) {</b>
+<b class="nc"><i>359</i>&nbsp;      output = minValue - 1;</b>
+<b class="nc"><i>360</i>&nbsp;      stdin.nextLine();</b>
+<b class="nc"><i>361</i>&nbsp;    }</b>
+<b class="nc"><i>362</i>&nbsp;    while (output &gt; maxValue || output &lt; minValue) {</b>
+<b class="nc"><i>363</i>&nbsp;      System.out.println(&quot;Value must be between &quot; + minValue + &quot; and &quot; + maxValue + &quot;. Please, try again:&quot;);</b>
+<i>364</i>&nbsp;      try {
+<b class="nc"><i>365</i>&nbsp;        output = stdin.nextInt();</b>
+<b class="nc"><i>366</i>&nbsp;      } catch (InputMismatchException e) {</b>
+<b class="nc"><i>367</i>&nbsp;        output = minValue - 1;</b>
+<b class="nc"><i>368</i>&nbsp;        stdin.nextLine();</b>
+<b class="nc"><i>369</i>&nbsp;      }</b>
+<i>370</i>&nbsp;    }
+<b class="nc"><i>371</i>&nbsp;    return output;</b>
+<i>372</i>&nbsp;  }
+<i>373</i>&nbsp;
+<i>374</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-05 14:25</div>
+</div>
+</body>
+</html>

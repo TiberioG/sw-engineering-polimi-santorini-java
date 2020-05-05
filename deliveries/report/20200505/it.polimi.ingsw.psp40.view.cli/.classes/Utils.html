@@ -1,0 +1,525 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Utils</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Utils (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Utils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26,3%
+  </span>
+  <span class="absValue">
+    (5/ 19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25,7%
+  </span>
+  <span class="absValue">
+    (52/ 202)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.Configuration;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.network.client.Client;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.io.PrintWriter;
+<i>8</i>&nbsp;import java.text.DateFormat;
+<i>9</i>&nbsp;import java.text.ParseException;
+<i>10</i>&nbsp;import java.text.SimpleDateFormat;
+<i>11</i>&nbsp;import java.util.*;
+<i>12</i>&nbsp;import java.util.concurrent.TimeUnit;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * Small library of utilities for the CLI, old version
+<i>17</i>&nbsp; * @author tiberioG
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;public class Utils {
+<i>20</i>&nbsp;    private PrintWriter out ;
+<i>21</i>&nbsp;    private Scanner in ;
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;    public Utils(Scanner in, PrintWriter out) {</b>
+<b class="fc"><i>24</i>&nbsp;        this.in  = in;</b>
+<b class="fc"><i>25</i>&nbsp;        this.out = out;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    /**
+<i>29</i>&nbsp;     * just an utiliyt to et longest string in a matrix of strings
+<i>30</i>&nbsp;     * @param matrix
+<i>31</i>&nbsp;     * @return int of chars of longest string
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public static int longestMatrix(String[][] matrix) {
+<b class="fc"><i>34</i>&nbsp;        int maxLength = 0;</b>
+<b class="fc"><i>35</i>&nbsp;        String longestString = &quot;&quot;;</b>
+<b class="fc"><i>36</i>&nbsp;        for (String[] strings : matrix) {</b>
+<b class="fc"><i>37</i>&nbsp;            for (int j = 0; j &lt; matrix.length; j++) {</b>
+<b class="fc"><i>38</i>&nbsp;                if (strings[j].length() &gt; maxLength) {</b>
+<b class="fc"><i>39</i>&nbsp;                    maxLength = strings[j].length();</b>
+<b class="fc"><i>40</i>&nbsp;                    longestString = strings[j];</b>
+<i>41</i>&nbsp;                }
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;            }
+<i>44</i>&nbsp;        }
+<b class="fc"><i>45</i>&nbsp;        return longestString.length();</b>
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    public static int longestArray(String[] array) {
+<b class="fc"><i>50</i>&nbsp;        int maxLength = 0;</b>
+<b class="fc"><i>51</i>&nbsp;        String longestString = &quot;&quot;;</b>
+<b class="fc"><i>52</i>&nbsp;        for (String s : array) {</b>
+<b class="fc"><i>53</i>&nbsp;            if (s.length() &gt; maxLength) {</b>
+<b class="fc"><i>54</i>&nbsp;                maxLength = s.length();</b>
+<b class="fc"><i>55</i>&nbsp;                longestString = s;</b>
+<i>56</i>&nbsp;            }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;        }
+<b class="fc"><i>59</i>&nbsp;        return longestString.length();</b>
+<i>60</i>&nbsp;    }
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    /**
+<i>64</i>&nbsp;     * utils for choices
+<i>65</i>&nbsp;     * @param min smaller number readable
+<i>66</i>&nbsp;     * @param max biggest number readable
+<i>67</i>&nbsp;     * @return number read
+<i>68</i>&nbsp;     */
+<i>69</i>&nbsp;    public int readNumbers(int min, int max){
+<i>70</i>&nbsp;        int number;
+<i>71</i>&nbsp;        do {
+<b class="nc"><i>72</i>&nbsp;            out.println(&quot;Choose one number:\n&quot;);</b>
+<b class="nc"><i>73</i>&nbsp;            while (!in.hasNextInt()) {</b>
+<b class="nc"><i>74</i>&nbsp;                out.println(&quot;That&#39;s not a number!\n&quot;);</b>
+<b class="nc"><i>75</i>&nbsp;                in.next();</b>
+<i>76</i>&nbsp;            }
+<b class="nc"><i>77</i>&nbsp;            number = in.nextInt();</b>
+<b class="nc"><i>78</i>&nbsp;        } while (number &lt; min || number &gt; max);</b>
+<b class="nc"><i>79</i>&nbsp;        in.nextLine();</b>
+<b class="nc"><i>80</i>&nbsp;        return number;</b>
+<i>81</i>&nbsp;    }
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    /**
+<i>84</i>&nbsp;     * Manages the insertion of an integer on command line input,
+<i>85</i>&nbsp;     * asking it again until it not a valid value.
+<i>86</i>&nbsp;     *
+<i>87</i>&nbsp;     * @param minValue       is the minimum acceptable value of the input
+<i>88</i>&nbsp;     * @param maxValue       is the maximum acceptable value of the input
+<i>89</i>&nbsp;     * @return the value of the input
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    public int validateIntInput( int minValue, int maxValue) {
+<i>93</i>&nbsp;        int output;
+<i>94</i>&nbsp;        try {
+<b class="nc"><i>95</i>&nbsp;            output = in.nextInt();</b>
+<b class="nc"><i>96</i>&nbsp;        } catch (InputMismatchException e) {</b>
+<b class="nc"><i>97</i>&nbsp;            output = minValue - 1;</b>
+<b class="nc"><i>98</i>&nbsp;            in.nextLine();</b>
+<b class="nc"><i>99</i>&nbsp;        }</b>
+<b class="nc"><i>100</i>&nbsp;        while (output &gt; maxValue || output &lt; minValue) {</b>
+<b class="nc"><i>101</i>&nbsp;            System.out.println(&quot;Value must be between &quot; + minValue + &quot; and &quot; + maxValue + &quot;. Please, try again:&quot;);</b>
+<i>102</i>&nbsp;            try {
+<b class="nc"><i>103</i>&nbsp;                output = in.nextInt();</b>
+<b class="nc"><i>104</i>&nbsp;            } catch (InputMismatchException e) {</b>
+<b class="nc"><i>105</i>&nbsp;                output = minValue - 1;</b>
+<b class="nc"><i>106</i>&nbsp;                in.nextLine();</b>
+<b class="nc"><i>107</i>&nbsp;            }</b>
+<i>108</i>&nbsp;        }
+<b class="nc"><i>109</i>&nbsp;        in.nextLine(); // handle nextInt()</b>
+<b class="nc"><i>110</i>&nbsp;        return output;</b>
+<i>111</i>&nbsp;    }
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    public Date readDate(String kind){
+<b class="nc"><i>115</i>&nbsp;        DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);</b>
+<b class="nc"><i>116</i>&nbsp;        Date date = new Date();</b>
+<b class="nc"><i>117</i>&nbsp;        Date today = new Date();</b>
+<b class="nc"><i>118</i>&nbsp;        Date oldest = new Date();</b>
+<i>119</i>&nbsp;        try {
+<b class="nc"><i>120</i>&nbsp;            oldest = dateFormat.parse(&quot;01/01/1900&quot;);</b>
+<b class="nc"><i>121</i>&nbsp;        } catch (ParseException e) {</b>
+<i>122</i>&nbsp;            //it&#39;s impossible to trow excep here ehe
+<b class="nc"><i>123</i>&nbsp;        }</b>
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;        if (kind == null){</b>
+<b class="nc"><i>126</i>&nbsp;            kind = &quot;date&quot;;</b>
+<i>127</i>&nbsp;        }
+<i>128</i>&nbsp;
+<b class="nc"><i>129</i>&nbsp;        out.println(&quot;Insert &quot; + kind + &quot; in format &quot; + Configuration.formatDate);</b>
+<i>130</i>&nbsp;        while (true) {
+<i>131</i>&nbsp;            try {
+<b class="nc"><i>132</i>&nbsp;                date = dateFormat.parse(in.nextLine());</b>
+<b class="nc"><i>133</i>&nbsp;                if (date.before(today) &amp;&amp; date.after(oldest)){</b>
+<b class="nc"><i>134</i>&nbsp;                    break;</b>
+<i>135</i>&nbsp;                }else{
+<b class="nc"><i>136</i>&nbsp;                    if (date.after(today)){</b>
+<b class="nc"><i>137</i>&nbsp;                        out.println(&quot;you&#39;re too young to play this game&quot;);</b>
+<i>138</i>&nbsp;                    }
+<b class="nc"><i>139</i>&nbsp;                    if (date.before(oldest)) {</b>
+<b class="nc"><i>140</i>&nbsp;                        out.println(&quot;you&#39;re too old to play this game&quot;);</b>
+<i>141</i>&nbsp;                    }
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;                }
+<b class="nc"><i>144</i>&nbsp;            } catch (ParseException e) {</b>
+<b class="nc"><i>145</i>&nbsp;                out.println(&quot;Wrong format of date&quot;);</b>
+<b class="nc"><i>146</i>&nbsp;            }</b>
+<i>147</i>&nbsp;        }
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;
+<b class="nc"><i>151</i>&nbsp;        return date;</b>
+<i>152</i>&nbsp;    }
+<i>153</i>&nbsp;
+<i>154</i>&nbsp;
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;    public List&lt;Integer&gt; readNotSameNumbers(int min, int max, int howmany){
+<b class="nc"><i>157</i>&nbsp;        List&lt;Integer&gt; numbers = new ArrayList&lt;Integer&gt;();</b>
+<i>158</i>&nbsp;
+<b class="nc"><i>159</i>&nbsp;        while (numbers.size() &lt; howmany ) {</b>
+<b class="nc"><i>160</i>&nbsp;            int curinput = readNumbers(min, max);</b>
+<b class="nc"><i>161</i>&nbsp;            if(!numbers.contains(curinput)) {</b>
+<b class="nc"><i>162</i>&nbsp;                numbers.add(curinput);</b>
+<i>163</i>&nbsp;            }
+<b class="nc"><i>164</i>&nbsp;        }</b>
+<b class="nc"><i>165</i>&nbsp;        return numbers;</b>
+<i>166</i>&nbsp;    }
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;
+<i>169</i>&nbsp;    public int[] readPosition_old(int min, int max){
+<b class="nc"><i>170</i>&nbsp;        int[] coord = new int[2];</b>
+<i>171</i>&nbsp;        do {
+<b class="nc"><i>172</i>&nbsp;            out.println(&quot;Insert coordinates in format x,y:&quot;);</b>
+<b class="nc"><i>173</i>&nbsp;            while (!in.hasNext(&quot;\\d*,\\d*&quot;)) {</b>
+<b class="nc"><i>174</i>&nbsp;                out.println(&quot;\nThat&#39;s not the correct pattern!&quot;);</b>
+<b class="nc"><i>175</i>&nbsp;                in.next();</b>
+<i>176</i>&nbsp;            }
+<b class="nc"><i>177</i>&nbsp;            in.nextLine();</b>
+<b class="nc"><i>178</i>&nbsp;            String correct = in.nextLine();</b>
+<b class="nc"><i>179</i>&nbsp;            out.println(correct);</b>
+<b class="nc"><i>180</i>&nbsp;            String[] ints= correct.split(&quot;,&quot;);</b>
+<b class="nc"><i>181</i>&nbsp;            coord[0] = Integer.parseInt(ints[0]);</b>
+<b class="nc"><i>182</i>&nbsp;            coord[1] = Integer.parseInt(ints[0]);</b>
+<b class="nc"><i>183</i>&nbsp;        } while (coord[0] &lt; min || coord[0] &gt; max || coord[1] &lt; min || coord[1] &gt; max);</b>
+<b class="nc"><i>184</i>&nbsp;        return coord;</b>
+<i>185</i>&nbsp;    }
+<i>186</i>&nbsp;
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    public int[] readPosition(int min, int max){
+<b class="nc"><i>189</i>&nbsp;        int[] coord = new int[2];</b>
+<i>190</i>&nbsp;        String input;
+<i>191</i>&nbsp;        do {
+<b class="nc"><i>192</i>&nbsp;            input = in.nextLine(); //todo non capisco perchè la prima volta mi leggel la linea vuota, mi aiutate pliz?</b>
+<b class="nc"><i>193</i>&nbsp;            while (!input.matches(&quot;([&quot; + min + &quot;-&quot; + max + &quot;]),([&quot; + min + &quot;-&quot; + max + &quot;])&quot;)) {</b>
+<b class="nc"><i>194</i>&nbsp;                out.println(&quot;This is not an allowed coordinate&quot;);</b>
+<b class="nc"><i>195</i>&nbsp;                input = in.nextLine();</b>
+<i>196</i>&nbsp;            }
+<b class="nc"><i>197</i>&nbsp;            String[] ints = input.split(&quot;,&quot;);</b>
+<b class="nc"><i>198</i>&nbsp;            coord[0] = Integer.parseInt(ints[0]);</b>
+<b class="nc"><i>199</i>&nbsp;            coord[1] = Integer.parseInt(ints[1]);</b>
+<b class="nc"><i>200</i>&nbsp;        }while (coord[0] &lt; min || coord[0] &gt; max || coord[1] &lt; min || coord[1] &gt; max);</b>
+<b class="nc"><i>201</i>&nbsp;        return coord;</b>
+<i>202</i>&nbsp;    }
+<i>203</i>&nbsp;
+<i>204</i>&nbsp;
+<i>205</i>&nbsp;
+<i>206</i>&nbsp;    public void singleTableCool(String title, String[] inputList, int delay) throws InterruptedException {
+<b class="fc"><i>207</i>&nbsp;        final  int SPACEADD = 5;</b>
+<b class="fc"><i>208</i>&nbsp;        int height = inputList.length;</b>
+<i>209</i>&nbsp;
+<b class="fc"><i>210</i>&nbsp;        int width = Math.max(Utils.longestArray(inputList), title.length()) + SPACEADD;</b>
+<b class="fc"><i>211</i>&nbsp;        int innerwidth = width - 4;</b>
+<i>212</i>&nbsp;
+<b class="fc"><i>213</i>&nbsp;        String titleString = centerString(width, title);</b>
+<i>214</i>&nbsp;
+<b class="fc"><i>215</i>&nbsp;        StringBuilder table = new StringBuilder();</b>
+<i>216</i>&nbsp;        //top line
+<b class="fc"><i>217</i>&nbsp;        table.append(&quot;╔&quot;);</b>
+<b class="fc"><i>218</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="fc"><i>219</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>220</i>&nbsp;        }
+<b class="fc"><i>221</i>&nbsp;        table.append(&quot;╗\n&quot;);</b>
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;        //title line
+<b class="fc"><i>224</i>&nbsp;        table.append(&quot;║&quot;).append(titleString.replaceAll(&quot;\n&quot;, &quot; &quot;).toUpperCase()).append(&quot;║\n&quot;);</b>
+<i>225</i>&nbsp;
+<i>226</i>&nbsp;        //close tile line
+<b class="fc"><i>227</i>&nbsp;        table.append(&quot;╠&quot;);</b>
+<b class="fc"><i>228</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="fc"><i>229</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>230</i>&nbsp;        }
+<b class="fc"><i>231</i>&nbsp;        table.append(&quot;╣\n&quot;);</b>
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;        //middle item lines
+<b class="fc"><i>234</i>&nbsp;        for (int i = 0; i &lt; height; i++ ){</b>
+<b class="fc"><i>235</i>&nbsp;            String nonewline = inputList[i].replaceAll(&quot;\n&quot;, &quot; &quot;);</b>
+<b class="fc"><i>236</i>&nbsp;            String output = String.format(&quot;. %-&quot; + innerwidth + &quot;s&quot;, nonewline);</b>
+<i>237</i>&nbsp;
+<b class="fc"><i>238</i>&nbsp;            if (nonewline.length() &gt; Colors.reset().length()) { // if length is less than the colorreset length it means cannot be colored for sure</b>
+<b class="fc"><i>239</i>&nbsp;                if (!Colors.reset().equals(nonewline.substring(nonewline.length() - Colors.reset().length()))) { //then I check if it contains a color reset at the end</b>
+<b class="fc"><i>240</i>&nbsp;                    table.append(&quot;║ &quot;).append(i).append(output).append(&quot;║\n&quot;); //if not</b>
+<i>241</i>&nbsp;                } else { // it there is colorreset at the end: FIX needed!
+<b class="fc"><i>242</i>&nbsp;                    table.append(&quot;║ &quot;).append(i).append(output).append(&quot;         ║\n&quot;);  //sorry for magic numbers of spaces but just works</b>
+<i>243</i>&nbsp;
+<i>244</i>&nbsp;                }
+<i>245</i>&nbsp;            }
+<i>246</i>&nbsp;            else {
+<b class="fc"><i>247</i>&nbsp;                table.append(&quot;║ &quot;).append(i).append(output).append(&quot;║\n&quot;);</b>
+<i>248</i>&nbsp;            }
+<i>249</i>&nbsp;        }
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;        //closeline
+<b class="fc"><i>252</i>&nbsp;        table.append(&quot;╚&quot;);</b>
+<b class="fc"><i>253</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="fc"><i>254</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>255</i>&nbsp;        }
+<b class="fc"><i>256</i>&nbsp;        table.append(&quot;╝\n&quot;);</b>
+<i>257</i>&nbsp;
+<b class="fc"><i>258</i>&nbsp;        String[] lines = table.toString().split(System.getProperty(&quot;line.separator&quot;));</b>
+<i>259</i>&nbsp;
+<b class="fc"><i>260</i>&nbsp;        for (int i = 0; i&lt;lines.length; i++){</b>
+<b class="fc"><i>261</i>&nbsp;            out.println(lines[i]);</b>
+<b class="fc"><i>262</i>&nbsp;            TimeUnit.MILLISECONDS.sleep(delay);</b>
+<i>263</i>&nbsp;        }
+<b class="fc"><i>264</i>&nbsp;    }</b>
+<i>265</i>&nbsp;
+<i>266</i>&nbsp;
+<i>267</i>&nbsp;    public String  tableString(String title, String[] inputList)  {
+<b class="nc"><i>268</i>&nbsp;        final  int SPACEADD = 5;</b>
+<b class="nc"><i>269</i>&nbsp;        int height = inputList.length;</b>
+<i>270</i>&nbsp;
+<b class="nc"><i>271</i>&nbsp;        int width = Math.max(Utils.longestArray(inputList), title.length()) + SPACEADD;</b>
+<b class="nc"><i>272</i>&nbsp;        int innerwidth = width - 4;</b>
+<i>273</i>&nbsp;
+<b class="nc"><i>274</i>&nbsp;        String titleString = centerString(width, title);</b>
+<i>275</i>&nbsp;
+<b class="nc"><i>276</i>&nbsp;        StringBuilder table = new StringBuilder();</b>
+<i>277</i>&nbsp;        //top line
+<b class="nc"><i>278</i>&nbsp;        table.append(&quot;╔&quot;);</b>
+<b class="nc"><i>279</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="nc"><i>280</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>281</i>&nbsp;        }
+<b class="nc"><i>282</i>&nbsp;        table.append(&quot;╗\n&quot;);</b>
+<i>283</i>&nbsp;
+<i>284</i>&nbsp;        //title line
+<b class="nc"><i>285</i>&nbsp;        table.append(&quot;║&quot;).append(titleString.replaceAll(&quot;\n&quot;, &quot; &quot;).toUpperCase()).append(&quot;║\n&quot;);</b>
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;        //close tile line
+<b class="nc"><i>288</i>&nbsp;        table.append(&quot;╠&quot;);</b>
+<b class="nc"><i>289</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="nc"><i>290</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>291</i>&nbsp;        }
+<b class="nc"><i>292</i>&nbsp;        table.append(&quot;╣\n&quot;);</b>
+<i>293</i>&nbsp;
+<i>294</i>&nbsp;        //middle item lines
+<b class="nc"><i>295</i>&nbsp;        for (int i = 0; i &lt; height; i++ ){</b>
+<b class="nc"><i>296</i>&nbsp;            String nonewline = inputList[i].replaceAll(&quot;\n&quot;, &quot; &quot;);</b>
+<b class="nc"><i>297</i>&nbsp;            String output = String.format(&quot;. %-&quot; + innerwidth + &quot;s&quot;, nonewline);</b>
+<i>298</i>&nbsp;
+<b class="nc"><i>299</i>&nbsp;            if (nonewline.length() &gt; Colors.reset().length()) { // if length is less than the colorreset length it means cannot be colored for sure</b>
+<b class="nc"><i>300</i>&nbsp;                if (!Colors.reset().equals(nonewline.substring(nonewline.length() - Colors.reset().length()))) { //then I check if it contains a color reset at the end</b>
+<b class="nc"><i>301</i>&nbsp;                    table.append(&quot;║ &quot;).append(i).append(output).append(&quot;║\n&quot;); //if not</b>
+<i>302</i>&nbsp;                } else { // it there is colorreset at the end: FIX needed!
+<b class="nc"><i>303</i>&nbsp;                    table.append(&quot;║ &quot;).append(i).append(output).append(&quot;         ║\n&quot;);  //sorry for magic numbers of spaces but just works</b>
+<i>304</i>&nbsp;
+<i>305</i>&nbsp;                }
+<i>306</i>&nbsp;            }
+<i>307</i>&nbsp;            else {
+<b class="nc"><i>308</i>&nbsp;                table.append(&quot;║ &quot;).append(i).append(output).append(&quot;║\n&quot;);</b>
+<i>309</i>&nbsp;            }
+<i>310</i>&nbsp;        }
+<i>311</i>&nbsp;
+<i>312</i>&nbsp;        //closeline
+<b class="nc"><i>313</i>&nbsp;        table.append(&quot;╚&quot;);</b>
+<b class="nc"><i>314</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="nc"><i>315</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>316</i>&nbsp;        }
+<b class="nc"><i>317</i>&nbsp;        table.append(&quot;╝\n&quot;);</b>
+<i>318</i>&nbsp;
+<b class="nc"><i>319</i>&nbsp;       return  table.toString();</b>
+<i>320</i>&nbsp;
+<i>321</i>&nbsp;    }
+<i>322</i>&nbsp;
+<i>323</i>&nbsp;
+<i>324</i>&nbsp;
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;    public String form(String title, int width){
+<b class="nc"><i>327</i>&nbsp;        String titleString = centerString(width, title);</b>
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;
+<b class="nc"><i>330</i>&nbsp;        StringBuilder table = new StringBuilder();</b>
+<i>331</i>&nbsp;        //top line
+<b class="nc"><i>332</i>&nbsp;        table.append(&quot;╔&quot;);</b>
+<b class="nc"><i>333</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="nc"><i>334</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>335</i>&nbsp;        }
+<b class="nc"><i>336</i>&nbsp;        table.append(&quot;╗\n&quot;);</b>
+<i>337</i>&nbsp;
+<i>338</i>&nbsp;        //title line
+<b class="nc"><i>339</i>&nbsp;        table.append(&quot;║&quot;).append(titleString.replaceAll(&quot;\n&quot;, &quot; &quot;).toUpperCase()).append(&quot;║\n&quot;);</b>
+<i>340</i>&nbsp;
+<i>341</i>&nbsp;        //close tile line
+<b class="nc"><i>342</i>&nbsp;        table.append(&quot;╠&quot;);</b>
+<b class="nc"><i>343</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="nc"><i>344</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>345</i>&nbsp;        }
+<b class="nc"><i>346</i>&nbsp;        table.append(&quot;╣\n&quot;);</b>
+<i>347</i>&nbsp;
+<i>348</i>&nbsp;        //formarea
+<b class="nc"><i>349</i>&nbsp;           int centerwidth = width - 2;</b>
+<b class="nc"><i>350</i>&nbsp;            String empty = String.format(&quot;%0&quot; + centerwidth + &quot;d&quot;, 0).replace(&#39;0&#39;, &#39; &#39;);</b>
+<b class="nc"><i>351</i>&nbsp;            table.append(&quot;║ &quot;).append(empty).append(&quot; ║\n&quot;);</b>
+<i>352</i>&nbsp;
+<i>353</i>&nbsp;
+<i>354</i>&nbsp;
+<i>355</i>&nbsp;        //closeline
+<b class="nc"><i>356</i>&nbsp;        table.append(&quot;╚&quot;);</b>
+<b class="nc"><i>357</i>&nbsp;        for (int i = 0; i&lt; (width ); i++ ){</b>
+<b class="nc"><i>358</i>&nbsp;            table.append(&quot;═&quot;);</b>
+<i>359</i>&nbsp;        }
+<b class="nc"><i>360</i>&nbsp;        table.append(&quot;╝\n&quot;);</b>
+<i>361</i>&nbsp;
+<b class="nc"><i>362</i>&nbsp;        return  table.toString();</b>
+<i>363</i>&nbsp;    }
+<i>364</i>&nbsp;
+<i>365</i>&nbsp;
+<i>366</i>&nbsp;    public void printMap(String[][] stringIsland ){
+<b class="nc"><i>367</i>&nbsp;        String lineSplit = &quot;&quot;;</b>
+<b class="nc"><i>368</i>&nbsp;        StringJoiner splitJoiner = new StringJoiner(&quot;┼&quot;, &quot;|&quot;, &quot;|&quot;);</b>
+<b class="nc"><i>369</i>&nbsp;        for (int i= 0; i &lt;5 ; i++) {</b>
+<b class="nc"><i>370</i>&nbsp;            splitJoiner.add(String.format(&quot;%14s&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;-&quot;));</b>
+<i>371</i>&nbsp;        }
+<b class="nc"><i>372</i>&nbsp;        lineSplit = splitJoiner.toString();</b>
+<b class="nc"><i>373</i>&nbsp;        for (String[] row : stringIsland) {</b>
+<b class="nc"><i>374</i>&nbsp;            StringJoiner sj = new StringJoiner(&quot; | &quot;, &quot;| &quot;, &quot; |&quot;);</b>
+<b class="nc"><i>375</i>&nbsp;            for (String col : row) {</b>
+<b class="nc"><i>376</i>&nbsp;                sj.add(col);</b>
+<i>377</i>&nbsp;            }
+<b class="nc"><i>378</i>&nbsp;            System.out.println(lineSplit);</b>
+<b class="nc"><i>379</i>&nbsp;            System.out.println(sj.toString());</b>
+<i>380</i>&nbsp;        }
+<b class="nc"><i>381</i>&nbsp;        System.out.println(lineSplit);</b>
+<i>382</i>&nbsp;
+<b class="nc"><i>383</i>&nbsp;    }</b>
+<i>384</i>&nbsp;
+<i>385</i>&nbsp;
+<i>386</i>&nbsp;    /**
+<i>387</i>&nbsp;     * Static method used to center a string using blanks
+<i>388</i>&nbsp;     * @param width int number of the width of output string
+<i>389</i>&nbsp;     * @param s the string to center with spaces
+<i>390</i>&nbsp;     * @return a string with added spaces with the original string in the middle
+<i>391</i>&nbsp;     */
+<i>392</i>&nbsp;    public static String centerString (int width, String s) {
+<b class="fc"><i>393</i>&nbsp;        return String.format(&quot;%-&quot; + width  + &quot;s&quot;, String.format(&quot;%&quot; + (s.length() + (width - s.length()) / 2) + &quot;s&quot;, s));</b>
+<i>394</i>&nbsp;    }
+<i>395</i>&nbsp;
+<i>396</i>&nbsp;
+<i>397</i>&nbsp;    String readnames() {
+<b class="nc"><i>398</i>&nbsp;        String name = in.nextLine();</b>
+<i>399</i>&nbsp;
+<b class="nc"><i>400</i>&nbsp;        while (name.equals(&quot;All&quot;) || name.isEmpty() || name.matches(&quot;^\\s*$&quot;)){</b>
+<b class="nc"><i>401</i>&nbsp;            out.println(&quot;\nThis username is not allowed, sorry! :(\n\n&quot; +</b>
+<i>402</i>&nbsp;                    &quot;INSERT ANOTHER ONE:\n&quot;);
+<b class="nc"><i>403</i>&nbsp;            name = in.nextLine();</b>
+<i>404</i>&nbsp;        }
+<b class="nc"><i>405</i>&nbsp;        return name;</b>
+<i>406</i>&nbsp;    }
+<i>407</i>&nbsp;
+<i>408</i>&nbsp;    String readIp() {
+<i>409</i>&nbsp;        String ip;
+<b class="nc"><i>410</i>&nbsp;        ip = in.nextLine();</b>
+<i>411</i>&nbsp;
+<b class="nc"><i>412</i>&nbsp;        while (!isValidIp(ip)) {</b>
+<b class="nc"><i>413</i>&nbsp;            System.out.println(&quot;This is not a valid IPv4 address. Please, try again:&quot;);</b>
+<b class="nc"><i>414</i>&nbsp;            ip = in.nextLine();</b>
+<i>415</i>&nbsp;        }
+<b class="nc"><i>416</i>&nbsp;        return ip;</b>
+<i>417</i>&nbsp;    }
+<i>418</i>&nbsp;
+<i>419</i>&nbsp;
+<i>420</i>&nbsp;    String readIpNew() {
+<i>421</i>&nbsp;        String ip;
+<b class="nc"><i>422</i>&nbsp;        ip = in.nextLine();</b>
+<i>423</i>&nbsp;
+<b class="nc"><i>424</i>&nbsp;        while (!isValidIp(ip)) {</b>
+<b class="nc"><i>425</i>&nbsp;            System.out.println(&quot;This is not a valid IPv4 address. Please, try again:&quot;);</b>
+<b class="nc"><i>426</i>&nbsp;            ip = in.nextLine();</b>
+<i>427</i>&nbsp;        }
+<b class="nc"><i>428</i>&nbsp;        return ip;</b>
+<i>429</i>&nbsp;    }
+<i>430</i>&nbsp;
+<i>431</i>&nbsp;    public static boolean isValidIp(String input) {
+<b class="nc"><i>432</i>&nbsp;        return input.matches(&quot;^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$&quot;) || input.equals(&quot;localhost&quot;);</b>
+<i>433</i>&nbsp;    }
+<i>434</i>&nbsp;
+<i>435</i>&nbsp;    public static boolean isValidPort(Integer input) {
+<b class="nc"><i>436</i>&nbsp;        return (input &gt;= Client.MIN_PORT &amp;&amp; input &lt;= Client.MAX_PORT);</b>
+<i>437</i>&nbsp;    }
+<i>438</i>&nbsp;
+<i>439</i>&nbsp;
+<i>440</i>&nbsp;
+<i>441</i>&nbsp;
+<i>442</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-05 14:25</div>
+</div>
+</body>
+</html>
