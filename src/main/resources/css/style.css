@@ -4,3 +4,11 @@
 
 .game-pane {
 }
+
+TextField {
+    -fx-border-radius: 1%;
+}
+
+.error-text {
+    -fx-border-color: red;
+}

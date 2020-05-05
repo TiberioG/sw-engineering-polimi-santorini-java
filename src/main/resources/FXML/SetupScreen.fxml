@@ -13,8 +13,8 @@
          </image></ImageView>
       <VBox alignment="CENTER" layoutX="455.0" layoutY="218.0" prefHeight="364.0" prefWidth="290.0" spacing="50.0">
          <children>
-            <TextField fx:id="ipAddressTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#ipAddressChanged" prefHeight="30.0" promptText="IP Address" />
-            <TextField fx:id="portTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#portChanged" prefHeight="30.0" promptText="Port" />
+            <TextField fx:id="ipAddressTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#ipAddressChanged" prefHeight="30.0" promptText="IP Address" onAction="#onEnterIpAddress"/>
+            <TextField fx:id="portTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#portChanged" prefHeight="30.0" promptText="Port" onAction="#onEnterPortText" />
             <Button fx:id="connectButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleConnectButton" prefWidth="124.0" styleClass="connect-button" text="Connect" textAlignment="CENTER">
                <font>
                   <Font size="15.0" />
