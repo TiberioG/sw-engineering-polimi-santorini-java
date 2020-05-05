@@ -139,6 +139,15 @@ public class MatchTest {
     }
 
     @Test
+    public void rescaleListFromCurrentPlayer() {
+        testMatch.setCurrentPlayer(name3);
+        testMatch.rescaleListFromCurrentPlayer();
+        List<Player> playersList = testMatch.getPlayers();
+        boolean isRescaledList = playersList.indexOf(testMatch.getPlayerByName(name3)) == 0 && playersList.indexOf(testMatch.getPlayerByName(name1)) == 1 && playersList.indexOf(testMatch.getPlayerByName(name2)) == 2;
+        assertTrue(isRescaledList);
+    }
+
+    @Test
     public void removePlayer_NewListOfPlayerWithoutRemovedPlayer() {
         List<Player> playerList = testMatch.getPlayers();
         testMatch.removePlayer(player2.getName());
