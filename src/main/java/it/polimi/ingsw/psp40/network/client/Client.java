@@ -10,6 +10,7 @@ import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.cli.CLI;
+import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 import javafx.application.Application;
 

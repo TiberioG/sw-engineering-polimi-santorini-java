@@ -194,4 +194,25 @@ public class GUI extends Application implements ViewInterface {
     public void displayChoiceSelectionOfWorker() {
 
     }
+
+    @Override
+    public void displayBuildBlock() {
+
+    }
+
+
+    @Override
+    public void displayMoveWorker() {
+
+    }
+
+    @Override
+    public void displayChoiceOfAvailableCellForMove() {
+
+    }
+
+    @Override
+    public void displayChoiceOfAvailableCellForBuild() {
+
+    }
 }
