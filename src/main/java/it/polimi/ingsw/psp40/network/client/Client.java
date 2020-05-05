@@ -62,7 +62,7 @@ public class Client implements ServerObserver {
 
   public static void main( String[] args )
   {
-    boolean cli = false;
+    boolean cli = true;
 
     if (args.length > 0) {
 
@@ -82,8 +82,8 @@ public class Client implements ServerObserver {
 
     if (cli) {
       Client client = new Client();
-      CLI view = new CLI(client);
-      //CoolCLI view = new CoolCLI(client);
+      //CLI view = new CLI(client);
+      CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }
@@ -332,5 +332,4 @@ public class Client implements ServerObserver {
     return availableBuildCells;
   }
 
-  //todo local check
 }

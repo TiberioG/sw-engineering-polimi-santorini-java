@@ -189,7 +189,7 @@ public class Utils {
         int[] coord = new int[2];
         String input;
         do {
-            input = in.nextLine(); //todo non capisco perchè la prima volta mi leggel la linea vuota, mi aiutate pliz?
+            input = in.nextLine();
             while (!input.matches("([" + min + "-" + max + "]),([" + min + "-" + max + "])")) {
                 out.println("This is not an allowed coordinate");
                 input = in.nextLine();
@@ -301,7 +301,6 @@ public class Utils {
                     table.append("║ ").append(i).append(output).append("║\n"); //if not
                 } else { // it there is colorreset at the end: FIX needed!
                     table.append("║ ").append(i).append(output).append("         ║\n");  //sorry for magic numbers of spaces but just works
-
                 }
             }
             else {
@@ -321,11 +320,8 @@ public class Utils {
     }
 
 
-
-
     public String form(String title, int width){
         String titleString = centerString(width, title);
-
 
         StringBuilder table = new StringBuilder();
         //top line
@@ -350,15 +346,12 @@ public class Utils {
             String empty = String.format("%0" + centerwidth + "d", 0).replace('0', ' ');
             table.append("║ ").append(empty).append(" ║\n");
 
-
-
         //closeline
         table.append("╚");
         for (int i = 0; i< (width ); i++ ){
             table.append("═");
         }
         table.append("╝\n");
-
         return  table.toString();
     }
 
@@ -379,7 +372,6 @@ public class Utils {
             System.out.println(sj.toString());
         }
         System.out.println(lineSplit);
-
     }
 
 
@@ -408,7 +400,6 @@ public class Utils {
     String readIp() {
         String ip;
         ip = in.nextLine();
-
         while (!isValidIp(ip)) {
             System.out.println("This is not a valid IPv4 address. Please, try again:");
             ip = in.nextLine();
@@ -420,7 +411,6 @@ public class Utils {
     String readIpNew() {
         String ip;
         ip = in.nextLine();
-
         while (!isValidIp(ip)) {
             System.out.println("This is not a valid IPv4 address. Please, try again:");
             ip = in.nextLine();

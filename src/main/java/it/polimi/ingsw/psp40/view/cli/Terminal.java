@@ -165,9 +165,7 @@ public class Terminal {
      *  https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
      */
     private static String stty(final String args) throws IOException, InterruptedException {
-
         String cmd = "stty " + args + " < /dev/tty";
-
         return exec(new String[] {
                 "sh",
                 "-c",

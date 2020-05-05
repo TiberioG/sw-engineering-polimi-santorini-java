@@ -11,15 +11,16 @@ import java.io.IOException;
  */
 
 public class SquareCell {
+    private final  static int len = 13;
+    private final  static int hei = 7;
 
     private boolean worker;
     private boolean tempWork;
+
     private Colors color;
 
     private int level;
-    private final  static int len = 13;
-    private final  static int hei = 7;
-    private String internal;
+
     private int startRow;
     private int startCol;
     private boolean selected;
@@ -56,7 +57,10 @@ public class SquareCell {
     public void setTempWorker(Colors color){
         this.color = color;
         this.tempWork = true;
-        //System.out.println("TENPWORKPOOO");
+    }
+
+    public void setTempLevel(int level){
+        this.level = level;
     }
 
     public void print(int startRow, int startCol) throws IOException, InterruptedException {
@@ -203,7 +207,7 @@ public class SquareCell {
 
     }
 
-    private void special (int colorbit) throws IOException, InterruptedException {
+    private void special2 (int colorbit) throws IOException, InterruptedException {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
             for (int j = 0; j < len; j++){
@@ -211,6 +215,27 @@ public class SquareCell {
             }
         }
     }
+
+    private void special (int colorbit) throws IOException, InterruptedException {
+        for (int i = 0; i < hei ; i ++){
+            Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
+              System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");
+        }
+        Terminal.moveAbsoluteCursor(startRow , startCol); // scendo di una riga ogni volta
+        for (int j = 0; j < len; j++){
+            System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");
+        }
+        for (int i = 0; i < hei ; i ++){
+            Terminal.moveAbsoluteCursor(startRow + i, startCol + len - 1 ); // scendo di una riga ogni volta
+            System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");
+        }
+        Terminal.moveAbsoluteCursor(startRow + hei -1 , startCol); // scendo di una riga ogni volta
+        for (int j = 0; j < len; j++){
+            System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");
+        }
+
+    }
+
 
 
 

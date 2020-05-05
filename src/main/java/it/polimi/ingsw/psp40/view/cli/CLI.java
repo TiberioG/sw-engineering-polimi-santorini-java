@@ -51,8 +51,6 @@ public class CLI implements ViewInterface {
     private boolean debug = Configuration.DEBUG;
 
 
-
-
     /* METHODS*/
 
     /**

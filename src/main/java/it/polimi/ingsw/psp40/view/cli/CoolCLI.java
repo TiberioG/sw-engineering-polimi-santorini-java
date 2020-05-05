@@ -23,11 +23,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * @author TiberioG
+ */
 public class CoolCLI implements ViewInterface {
     private final Client client;
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
-    Colors colorWorker;
+    private Colors colorWorker;
+
+    private int currentWorkerId = 0;
 
     private Date date = null;
     private int numOfPlayers = 0;
@@ -37,6 +42,7 @@ public class CoolCLI implements ViewInterface {
     private static final int MAX_PORT = 50000;
     private static final int ROWS = 50;
     private static final int COLS = 150;
+    private static final int SPEED = 2000; //seconds to keep showing message before going on
 
     private final Utils utils = new Utils(in, out);
     private static Frame upper = new Frame(new int[]{0,0}, new int[]{8, COLS}, in, out);
@@ -103,8 +109,8 @@ public class CoolCLI implements ViewInterface {
             Terminal.moveRelativeCursor(-1, -29);
 
             try {
-                port = in.nextInt();
-            } catch (InputMismatchException e) {
+                port = Integer.parseInt(in.nextLine());
+            } catch (NumberFormatException e) {
                 center2.center(utils.form("enter port number", 30), 0);
                 Terminal.moveRelativeCursor(-1, -29);
                 in.nextLine();
@@ -115,8 +121,8 @@ public class CoolCLI implements ViewInterface {
                 center2.center(utils.form("enter port number", 30), 0);
                 Terminal.moveRelativeCursor(-1, -29);
                 try {
-                    port = in.nextInt();
-                } catch (InputMismatchException e) {
+                    port = Integer.parseInt(in.nextLine());
+                } catch (NumberFormatException e) {
                     center2.center(utils.form("enter port number", 30), 0);
                     Terminal.moveRelativeCursor(-1, -29);
                     in.nextLine();
@@ -183,7 +189,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayLoginSuccessful() {
         left.clear();
-        left.println("You have been logged in successfully");
+        left.printWrapped("You have been logged in successfully");
     }
 
     @Override
@@ -194,15 +200,14 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayUserJoined(String details) {
-
         left.clear();
-        out.println(details);
+        left.printWrapped(details);
     }
 
     @Override
     public void displayAddedToQueue(String details) {
         left.clear();
-        out.println(details);
+        left.printWrapped(details);
     }
 
     @Override
@@ -214,14 +219,13 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayGenericMessage(String message) {
-
         left.clear();
         lower.println(message);
     }
 
     @Override
     public void displayDisconnected(String details) {
-        out.println(details);
+        left.printWrapped(details);
         client.close();
     }
 
@@ -331,11 +335,11 @@ public class CoolCLI implements ViewInterface {
         }
         List<int[]> occupy = cellAdapter(client.getLocationCache().getAllOccupied()) ;
 
-        left.printWrapped("Use arrow keys to select where you want to position your worker, ehen selected press ENTER");
+        left.printWrapped("Use arrow keys to select where you want to position your worker, confirm with SPACEBAR");
         int[] work1 =position(occupy);
 
         left.clear();
-        left.printWrapped("position your second worker with arrows, \n when done, press q");
+        left.printWrapped("Use arrow keys to select where you want to position your worker, confirm with SPACEBAR");
 
         occupy.add(work1);
         int[] work2 = position(occupy);
@@ -373,7 +377,9 @@ public class CoolCLI implements ViewInterface {
     public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
         left.clear();
         try {
-            Terminal.yesBuffer();
+            updateIsland();
+            myisland.clearMovable();
+            myisland.print();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -381,15 +387,18 @@ public class CoolCLI implements ViewInterface {
         Phase selectedPhase = null;
         if (phaseList.size() == 1) {
             selectedPhase = phaseList.get(0);
-            out.println("there is only available this phase: " + selectedPhase.getType().toString());
-        } else {
-            String[] phases = phaseList.stream().map(phase -> phase.getType().toString()).toArray(String[]::new);
-
+            left.println("there is only available this phase: " + selectedPhase.getType().toString());
             try {
-                utils.singleTableCool("Phases available", phases, 100 );
+                TimeUnit.MILLISECONDS.sleep(SPEED);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+        } else {
+            String[] phases = phaseList.stream().map(phase -> phase.getType().toString()).toArray(String[]::new);
+
+            left.clear();
+            left.println(utils.tableString("Phases available", phases)); //todo set position absolute
 
             int index = utils.readNumbers(0, phaseList.size());
             selectedPhase = phaseList.get(index);
@@ -401,9 +410,11 @@ public class CoolCLI implements ViewInterface {
                 break;
             case MOVE_WORKER:
                 client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+                left.println("passo fase succ");
                 break;
             case BUILD_COMPONENT:
                 client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
+                left.println("passo fase succ");
                 break;
         }
 
@@ -411,18 +422,17 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
+        left.clear();
         List<Cell> availableCells = client.getAvailableMoveCells();
 
-        left.clear();
         try {
             updateIsland();
-           // myisland.clearMovable();
-            myisland.setMovable(client.getAvailableMoveCells());
+            myisland.clearMovable();
+            myisland.setMovable(availableCells);
             myisland.print();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
 
         List<int[]> availableCellsCoord = cellAdapter(availableCells) ;
         left.println("These are the cells available for move");
@@ -431,26 +441,12 @@ public class CoolCLI implements ViewInterface {
         displayMoveWorker();
     }
 
-    /*
-        @Override
-        public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
-            Phase selectedPhase = null;
-            if (phaseList.size() == 1) {
-                selectedPhase = phaseList.get(0);
-            } else {
-                //logica per far seleziona all'utente la fase fra quelle disponibili
-            }
-
-            switch (selectedPhase.getType()) {
-                case SELECT_WORKER:
-                    displayChoiceSelectionOfWorker();
-                    break;
-            }
-        }
-    */
-
     @Override
     public void displayChoiceSelectionOfWorker() {
+        left.clear();
+        left.println("Choose worker using TAB, confirm with SPACEBAR");
+        Integer[] starting = getMyWorkers().get(currentWorkerId);
+
         try {
             this.updateIsland();
             myisland.print();
@@ -458,58 +454,127 @@ public class CoolCLI implements ViewInterface {
             e.printStackTrace();
         }
 
+        currentWorkerId = swapWorker();
+        client.sendToServer(new Message(TypeOfMessage.SELECT_WORKER, currentWorkerId));
+    }
+
+
+    @Override
+    public void displayMoveWorker() {
+        Integer[] starting = getMyWorkers().get(currentWorkerId);
+
+        int[] position = positionAllowed(starting, cellAdapter(client.getAvailableMoveCells()), 'm');
+
+        CoordinatesMessage moveCoord = new CoordinatesMessage(position[0], position[1]);
+        client.sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
+    }
+
+    @Override
+    public void displayChoiceOfAvailableCellForBuild() {
+        left.clear();
+        List<Cell> availableCells = new ArrayList<>(client.getAvailableBuildCells().keySet());
+
         try {
-            Terminal.yesBuffer();
+            updateIsland();
+            myisland.clearMovable();
+            myisland.setMovable(availableCells);
+            myisland.print();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        left.println("Choose worker selecting the id:");
 
-        getMyWorkers().entrySet().forEach(entry -> {
-            out.println("id: " + entry.getKey() + ", coordinates: " + entry.getValue()[0] + "," + entry.getValue()[1]);
-        });
-
-        int id = utils.readNumbers(0, getMyWorkers().size() -1);
-
-        client.sendToServer(new Message(TypeOfMessage.SELECT_WORKER, id));
-    }
-    @Override
-    public void displayMoveWorker() {
-
-        position(cellAdapter(client.getAvailableMoveCells()));
+        List<int[]> availableCellsCoord = cellAdapter(availableCells) ;
+        left.println("These are the cells available for build");
+        availableCellsCoord.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
+        displayBuildBlock();
 
     }
 
     @Override
     public void displayBuildBlock() {
+        left.clear();
+        left.println("what cell would you like to build in?");
+
+
+        Integer[] starting = getMyWorkers().get(currentWorkerId); //this this are the coordinates of the current worker
+        List<Cell> availableBuildCell = client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList()); // i get te list of all the Cells that can be built by
+
+
+        int[] position = positionAllowed(starting, cellAdapter(availableBuildCell), 'b'); // read the coordinates where the user wants to build
+        Cell cellToBuild = availableBuildCell.stream().filter(cell -> cell.getCoordX() == position[0] && cell.getCoordY() == position[1]).findFirst().orElse(null); // use this to get the corresponding Cell obj
+
+        CoordinatesMessage buildCoord = new CoordinatesMessage(position[0], position[1]);
+
+
+        List<Integer> listOfAvailableComponents = client.getAvailableBuildCells().get(cellToBuild); // getting the components buildable in the selected cell
+        List<String> listOfStringComponent = Arrays.asList(Component.allNames());
+
+        //using this to get the names of the components form all the names available
+        String[] nameOfAvailableComponents = new String[listOfAvailableComponents.size()];
+        for(int i=0; i<listOfAvailableComponents.size(); i++){
+            nameOfAvailableComponents[i] = listOfStringComponent.get(listOfAvailableComponents.get(i));
+        }
+
+        if(listOfAvailableComponents.size()==1){
+            client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.valueOf(nameOfAvailableComponents[0]), buildCoord)));
+
+        }
+        else {
+            left.println("Choose one of the following blocks to build:");
+
+            try {
+                utils.singleTableCool("Blocks available", nameOfAvailableComponents, 100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Terminal.yesBuffer();
+                Terminal.showCursor();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            int componentCode = utils.readNumbers(0, Component.allNames().length - 1);
+            myisland.clearMovable();
+            myisland.setTempLevel(position[0], position[1], componentCode);
+            try {
+                myisland.print();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.valueOf(nameOfAvailableComponents[componentCode]), buildCoord)));
+
+
+        }
 
     }
 
-    @Override
-    public void displayChoiceOfAvailableCellForBuild() {
 
-    }
-
-
-
-    public void updateIsland() throws IOException, InterruptedException {
+    private void updateIsland() {
         myisland = new IslandAdapter(client.getFieldCache(), client.getLocationCache() );
-
     }
 
-
-    private int[] position(List<int[]> occupied ){
+    private int[] position( List<int[]> occupied ){
         boolean debug = false;
         int curRow = 0;
         int curCol = 0;
+        myisland.setSelected(curRow, curCol);
+        try {
+            myisland.print();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         while (true) {
             try {
                 if (System.in.available() != 0) {
                     int c = System.in.read();  //read one char at a time in ascii code
 
-                    //GETTING P to positiom
-                    if (c == 112) {   // if press P -> quit this visualization
+                    //GETTING SPACEBAR to positiom
+                    if (c == 32) {
                         if (!contains(occupied, curRow, curCol)) {
                             myisland.setWorker(curRow, curCol, colorWorker);
                             myisland.clearSelected();
@@ -564,28 +629,41 @@ public class CoolCLI implements ViewInterface {
             }
         }// end while true
 
-
-
         return new int[]{curRow, curCol};
     }
 
-    private int[] positionAllowed(List<int[]> allowed ){
+    private int[] positionAllowed(Integer[] starting, List<int[]> allowed , char kind){
         boolean debug = false;
-        int curRow = 0;
-        int curCol = 0;
+        int curRow = starting[0];
+        int curCol = starting[1];
+
+        myisland.setSelected(curRow, curCol);
+        try {
+            myisland.print();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         while (true) {
             try {
                 if (System.in.available() != 0) {
                     int c = System.in.read();  //read one char at a time in ascii code
 
-                    //GETTING P to positiom
-                    if (c == 112) {   // if press P -> quit this visualization
-                            myisland.setWorker(curRow, curCol, colorWorker);
-                            myisland.clearSelected();
-                            myisland.print();
+                    //GETTING SPACEBAR to positiom
+                    if (c == 32) {   // if press P -> quit this visualization
+                        if(contains(allowed, curRow, curCol)) {
+                            if(kind == 'm') {
+                                myisland.setWorker(curRow, curCol, colorWorker);
+                                myisland.clearSelected();
+                                myisland.print();
+                            }
+                            else {
+                                myisland.clearMovable();
+                                myisland.setSelected(curRow, curCol);
+                                myisland.print();
+                            }
                             break;
-
+                        }
                     }
 
                     //getting an ARROW KEY
@@ -594,19 +672,19 @@ public class CoolCLI implements ViewInterface {
                         int next2 = System.in.read();
                         if (next1 == 91) { //  read [
                             if (next2 == 65) {                     //UP  arrow
-                                if (contains(allowed, curRow - 1, curCol)) {
+                                if (curRow > 0 && curRow <= 5) {
                                     curRow--;
                                 }
                             } else if (next2 == 66) {              //DOWN arrow
-                                if (contains(allowed, curRow + 1, curCol)) {
+                                if (curRow >= 0 && curRow < 4) {
                                     curRow++;
                                 }
                             } else if (next2 == 67) {              //RIGHT arrow
-                                if (contains(allowed, curRow , curCol + 1)) {
+                                if (curCol >= 0 && curCol < 4) {
                                     curCol++;
                                 }
                             } else if (next2 == 68) {               //LEFT  arrow
-                                if (contains(allowed, curRow, curCol- 1 )) {
+                                if (curCol > 0 && curCol <= 5) {
                                     curCol--;
                                 }
                             }
@@ -614,7 +692,55 @@ public class CoolCLI implements ViewInterface {
                         myisland.setSelected(curRow, curCol);
                         myisland.print();
                     }//end arrow management
+                    // gettind D for debug option
+                    else if (c == 100) {
+                        debug = !debug;
+                        if (!debug) {
+                            myisland.print();
+                        }
+                    }
 
+                    if (debug) {
+                        myisland.debug();
+                    }
+
+                } //end system in available
+            } catch (IOException | InterruptedException e) {
+                //todo frame per except
+            }
+        }// end while true
+
+        return new int[]{curRow, curCol};
+    }
+
+
+    private int swapWorker(){
+        boolean debug = false;
+        int curWorkId = 0;
+
+        int curRow = getMyWorkers().get(curWorkId)[0];
+        int curCol = getMyWorkers().get(curWorkId)[1];
+
+        while (true) {
+            try {
+                if (System.in.available() != 0) {
+                    int c = System.in.read();  //read one char at a time in ascii code
+
+                    //GETTING SPACE_BAR to positiom
+                    if (c == 32) {
+                        break;
+                    }
+
+                    //GETTING tab
+                   if (c == 9){
+                       if(curWorkId == 0){
+                           curWorkId = 1;
+                       }else {
+                           curWorkId = 0;
+                       }
+                       myisland.setSelected(getMyWorkers().get(curWorkId)[0], getMyWorkers().get(curWorkId)[1]);
+                       myisland.print();
+                   }
 
                     // gettind D for debug option
                     else if (c == 100) {
@@ -634,13 +760,8 @@ public class CoolCLI implements ViewInterface {
             }
         }// end while true
 
-
-
-        return new int[]{curRow, curCol};
+        return curWorkId;
     }
-
-
-
 
 
 
@@ -659,7 +780,6 @@ public class CoolCLI implements ViewInterface {
                         "  88 888 88    888ooo8     888        888         888     888 88 888o8 88   888ooo8   \n" +
                         "   888 888     888    oo   888      o 888o     oo 888o   o888 88  888  88   888    oo \n" +
                         "    8   8     o888ooo8888 o888ooooo88  888oooo88    88ooo88  o88o  8  o88o o888ooo8888" ;
-
         String to =
                 "ooooooooooo   ooooooo  \n" +
                 "88  888  88 o888   888o\n" +
@@ -735,7 +855,6 @@ public class CoolCLI implements ViewInterface {
 
         return bool;
     }
-
 
     private boolean contains (List<int[]> lista, int x, int y){
         boolean bool = false;

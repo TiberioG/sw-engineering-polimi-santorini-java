@@ -70,7 +70,7 @@ public class IslandAdapter {
     }
 
     void debug() throws IOException, InterruptedException {
-        //Terminal.noBuffer();
+
         int initRow = cursor[0];
         int initCol = cursor[1];
 
@@ -99,7 +99,9 @@ public class IslandAdapter {
     void setWorker(int r, int c, Colors color) {
         matrix[r][c].setTempWorker(color);
     }
-
+    void setTempLevel(int r, int c, int templevel) {
+        matrix[r][c].setTempLevel(templevel);
+    }
 
     public void setMovable (List<Cell> availableCells ) {
         for (Cell cell : availableCells) {
