@@ -214,4 +214,9 @@ public class GUI extends Application implements ViewInterface {
     public void displayBuildBlock() {
 
     }
+
+    @Override
+    public void displayLobbyCreated(String playersWaiting) {
+
+    }
 }

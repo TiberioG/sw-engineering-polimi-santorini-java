@@ -8,6 +8,7 @@ public enum TypeOfMessage {
     LOGIN_SUCCESSFUL,
     LOGIN_FAILURE,
     NUM_PLAYERS_FAILURE, // todo implementarlo client side
+    LOBBY_CREATED,
     CREATED_MATCH,      //obj_type : null
     START_MATCH,      //obj_type : null
     LOGIN,        //obj_type : Tupla(String, Date)

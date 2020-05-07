@@ -41,6 +41,8 @@ public class Client implements ServerObserver {
 
   private String username = null;
 
+  private Boolean waiting = false;
+
   ServerAdapter serverAdapter;
 
   private static final Logger LOGGER = Logger.getLogger("Client");
@@ -139,6 +141,10 @@ public class Client implements ServerObserver {
 
       case GENERIC_MESSAGE:
         view.displayGenericMessage((String)message.getPayload(String.class));
+        break;
+
+      case LOBBY_CREATED:
+        view.displayLobbyCreated((String)message.getPayload(String.class));
         break;
 
       case LOGIN_SUCCESSFUL:
@@ -332,4 +338,7 @@ public class Client implements ServerObserver {
     return availableBuildCells;
   }
 
+  public boolean getWaiting(){
+    return this.waiting;
+  }
 }

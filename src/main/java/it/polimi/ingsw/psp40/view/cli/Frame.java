@@ -85,7 +85,7 @@ class Frame {
                 try {
                     TimeUnit.MILLISECONDS.sleep(delay);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         }
@@ -126,5 +126,6 @@ class Frame {
     public int[] getInit(){
         return this.absInit;
     }
+
 
 }

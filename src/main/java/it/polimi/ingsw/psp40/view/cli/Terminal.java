@@ -181,23 +181,17 @@ public class Terminal {
      */
     private static String exec(final String[] cmd)  throws IOException, InterruptedException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
         Process p = Runtime.getRuntime().exec(cmd);
         int c;
         InputStream in = p.getInputStream();
-
         while ((c = in.read()) != -1) {
             bout.write(c);
         }
-
         in = p.getErrorStream();
-
         while ((c = in.read()) != -1) {
             bout.write(c);
         }
-
         p.waitFor();
-
         return  new String(bout.toByteArray());
     }
 

@@ -39,7 +39,6 @@ public class Utils {
                     maxLength = strings[j].length();
                     longestString = strings[j];
                 }
-
             }
         }
         return longestString.length();
@@ -408,18 +407,8 @@ public class Utils {
     }
 
 
-    String readIpNew() {
-        String ip;
-        ip = in.nextLine();
-        while (!isValidIp(ip)) {
-            System.out.println("This is not a valid IPv4 address. Please, try again:");
-            ip = in.nextLine();
-        }
-        return ip;
-    }
-
     public static boolean isValidIp(String input) {
-        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost");
+        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost") || input.equals("tiberio.xyz");
     }
 
     public static boolean isValidPort(Integer input) {

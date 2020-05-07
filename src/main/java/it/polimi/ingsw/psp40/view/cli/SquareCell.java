@@ -120,7 +120,6 @@ public class SquareCell {
             }
         }
 
-
         if(buildable){
             this.special(27);
         }
