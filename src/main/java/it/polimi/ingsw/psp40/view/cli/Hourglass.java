@@ -5,16 +5,12 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Hourglass implements Runnable{
-    private PrintWriter out ;
-    private Scanner in ;
     private Frame upper;
     private Frame lower;
     private volatile boolean cancelled;
 
 
-    public Hourglass(Scanner in, PrintWriter out, Frame upper, Frame lower) {
-        this.in  = in;
-        this.out = out;
+    public Hourglass(Frame upper, Frame lower) {
         this.upper = upper;
         this.lower = lower;
     }
@@ -43,7 +39,6 @@ public class Hourglass implements Runnable{
                     "██████████████████████████\n" +
                     "████                  ████\n" +
                     "██████████████████████████\n";
-
 
 
 
@@ -1000,6 +995,13 @@ public class Hourglass implements Runnable{
             "██ ███ ██ ██   ██ ██    ██    ██ ██  ██ ██ ██    ██     ██    ██    ██    ██   ██ ██      ██   ██     ██      ██      ██   ██    ██    ██      ██   ██      ██ \n" +
             " ███ ███  ██   ██ ██    ██    ██ ██   ████  ██████       ██████     ██    ██   ██ ███████ ██   ██     ██      ███████ ██   ██    ██    ███████ ██   ██ ███████ \n";
 
+    public static String starting =
+            "███    ███  █████  ████████  ██████ ██   ██     ██ ███████     ███████ ████████  █████  ██████  ████████ ██ ███    ██  ██████  \n" +
+            "████  ████ ██   ██    ██    ██      ██   ██     ██ ██          ██         ██    ██   ██ ██   ██    ██    ██ ████   ██ ██       \n" +
+            "██ ████ ██ ███████    ██    ██      ███████     ██ ███████     ███████    ██    ███████ ██████     ██    ██ ██ ██  ██ ██   ███ \n" +
+            "██  ██  ██ ██   ██    ██    ██      ██   ██     ██      ██          ██    ██    ██   ██ ██   ██    ██    ██ ██  ██ ██ ██    ██ \n" +
+            "██      ██ ██   ██    ██     ██████ ██   ██     ██ ███████     ███████    ██    ██   ██ ██   ██    ██    ██ ██   ████  ██████  \n" ;
+
 
 
     public static String print(int i){
@@ -1091,12 +1093,10 @@ public class Hourglass implements Runnable{
     public void run() {
         upper.clear();
         Terminal.hideCursor();
-        lower.center(Hourglass.waiting, 100);
         while (!cancelled) {
+            lower.center(Hourglass.waiting, 100);
             for (int i = 0; i < 39; i++) {
                 if (cancelled){
-                    upper.clear();
-                    lower.clear();
                     break;
                 }
                 upper.center(Hourglass.print(i), 10);
@@ -1104,17 +1104,14 @@ public class Hourglass implements Runnable{
             try {
                 TimeUnit.MILLISECONDS.sleep(500);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
-
-        lower.clear();
     }
 
     public void cancel()
     {
         cancelled = true;
-        lower.clear();
     }
 
 }

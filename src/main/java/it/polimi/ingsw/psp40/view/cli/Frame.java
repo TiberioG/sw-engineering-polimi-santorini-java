@@ -43,6 +43,16 @@ class Frame {
         in.reset();
     }
 
+    void clearRight(){
+        System.out.print(Colors.reset());
+        for (int row = absInit[0]; row <= absEnd[0]; row++){
+            Terminal.moveAbsoluteCursor(row, absInit[1]);
+            System.out.print("\u001b[K");
+        }
+        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        in.reset();
+    }
+
     void print(String string){
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
         System.out.print(string);
@@ -72,6 +82,7 @@ class Frame {
     }
 
     void center (String toWrite, int delay){
+        Terminal.hideCursor();
         String[] lines = toWrite.split("\\r?\\n");
         for (int i = 0; i<lines.length; i++){
             int len = lines[i].length();
@@ -90,6 +101,7 @@ class Frame {
             }
         }
         lastRowRitten = lastRowRitten + lines.length + 1;
+        Terminal.showCursor();
     }
 
 

@@ -2,13 +2,17 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.exceptions.OldUserException;
+import it.polimi.ingsw.psp40.exceptions.YoungUserException;
 import it.polimi.ingsw.psp40.network.client.Client;
 
+import java.awt.*;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -17,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author tiberioG
  */
 public class Utils {
+
     private PrintWriter out ;
     private Scanner in ;
 
@@ -145,10 +150,36 @@ public class Utils {
             }
         }
 
-
-
         return date;
     }
+
+
+    public Date isValidDate(String input) throws ParseException, YoungUserException, OldUserException {
+        DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
+        Date date = dateFormat.parse(input);
+        Date today = new Date();
+        Date oldest = new Date();
+        try {
+            oldest = dateFormat.parse("01/01/1900");
+        } catch (ParseException e) {
+            //it's impossible to trow excep here ehe
+        }
+
+        if (date.before(today) && date.after(oldest)){
+            return date;
+        }else{
+            if (date.after(today)){
+                throw new YoungUserException();
+            }
+            if (date.before(oldest)) {
+                throw new OldUserException();
+            }
+        }
+        return null;
+    }
+
+
+
 
 
 
@@ -355,6 +386,44 @@ public class Utils {
     }
 
 
+    public String formPrefilled(String title, int width, String prefill){
+        String titleString = centerString(width, title);
+
+        StringBuilder table = new StringBuilder();
+        //top line
+        table.append("╔");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╗\n");
+
+        //title line
+        table.append("║").append(titleString.replaceAll("\n", " ").toUpperCase()).append("║\n");
+
+        //close tile line
+        table.append("╠");
+        for (int i = 0; i< (width); i++ ){
+            table.append("═");
+        }
+        table.append("╣\n");
+
+        //formarea
+        int centerwidth = width - 3 ;
+        String output = String.format("%-" + centerwidth + "s", prefill);
+        table.append("║  ").append(output).append(" ║\n");
+
+        //closeline
+        table.append("╚");
+        for (int i = 0; i< (width ); i++ ){
+            table.append("═");
+        }
+        table.append("╝\n");
+        return  table.toString();
+    }
+
+
+
+
     public void printMap(String[][] stringIsland ){
         String lineSplit = "";
         StringJoiner splitJoiner = new StringJoiner("┼", "|", "|");
@@ -405,6 +474,11 @@ public class Utils {
         }
         return ip;
     }
+
+    public static boolean isValidUsername(String input){
+        return !(input.equals("All") || input.isEmpty() || input.matches("^\\s*$") || input.equals("Hitler"));
+    }
+
 
 
     public static boolean isValidIp(String input) {

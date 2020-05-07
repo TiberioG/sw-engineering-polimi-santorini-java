@@ -5,9 +5,13 @@ import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
+import it.polimi.ingsw.psp40.exceptions.OldUserException;
+import it.polimi.ingsw.psp40.exceptions.YoungUserException;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
+
+import java.awt.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
  * @author TiberioG
  */
 public class CoolCLI implements ViewInterface {
+    private int DELAY;
     private final Client client;
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
@@ -44,8 +49,15 @@ public class CoolCLI implements ViewInterface {
     private static Frame upper = new Frame(new int[]{0,0}, new int[]{8, COLS}, in, out);
     private static Frame center = new Frame(new int[]{10,0}, new int[]{ROWS, COLS}, in, out);
     private static Frame center2 = new Frame(new int[]{15,0}, new int[]{ROWS, COLS}, in, out);
+    private static Frame center3 = new Frame(new int[]{20,0}, new int[]{ROWS, COLS}, in, out);
     private static Frame lower = new Frame (new int[]{ROWS - 6 ,0}, new int[]{ROWS, COLS}, in, out);
     private static Frame left = new Frame(new int[]{10,0}, new int[]{99, 58}, in, out);
+    private static Frame right = new Frame(new int[]{11,60}, new int[]{ROWS, COLS}, in, out);
+
+    //2-frame layout
+    private final static int  SPACING = 3;
+    private static Frame lay2Left = new Frame(new int[]{10, (COLS - (CardSelector.width + SPACING + CardSelector.extended) ) /2}, new int[]{ROWS, COLS}, in, out);
+    private static Frame lay2Right = new Frame(new int[]{10,((COLS - 2 * (CardSelector.width + SPACING) ) /2) + CardSelector.width + SPACING}, new int[]{ROWS, COLS}, in, out);
 
     private boolean fastboot = true;
 
@@ -58,9 +70,16 @@ public class CoolCLI implements ViewInterface {
      * @param client
      */
     public CoolCLI(Client client) {
+
+        if(!fastboot) {
+            DELAY = 100;
+        }
+        else {
+            DELAY = 0;
+        }
+
+
         this.client = client; //associate with client
-
-
         /* Clear Terminal, a bit overkill but I'm sure terminal window is clean with no history */
         Terminal.resize(ROWS, COLS);  //force terminal window size
         Terminal.superClear();   //this clears all the previous history of terminal
@@ -86,36 +105,36 @@ public class CoolCLI implements ViewInterface {
         /* Real working  mode: gets input from user */
         if(!fastboot) {
             /* reading ip/URL of server */
-            center.center(utils.form("enter address of server", 30), 0); //print form
+            center.center(utils.form("enter address of server", 30), DELAY); //print form
             Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
             ip = in.nextLine();
             while (!Utils.isValidIp(ip)) {
                 lower.print("This is not a valid IPv4 address. Please, try again:");
-                center.center(utils.form("enter address of server", 30), 0);
+                center.center(utils.form("enter address of server", 30), DELAY);
                 Terminal.moveRelativeCursor(-1, -29);
                 ip = in.nextLine();
             }
             lower.clear(); // used to clear lower part where are displayed errors
 
             /* reading port of server */
-            center2.center(utils.form("Enter port number", 30), 0);
+            center2.center(utils.form("Enter port number", 30), DELAY);
             Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
             try {
                 port = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt
             } catch (NumberFormatException e) {
-                center2.center(utils.form("enter port number", 30), 0);
+                center2.center(utils.form("enter port number", 30), DELAY);
                 Terminal.moveRelativeCursor(-1, -29);
                 in.nextLine();
             }
 
             while (port < MIN_PORT || port > MAX_PORT) {
                 lower.print("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:");
-                center2.center(utils.form("enter port number", 30), 0);
+                center2.center(utils.form("enter port number", 30), DELAY);
                 Terminal.moveRelativeCursor(-1, -29);
                 try {
                     port = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt
                 } catch (NumberFormatException e) {
-                    center2.center(utils.form("enter port number", 30), 0);
+                    center2.center(utils.form("enter port number", 30), DELAY);
                     Terminal.moveRelativeCursor(-1, -29);
                     in.nextLine();
                 }
@@ -148,20 +167,82 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayLogin() {
         String username;
+        Date date = null;
+        center.clear();
+        center2.clear();
+        left.clear();//importante sia l'ultimo clear
 
         if(!fastboot) {
-            center.clear();
-            center2.clear();
-            left.clear();//importante sia l'ultimo clear
+            /* reading username */
+            center.center(utils.form("Enter username ", 30), DELAY); //print form
+            Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+            username = in.nextLine();
+            while (!Utils.isValidUsername(username)) {
+                lower.print("This is not a valid username");
+                center.center(utils.form("Enter username ", 30), 0); //print form
+                Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+                username = in.nextLine();
+            }
+            lower.clear(); // used to clear lower part where are displayed errors
 
-            out.println("Choose your username:   ");
-            username = utils.readnames();
+            //reading birthdate
+            do{
+                try{
+                    Terminal.hideCursor();
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), DELAY); //print form
+                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+                    Terminal.showCursor();
+                    date = utils.isValidDate(in.nextLine());
+                }
+                catch (ParseException e) {
+                    lower.print("Wrong format of date");
+                    Terminal.hideCursor();
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form
+                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+                    Terminal.showCursor();
+                } catch (YoungUserException e) {
+                    lower.print("You're too young to play this game");
+                    Terminal.hideCursor();
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form
+                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+                    Terminal.showCursor();
+                } catch (OldUserException e) {
+                    lower.print("You're too old to play this game");
+                    Terminal.hideCursor();
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form
+                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+                    Terminal.showCursor();
+                }
+            }while (date == null);
 
-            date = utils.readDate("birthdate");
+            lower.clear(); // used to clear lower part where are displayed errors
 
-            out.println("How many people do you want to play with?");
-            numOfPlayers = utils.readNumbers(2, 3);
-        }
+
+            /* reading port of server */
+            center3.center(utils.form("How many players?", 30), DELAY);
+            Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
+            try {
+                numOfPlayers = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt
+            } catch (NumberFormatException e) {
+                center3.center(utils.form("how many players?", 30), 0);
+                Terminal.moveRelativeCursor(-1, -29);
+                in.nextLine();
+            }
+
+            while (numOfPlayers < 2 || numOfPlayers > 3) {
+                lower.print("Value must be between " + 2 + " and " + 3 + ". Please, try again:");
+                center3.center(utils.form("how many players?", 30), 0);
+                Terminal.moveRelativeCursor(-1, -29);
+                try {
+                    numOfPlayers = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt
+                } catch (NumberFormatException e) {
+                    center3.center(utils.form("how many players?", 30), 0);
+                    Terminal.moveRelativeCursor(-1, -29);
+                    in.nextLine();
+                }
+            }
+
+        }//if fastboot enabled
         else {
             username = new Date().toString();
             DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
@@ -181,24 +262,34 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayLoginSuccessful() {
-            left.clear();
+        /*left.clear();
         left.printWrapped("You have been logged in successfully");
+
+         */
     }
 
     @Override
     public void displayLoginFailure(String details) {
-
+        lower.print(details);
+        try {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
+        displayLogin();
     }
 
     @Override
     public void displayUserJoined(String details) {
-        left.clear();
+       /* left.clear();
         left.printWrapped(details);
+
+        */
     }
 
     @Override
     public void displayAddedToQueue(String details) {
-        hour = new Hourglass(in, out, center, lower);
+        hour = new Hourglass(center, lower);
         executor = Executors.newFixedThreadPool(1);
         executor.execute(hour);
         left.clear();
@@ -209,10 +300,19 @@ public class CoolCLI implements ViewInterface {
     public void displayStartingMatch() {
         hour.cancel();
         executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
         center.clear();
         lower.clear();
-        left.clear();
-        left.println("MATCH IS STARTING!!!!");
+        lower.center(Hourglass.starting, 100);
+        try {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
     }
 
     @Override
@@ -230,7 +330,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayLobbyCreated(String playersWaiting) {
-        hour = new Hourglass(in, out, center, lower);
+        hour = new Hourglass(center, lower);
         executor = Executors.newFixedThreadPool(1);
         executor.execute(hour);
     }
@@ -244,12 +344,17 @@ public class CoolCLI implements ViewInterface {
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
         hour.cancel();
         executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
         center.clear();
         lower.clear();
 
         left.clear(); // must be last clear
 
-        CardSelector cardSelector = new CardSelector(cards, numPlayers, left.getInit());
+        CardSelector cardSelector = new CardSelector(cards, numPlayers, lay2Left, lay2Right );
 
         int[] selection = cardSelector.selection();
 
@@ -260,13 +365,24 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
+        hour.cancel();
+        executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
         center.clear();
-        center2.clear();
         lower.clear();
 
-        left.clear(); //
+        left.clear(); // must be last clear
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
 
-        CardSelector cardSelector = new CardSelector(availableCards, 1,  left.getInit());
+        CardSelector cardSelector = new CardSelector(availableCards, 1,  lay2Left, lay2Right);
         int[] personalIdCard = cardSelector.selection();
         client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard[0]));
         left.clear();
@@ -275,7 +391,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayCardInGame(List<Card> cardInGame) {
         left.clear();
-        CardSelector cardSelector = new CardSelector(cardInGame, 0,  new int[]{15,30});
+        CardSelector cardSelector = new CardSelector(cardInGame, 0,  lay2Left, lay2Right);
         //non printa nulla
 
         left.clear();
@@ -291,7 +407,7 @@ public class CoolCLI implements ViewInterface {
         String[] colorsAvailableArray = colorsAvailable.toArray(new String[0]);//conversion to string
         left.println("I's time to choose one color for your workers, \n choose from following list:");
         try {
-            utils.singleTableCool("options", colorsAvailableArray, 100);
+            utils.singleTableCool("options", colorsAvailableArray, DELAY);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -331,18 +447,17 @@ public class CoolCLI implements ViewInterface {
         workercord.add(new CoordinatesMessage(work2[0], work2[1]));
 
         client.sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.valueOf(colorsAvailableArray[choice]), workercord)) );
-        //out.println("done");
-
-
     }
 
     @Override
     public void displayAskFirstPlayer(List<Player> allPlayers) {
         left.clear();
+        center.clear();
+
         String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
 
         try {
-            utils.singleTableCool("Players available", names, 100);
+            utils.singleTableCool("Players available", names, DELAY);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -505,7 +620,7 @@ public class CoolCLI implements ViewInterface {
         else {
             left.println("Choose one of the following blocks to build:");
             try {
-                utils.singleTableCool("Blocks available", nameOfAvailableComponents, 100);
+                utils.singleTableCool("Blocks available", nameOfAvailableComponents, DELAY);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -747,13 +862,7 @@ public class CoolCLI implements ViewInterface {
     }
 
     private void maketitle() throws InterruptedException {
-        int DELAY;
-        if(!fastboot) {
-            DELAY = 200;
-        }
-        else {
-            DELAY = 0;
-        }
+
         Terminal.hideCursor();
         String welcome =
                         "oooo     oooo ooooooooooo ooooo         oooooooo8   ooooooo  oooo     oooo ooooooooooo\n" +

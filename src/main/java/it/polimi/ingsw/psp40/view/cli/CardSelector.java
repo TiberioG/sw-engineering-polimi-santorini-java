@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.model.Card;
+import org.davidmoten.text.utils.WordWrap;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,18 +10,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CardSelector {
-    private static int width = 30;
+    static int width = 20;
+    static int extended = width + 5 ;
+
     private String title ;
     private List<Card> cards = new ArrayList<>();
     private int toSelect;
 
-    private int[] absInit;
 
-    public CardSelector(HashMap<Integer, Card> hashMapCards, int toSelect, int[] absInit){
+    Frame f1;
+    Frame f2;
+
+    public CardSelector(HashMap<Integer, Card> hashMapCards, int toSelect, Frame f1, Frame f2){
         for (int i = 0; i< hashMapCards.size(); i++){
             this.cards.add(hashMapCards.get(i));
         }
-        this.absInit = absInit;
+        this.f1 = f1;
+        this.f2 = f2;
         this.toSelect = toSelect;
         switch (toSelect){
             case 0:
@@ -35,9 +41,10 @@ public class CardSelector {
         }
     }
 
-    public CardSelector(List<Card> availableCards, int toSelect, int[] absInit){
+    public CardSelector(List<Card> availableCards, int toSelect, Frame f1, Frame f2){
         this.cards = availableCards;
-        this.absInit = absInit;
+        this.f1 = f1;
+        this.f2 = f2;
         this.toSelect = toSelect;
 
         switch (toSelect){
@@ -65,6 +72,7 @@ public class CardSelector {
 
         Terminal.hideCursor();
         print(selection, selected);
+        showText(selection);
         while (true) {
             try {
                 if (System.in.available() != 0) {
@@ -100,6 +108,7 @@ public class CardSelector {
                             }
                         }
                         print(selection, selected);
+                        showText(selection);
                     }//end arrow management
 
                 } //end system in available
@@ -127,20 +136,20 @@ public class CardSelector {
         StringBuilder title = new StringBuilder();
 
         //top line
-        Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        Terminal.moveAbsoluteCursor(f1.getInit()[0], f1.getInit()[1]);
         System.out.print("╔");
         for (int i = 0; i < (width); i++) {
             System.out.print("═");
         }
         System.out.print("╗");
 
-        Terminal.moveAbsoluteCursor(absInit[0] + 1, absInit[1]); // goo down one line
+        Terminal.moveAbsoluteCursor(f1.getInit()[0] + 1, f1.getInit()[1]); // goo down one line
 
         //title line
         title.append("║").append(titleString.replaceAll("\n", " ").toUpperCase()).append("║");
         System.out.print(title);
 
-        Terminal.moveAbsoluteCursor(absInit[0] + 2, absInit[1]); // goo down one line
+        Terminal.moveAbsoluteCursor(f1.getInit()[0] + 2, f1.getInit()[1]); // goo down one line
 
         //close tile line
         System.out.print("╠");
@@ -149,7 +158,7 @@ public class CardSelector {
         }
         System.out.print("╣");
 
-        Terminal.moveAbsoluteCursor(absInit[0] + 3, absInit[1]); // goo down one line
+        Terminal.moveAbsoluteCursor(f1.getInit()[0] + 3, f1.getInit()[1]); // goo down one line
 
         //middle item lines
         for (int i = 0; i < height; i++) {
@@ -184,7 +193,7 @@ public class CardSelector {
             }
             System.out.print("║");
 
-            Terminal.moveAbsoluteCursor(absInit[0] + 4 + i, absInit[1]);
+            Terminal.moveAbsoluteCursor(f1.getInit()[0] + 4 + i, f1.getInit()[1]);
         }
 
         //closeline
@@ -193,7 +202,57 @@ public class CardSelector {
             System.out.print("═");
         }
         System.out.print("╝");
-
     }
 
+    private void showText(int cardId){
+        f2.clearRight(); //ued to odelete previous box
+        String titleString = Utils.centerString(width, "Card description"); //title
+        StringBuilder title = new StringBuilder();
+        String wrapped =  //content
+                WordWrap.from(cards.get(cardId).getDescription())
+                        .maxWidth(width)
+                        .wrap();
+        String[] lines = wrapped.split("\\r?\\n"); //split in lines
+
+        //top line
+        Terminal.moveAbsoluteCursor(f2.getInit()[0], f2.getInit()[1]);
+        System.out.print("╔");
+        for (int i = 0; i < extended; i++) {
+            System.out.print("═");
+        }
+        System.out.print("╗");
+
+        //title line
+        Terminal.moveAbsoluteCursor(f2.getInit()[0] + 1, f2.getInit()[1]); // goo down one line
+        title.append("║  ").append(titleString.replaceAll("\n", " ").toUpperCase()).append("   ║");
+        System.out.print(title);
+
+        //close tile line
+        Terminal.moveAbsoluteCursor(f2.getInit()[0] + 2, f2.getInit()[1]); // goo down one line
+        System.out.print("╠");
+        for (int i = 0; i < (extended); i++) {
+            System.out.print("═");
+        }
+        System.out.print("╣");
+
+        Terminal.moveAbsoluteCursor(f2.getInit()[0] + 3, f2.getInit()[1]); // goo down one line
+
+        //middle item lines
+        for (int i = 0; i < lines.length; i++) {
+            String output = String.format("  %-"+ width + "s", lines[i]);
+            System.out.print("║ ");
+            System.out.print(output);
+            System.out.print("  ║");
+            Terminal.moveAbsoluteCursor(f2.getInit()[0] + 4 + i, f2.getInit()[1]);
+
+        }
+
+        //closeline
+        System.out.print("╚");
+        for (int i = 0; i< (extended); i++ ){
+            System.out.print("═");
+        }
+        System.out.print("╝");
+
+    }
 }
