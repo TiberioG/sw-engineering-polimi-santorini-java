@@ -21,7 +21,7 @@ public class IslandAdapter {
     private SquareCell[][] matrix ;
     private int len;
     private int hei;
-    private int[] cursor = {7, 60};
+    private Frame frame;
 
     private final int SPACING_H = 1;
     final int SPACING_V = 1;
@@ -32,10 +32,11 @@ public class IslandAdapter {
      * @param field from the model, a matrix of {@link Cell}
      * @param location from the model {@link Location}
      */
-    IslandAdapter(Cell[][] field, Location location){
-        matrix = new SquareCell[field.length][field.length];
-        len = SquareCell.getLen();
-        hei = SquareCell.getHei();
+    IslandAdapter(Cell[][] field, Location location, Frame frame){
+        this.frame = frame;
+        this.matrix = new SquareCell[field.length][field.length];
+        this.len = SquareCell.getLen();
+        this.hei = SquareCell.getHei();
 
         for (int row = 0; row < field.length ; row++) {
             for (int col = 0; col < field.length ; col++) {
@@ -58,8 +59,8 @@ public class IslandAdapter {
     void print() throws IOException, InterruptedException {
         Terminal.noBuffer();
         Terminal.hideCursor();
-        int initRow = cursor[0];
-        int initCol = cursor[1];
+        int initRow = frame.getInit()[0];
+        int initCol = frame.getInit()[1];
 
         for (int row = 0; row < matrix.length; row ++) {
             for (int col = 0; col < matrix.length; col++) {
@@ -70,9 +71,8 @@ public class IslandAdapter {
     }
 
     void debug() throws IOException, InterruptedException {
-
-        int initRow = cursor[0];
-        int initCol = cursor[1];
+        int initRow = frame.getInit()[0];
+        int initCol = frame.getInit()[1];
 
         for (int row = 0; row < matrix.length; row ++) {
             for (int col = 0; col < matrix.length; col++) {

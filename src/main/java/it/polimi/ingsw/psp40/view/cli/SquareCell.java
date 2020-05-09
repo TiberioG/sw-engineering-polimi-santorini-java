@@ -139,7 +139,7 @@ public class SquareCell {
     }
 
 
-    private void noWorkerL0 () throws IOException, InterruptedException {
+    private void noWorkerL0 ()  {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
             for (int j = 0; j < len; j++){
@@ -149,7 +149,7 @@ public class SquareCell {
     }
 
 
-    private void noWorkerL1 () throws IOException, InterruptedException {
+    private void noWorkerL1 ()  {
         for (int i = 0; i < hei - 2  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 1, startCol + 1 ); // scendo di una riga ogni volta con offset 1
             for (int j = 0; j < len - 2 ; j++){
@@ -158,7 +158,7 @@ public class SquareCell {
         }
     }
 
-    private void noWorkerL2 () throws IOException, InterruptedException {
+    private void noWorkerL2 ()  {
         for (int i = 0; i < hei - 4  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 2, startCol + 2 ); // scendo di una riga ogni volta  n offset 2
             for (int j = 0; j < len - 4 ; j++){
@@ -167,7 +167,7 @@ public class SquareCell {
         }
     }
 
-    private void noWorkerL3 () throws IOException, InterruptedException {
+    private void noWorkerL3 () {
         for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
             for (int j = 0; j < len - 6 ; j++){
@@ -176,7 +176,7 @@ public class SquareCell {
         }
     }
 
-    private void noWorkerL4 () throws IOException, InterruptedException {
+    private void noWorkerL4 () {
         for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
             for (int j = 0; j < len - 6 ; j++){
@@ -186,7 +186,7 @@ public class SquareCell {
     }
 
 
-    private void yesWorker () throws IOException, InterruptedException {
+    private void yesWorker ()  {
         for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
             Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
             for (int j = 0; j < len - 6 ; j++){
@@ -196,7 +196,6 @@ public class SquareCell {
             }
         }
     }
-
 
 
     private void coordinates (int row, int col) throws IOException, InterruptedException {
@@ -234,8 +233,6 @@ public class SquareCell {
         }
 
     }
-
-
 
 
     public static int getLen(){

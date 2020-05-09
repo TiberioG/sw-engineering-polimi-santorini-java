@@ -79,6 +79,26 @@ class Frame {
 
     void border(){
 
+        for (int i = 0; i < rowSpan ; i ++){
+            Terminal.moveAbsoluteCursor(absInit[0] + i, absInit[1]); // scendo di una riga ogni volta
+            System.out.print("┃");
+        }
+
+        Terminal.moveAbsoluteCursor(absInit[0] , absInit[1]);
+        for (int j = 0; j < colSpan; j++){
+            System.out.print("━");
+        }
+
+        for (int i = 1; i < rowSpan  ; i ++){
+            Terminal.moveAbsoluteCursor(absInit[0] + i, absEnd[1] );
+            System.out.print("┃");
+        }
+
+        Terminal.moveAbsoluteCursor(absEnd[0] , absInit[1]);
+        for (int j = 0; j < colSpan; j++){
+            System.out.print("━");
+        }
+
     }
 
     void center (String toWrite, int delay){
@@ -86,6 +106,29 @@ class Frame {
         String[] lines = toWrite.split("\\r?\\n");
         for (int i = 0; i<lines.length; i++){
             int len = lines[i].length();
+            int diff = (colSpan - len) / 2;
+            if (diff < 0){
+                diff = 0;
+            }
+            Terminal.moveAbsoluteCursor(absInit[0]+ i + 1, absInit[1] + diff);
+            System.out.print(lines[i]);
+            if (delay != 0) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(delay);
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                }
+            }
+        }
+        lastRowRitten = lastRowRitten + lines.length + 1;
+        Terminal.showCursor();
+    }
+
+
+    void centerFixed (String toWrite, int len, int delay){
+        Terminal.hideCursor();
+        String[] lines = toWrite.split("\\r?\\n");
+        for (int i = 0; i<lines.length; i++){
             int diff = (colSpan - len) / 2;
             if (diff < 0){
                 diff = 0;
@@ -139,5 +182,16 @@ class Frame {
         return this.absInit;
     }
 
+    public int[] getAbsEnd(){
+        return this.absEnd;
+    }
 
+
+    public PrintWriter getOut() {
+        return out;
+    }
+
+    public Scanner getIn() {
+        return in;
+    }
 }

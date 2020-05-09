@@ -198,6 +198,10 @@ public class Client implements ServerObserver {
         view.displayChoicePersonalCard(availableCards);
         break;
 
+      case FORCED_CARD:
+        Card card = (Card)message.getPayload(Card.class);
+        view.displayForcedCard(card);
+
       /* case used to choose the first player to position his workers, is selected by the current player */
       case CHOOSE_FIRST_PLAYER:
         List<Player> payloadOfChooseFirstPlayer = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());

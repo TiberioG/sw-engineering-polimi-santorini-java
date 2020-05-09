@@ -176,6 +176,11 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void displayForcedCard(Card card) {
+
+    }
+
+    @Override
     public void displaySetInitialPosition(List<Player> playerList) {
 
     }

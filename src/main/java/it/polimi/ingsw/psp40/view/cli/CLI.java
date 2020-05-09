@@ -228,6 +228,12 @@ public class CLI implements ViewInterface {
     }
 
     @Override
+    public void displayForcedCard(Card card) {
+        out.println("You have been assigned the following card:" + card.getName());
+
+    }
+
+    @Override
     public void displaySetInitialPosition(List<Player> playerList) {
         List<String> colorAlreadyUsed = playerList.stream().flatMap(player -> player.getWorkers().stream()).map(worker -> worker.getColor().toString()).distinct().collect(Collectors.toList());
         List<String> colorsAvailable = Arrays.asList(Colors.allNames()).stream().filter(colorAvailable -> colorAlreadyUsed.indexOf(colorAvailable) == -1).collect(Collectors.toList());

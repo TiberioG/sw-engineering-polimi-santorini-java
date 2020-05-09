@@ -28,6 +28,7 @@ public interface ViewInterface {
     void displayChoicePersonalCard(List<Card> availableCards) ;
 
     void displayCardInGame(List<Card> cardInGame);
+    void displayForcedCard(Card card);
     void displaySetInitialPosition(List<Player> playerList);
     void displayAskFirstPlayer(List<Player> allPlayers);
     void displayChoiceOfAvailablePhases(List<Phase> phaseList);
