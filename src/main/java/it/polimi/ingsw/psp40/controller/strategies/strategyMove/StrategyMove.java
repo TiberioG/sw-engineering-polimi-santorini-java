@@ -9,4 +9,5 @@ import java.util.List;
 public interface StrategyMove {
     void move(Worker worker, Cell cell) throws SantoriniException;
     List<Cell> getAvailableCells(Worker worker);
+    List<Cell> getAdjCells (Cell cell);
 }

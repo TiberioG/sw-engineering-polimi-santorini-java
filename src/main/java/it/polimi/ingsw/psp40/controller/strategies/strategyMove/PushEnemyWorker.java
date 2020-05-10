@@ -43,9 +43,9 @@ public class PushEnemyWorker extends DefaultMove {
     @Override
     public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
-        List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);
+        List<Cell> adjCells = super.getAdjCells(workerCell);
         return adjCells.stream()
-                .filter(cell -> !(cell.getTower().getTopComponent().getComponentCode() == workerCell.getTower().getTopComponent().getComponentCode() + 2)) // remove cells where tower is 2 or more level higher than where the worker is
+                .filter(cell -> cell.getTower().getTopComponent().getComponentCode() <= workerCell.getTower().getTopComponent().getComponentCode() + 1) // remove cells where tower is 2 or more level higher than where the worker is
                 .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
                 .filter(cell -> (match.getLocation().getOccupant(cell) == null || ((match.getLocation().getOccupant(cell).getOwner() != worker.getOwner()) && checkPositionBehind(worker, cell)) )) // removes cells where there is an allied worker or where there is an enemy worker and the cell behind him is occupied (or doesn't exist)
                 .collect(Collectors.toList());

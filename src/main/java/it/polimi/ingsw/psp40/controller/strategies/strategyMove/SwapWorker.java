@@ -39,9 +39,9 @@ public class SwapWorker extends DefaultMove {
     @Override
     public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
-        List<Cell> adjCells = match.getIsland().getAdjCells(workerCell);
+        List<Cell> adjCells = super.getAdjCells(workerCell);
         return adjCells.stream()
-                .filter(cell -> !(cell.getTower().getTopComponent().getComponentCode() == workerCell.getTower().getTopComponent().getComponentCode() + 2)) // remove cells where tower is 2 or more level higher than where the worker is
+                .filter(cell -> cell.getTower().getTopComponent().getComponentCode() <= workerCell.getTower().getTopComponent().getComponentCode() + 1) // remove cells where tower is 2 or more level higher than where the worker is
                 .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
                 .filter(cell -> (match.getLocation().getOccupant(cell) == null || match.getLocation().getOccupant(cell).getOwner() != worker.getOwner()) ) // remove cells where there is a worker owned by the current player
                 .collect(Collectors.toList());

@@ -14,8 +14,7 @@ public class MatchProperties {
     private HashMap<Worker, Integer> initialLevels = new HashMap<>();
     private HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
     private List<PhaseType> performedPhases = new ArrayList<>();
-
-
+    private boolean othersCantLevelUp = false;
 
 
     public void resetAllParameter() {
@@ -24,6 +23,7 @@ public class MatchProperties {
         initialLevels = new HashMap<>();
         builtInThisTurn = new HashMap<>();
         performedPhases = new ArrayList<>();
+        othersCantLevelUp = false;
     }
 
     public HashMap<Worker, Cell> getInitialPositionMap() {
@@ -60,4 +60,11 @@ public class MatchProperties {
         return builtInThisTurn.get(worker);
     }
 
+    public boolean isOthersCantLevelUp() {
+        return othersCantLevelUp;
+    }
+
+    public void setOthersCantLevelUp(boolean othersCantLevelUp) {
+        this.othersCantLevelUp = othersCantLevelUp;
+    }
 }
