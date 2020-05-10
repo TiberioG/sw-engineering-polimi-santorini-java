@@ -75,7 +75,7 @@ public class CardManager {
                 strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
                 strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
                 strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
-                strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyLose", "DefaultLose"));
+                strategySettings.setStrategyLose(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyLose", "DefaultLose"));
 
                 Class.forName(Configuration.strategyMovePackage + "." + strategySettings.getStrategyMove());
                 Class.forName(Configuration.strategyBuildPackage + "." + strategySettings.getStrategyBuild());

@@ -26,7 +26,7 @@ public class StrategySettings {
     }
 
     public void setStrategyWin(String strategyWin) {
-        strategyWin = strategyWin;
+        this.strategyWin = strategyWin;
     }
 
     public String getStrategyBuild() {
@@ -42,6 +42,6 @@ public class StrategySettings {
     }
 
     public void setStrategyLose(String strategyLose) {
-        strategyLose = strategyLose;
+        this.strategyLose = strategyLose;
     }
 }
