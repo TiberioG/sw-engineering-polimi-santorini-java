@@ -416,6 +416,18 @@ public class CLI implements ViewInterface {
         out.println("Lobby created! Waiting for " + playersWaiting + " other(s) player(s)...");
     }
 
+    @Override
+    public void displayWinnerMessage() {
+        out.println("Congratulations, you won!");
+    }
+
+    @Override
+    public void displayLoserMessage() {
+        out.println("I'm sorry, you lose!");
+    }
+
+
+
     private void showIsland() {
         Location location = client.getLocationCache();
         Cell[][] field = client.getFieldCache();

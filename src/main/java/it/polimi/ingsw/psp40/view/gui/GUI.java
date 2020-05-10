@@ -224,4 +224,13 @@ public class GUI extends Application implements ViewInterface {
     public void displayLobbyCreated(String playersWaiting) {
 
     }
+
+    @Override
+    public void displayWinnerMessage() {
+
+    }
+    @Override
+    public void displayLoserMessage() {
+
+    }
 }

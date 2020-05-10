@@ -902,6 +902,17 @@ public class CoolCLI implements ViewInterface {
     }
 
 
+    @Override
+    public void displayWinnerMessage() {
+        left.println("Congratulations, you won!");
+    }
+
+    @Override
+    public void displayLoserMessage() {
+        left.println("I'm sorry, you lose!");
+    }
+
+
 
     private List<int[]> cellAdapter(List<Cell> cellList){
         List<int[]> coord = new ArrayList<>();

@@ -20,10 +20,11 @@ public class Match extends Publisher<Message> {
     private int matchID;
     private Island island;
     private List<Player> listPlayers = new ArrayList<>();
-    private Player currentPlayer ;
+    private Player currentPlayer;
     private List<Card> listCardsInGame = new ArrayList<>();
     private VirtualView virtualView;
     private MatchProperties matchProperties;
+    private Player winningPlayer;
 
     /**
      * Constructor
@@ -175,5 +176,10 @@ public class Match extends Publisher<Message> {
         }
         publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         return getPlayers();
+    }
+
+    public void setWinningPlayer(Player winningPlayer) {
+        this.winningPlayer = winningPlayer;
+        publish(new Message("ALL", TypeOfMessage.WINNING_PLATER_UPDATED, this.winningPlayer));
     }
 }

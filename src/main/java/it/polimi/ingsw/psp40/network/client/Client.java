@@ -84,8 +84,8 @@ public class Client implements ServerObserver {
 
     if (cli) {
       Client client = new Client();
-      //CLI view = new CLI(client);
-      CoolCLI view = new CoolCLI(client);
+      CLI view = new CLI(client);
+      //CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }
@@ -201,7 +201,7 @@ public class Client implements ServerObserver {
       case FORCED_CARD:
         Card card = (Card)message.getPayload(Card.class);
         view.displayForcedCard(card);
-
+        break;
       /* case used to choose the first player to position his workers, is selected by the current player */
       case CHOOSE_FIRST_PLAYER:
         List<Player> payloadOfChooseFirstPlayer = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
@@ -252,7 +252,14 @@ public class Client implements ServerObserver {
         availableBuildCells =  (HashMap<Cell, List<Integer>>) message.getPayload(new TypeToken<HashMap<Cell, List<Integer>>>() {}.getType());
         view.displayChoiceOfAvailableCellForBuild();
         break;
-
+      case WINNING_PLATER_UPDATED:
+        Player winningPlayer = (Player) message.getPayload(Player.class);
+        if (winningPlayer.getName().equals(username)) {
+          view.displayWinnerMessage();
+        } else {
+          view.displayLoserMessage();
+        }
+        break;
       default:
         break;
 

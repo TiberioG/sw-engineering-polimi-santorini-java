@@ -454,7 +454,7 @@ public class Utils {
     }
 
 
-    String readnames() {
+    public String readNames() {
         String name = in.nextLine();
 
         while (name.equals("All") || name.isEmpty() || name.matches("^\\s*$")){
@@ -465,7 +465,7 @@ public class Utils {
         return name;
     }
 
-    String readIp() {
+    public String readIp() {
         String ip;
         ip = in.nextLine();
         while (!isValidIp(ip)) {
@@ -479,8 +479,6 @@ public class Utils {
         return !(input.equals("All") || input.isEmpty() || input.matches("^\\s*$") || input.equals("Hitler"));
     }
 
-
-
     public static boolean isValidIp(String input) {
         return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost") || input.equals("tiberio.xyz");
     }
@@ -488,8 +486,4 @@ public class Utils {
     public static boolean isValidPort(Integer input) {
         return (input >= Client.MIN_PORT && input <= Client.MAX_PORT);
     }
-
-
-
-
 }

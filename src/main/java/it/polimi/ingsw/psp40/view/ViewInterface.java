@@ -37,6 +37,8 @@ public interface ViewInterface {
     void displayChoiceOfAvailableCellForBuild();
     void displayMoveWorker();
     void displayBuildBlock();
+    void displayWinnerMessage();
+    void displayLoserMessage();
 
     void displayLobbyCreated(String playersWaiting);
 }
