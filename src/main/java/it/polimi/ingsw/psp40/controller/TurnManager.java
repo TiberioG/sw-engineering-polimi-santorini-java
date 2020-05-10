@@ -151,15 +151,6 @@ public class TurnManager {
     }
 
     /**
-     * This method call the checkWin method of the strategyWin of the current turn and update the virtualView with a message for notify the winning
-     */
-    public void checkWin() {
-        if (currentTurn.checkWin()) {
-            // todo chiamare la view
-        }
-    }
-
-    /**
      * This method check if the list of the next phases contains the phase type in the param
      * @param type the type of phase to check
      * @return a boolean which indicate if the next phases list contains the phase in the param
@@ -190,12 +181,15 @@ public class TurnManager {
      * @param type the type of the phase to update
      */
     private void updateCurrentPhase(PhaseType type) {
-        if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
-            //richiamare la virtualview notificando la vittoria
-        }
-
         currentTurn.updateCurrentPhaseFromType(type);
         match.getMatchProperties().getPerformedPhases().add(type);
+
+
+        if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
+            match.setWinningPlayer(getCurrentPlayer());
+            return;
+        }
+
         if (currentTurn.getCurrentPhase().getNextPhases() == null) {
             //richiamare la virtual view per notificare la fine del turno
             //seleziono il prossimo turno

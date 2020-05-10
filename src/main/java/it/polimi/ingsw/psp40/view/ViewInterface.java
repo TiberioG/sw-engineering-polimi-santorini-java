@@ -28,6 +28,7 @@ public interface ViewInterface {
     void displayChoicePersonalCard(List<Card> availableCards) ;
 
     void displayCardInGame(List<Card> cardInGame);
+    void displayForcedCard(Card card);
     void displaySetInitialPosition(List<Player> playerList);
     void displayAskFirstPlayer(List<Player> allPlayers);
     void displayChoiceOfAvailablePhases(List<Phase> phaseList);
@@ -36,6 +37,8 @@ public interface ViewInterface {
     void displayChoiceOfAvailableCellForBuild();
     void displayMoveWorker();
     void displayBuildBlock();
+    void displayWinnerMessage();
+    void displayLoserMessage();
 
     void displayLobbyCreated(String playersWaiting);
 }

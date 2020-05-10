@@ -12,6 +12,7 @@ public class Phase {
     public Phase(PhaseType type, List<Phase> nextPhases, boolean needCheckForVictory) {
         this.type = type;
         this.nextPhases = nextPhases;
+        this.needCheckForVictory = needCheckForVictory;
     }
 
     public PhaseType getType() {

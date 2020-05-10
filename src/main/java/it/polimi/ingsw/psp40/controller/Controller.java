@@ -102,7 +102,7 @@ public class Controller implements Listener<Message> {
                     Card cardAvailable = match.getCards().stream().filter(card -> !listOfIdCardsAlreadyAssigned.contains(card.getId())).findFirst().orElse(null);
 
                     match.getCurrentPlayer().setCurrentCard(cardAvailable);
-                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.GENERIC_MESSAGE, "Ti è stata assegnata la seguente carta: " + cardAvailable.getName()));
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.FORCED_CARD, cardAvailable));
 
                     virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_FIRST_PLAYER, match.getPlayers()));
                 }
@@ -157,7 +157,22 @@ public class Controller implements Listener<Message> {
                     e.printStackTrace();
                 }
                 break;
+            /*case INIT_NEW_MATCH:
+                if (match.isMatchedEnded() == true) {
+                    String nameOfWinningPlayer = match.getCurrentPlayer().getName();
+                    List<Player> playerList = match.getPlayers();
+                    createNewMatch();
 
+                    playerList.forEach(player -> {
+                        addPlayerToMatch(player.getName(), player.getBirthday());
+                    });
+
+                    match.setCurrentPlayer(match.getPlayerByName(nameOfWinningPlayer));
+                    match.rescaleListFromCurrentPlayer();
+                    virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
+                };
+                break;
+            */
         }
     }
 }
