@@ -75,15 +75,18 @@ public class CardManager {
                 strategySettings.setStrategyMove(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyMove", "DefaultMove"));
                 strategySettings.setStrategyBuild(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyBuild", "DefaultBuild"));
                 strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyWin", "DefaultWin"));
+                strategySettings.setStrategyWin(JsonAdapter.getStringFromJsonObject(strategySettingsJsonObject, "strategyLose", "DefaultLose"));
 
                 Class.forName(Configuration.strategyMovePackage + "." + strategySettings.getStrategyMove());
                 Class.forName(Configuration.strategyBuildPackage + "." + strategySettings.getStrategyBuild());
                 Class.forName(Configuration.strategyWinPackage + "." + strategySettings.getStrategyWin());
+                Class.forName(Configuration.strategyLosePackage + "." + strategySettings.getStrategyLose());
 
             } else {
                 strategySettings.setStrategyMove("DefaultMove");
                 strategySettings.setStrategyBuild("DefaultBuild");
                 strategySettings.setStrategyWin("DefaultWin");
+                strategySettings.setStrategyLose("DefaultLose");
             }
 
         } catch( ClassNotFoundException e ) {

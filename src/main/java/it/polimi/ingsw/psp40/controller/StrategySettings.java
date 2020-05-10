@@ -7,8 +7,9 @@ package it.polimi.ingsw.psp40.controller;
 public class StrategySettings {
     /* Attributes */
     private String strategyMove;
-    private String StrategyWin;
+    private String strategyWin;
     private String strategyBuild;
+    private String strategyLose;
 
     /* Methods */
 
@@ -21,11 +22,11 @@ public class StrategySettings {
     }
 
     public String getStrategyWin() {
-        return StrategyWin;
+        return strategyWin;
     }
 
     public void setStrategyWin(String strategyWin) {
-        StrategyWin = strategyWin;
+        strategyWin = strategyWin;
     }
 
     public String getStrategyBuild() {
@@ -34,5 +35,13 @@ public class StrategySettings {
 
     public void setStrategyBuild(String strategyBuild) {
         this.strategyBuild = strategyBuild;
+    }
+
+    public String getStrategyLose() {
+        return strategyLose;
+    }
+
+    public void setStrategyLose(String strategyLose) {
+        strategyLose = strategyLose;
     }
 }
