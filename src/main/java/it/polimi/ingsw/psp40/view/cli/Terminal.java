@@ -73,6 +73,10 @@ public class Terminal {
         System.out.print("\u001b[2J"); // clear entire screen (and moves cursor to upper left
     }
 
+    public static void clearLine(){
+        System.out.print("\u001b[2K"); // clear entire line
+    }
+
     /**
      * Method to enable showing the cursor in Terminal
      */

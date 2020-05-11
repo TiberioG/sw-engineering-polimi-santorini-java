@@ -63,7 +63,7 @@ public class SquareCell {
         this.level = level;
     }
 
-    public void print(int startRow, int startCol) throws IOException, InterruptedException {
+    public void print(int startRow, int startCol) {
         this.startRow = startRow;
         this.startCol = startCol;
         //Terminal.noBuffer();
@@ -198,14 +198,14 @@ public class SquareCell {
     }
 
 
-    private void coordinates (int row, int col) throws IOException, InterruptedException {
+    private void coordinates (int row, int col) {
         System.out.print(Colors.reset());
         Terminal.moveAbsoluteCursor(startRow + hei - 1  , startCol); // scendo di una riga ogni volta
         System.out.print(row + "," + col);
 
     }
 
-    private void special2 (int colorbit) throws IOException, InterruptedException {
+    private void special2 (int colorbit)  {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
             for (int j = 0; j < len; j++){
@@ -214,7 +214,7 @@ public class SquareCell {
         }
     }
 
-    private void special (int colorbit) throws IOException, InterruptedException {
+    private void special (int colorbit)  {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
               System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");

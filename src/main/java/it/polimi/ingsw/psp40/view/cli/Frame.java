@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp40.view.cli;
 import it.polimi.ingsw.psp40.commons.Colors;
 import org.davidmoten.text.utils.WordWrap;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,7 @@ class Frame {
     private int[] absEnd;
 
     private int lastRowRitten = 1;
+    private int rowsadded;
 
     private int rowSpan;
     private int colSpan;
@@ -68,14 +70,21 @@ class Frame {
     }
 
 
-    void printWrapped (String towrite){
-        String wrapped =
+    void printWrapped (String towrite)  {
+                String wrapped =
                 WordWrap.from(towrite)
                         .maxWidth(colSpan)
                         .wrap();
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
+        String[] lines = wrapped.split("\\r?\\n"); //split in lines
        System.out.print(wrapped);
-    }
+        rowsadded = lines.length;
+     }
+
+   void append(String toWrite){
+       Terminal.moveAbsoluteCursor(absInit[0] + rowsadded, absInit[1]);
+       System.out.println(toWrite);
+   }
 
     void border(){
 
