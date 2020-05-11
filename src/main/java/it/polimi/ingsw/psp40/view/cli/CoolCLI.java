@@ -487,7 +487,8 @@ public class CoolCLI implements ViewInterface {
     }
 
     @Override
-    public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
+    public void displayChoiceOfAvailablePhases() {
+        List<Phase> phaseList = client.getListOfPhasesCache();
         left.clear();
         try {
             updateIsland();

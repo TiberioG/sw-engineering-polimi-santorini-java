@@ -52,6 +52,7 @@ public class Client implements ServerObserver {
   private List<Player> playerListCache;
   private List<Cell> availableMoveCells;
   private HashMap<Cell, List<Integer>> availableBuildCells;
+  private List<Phase> listOfPhasesCache;
 
 
 
@@ -234,13 +235,14 @@ public class Client implements ServerObserver {
         break;
 
       case INIT_TURN:
-        List<Phase> phaseList = new ArrayList<>();
-        phaseList.add((Phase) message.getPayload(new TypeToken<Phase>() {}.getType()));
-        view.displayChoiceOfAvailablePhases(phaseList);
+        listOfPhasesCache = new ArrayList<>();
+        listOfPhasesCache.add((Phase) message.getPayload(new TypeToken<Phase>() {}.getType()));
+        view.displayChoiceOfAvailablePhases();
         break;
 
       case NEXT_PHASE_AVAILABLE:
-        view.displayChoiceOfAvailablePhases((List<Phase>) message.getPayload(new TypeToken<List<Phase>>() {}.getType()));
+        listOfPhasesCache = (List<Phase>) message.getPayload(new TypeToken<List<Phase>>() {}.getType());
+        view.displayChoiceOfAvailablePhases();
       break;
 
       case AVAILABLE_CELL_FOR_MOVE:
@@ -335,6 +337,10 @@ public class Client implements ServerObserver {
 
   public List<Player> getPlayerListCache(){
     return playerListCache;
+  }
+
+  public List<Phase> getListOfPhasesCache(){
+    return listOfPhasesCache;
   }
 
   public List<Worker> getMyWorkerCached(){

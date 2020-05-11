@@ -191,7 +191,7 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
+    public void displayChoiceOfAvailablePhases() {
 
     }
 

@@ -132,6 +132,9 @@
           "type": "buildComponent"
         }]
       }]
+    },
+    "strategySettings": {
+      "strategyBuild": "DoubleBuildIfCantLevelUp"
     }
   }
 ]

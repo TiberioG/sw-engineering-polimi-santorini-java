@@ -146,11 +146,19 @@ public class Turn {
     }
 
     /**
-     * This method call the checkLose of the strategyLose
+     * This method call the checkLoseForMove of the strategyLose
      * @return a {@link boolean} which indicate if the player has lose
      */
-    public boolean checkLose() {
-        return strategyLose.checkLose(strategyMove);
+    public boolean checkLoseForMove() {
+        return strategyLose.checkLoseForMove(strategyMove);
+    }
+
+    /**
+     * This method call the checkLoseForBuild of the strategyLose
+     * @return a {@link boolean} which indicate if the player has lose
+     */
+    public boolean checkLoseForBuild() {
+        return strategyLose.checkLoseForBuild(strategyBuild, selectedWorker);
     }
 
     /**

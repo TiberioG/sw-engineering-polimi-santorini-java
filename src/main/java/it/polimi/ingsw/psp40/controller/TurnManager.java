@@ -197,7 +197,10 @@ public class TurnManager {
             //seleziono il prossimo turno
             selectNextTurn();
         } else {
-            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));
+            List<Phase> listOfNextPhase = currentTurn.getCurrentPhase().getNextPhases();
+            if (listOfNextPhase.size() == 1 && listOfNextPhase.get(0).getType().equals(PhaseType.BUILD_COMPONENT) && currentTurn.checkLoseForBuild()) {
+                removePlayerForLost();
+            } else updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));
         }
     }
 
@@ -210,6 +213,19 @@ public class TurnManager {
         inizializedCurrentTurn();
     }
 
+
+    /**
+     * This method performs all the operations to remove a player who has lost
+     */
+    private void removePlayerForLost() {
+        String name = this.match.getCurrentPlayer().getName();
+        turnsMap.remove(name);
+        match.removePlayer(name);
+        //notificare la perdità e gestire il caso che rimanga solo un giocatore
+        selectNextTurn();
+    }
+
+
     /**
      * this method initializes the current round by resetting the match properties related to the rounds and checking a player's loss, also notifies the virtual view of the start of the turn
      */
@@ -217,13 +233,9 @@ public class TurnManager {
         match.getMatchProperties().resetAllParameter();
         currentTurn.initializeTurn();
 
-        //se non ci sono celle disponibili
-        if (currentTurn.checkLose()) {
-            String name = this.match.getCurrentPlayer().getName();
-            turnsMap.remove(name);
-            match.removePlayer(name);
-            //notificare la perdità e gestire il caso che rimanga solo un giocatore
-            selectNextTurn();
+        //se non ci sono celle disponibili per muoversi
+        if (currentTurn.checkLoseForMove()) {
+            removePlayerForLost();
         } else {
             getCurrentPlayer().getWorkers().forEach(worker -> {
                 match.getMatchProperties().getInitialPositionMap().put(worker, this.match.getLocation().getLocation(worker));

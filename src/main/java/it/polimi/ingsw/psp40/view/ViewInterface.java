@@ -31,7 +31,7 @@ public interface ViewInterface {
     void displayForcedCard(Card card);
     void displaySetInitialPosition(List<Player> playerList);
     void displayAskFirstPlayer(List<Player> allPlayers);
-    void displayChoiceOfAvailablePhases(List<Phase> phaseList);
+    void displayChoiceOfAvailablePhases();
     void displayChoiceOfAvailableCellForMove();
     void displayChoiceSelectionOfWorker();
     void displayChoiceOfAvailableCellForBuild();

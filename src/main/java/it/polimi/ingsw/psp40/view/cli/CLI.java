@@ -297,7 +297,8 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayChoiceOfAvailablePhases(List<Phase> phaseList) {
+    public void displayChoiceOfAvailablePhases() {
+        List<Phase> phaseList = client.getListOfPhasesCache();
         Phase selectedPhase = null;
         if (phaseList.size() == 1) {
             selectedPhase = phaseList.get(0);
@@ -355,9 +356,15 @@ public class CLI implements ViewInterface {
     public void displayChoiceOfAvailableCellForBuild() {
         client.getAvailableBuildCells().keySet();
         List<int[]> availableCells = cellAdapter(client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList()));
-        out.println("These are the cells available for build");
-        availableCells.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
-        displayBuildBlock();
+        if (availableCells.size() > 0) {
+            out.println("These are the cells available for build");
+            availableCells.forEach(cell ->  out.println(cell[0] + "," + cell[1]));
+            displayBuildBlock();
+        } else {
+            out.println("There are no cells available to build at this stage! Select another phase.");
+            displayChoiceOfAvailablePhases();
+        }
+
     }
 
 
