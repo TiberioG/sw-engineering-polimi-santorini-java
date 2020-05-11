@@ -36,7 +36,11 @@
     "id": 2,
     "name": "Atena",
     "type": "Turno dell'avversario",
-    "description": "Se nel tuo ultimo turno uno dei tuoi lavoratori è salito di livello, in questo turno gli lavoratori avversari non possono salire di livello"
+    "description": "Se nel tuo ultimo turno uno dei tuoi lavoratori è salito di livello, in questo turno gli lavoratori avversari non possono salire di livello",
+    "strategySettings": {
+      "strategyMove": "OthersCantLevelUp",
+      "strategyLose": "LoseOtherCantLevelUp"
+    }
   },
   {
     "id": 3,

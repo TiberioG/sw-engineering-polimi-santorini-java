@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
+import it.polimi.ingsw.psp40.controller.strategies.strategyLose.StrategyLose;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
@@ -95,6 +96,7 @@ public class TurnManager {
             turn.setStrategyMove((StrategyMove) createStrategyWithReflection(Configuration.strategyMovePackage + "." + card.getStrategySettings().getStrategyMove(), new Class[]{Match.class}, new Object[]{match}));
             turn.setStrategyBuild((StrategyBuild) createStrategyWithReflection(Configuration.strategyBuildPackage + "." + card.getStrategySettings().getStrategyBuild(), new Class[]{Match.class}, new Object[]{match}));
             turn.setStrategyWin((StrategyWin) createStrategyWithReflection(Configuration.strategyWinPackage + "." + card.getStrategySettings().getStrategyWin(), new Class[]{Match.class}, new Object[]{match}));
+            turn.setStrategyLose((StrategyLose) createStrategyWithReflection(Configuration.strategyLosePackage + "." + card.getStrategySettings().getStrategyLose(), new Class[]{Match.class}, new Object[]{match}));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -216,8 +218,7 @@ public class TurnManager {
         currentTurn.initializeTurn();
 
         //se non ci sono celle disponibili
-        if (currentTurn.noAvailableCellForWorkers()) {
-            // todo ricordarsi di gestire atena
+        if (currentTurn.checkLose()) {
             String name = this.match.getCurrentPlayer().getName();
             turnsMap.remove(name);
             match.removePlayer(name);

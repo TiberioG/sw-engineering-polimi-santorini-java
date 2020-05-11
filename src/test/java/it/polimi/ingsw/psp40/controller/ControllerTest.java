@@ -81,12 +81,14 @@ public class ControllerTest {
 
     @Test
     public void setCardToPlayerTest_firstPlayer() {
-        setCardToGameTest();
-        Message message = hashMapOfDisplayMessage.get(TypeOfMessage.CHOOSE_GAME_CARDS);
+        controller.update(new Message("ALL", TypeOfMessage.START_MATCH, hashMapOfNewPlayers));
+        List<Integer> listOfSelectedCard = new ArrayList<>();
+        listOfSelectedCard.add(0);
+        listOfSelectedCard.add(1);
+        controller.update(new Message("ALL", TypeOfMessage.SET_CARDS_TO_GAME, listOfSelectedCard));
         controller.update(new Message(nameOfFirstPlayer, TypeOfMessage.SET_CARD_TO_PLAYER, 0));
         controller.update(new Message(nameOfSecondPlayer, TypeOfMessage.SET_CARD_TO_PLAYER, 1));
-        assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_PERSONAL_CARD));
-        assertTrue(verifyDisplayMessageCall(TypeOfMessage.GENERIC_MESSAGE));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.FORCED_CARD));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_FIRST_PLAYER));
     }
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp40.controller;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
+import it.polimi.ingsw.psp40.controller.strategies.strategyLose.StrategyLose;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
@@ -24,6 +25,7 @@ public class Turn {
     private StrategyMove strategyMove;
     private StrategyWin strategyWin;
     private StrategyBuild strategyBuild;
+    private StrategyLose strategyLose;
 
     /**
      * Constructor to  init turn instance
@@ -66,6 +68,15 @@ public class Turn {
     public void setStrategyWin(StrategyWin strategyWin) {
         this.strategyWin = strategyWin;
     }
+
+    /**
+     * Method to set the strategyLose in the turn
+     * @param strategyLose the strategyLose to set
+     */
+    public void setStrategyLose(StrategyLose strategyLose) {
+        this.strategyLose = strategyLose;
+    }
+
 
     /**
      * Method to retrieve the player of the turn
@@ -135,11 +146,11 @@ public class Turn {
     }
 
     /**
-     * This method check if the player's workers can move around using strategyMove's getAvailableCells
-     * @return a {@link boolean} which indicate if the player's workers can move
+     * This method call the checkLose of the strategyLose
+     * @return a {@link boolean} which indicate if the player has lose
      */
-    public boolean noAvailableCellForWorkers() {
-        return player.getWorkers().stream().filter(worker -> strategyMove.getAvailableCells(worker).size() > 0).count() == 0;
+    public boolean checkLose() {
+        return strategyLose.checkLose(strategyMove);
     }
 
     /**
