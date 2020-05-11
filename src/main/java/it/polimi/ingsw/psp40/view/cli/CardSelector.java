@@ -44,6 +44,7 @@ public class CardSelector {
     }
 
     public CardSelector(List<Card> availableCards, int toSelect, Frame container){
+
         this.cards = availableCards;
         this.fLeft = new Frame(new int[]{10, (container.getColSpan() - (width + SPACING + extended) ) /2}, container.getAbsEnd(), container.getIn(), container.getOut());
         this.fRight = new Frame(new int[]{10,((container.getColSpan() - 2 * (width + SPACING) ) /2) +width + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
@@ -63,18 +64,18 @@ public class CardSelector {
 
     }
 
-    int[] selection (){
+    int[] selectionMultiple (){
         try {
             Terminal.noBuffer();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        int selection = 0;
-        List<Integer> selected = new ArrayList<Integer>();
+        int position = 0;
+        List<Integer> positionSelectedList = new ArrayList<Integer>();
 
         Terminal.hideCursor();
-        print(selection, selected);
-        showText(selection);
+        print(position, positionSelectedList);
+        showText(position);
         while (true) {
             try {
                 if (System.in.available() != 0) {
@@ -82,12 +83,12 @@ public class CardSelector {
 
                     //GETTING SPACEBAR to positiom
                     if (c == 32) {
-                        if ( selected.size() < toSelect) {
-                            if(!selected.contains(selection)) {
-                                selected.add(selection);
-                                print(selection, selected);
+                        if ( positionSelectedList.size() < toSelect) {
+                            if(!positionSelectedList.contains(position)) {
+                                positionSelectedList.add(position);
+                                print(position, positionSelectedList);
                             }
-                            if(selected.size() == toSelect){
+                            if(positionSelectedList.size() == toSelect){
                                 break;
                             }
                         }
@@ -100,17 +101,17 @@ public class CardSelector {
                         int next2 = System.in.read();
                         if (next1 == 91) { //  read [
                             if (next2 == 65) {                     //UP  arrow
-                                if (selection > 0 && selection <= cards.size() -1) {
-                                    selection--;
+                                if (position > 0 && position <= cards.size() -1) {
+                                    position--;
                                 }
                             } else if (next2 == 66) {              //DOWN arrow
-                                if (selection >= 0 && selection < cards.size() -1) {
-                                    selection++;
+                                if (position >= 0 && position < cards.size() -1) {
+                                    position++;
                                 }
                             }
                         }
-                        print(selection, selected);
-                        showText(selection);
+                        print(position, positionSelectedList);
+                        showText(position);
                     }//end arrow management
 
                 } //end system in available
@@ -119,16 +120,68 @@ public class CardSelector {
             }
         }// end while true
 
-        //conversion to array
+        //conversion to array of IDs
         int[] ret = new int[toSelect];
         for (int i=0; i < toSelect; i++)
         {
-            ret[i] = selected.get(i);
+            ret[i] = cards.get(positionSelectedList.get(i)).getId();
         }
         return ret;
 
     }
 
+
+
+
+    int selectionSingol (){
+        try {
+            Terminal.noBuffer();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        int position = 0;
+
+        Terminal.hideCursor();
+        print(position, null);
+        showText(position);
+        while (true) {
+            try {
+                if (System.in.available() != 0) {
+                    int c = System.in.read();  //read one char at a time in ascii code
+
+                    //GETTING SPACEBAR to positiom
+                    if (c == 32) {
+                        break;
+                    }
+
+                    //getting an ARROW KEY
+                    else if (c == 27) { // first part of arrow key == ESC
+                        int next1 = System.in.read();
+                        int next2 = System.in.read();
+                        if (next1 == 91) { //  read [
+                            if (next2 == 65) {                     //UP  arrow
+                                if (position > 0 && position <= cards.size() -1) {
+                                    position--;
+                                }
+                            } else if (next2 == 66) {              //DOWN arrow
+                                if (position >= 0 && position < cards.size() -1) {
+                                    position++;
+                                }
+                            }
+                        }
+                        print(position, null);
+                        showText(position);
+                    }//end arrow management
+
+                } //end system in available
+            } catch (IOException e) {
+                //todo frame per except
+            }
+        }// end while true
+
+        return cards.get(position).getId();
+
+    }
 
     private void print (int current, List<Integer> selected) {
         int height = cards.size();
@@ -169,7 +222,7 @@ public class CardSelector {
 
             System.out.print("║ ");
 
-            if (selected.contains(i)){
+            if (selected != null && selected.contains(i)){
                 if( i == current){
                     System.out.print("\u001b[48;5;" + 22 + "m"); //verdino scuro == current&&selected
                     System.out.print(" ");
