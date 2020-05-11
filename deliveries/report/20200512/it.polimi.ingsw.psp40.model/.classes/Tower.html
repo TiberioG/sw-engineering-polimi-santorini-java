@@ -1,0 +1,157 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Tower</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Tower (it.polimi.ingsw.psp40.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Tower</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (14/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.RemoveGroundLevelException;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp; public class Tower  {
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    /* Attributes */
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    private List&lt;Component&gt; components;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /* Constructor(s) */
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Constructor
+<i>20</i>&nbsp;     */
+<b class="fc"><i>21</i>&nbsp;    Tower() {</b>
+<b class="fc"><i>22</i>&nbsp;        this.components = new ArrayList&lt;&gt;();</b>
+<i>23</i>&nbsp;        try {
+<b class="fc"><i>24</i>&nbsp;            addComponent(Component.GROUND);</b>
+<b class="nc"><i>25</i>&nbsp;        } catch (BuildLowerComponentException e) {</b>
+<b class="nc"><i>26</i>&nbsp;            e.printStackTrace(); // this can not happen</b>
+<b class="fc"><i>27</i>&nbsp;        }</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /* Methods */
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Returns components of the tower
+<i>34</i>&nbsp;     * @return components list
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;     public List&lt;Component&gt; getComponents() {
+<b class="fc"><i>37</i>&nbsp;        return components;</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * Adds the given component at the top of the tower
+<i>42</i>&nbsp;     * @param component {@link Component} to be added
+<i>43</i>&nbsp;     * @throws BuildLowerComponentException if the given component is lower than the tower&#39;s latest component
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;     void addComponent(Component component) throws BuildLowerComponentException {
+<b class="fc"><i>46</i>&nbsp;         if (components.size() != 0 &amp;&amp; component.getComponentCode() &lt;= components.get(components.size() - 1).getComponentCode())</b>
+<b class="fc"><i>47</i>&nbsp;             throw new BuildLowerComponentException();</b>
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;         components.add(component);</b>
+<b class="fc"><i>50</i>&nbsp;     }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    /**
+<i>53</i>&nbsp;     * Removes the last {@link Component} of the tower.
+<i>54</i>&nbsp;     * @return {@link Component} removed. Null if the tower has only the {@link Component#GROUND} component
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    Component removeComponent() throws RemoveGroundLevelException {
+<b class="fc"><i>57</i>&nbsp;        if (components.size() &gt; 1) { // greater than 1 because first level can not be removed (GROUND)</b>
+<b class="fc"><i>58</i>&nbsp;            return components.remove(components.size() - 1);</b>
+<i>59</i>&nbsp;        } else {
+<b class="fc"><i>60</i>&nbsp;            throw new RemoveGroundLevelException();</b>
+<i>61</i>&nbsp;        }
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    }
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;     /**
+<i>66</i>&nbsp;      * Get the latest component of the tower
+<i>67</i>&nbsp;      *
+<i>68</i>&nbsp;      * @return latest {@link Component} of the tower
+<i>69</i>&nbsp;      */
+<i>70</i>&nbsp;    public Component getTopComponent (){
+<b class="fc"><i>71</i>&nbsp;        return this.components.get(components.size() -1);</b>
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 23:54</div>
+</div>
+</body>
+</html>

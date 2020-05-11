@@ -66,7 +66,7 @@ public class CoolCLI implements ViewInterface {
     private IslandAdapter myisland;
     private Hourglass hour;
     private ExecutorService executor;
-    private KeyboardDaemon keyboardDaemon;
+    //private KeyboardDaemon keyboardDaemon;
 
     /**
      * Constructor

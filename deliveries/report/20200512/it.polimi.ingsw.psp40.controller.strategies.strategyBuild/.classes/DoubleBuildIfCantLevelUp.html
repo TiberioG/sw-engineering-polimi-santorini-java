@@ -1,0 +1,132 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DoubleBuildIfCantLevelUp</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.controller.strategies.strategyBuild</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DoubleBuildIfCantLevelUp (it.polimi.ingsw.psp40.controller.strategies.strategyBuild)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DoubleBuildIfCantLevelUp</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/ 13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.PhaseType;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.controller.strategies.strategyMove.DefaultMove;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.model.Cell;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.model.Match;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.model.Worker;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;import java.util.stream.Collectors;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * This Class is used to to define the PROMETEO card
+<i>16</i>&nbsp; * This strategy makes possible to build even before move if with move the worker can&#39;t level up
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class DoubleBuildIfCantLevelUp extends DefaultBuild {
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    public DoubleBuildIfCantLevelUp(Match match) {
+<b class="fc"><i>21</i>&nbsp;        super(match);</b>
+<b class="fc"><i>22</i>&nbsp;    }</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /**
+<i>26</i>&nbsp;     * This method is used to retrieve a list of cells where is possible for a {@link Worker} to build any kind of possible {@link Component}
+<i>27</i>&nbsp;     * @param worker is the {@link Worker} you want to know where it can build
+<i>28</i>&nbsp;     * @return a list of {@link Cell} near the worker where is possible to build. If the build is happening before the move, it returns an empty list if the worker, while moving, can level up
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    @Override
+<i>31</i>&nbsp;    public List&lt;Cell&gt; getBuildableCells(Worker worker) {
+<b class="fc"><i>32</i>&nbsp;        boolean alreadyMoved = match.getMatchProperties().getPerformedPhases().stream().anyMatch(phase -&gt; phase == PhaseType.MOVE_WORKER);</b>
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;        if(!alreadyMoved) {</b>
+<b class="fc"><i>35</i>&nbsp;            DefaultMove defaultMove = new DefaultMove(match);</b>
+<b class="fc"><i>36</i>&nbsp;            List&lt;Cell&gt; whereCanIMove = defaultMove.getAvailableCells(worker);</b>
+<b class="fc"><i>37</i>&nbsp;            int workerInitialLevel = match.getLocation().getLocation(worker).getTower().getTopComponent().getComponentCode();</b>
+<b class="fc"><i>38</i>&nbsp;            List&lt;Cell&gt; whereCanIMoveGoingUp = whereCanIMove.stream()</b>
+<b class="fc"><i>39</i>&nbsp;                    .filter(cell -&gt; cell.getTower().getTopComponent().getComponentCode() &gt; workerInitialLevel)</b>
+<b class="fc"><i>40</i>&nbsp;                    .collect(Collectors.toList());</b>
+<b class="fc"><i>41</i>&nbsp;            if(whereCanIMoveGoingUp.size() != 0) {</b>
+<b class="fc"><i>42</i>&nbsp;                return new ArrayList&lt;&gt;();</b>
+<i>43</i>&nbsp;            }
+<i>44</i>&nbsp;        }
+<i>45</i>&nbsp;
+<b class="fc"><i>46</i>&nbsp;        return super.getBuildableCells(worker);</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 23:54</div>
+</div>
+</body>
+</html>

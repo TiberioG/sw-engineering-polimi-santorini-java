@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DefaultBuild</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.controller.strategies.strategyBuild</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DefaultBuild (it.polimi.ingsw.psp40.controller.strategies.strategyBuild)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DefaultBuild</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96%
+  </span>
+  <span class="absValue">
+    (24/ 25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedBuildException;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableBuildException;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.model.Cell;
+<i>9</i>&nbsp;import it.polimi.ingsw.psp40.model.Match;
+<i>10</i>&nbsp;import it.polimi.ingsw.psp40.model.Worker;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import java.util.ArrayList;
+<i>14</i>&nbsp;import java.util.List;
+<i>15</i>&nbsp;import java.util.stream.Collectors;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;/**
+<i>18</i>&nbsp; * This is the class that implements the strategy used to build new components on the Island of the Match
+<i>19</i>&nbsp; * It is the superclass of all the different strategies
+<i>20</i>&nbsp; */
+<i>21</i>&nbsp;public class DefaultBuild implements StrategyBuild {
+<i>22</i>&nbsp;    /* Attributes */
+<i>23</i>&nbsp;    protected Match match;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /* Constructor(s) */
+<b class="fc"><i>26</i>&nbsp;    public DefaultBuild(Match match) {</b>
+<b class="fc"><i>27</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /* Methods */
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * This method is used to build a component on the island of a match
+<i>34</i>&nbsp;     * @param compToBuild is the type of {@link Component} you want to build
+<i>35</i>&nbsp;     * @param whereToBuild is the {@link Cell} where you want to add the new component
+<i>36</i>&nbsp;     * @param worker is the {@link Worker} used to build
+<i>37</i>&nbsp;     * @throws ZeroCellsAvailableBuildException
+<i>38</i>&nbsp;     * @throws WrongCellSelectedBuildException
+<i>39</i>&nbsp;     * @throws ComponentNotAllowed
+<i>40</i>&nbsp;     * @throws BuildLowerComponentException
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    @Override
+<i>43</i>&nbsp;    public void build(Component compToBuild, Cell whereToBuild, Worker worker) throws ZeroCellsAvailableBuildException, WrongCellSelectedBuildException, ComponentNotAllowed, BuildLowerComponentException {
+<b class="fc"><i>44</i>&nbsp;        List&lt;Cell&gt; buildableCells = getBuildableCells(worker);</b>
+<i>45</i>&nbsp;
+<b class="fc"><i>46</i>&nbsp;        if(buildableCells.size() == 0) //1 check: there are free cells close to the worker where is possible to build?</b>
+<i>47</i>&nbsp;        {
+<b class="fc"><i>48</i>&nbsp;            throw new ZeroCellsAvailableBuildException();</b>
+<i>49</i>&nbsp;        }
+<i>50</i>&nbsp;        else {
+<b class="fc"><i>51</i>&nbsp;            if(!buildableCells.contains(whereToBuild) ) //2 check: where I wanna build is in the list of buildable cells?</b>
+<i>52</i>&nbsp;            {
+<b class="fc"><i>53</i>&nbsp;                throw new WrongCellSelectedBuildException();</b>
+<i>54</i>&nbsp;            }
+<i>55</i>&nbsp;            else {
+<b class="fc"><i>56</i>&nbsp;                if(!getComponentsBuildable(whereToBuild).contains(compToBuild.getComponentCode()) ) //3 check: what I wanna build is allowed there?</b>
+<i>57</i>&nbsp;                {
+<b class="fc"><i>58</i>&nbsp;                    throw new ComponentNotAllowed();</b>
+<i>59</i>&nbsp;                }
+<b class="fc"><i>60</i>&nbsp;                match.getIsland().addComponent(compToBuild, whereToBuild); // here I finally add the component in the model</b>
+<i>61</i>&nbsp;                //whereToBuild.getTower().addComponent(compToBuild);
+<b class="fc"><i>62</i>&nbsp;                match.getMatchProperties().builtNow(worker, whereToBuild); // I also save that this worker has built here in the turnProp.</b>
+<i>63</i>&nbsp;            }
+<i>64</i>&nbsp;        }
+<i>65</i>&nbsp;
+<b class="fc"><i>66</i>&nbsp;    }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * This method is used to retrieve a list of cells where is possible for a {@link Worker} to build any kind of possible {@link Component}
+<i>70</i>&nbsp;     * @param worker is the {@link Worker} you want to know where it can build
+<i>71</i>&nbsp;     * @return a list of {@link Cell} near the worker where is possible to build
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    public List&lt;Cell&gt; getBuildableCells(Worker worker) {
+<b class="fc"><i>74</i>&nbsp;        Cell whereIam = match.getLocation().getLocation(worker);</b>
+<b class="fc"><i>75</i>&nbsp;        List&lt;Cell&gt; adjCells = match.getIsland().getAdjCells(whereIam);</b>
+<b class="fc"><i>76</i>&nbsp;        return adjCells.stream()</b>
+<b class="fc"><i>77</i>&nbsp;                .filter(cell -&gt; cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete</b>
+<b class="fc"><i>78</i>&nbsp;                .filter(cell -&gt; match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker</b>
+<b class="fc"><i>79</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    /**
+<i>83</i>&nbsp;     * This method is used to know the kind of new component is possible to build on a specific {@link Cell}
+<i>84</i>&nbsp;     * @param cell is the {@link Cell} where you want to know which is the next buildable component
+<i>85</i>&nbsp;     * @return a list of integers that represent the {@link Component} code. In this DefaultBuild the list is always made out of only one element
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public List&lt;Integer&gt; getComponentsBuildable(Cell cell) {
+<b class="fc"><i>88</i>&nbsp;        List&lt;Integer&gt; comps = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>89</i>&nbsp;        Component current = cell.getTower().getTopComponent();</b>
+<b class="fc"><i>90</i>&nbsp;        if (current == Component.DOME){ // if tower is already complete</b>
+<b class="nc"><i>91</i>&nbsp;            return comps; // the list of buildable components must be empty</b>
+<i>92</i>&nbsp;        }
+<i>93</i>&nbsp;        else {
+<b class="fc"><i>94</i>&nbsp;            comps.add(current.getComponentCode() + 1); // else I add the next component code</b>
+<b class="fc"><i>95</i>&nbsp;            return comps;</b>
+<i>96</i>&nbsp;        }
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;}
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 23:54</div>
+</div>
+</body>
+</html>
