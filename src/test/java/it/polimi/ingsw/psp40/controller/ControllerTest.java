@@ -91,4 +91,12 @@ public class ControllerTest {
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.FORCED_CARD));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_FIRST_PLAYER));
     }
+
+    @Test
+    public void setFirstPlayer_firstPlayer() {
+        controller.update(new Message("ALL", TypeOfMessage.START_MATCH, hashMapOfNewPlayers));
+        controller.update(new Message(nameOfSecondPlayer, TypeOfMessage.SET_FIRST_PLAYER, nameOfFirstPlayer));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_POSITION_OF_WORKERS));
+
+    }
 }

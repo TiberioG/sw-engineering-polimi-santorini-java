@@ -2,7 +2,10 @@ package it.polimi.ingsw.psp40.controller;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
+import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
+import it.polimi.ingsw.psp40.model.Worker;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 import it.polimi.ingsw.psp40.model.CardManager;
@@ -13,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,8 +33,8 @@ public class TurnManagerTest {
         firstPlayer = match.createPlayer("firstPlayer", new Date());
         secondPlayer = match.createPlayer("secondPlayer", new Date());
         CardManager cardManager = CardManager.initCardManager();
-        firstPlayer.setCurrentCard(cardManager.getCardById(0));
-        secondPlayer.setCurrentCard(cardManager.getCardById(1));
+        firstPlayer.setCurrentCard(cardManager.getCardById(1)); //artemide card
+        secondPlayer.setCurrentCard(cardManager.getCardById(0)); //apollo card
         try {
             match.getLocation().setLocation(match.getIsland().getCell(0,0), firstPlayer.addWorker(Colors.BLUE));
             match.getLocation().setLocation(match.getIsland().getCell(0,1), firstPlayer.addWorker(Colors.BLUE));
@@ -61,6 +65,26 @@ public class TurnManagerTest {
         assertTrue(turnManager.getCurrentPlayer().equals(secondPlayer));
 
 
+    }
+
+    @Test
+    public void testLoseForNoAvailableCellsForMove() {
+        List<Worker> secondPlayerWorkers = secondPlayer.getWorkers();
+
+        try {
+            match.getLocation().setLocation(match.getIsland().getCell(1,0), secondPlayerWorkers.get(0));
+            match.getLocation().setLocation(match.getIsland().getCell(1,1), secondPlayerWorkers.get(1));
+            match.getIsland().getCell(0,2).getTower().getComponents().add(Component.FIRST_LEVEL);
+            match.getIsland().getCell(0,2).getTower().getComponents().add(Component.SECOND_LEVEL);
+            match.getIsland().getCell(1,2).getTower().getComponents().add(Component.FIRST_LEVEL);
+            match.getIsland().getCell(1,2).getTower().getComponents().add(Component.SECOND_LEVEL);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        turnManager = new TurnManager(match, new VirtualView(new Server()));
+
+        assertTrue(turnManager.getCurrentPlayer().getName().equals(secondPlayer.getName()) && match.getPlayers().size() == 1);
     }
 
     @Test
