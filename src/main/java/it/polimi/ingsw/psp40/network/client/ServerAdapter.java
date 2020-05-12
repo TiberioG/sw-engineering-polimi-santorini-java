@@ -93,9 +93,9 @@ public class ServerAdapter implements Runnable
 
         /* notify the observers that we got a message from the server */
         for (ServerObserver observer : observersCpy) {
-          new Thread(() -> {
+          //new Thread(() -> {
             observer.handleMessage(msg);
-          }).start();
+      // }).start();
         }
       } catch (EOFException e) {
       }

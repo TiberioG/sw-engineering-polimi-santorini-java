@@ -20,6 +20,11 @@ public class Hourglass implements Runnable{
 
     @Override
     public void run() {
+        try {
+            Terminal.noBuffer();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
         upper.clear();
         Terminal.hideCursor();
         while (!cancelled) {

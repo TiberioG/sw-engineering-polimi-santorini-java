@@ -233,8 +233,8 @@ public class Server
     if(howManyPlayers == 0) {
       howManyPlayers = message.getNumOfPlayers();
       LOGGER.log(Level.INFO, "Notifying the first user that the lobby has been created and is waiting for new players...");
-      details = "Lobby created! Waiting for " + (howManyPlayers-1) + " other(s) player(s)...";
-      messageToSend = new Message(username, TypeOfMessage.GENERIC_MESSAGE, details);
+      details = Integer.toString(howManyPlayers-1);
+      messageToSend = new Message(username, TypeOfMessage.LOBBY_CREATED, details);
       sendToClient(messageToSend);
     } else {
       LOGGER.log(Level.INFO, "Notifying other users about new user joined to the queue");

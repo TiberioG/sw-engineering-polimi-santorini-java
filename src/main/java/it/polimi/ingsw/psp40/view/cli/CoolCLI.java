@@ -98,6 +98,8 @@ public class CoolCLI implements ViewInterface {
             e.printStackTrace();
         }
 
+        hour = new Hourglass(center, lower);
+        executor = Executors.newFixedThreadPool(1);
 
     }
 
@@ -289,11 +291,16 @@ public class CoolCLI implements ViewInterface {
         */
     }
 
+
+    @Override
+    public void displayLobbyCreated(String playersWaiting) {
+        executor.execute(hour);
+    }
+
+
     @Override
     public void displayAddedToQueue(String details) {
         center.clear();
-        hour = new Hourglass(center, lower);
-        executor = Executors.newFixedThreadPool(1);
         executor.execute(hour);
         left.clear();
         left.printWrapped(details);
@@ -343,12 +350,7 @@ public class CoolCLI implements ViewInterface {
     }
 
 
-    @Override
-    public void displayLobbyCreated(String playersWaiting) {
-        hour = new Hourglass(center, lower);
-        executor = Executors.newFixedThreadPool(1);
-        executor.execute(hour);
-    }
+
 
     /**
      * Method used to show all the cards available and get from the user the selection of cards he want to use in the game
