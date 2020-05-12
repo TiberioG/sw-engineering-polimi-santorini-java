@@ -22,6 +22,16 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
     private CardManager cardManager;
     private Server server;
 
+    /* todo teoricamente potrei usare match.getMatchID(), ma:
+        1) forse match dobbiamo toglierlo da qua
+        2) il controller istanzia il match e dopo fa virtualview.setMatch(match).
+           Il problema è che il match quando viene istanziato fa in automatico un publish e quindi displayMessage() qua dentro
+           quando prova ad accedere a match lo trova null perchè virtualview.setMatch(match) non è ancora stato fatto
+           Possibile soluzione se non si vuole usare questa variabile: fare che il messaggo mandao dal match con il publish abbia anche
+           il matchID settato e quindi dentro a displayMessage() fare un controllo
+    */
+    private int matchID;
+
     /**
      * Constructor
      * @param server
@@ -60,9 +70,11 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
 
     /**
      * Sends message to the client
-     * @param message
+     * @param message {@link Message} to be sent
      */
     public void displayMessage(Message message) {
+        //message.setMatchID(match.getMatchID()); // vedi to-do sopra
+        message.setMatchID(this.matchID);
         server.sendToClient(message);
     }
 
@@ -72,6 +84,10 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
      */
     public void setMatch(Match match){
         this.match = match;
+    }
+
+    public void setMatchID(int matchID) {
+        this.matchID = matchID;
     }
 }
 

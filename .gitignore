@@ -12,6 +12,7 @@ target
 
 #manifest files
 resources/manifest
+/src/main/java/META-INF/
 
 #built jars
 classes/artifacts

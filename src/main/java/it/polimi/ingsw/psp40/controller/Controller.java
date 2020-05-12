@@ -30,8 +30,9 @@ public class Controller implements Listener<Message> {
         cardManager = CardManager.initCardManager();
     }
 
-    private void createNewMatch() {
-        match = new Match(new Date().hashCode(), this.virtualView);
+    private void createNewMatch(int matchID) {
+        virtualView.setMatchID(matchID);
+        match = new Match(matchID, this.virtualView);
         virtualView.setMatch(match);
     }
 
@@ -76,7 +77,7 @@ public class Controller implements Listener<Message> {
         TypeOfMessage type = message.getTypeOfMessage();
         switch (type) {
             case START_MATCH: //if I receive this i'm ready to create a new match
-                createNewMatch();
+                createNewMatch(message.getMatchID());
                 ((Map<String, String>)message.getPayload(Map.class)).forEach((username, date) -> {
                     try {
                         addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
