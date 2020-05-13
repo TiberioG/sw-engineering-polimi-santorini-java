@@ -122,12 +122,12 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLogin() {
-
+        setupScreenController.displayUserForm();
     }
 
     @Override
     public void displayLoginSuccessful() {
-
+        System.out.println("You have been logged in successfully");
     }
 
     @Override

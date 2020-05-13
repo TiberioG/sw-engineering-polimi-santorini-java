@@ -1,15 +1,20 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
+import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.function.UnaryOperator;
 
@@ -22,11 +27,28 @@ public class SetupScreenController {
     @FXML
     private Button connectButton;
 
+
+    @FXML
+    private VBox vBoxForServerProps;
+
     @FXML
     private TextField ipAddressTextField;
 
     @FXML
     private TextField portTextField;
+
+    @FXML
+    private VBox vBoxForUserProps;
+
+    @FXML
+    private TextField usernameTextField;
+
+    @FXML
+    private DatePicker birthdayDatePicker;
+
+    @FXML
+    private ComboBox<Integer> numOfPlayerComboBox;
+
 
     /* Methods */
 
@@ -36,6 +58,9 @@ public class SetupScreenController {
         portTextField.setTextFormatter(textFormatter); // portTextField will now accept only integers (or blank string)
         validationMap.put(ipAddressTextField, false);
         validationMap.put(portTextField, false);
+
+
+        numOfPlayerComboBox.getItems().addAll(2,3);
     }
 
 
@@ -46,7 +71,9 @@ public class SetupScreenController {
 
     @FXML
     public void handleConnectButton(ActionEvent actionEvent) {
-        System.out.println("Clicked");
+        client.setServerIP(ipAddressTextField.getText());
+        client.setServerPort(Integer.parseInt("0" + portTextField.getText().trim()));
+        client.connectToServer();
     }
 
     @FXML
@@ -83,6 +110,25 @@ public class SetupScreenController {
         validateFields();
     }
 
+    public void displayUserForm() {
+        vBoxForServerProps.setVisible(false);
+        vBoxForUserProps.setVisible(true);
+    }
+
+    @FXML
+    public void handleSendInfoButton(ActionEvent actionEvent) {
+        String username = usernameTextField.getText();
+
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        LocalDate birthdayFromDataPicker = birthdayDatePicker.getValue();
+        Date birthday = Date.from(birthdayFromDataPicker.atStartOfDay(defaultZoneId).toInstant());
+
+        Integer numOfPlayers = numOfPlayerComboBox.getValue();
+
+        client.setUsername(username);
+        LoginMessage loginMessage = new LoginMessage(username, birthday, numOfPlayers, TypeOfMessage.LOGIN);
+        client.sendToServer(loginMessage);
+    }
 
 
     private void validateFields() {
