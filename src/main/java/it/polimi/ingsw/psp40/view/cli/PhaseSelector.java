@@ -8,6 +8,10 @@ import org.davidmoten.text.utils.WordWrap;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *
+ * @author TiberioG
+ */
 public class PhaseSelector {
     private final static int  SPACING = 3;
     private String title ="Select Phase";

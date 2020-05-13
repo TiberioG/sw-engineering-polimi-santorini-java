@@ -10,7 +10,6 @@ import it.polimi.ingsw.psp40.exceptions.YoungUserException;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -26,10 +25,14 @@ import java.util.stream.Collectors;
 
 
 /**
+ * This is the class used to display a beautiful and cool cli.
+ * Works with UNIX terminals, need support of Unicode and 255-colors
+ *
+ * "We made the buttons on the screen look so good you'll want to lick them" S.Jobs
  * @author TiberioG
  */
 public class CoolCLI implements ViewInterface {
-    private int DELAY;
+    private int DELAY; // used to set delay of animations
     private final Client client;
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
@@ -59,7 +62,6 @@ public class CoolCLI implements ViewInterface {
     private static Frame left = new Frame(new int[]{10,0}, new int[]{ROWS -3, 58}, in, out);
     private static Frame islandFrame = new Frame(new int[]{8,80}, new int[]{ROWS -3, 58}, in, out);
 
-
     private boolean fastboot = true;
     private boolean debug = false;
 
@@ -73,16 +75,14 @@ public class CoolCLI implements ViewInterface {
      * @param client
      */
     public CoolCLI(Client client) {
-
         if(!fastboot) {
             DELAY = 100;
         }
         else {
             DELAY = 0;
         }
-
-
         this.client = client; //associate with client
+
         /* Clear Terminal, a bit overkill but I'm sure terminal window is clean with no history */
         Terminal.resize(ROWS, COLS);  //force terminal window size
         Terminal.superClear();   //this clears all the previous history of terminal
@@ -92,15 +92,12 @@ public class CoolCLI implements ViewInterface {
 
         try {
             maketitle();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             //e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         hour = new Hourglass(center, lower);
         executor = Executors.newFixedThreadPool(1);
-
     }
 
     /**
@@ -114,7 +111,6 @@ public class CoolCLI implements ViewInterface {
         /* Real working  mode: gets input from user */
         if(!fastboot) {
             /* reading ip/URL of server */
-
             center.center(utils.form("enter address of server", 30), DELAY); //print form
             Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
             ip = in.nextLine();
@@ -136,7 +132,6 @@ public class CoolCLI implements ViewInterface {
                 Terminal.moveRelativeCursor(-1, -29);
                 in.nextLine();
             }
-
             while (port < MIN_PORT || port > MAX_PORT) {
                 lower.print("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:");
                 center2.center(utils.form("enter port number", 30), DELAY);
@@ -164,23 +159,24 @@ public class CoolCLI implements ViewInterface {
     }
 
     /**
-     * Method used to show server not reachable
+     * Method used to show server is not reachable
      */
     @Override
-    public void displaySetupFailure() { //todo better
+    public void displaySetupFailure() {
         left.clear();
-        out.println("Can not reach the server, please try again");
+        lower.center("Can not reach the server, please try again", DELAY);
         displaySetup();
     }
 
-    //todo javadoc
+    /**
+     * Method used to ask username and birthday
+     */
     @Override
     public void displayLogin() {
         String username;
-        Date date = null;
         center.clear();
         center2.clear();
-        left.clear();//importante sia l'ultimo clear
+        left.clear();
 
         if(!fastboot) {
             /* reading username */
@@ -204,23 +200,19 @@ public class CoolCLI implements ViewInterface {
                 }
                 catch (ParseException e) {
                     lower.print("Wrong format of date");
-                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form delay 0!!
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 } catch (YoungUserException e) {
                     lower.print("You're too young to play this game");
-                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form delay 0!!
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 } catch (OldUserException e) {
                     lower.print("You're too old to play this game");
-                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form
+                    center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form delay 0!!
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 }
-
-
             }while (date == null);
-
             lower.clear(); // used to clear lower part where are displayed errors
-
 
             /* reading port of server */
             center3.center(utils.form("How many players?", 30), DELAY);
@@ -228,14 +220,14 @@ public class CoolCLI implements ViewInterface {
             try {
                 numOfPlayers = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt
             } catch (NumberFormatException e) {
-                center3.center(utils.form("how many players?", 30), 0);
+                center3.center(utils.form("how many players?", 30), 0); //only the first has delay, this is the following (case first not valid) and should be displayed immediatel
                 Terminal.moveRelativeCursor(-1, -29);
                 in.nextLine();
             }
 
             while (numOfPlayers < 2 || numOfPlayers > 3) {
                 lower.print("Value must be between " + 2 + " and " + 3 + ". Please, try again:");
-                center3.center(utils.form("how many players?", 30), 0);
+                center3.center(utils.form("how many players?", 30), 0); //only the first has delay, this is the following (case first not valid) and should be displayed immediatel
                 Terminal.moveRelativeCursor(-1, -29);
                 try {
                     numOfPlayers = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt
@@ -258,54 +250,73 @@ public class CoolCLI implements ViewInterface {
             numOfPlayers = 2;
         }
 
+        //send to server
         client.setUsername(username);
         LoginMessage loginMessage = new LoginMessage(username, date, numOfPlayers, TypeOfMessage.LOGIN);
         client.sendToServer(loginMessage);
-
     }
 
+    /**
+     * Method to just show login was completed
+     */
     @Override
     public void displayLoginSuccessful() {
-        /*left.clear();
-        left.printWrapped("You have been logged in successfully");
-
-         */
+        /*
+        left.clear();
+        lower.center("You have been logged in successfully");
+        */
     }
 
+    /**
+     * Method to just show login was not completed and to restart the DisplayLogin
+     */
     @Override
     public void displayLoginFailure(String details) {
         lower.print(details);
         try {
-            TimeUnit.MILLISECONDS.sleep(1000);
+            TimeUnit.MILLISECONDS.sleep(1000); //show user message 1 sec before wiping out
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
-        displayLogin();
+        displayLogin(); //let's do it again
     }
 
+    /**
+     * Method to show details when a user has joined match
+     * @param details
+     */
     @Override
     public void displayUserJoined(String details) {
-       /* left.clear();
-        left.printWrapped(details);
-
+       /*
+       left.clear();
+        left.printWrapped(details); //I think user doesn't really care about this
         */
     }
 
-
+    /**
+     * Method to show "waiting for other players "
+     * @param playersWaiting I'm not showing this
+     */
     @Override
     public void displayLobbyCreated(String playersWaiting) {
-        executor.execute(hour);
+        executor.execute(hour); //starts beautiful hourglass
     }
 
-
+    /**
+     * Method to show "waiting for other players "
+     * @param details I'm not showing this
+     */
     @Override
     public void displayAddedToQueue(String details) {
         center.clear();
         executor.execute(hour);
         left.clear();
-        left.printWrapped(details);
+        //left.printWrapped(details);
     }
 
+    /**
+     * This method kills the hourglass and tells players match is starting!!
+     */
     @Override
     public void displayStartingMatch() {
         center.clear();
@@ -320,7 +331,7 @@ public class CoolCLI implements ViewInterface {
         lower.clear();
 
         try {
-            lower.center(URLReader(getClass().getResource("/ascii/starting")), 100);
+            lower.center(URLReader(getClass().getResource("/ascii/starting")), DELAY);
         } catch (IOException e) {
             //e.printStackTrace();
         }
@@ -331,26 +342,31 @@ public class CoolCLI implements ViewInterface {
         }
     }
 
+
+    /**
+     * Method used to show generic messages, mainly for debug purposes
+     * @param message the String from server
+     */
     @Override
     public void displayGenericMessage(String message) {
         left.clear();
-        lower.center(message,100);
+        lower.center(message,DELAY);
         try {
             TimeUnit.MILLISECONDS.sleep(1000);
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
-
     }
 
+    /**
+     * Method used to show disconnection of user
+     * @param details it's the string received from Server
+     */
     @Override
     public void displayDisconnected(String details) {
         left.printWrapped(details);
         client.close();
     }
-
-
-
 
     /**
      * Method used to show all the cards available and get from the user the selection of cards he want to use in the game
@@ -362,13 +378,12 @@ public class CoolCLI implements ViewInterface {
         hour.cancel();
         executor.shutdownNow();
         try {
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(DELAY);
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
         center.clear();
         lower.clear();
-
         left.clear(); // must be last clear
 
         CardSelector cardSelector = new CardSelector(cards, numPlayers, center);
@@ -385,7 +400,7 @@ public class CoolCLI implements ViewInterface {
         hour.cancel();
         executor.shutdownNow();
         try {
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(DELAY);
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
@@ -394,7 +409,7 @@ public class CoolCLI implements ViewInterface {
 
         left.clear(); // must be last clear
         try {
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(DELAY);
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
@@ -405,19 +420,19 @@ public class CoolCLI implements ViewInterface {
 
         center.clear();
         try {
-            center.center(URLReader(getClass().getResource("/ascii/cards/" + personalIdCard)), 100);
+            center.center(URLReader(getClass().getResource("/ascii/cards/" + personalIdCard)), DELAY);
         } catch (IOException e) {
             //e.printStackTrace();
         }
         String nameCard = null;
 
-        for (int i = 0; i<availableCards.size(); i++){
-            if (availableCards.get(i).getId() == personalIdCard){
-                nameCard = availableCards.get(i).getName();
+        for (Card availableCard : availableCards) {
+            if (availableCard.getId() == personalIdCard) {
+                nameCard = availableCard.getName();
             }
         }
 
-        lower2.center(client.getUsername() + " your card is: " + nameCard, 100);
+        lower2.center(client.getUsername() + " your card is: " + nameCard, DELAY);
 
     }
 
@@ -434,18 +449,17 @@ public class CoolCLI implements ViewInterface {
         thiscard = card;
         center.clear();
         try {
-            center.center(URLReader(getClass().getResource("/ascii/cards/" + card.getId())), 100);
+            center.center(URLReader(getClass().getResource("/ascii/cards/" + card.getId())), DELAY);
         } catch (IOException e) {
             //e.printStackTrace();
         }
 
-        lower2.center(client.getUsername() + " your card is: "+ card.getName(), 100);
+        lower2.center(client.getUsername() + " your card is: "+ card.getName(), DELAY);
         try {
             TimeUnit.MILLISECONDS.sleep(2000);
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
-
 
     }
 
@@ -458,7 +472,7 @@ public class CoolCLI implements ViewInterface {
         List<String> colorsAvailable = Arrays.asList(Colors.allNames()).stream().filter(colorAvailable -> colorAlreadyUsed.indexOf(colorAvailable) == -1).collect(Collectors.toList());
 
 
-        center.center("Choose with keyboard arrows one color for your workers, confirm with SPACEBAR", 100);
+        center.center("Choose with keyboard arrows one color for your workers, confirm with SPACEBAR", DELAY);
         ColorSelector colorSelector = new ColorSelector(colorsAvailable, center2);
         int selection = colorSelector.selection();
         colorWorker = Colors.valueOf(colorsAvailable.get(selection));
@@ -636,7 +650,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayBuildBlock() {
         left.clear();
-        left.printWrapped("What cell would you like to build in? Use arrow to select and confirm with spacebar");
+        left.printWrapped("What cell would you like to build in? Use arrow to select and confirm with SPACEBAR");
 
         Integer[] starting = getMyWorkers().get(currentWorkerId); //this this are the coordinates of the current worker
         List<Cell> availableBuildCell = client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList()); // i get te list of all the Cells that can be built by
@@ -679,10 +693,48 @@ public class CoolCLI implements ViewInterface {
         }
     }
 
+
+    /**
+     * Method to show a message to the winner
+     */
+    @Override
+    public void displayWinnerMessage() {
+        center.clear();
+        left.clear();
+        lower.clear();
+        try {
+            center.centerFixed(URLReader(getClass().getResource("/ascii/welcome")), 40, DELAY);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        lower.center("Congratulations, you won!", DELAY); //todocoool
+    }
+
+    /**
+     * Method to show a message to a loser
+     */
+    @Override
+    public void displayLoserMessage() {
+        left.clear();
+        left.println("I'm sorry, you lose!"); // todoo cool
+    }
+
+
+    /* Private heleper methods starting here */
+
+    /**
+     * Helper method used to instantiate the island adapter and recreate the island for the view using the one stored in the client's cache
+     */
     private void updateIsland() {
         myisland = new IslandAdapter(client.getFieldCache(), client.getLocationCache(), islandFrame );
     }
 
+    /**
+     * Method used to position the first time the workers
+     * @param occupied list of coordinates already occupied by a worker, so nt allowed
+     * @param starting coordinates where to start displaying the selector
+     * @return the coordinates of the chosen cell
+     */
     private int[] position( List<int[]> occupied, int[] starting ){
         int curRow = starting[0];
         int curCol = starting[1];
@@ -692,7 +744,6 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
 
         while (true) {
             try {
@@ -756,6 +807,13 @@ public class CoolCLI implements ViewInterface {
         return new int[]{curRow, curCol};
     }
 
+    /**
+     * Method used when a player can select a cell for build or to move
+     * @param starting coordinates of the cell where start displaying the selector
+     * @param allowed List of coordinates allowed to choose
+     * @param kind m for a move else it'sa build
+     * @return the coordinates choosen for move or for build, if user wants to back to selection of workers it returns a negative coordinate -1,-1
+     */
     private int[] positionAllowed(Integer[] starting, List<int[]> allowed , char kind){
         int curRow = starting[0];
         int curCol = starting[1];
@@ -773,7 +831,7 @@ public class CoolCLI implements ViewInterface {
                     int c = System.in.read();  //read one char at a time in ascii code
 
                     //GETTING SPACEBAR to positiom
-                    if (c == 32) {   // if press P -> quit this visualization
+                    if (c == 32) {
                         if(contains(allowed, curRow, curCol)) {
                             if(kind == 'm') {
                                 myisland.setWorker(curRow, curCol, colorWorker);
@@ -818,7 +876,7 @@ public class CoolCLI implements ViewInterface {
 
                     // getting B for back only for move
                     else if (c == 98){
-                        if(kind == 'm') {
+                        if(kind == 'm') { // if this it means I want to go back
                             curCol = -1;
                             curRow = -1;
                             break;
@@ -846,6 +904,13 @@ public class CoolCLI implements ViewInterface {
     }
 
 
+    /**
+     * Method used when a payer can position two or more different kind of blocks in a  cell.
+     * This allows to choose using the keyboard and displays a preview of the block to build
+     * @param listOfAvailableComponents list ok the levels availabel to build (as inteer)
+     * @param position coordinates on map where to show the block
+     * @return the level to build as integer
+     */
     private int chooseblock(List<Integer> listOfAvailableComponents, int[] position){
         int curRow = position[0];
         int curCol = position[1];
@@ -863,14 +928,14 @@ public class CoolCLI implements ViewInterface {
                 if (System.in.available() != 0) {
                     int c = System.in.read();  //read one char at a time in ascii code
 
-                    //GETTING SPACEBAR to positiom
+                    //GETTING SPACEBAR to confirm block
                     if (c == 32) {
                         myisland.clearSelected();
                         myisland.print();
                         break;
                     }
 
-                    //GETTING tab
+                    //GETTING tab to change build block
                     if (c == 9){
                         if (curBlk < listOfAvailableComponents.size() -1){
                             curBlk ++;
@@ -895,14 +960,19 @@ public class CoolCLI implements ViewInterface {
                     }
 
                 } //end system in available
-            } catch (IOException | InterruptedException e) {
-                //todo frame per except
+            } catch (IOException | InterruptedException ignored) {
+
             }
         }// end while true
 
         return curBlk;
     }
 
+
+    /**
+     * Private helper method used to choose between workers using TAB
+     * @return id of worker
+     */
     private int swapWorker(){
         int curWorkId = 0;
         myisland.setSelected(getMyWorkers().get(curWorkId)[0], getMyWorkers().get(curWorkId)[1]);
@@ -916,14 +986,14 @@ public class CoolCLI implements ViewInterface {
                 if (System.in.available() != 0) {
                     int c = System.in.read();  //read one char at a time in ascii code
 
-                    //GETTING SPACE_BAR to positiom
+                    //GETTING SPACE_BAR to confirm
                     if (c == 32) {
                         break;
                     }
 
                     //GETTING tab
                    if (c == 9){
-                       if(curWorkId == 0){
+                       if(curWorkId == 0){ //swap selection
                            curWorkId = 1;
                        }else {
                            curWorkId = 0;
@@ -953,38 +1023,36 @@ public class CoolCLI implements ViewInterface {
         return curWorkId;
     }
 
+    /**
+     * Helper method used to oshow the title of "SANTORINI" game
+     * @throws InterruptedException
+     * @throws IOException
+     */
     private void maketitle() throws InterruptedException, IOException {
-
         Terminal.hideCursor();
         String welcome = URLReader(getClass().getResource("/ascii/welcome"));
         String to = URLReader(getClass().getResource("/ascii/to"));
         String santorini = URLReader(getClass().getResource("/ascii/santorini"));
 
         upper.clear();
-        upper.center(welcome, DELAY);
+        upper.center(welcome, DELAY);           //WELCOME
         TimeUnit.MILLISECONDS.sleep(DELAY);
+
         upper.clear();
-        upper.center(to, DELAY);
+        upper.center(to, DELAY);                //TO
         TimeUnit.MILLISECONDS.sleep(DELAY);
+
         upper.clear();
-        upper.center(santorini, DELAY);
+        upper.center(santorini, DELAY);        //SANTORINI
         TimeUnit.MILLISECONDS.sleep(DELAY);
         Terminal.showCursor();
     }
 
-
-    @Override
-    public void displayWinnerMessage() {
-        left.println("Congratulations, you won!");
-    }
-
-    @Override
-    public void displayLoserMessage() {
-        left.println("I'm sorry, you lose!");
-    }
-
-
-
+    /**
+     * Helper method to convert a list of cells into a list of array coordinates
+     * @param cellList intput list of Cells
+     * @return list of int[] of coordinates x,y
+     */
     private List<int[]> cellAdapter(List<Cell> cellList){
         List<int[]> coord = new ArrayList<>();
         if(cellList.size() != 0) {
@@ -993,12 +1061,14 @@ public class CoolCLI implements ViewInterface {
         return coord;
     }
 
+    /**
+     * Helper method to het a map of all the workers of a player with their location
+     * @return a map with for each id of worker it's location as array of integer [x,y]
+     */
     private HashMap<Integer, Integer[]> getMyWorkers() {
         Location location = client.getLocationCache();
         Cell[][] field = client.getFieldCache();
-
         HashMap<Integer, Integer[]> workerInfo = new HashMap<>();
-
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field.length; j++) {
                 Worker occupant = location.getOccupant(i, j);
@@ -1011,6 +1081,13 @@ public class CoolCLI implements ViewInterface {
     }
 
 
+    /**
+     * Helper method to check if in a list of coordinates array there are the specified coordinates x, y
+     * @param lista input list of coordinates as int[]
+     * @param x coordinate x
+     * @param y coordnate y
+     * @return true if x,y is contained in the list of coordinates
+     */
     private boolean contains (List<int[]> lista, int x, int y){
         boolean bool = false;
         for (int[] ints : lista) {
@@ -1019,11 +1096,16 @@ public class CoolCLI implements ViewInterface {
                 break;
             }
         }
-
         return bool;
     }
 
-    public static String URLReader(URL url) throws IOException {
+    /**
+     * Method to read from resources a file as String
+     * @param url path in resources folder
+     * @return the string contained in the searched file
+     * @throws IOException
+     */
+    private static String URLReader(URL url) throws IOException {
         try (InputStream in = url.openStream()) {
             byte[] bytes = in.readAllBytes();
             return new String(bytes, StandardCharsets.UTF_8);

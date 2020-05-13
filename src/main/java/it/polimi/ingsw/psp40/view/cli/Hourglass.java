@@ -8,6 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Class used to display a cool hourlass in ASCII while user is waiting
+ * "Tempus fugit"
+ * @author TiberioG
+ */
 public class Hourglass implements Runnable{
     private Frame upper;
     private Frame lower;

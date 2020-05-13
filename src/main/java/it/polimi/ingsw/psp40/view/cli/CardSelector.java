@@ -131,8 +131,6 @@ public class CardSelector {
     }
 
 
-
-
     int selectionSingol (){
         try {
             Terminal.noBuffer();

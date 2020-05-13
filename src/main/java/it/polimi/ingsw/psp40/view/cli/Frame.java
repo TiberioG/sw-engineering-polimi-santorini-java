@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * This class is used to create a frame inside the CLI
+ *
+ * @author TiberioG
  */
 class Frame {
     private PrintWriter out ;

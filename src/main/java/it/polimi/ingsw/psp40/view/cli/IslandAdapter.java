@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * This class is used to transform the field of cells and the location form the model to a matrix of
+ * "No man is an island"
+ * @author TiberioG
  */
 public class IslandAdapter {
 
