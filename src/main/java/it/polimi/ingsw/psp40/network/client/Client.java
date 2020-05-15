@@ -65,7 +65,7 @@ public class Client implements ServerObserver {
 
   public static void main( String[] args )
   {
-    boolean cli = true;
+    boolean cli = false;
 
     if (args.length > 0) {
 
@@ -260,6 +260,14 @@ public class Client implements ServerObserver {
           view.displayWinnerMessage();
         } else {
           view.displayLoserMessage();
+        }
+        break;
+      case PLAYER_HAS_LOST:
+        Player player = (Player) message.getPayload(Player.class);
+        if (player.getName().equals(username)) {
+          view.displayLoserMessage();
+        } else {
+          view.displayLoserPlayer(player);
         }
         break;
       default:

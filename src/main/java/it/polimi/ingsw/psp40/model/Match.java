@@ -164,7 +164,7 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * Method to remove a player from the match
+     * Method to remove a player who have lost from the match
      * @param name player name that you want to remove
      * @return the list of remaining players
      */
@@ -173,13 +173,23 @@ public class Match extends Publisher<Message> {
         if (player != null) {
             player.getWorkers().forEach(worker -> location.removeLocation(worker));
             listPlayers.remove(player);
+            publish(new Message("ALL", TypeOfMessage.PLAYER_HAS_LOST, player));
         }
+
         publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
         return getPlayers();
     }
 
-    public void setWinningPlayer(Player winningPlayer) {
-        this.winningPlayer = winningPlayer;
-        publish(new Message("ALL", TypeOfMessage.WINNING_PLATER_UPDATED, this.winningPlayer));
+
+    /**
+     * Method to set the winningplayer of the match and for notify the winning player to the virtualView
+     * @param name name of the winning player
+     */
+    public void setWinningPlayer(String name) {
+        Player player = getPlayerByName(name);
+        if (player != null) {
+            this.winningPlayer = player;
+            publish(new Message("ALL", TypeOfMessage.WINNING_PLATER_UPDATED, this.winningPlayer));
+        }
     }
 }

@@ -433,6 +433,11 @@ public class CLI implements ViewInterface {
         out.println("I'm sorry, you lose!");
     }
 
+    @Override
+    public void displayLoserPlayer(Player player) {
+        out.println(player.getName() + " lost!");
+    }
+
 
 
     private void showIsland() {

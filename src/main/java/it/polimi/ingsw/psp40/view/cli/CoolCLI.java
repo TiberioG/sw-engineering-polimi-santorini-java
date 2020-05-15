@@ -720,6 +720,12 @@ public class CoolCLI implements ViewInterface {
     }
 
 
+    @Override
+    public void displayLoserPlayer(Player player) {
+
+    }
+
+
     /* Private heleper methods starting here */
 
     /**

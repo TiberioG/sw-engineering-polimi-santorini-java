@@ -188,7 +188,7 @@ public class TurnManager {
 
 
         if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
-            match.setWinningPlayer(getCurrentPlayer());
+            match.setWinningPlayer(getCurrentPlayer().getName());
             return;
         }
 
@@ -218,11 +218,17 @@ public class TurnManager {
      * This method performs all the operations to remove a player who has lost
      */
     private void removePlayerForLost() {
-        String name = this.match.getCurrentPlayer().getName();
-        turnsMap.remove(name);
-        match.removePlayer(name);
-        //notificare la perdità e gestire il caso che rimanga solo un giocatore
-        selectNextTurn();
+        String nameOfTheLosePlayer = match.getCurrentPlayer().getName();
+        match.selectNextCurrentPlayer();
+        turnsMap.remove(nameOfTheLosePlayer);
+        match.removePlayer(nameOfTheLosePlayer);
+
+        if (match.getPlayers().size() == 1) {
+            match.setWinningPlayer(match.getCurrentPlayer().getName());
+        } else {
+            currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
+            inizializedCurrentTurn();
+        }
     }
 
 

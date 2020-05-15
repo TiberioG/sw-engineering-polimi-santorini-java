@@ -56,8 +56,8 @@ public class GUI extends Application implements ViewInterface {
         client = new Client();
         client.setView(this);
 
-        //displaySetup();
-        testDisplayGame();
+        displaySetup();
+        //testDisplayGame();
     }
 
     @Override
@@ -231,6 +231,12 @@ public class GUI extends Application implements ViewInterface {
     }
     @Override
     public void displayLoserMessage() {
+
+    }
+
+
+    @Override
+    public void displayLoserPlayer(Player player) {
 
     }
 }

@@ -39,6 +39,7 @@ public interface ViewInterface {
     void displayBuildBlock();
     void displayWinnerMessage();
     void displayLoserMessage();
+    void displayLoserPlayer(Player player);
 
     void displayLobbyCreated(String playersWaiting);
 }
