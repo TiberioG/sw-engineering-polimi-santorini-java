@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.cli;
 
+import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
@@ -92,7 +93,7 @@ public class CoolCLI implements ViewInterface {
 
         try {
             maketitle();
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             //e.printStackTrace();
         }
 
@@ -273,11 +274,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayLoginFailure(String details) {
         lower.print(details);
-        try {
-            TimeUnit.MILLISECONDS.sleep(1000); //show user message 1 sec before wiping out
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(SPEED); //show user message 1 sec before wiping out
         displayLogin(); //let's do it again
     }
 
@@ -322,11 +319,8 @@ public class CoolCLI implements ViewInterface {
         center.clear();
         hour.cancel();
         executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(1000);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(SPEED);
+
         center.clear();
         lower.clear();
 
@@ -335,11 +329,8 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        try {
-            TimeUnit.MILLISECONDS.sleep(1000);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(SPEED);
+
     }
 
 
@@ -351,11 +342,7 @@ public class CoolCLI implements ViewInterface {
     public void displayGenericMessage(String message) {
         left.clear();
         lower.center(message,DELAY);
-        try {
-            TimeUnit.MILLISECONDS.sleep(1000);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(SPEED);
     }
 
     /**
@@ -377,11 +364,7 @@ public class CoolCLI implements ViewInterface {
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
         hour.cancel();
         executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(DELAY);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(DELAY);
         center.clear();
         lower.clear();
         left.clear(); // must be last clear
@@ -399,20 +382,13 @@ public class CoolCLI implements ViewInterface {
     public void displayChoicePersonalCard(List<Card> availableCards) {
         hour.cancel();
         executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(DELAY);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(DELAY);
+
         center.clear();
         lower.clear();
 
         left.clear(); // must be last clear
-        try {
-            TimeUnit.MILLISECONDS.sleep(DELAY);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(DELAY);
 
         CardSelector cardSelector = new CardSelector(availableCards, 1,  center);
         int personalIdCard = cardSelector.selectionSingol();
@@ -424,13 +400,8 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        String nameCard = null;
 
-        for (Card availableCard : availableCards) {
-            if (availableCard.getId() == personalIdCard) {
-                nameCard = availableCard.getName();
-            }
-        }
+        String nameCard = availableCards.stream().filter(card -> card.getId() == personalIdCard).map(card -> card.getName()).findFirst().orElse(null);
 
         lower2.center(client.getUsername() + " your card is: " + nameCard, DELAY);
 
@@ -455,11 +426,7 @@ public class CoolCLI implements ViewInterface {
         }
 
         lower2.center(client.getUsername() + " your card is: "+ card.getName(), DELAY);
-        try {
-            TimeUnit.MILLISECONDS.sleep(2000);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+        Utils.doTimeUnitSleep(2000);
 
     }
 
@@ -518,8 +485,8 @@ public class CoolCLI implements ViewInterface {
         center.clear();
         PlayerSelector playerSelector = new PlayerSelector(allPlayers, center);
 
-        String playerselected = playerSelector.selection();
-        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerselected));
+        String playerSelected = playerSelector.selection();
+        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected));
     }
 
     @Override
@@ -534,15 +501,11 @@ public class CoolCLI implements ViewInterface {
             e.printStackTrace();
         }
 
-        Phase selectedPhase = null;
+        Phase selectedPhase;
         if (phaseList.size() == 1) {
             selectedPhase = phaseList.get(0);
             left.println("there is only available this phase: " + selectedPhase.getType().toString());
-            try {
-                TimeUnit.MILLISECONDS.sleep(SPEED);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Utils.doTimeUnitSleep(SPEED);
 
         } else {
             PhaseSelector phaseSelector = new PhaseSelector(phaseList, left);
@@ -1030,11 +993,10 @@ public class CoolCLI implements ViewInterface {
     }
 
     /**
-     * Helper method used to oshow the title of "SANTORINI" game
-     * @throws InterruptedException
+     * Helper method used to show the title of "SANTORINI" game
      * @throws IOException
      */
-    private void maketitle() throws InterruptedException, IOException {
+    private void maketitle() throws IOException {
         Terminal.hideCursor();
         String welcome = URLReader(getClass().getResource("/ascii/welcome"));
         String to = URLReader(getClass().getResource("/ascii/to"));
@@ -1042,15 +1004,15 @@ public class CoolCLI implements ViewInterface {
 
         upper.clear();
         upper.center(welcome, DELAY);           //WELCOME
-        TimeUnit.MILLISECONDS.sleep(DELAY);
+        Utils.doTimeUnitSleep(DELAY);
 
         upper.clear();
         upper.center(to, DELAY);                //TO
-        TimeUnit.MILLISECONDS.sleep(DELAY);
+        Utils.doTimeUnitSleep(DELAY);
 
         upper.clear();
         upper.center(santorini, DELAY);        //SANTORINI
-        TimeUnit.MILLISECONDS.sleep(DELAY);
+        Utils.doTimeUnitSleep(DELAY);
         Terminal.showCursor();
     }
 
@@ -1089,20 +1051,13 @@ public class CoolCLI implements ViewInterface {
 
     /**
      * Helper method to check if in a list of coordinates array there are the specified coordinates x, y
-     * @param lista input list of coordinates as int[]
+     * @param intsList input list of coordinates as int[]
      * @param x coordinate x
-     * @param y coordnate y
+     * @param y coordinate y
      * @return true if x,y is contained in the list of coordinates
      */
-    private boolean contains (List<int[]> lista, int x, int y){
-        boolean bool = false;
-        for (int[] ints : lista) {
-            if (ints[0] == x && ints[1] == y) {
-                bool = true;
-                break;
-            }
-        }
-        return bool;
+    private boolean contains (List<int[]> intsList, int x, int y){
+        return intsList.stream().anyMatch(ints -> ints[0] == x && ints[1] == y);
     }
 
     /**
@@ -1117,7 +1072,6 @@ public class CoolCLI implements ViewInterface {
             return new String(bytes, StandardCharsets.UTF_8);
         }
     }
-
 
 }
 

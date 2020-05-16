@@ -3,10 +3,8 @@ package it.polimi.ingsw.psp40.view.cli;
 import it.polimi.ingsw.psp40.commons.Colors;
 import org.davidmoten.text.utils.WordWrap;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class is used to create a frame inside the CLI
@@ -27,7 +25,7 @@ class Frame {
     private int colSpan;
 
 
-    Frame(int[] absInit, int[] absEnd, Scanner in, PrintWriter out ){
+    public Frame(int[] absInit, int[] absEnd, Scanner in, PrintWriter out ){
         this.absInit = absInit;
         this.absEnd = absEnd;
         this.in = in;
@@ -72,14 +70,13 @@ class Frame {
     }
 
 
-    void printWrapped (String towrite)  {
-                String wrapped =
-                WordWrap.from(towrite)
+    void printWrapped (String toWrite)  {
+        String wrapped = WordWrap.from(toWrite)
                         .maxWidth(colSpan)
                         .wrap();
         Terminal.moveAbsoluteCursor(absInit[0], absInit[1]);
         String[] lines = wrapped.split("\\r?\\n"); //split in lines
-       System.out.print(wrapped);
+        System.out.print(wrapped);
         rowsadded = lines.length;
      }
 
@@ -123,13 +120,7 @@ class Frame {
             }
             Terminal.moveAbsoluteCursor(absInit[0]+ i + 1, absInit[1] + diff);
             System.out.print(lines[i]);
-            if (delay != 0) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(delay);
-                } catch (InterruptedException e) {
-                    //e.printStackTrace();
-                }
-            }
+            if (delay != 0) Utils.doTimeUnitSleep(delay);
         }
         lastRowRitten = lastRowRitten + lines.length + 1;
         Terminal.showCursor();
@@ -147,11 +138,7 @@ class Frame {
             Terminal.moveAbsoluteCursor(absInit[0]+ i + 1, absInit[1] + diff);
             System.out.print(lines[i]);
             if (delay != 0) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(delay);
-                } catch (InterruptedException e) {
-                    //e.printStackTrace();
-                }
+                Utils.doTimeUnitSleep(delay);
             }
         }
         lastRowRitten = lastRowRitten + lines.length + 1;
@@ -169,13 +156,7 @@ class Frame {
             }
             Terminal.moveAbsoluteCursor(lastRowRitten+ i + 1, absInit[1] + diff);
             System.out.print(lines[i]);
-            if (delay != 0) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(delay);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (delay != 0)  Utils.doTimeUnitSleep(delay);
         }
         lastRowRitten = lastRowRitten + lines.length + 1;
     }

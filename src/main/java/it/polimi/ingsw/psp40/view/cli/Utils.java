@@ -233,7 +233,7 @@ public class Utils {
 
 
 
-    public void singleTableCool(String title, String[] inputList, int delay) throws InterruptedException {
+    public void singleTableCool(String title, String[] inputList, int delay) {
         final  int SPACEADD = 5;
         int height = inputList.length;
 
@@ -289,12 +289,12 @@ public class Utils {
 
         for (int i = 0; i<lines.length; i++){
             out.println(lines[i]);
-            TimeUnit.MILLISECONDS.sleep(delay);
+            doTimeUnitSleep(delay);
         }
     }
 
 
-    public String  tableString(String title, String[] inputList)  {
+    public String tableString(String title, String[] inputList)  {
         final  int SPACEADD = 5;
         int height = inputList.length;
 
@@ -486,4 +486,17 @@ public class Utils {
     public static boolean isValidPort(Integer input) {
         return (input >= Client.MIN_PORT && input <= Client.MAX_PORT);
     }
+
+    /**
+     * Method to call MILLISECONDS.sleep of {@link TimeUnit} and for manage his InterruptedException
+     * @param timeout milliseconds value requested for sleep
+     */
+    public static void doTimeUnitSleep(int timeout) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(timeout); //show user message 1 sec before wiping out
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
+    }
+
 }

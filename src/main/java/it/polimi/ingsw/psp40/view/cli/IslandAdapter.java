@@ -34,7 +34,7 @@ public class IslandAdapter {
      * @param field from the model, a matrix of {@link Cell}
      * @param location from the model {@link Location}
      */
-    IslandAdapter(Cell[][] field, Location location, Frame frame){
+    public IslandAdapter(Cell[][] field, Location location, Frame frame){
         this.frame = frame;
         this.matrix = new SquareCell[field.length][field.length];
         this.len = SquareCell.getLen();

@@ -119,9 +119,9 @@ public class UtilsTest {
 
 
     @Test
-    public void ansiCursors() throws InterruptedException {
+    public void ansiCursors() {
         out.print("ciao");
-        TimeUnit.MILLISECONDS.sleep(1200);
+        Utils.doTimeUnitSleep(1200);
         out.println("\u001b[3D");
     }
 }

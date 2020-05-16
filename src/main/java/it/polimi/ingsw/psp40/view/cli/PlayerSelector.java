@@ -31,7 +31,7 @@ public class PlayerSelector {
     }
 
 
-    String selection (){
+    public String selection (){
         try {
             Terminal.noBuffer();
         } catch (IOException | InterruptedException e) {

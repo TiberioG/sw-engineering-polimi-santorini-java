@@ -48,11 +48,7 @@ public class Hourglass implements Runnable{
                     //
                 }
             }
-            try {
-                TimeUnit.MILLISECONDS.sleep(500);
-            } catch (InterruptedException e) {
-                //e.printStackTrace();
-            }
+            Utils.doTimeUnitSleep(500);
         }
     }
 
