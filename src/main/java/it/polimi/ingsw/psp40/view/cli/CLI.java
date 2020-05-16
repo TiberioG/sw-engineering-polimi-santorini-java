@@ -169,11 +169,7 @@ public class CLI implements ViewInterface {
     public void displayCardSelection(HashMap<Integer,Card> cards, int numPlayers) {
         String[] names = cards.values().stream().map(Card::getName).toArray(String[]::new);
 
-        try {
-            utils.singleTableCool("Cards Available", names, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        utils.singleTableCool("Cards Available", names, 100);
         System.out.println("Select " + numPlayers + " cards");
 
         //String[] selectedCards = IntStream.range(0, numPlayers).mapToObj(i -> names[utils.readNumbers(0, names.length - 1)]).toArray(String[]::new);
@@ -195,11 +191,7 @@ public class CLI implements ViewInterface {
     public void displayChoicePersonalCard(List<Card> availableCards) {
         String[] names = availableCards.stream().map(Card::getName).toArray(String[]::new);
 
-        try {
-            utils.singleTableCool("Cards Available", names, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        utils.singleTableCool("Cards Available", names, 100);
 
         System.out.println("Choice your personal card");
 
@@ -219,11 +211,7 @@ public class CLI implements ViewInterface {
     public void displayCardInGame(List<Card> cardInGame) {
         String[] names = cardInGame.stream().map(Card::getName).toArray(String[]::new);
 
-        try {
-            utils.singleTableCool("Card selected", names, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        utils.singleTableCool("Card selected", names, 100);
 
     }
 
@@ -240,11 +228,7 @@ public class CLI implements ViewInterface {
 
         String[] colorsAvailableArray = colorsAvailable.toArray(new String[0]);//conversion to string
         out.println("I's time to choose one color for your workers, choose from following list:");
-        try {
-            utils.singleTableCool("options", colorsAvailableArray, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        utils.singleTableCool("options", colorsAvailableArray, 100);
 
         int choice = utils.readNumbers(0,colorsAvailableArray.length - 1);
         out.println("Wooow, you have selected color " + colorsAvailableArray[choice]+ " for your workers");
@@ -285,11 +269,7 @@ public class CLI implements ViewInterface {
     public void displayAskFirstPlayer(List<Player> allPlayers)  {
         String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
 
-        try {
-            utils.singleTableCool("Players available", names, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        utils.singleTableCool("Players available", names, 100);
         //todo double column for also card display
 
         int selection = utils.readNumbers(0, names.length -1);
@@ -306,11 +286,7 @@ public class CLI implements ViewInterface {
         } else {
             String[] phases = phaseList.stream().map(phase -> phase.getType().toString()).toArray(String[]::new);
 
-            try {
-                utils.singleTableCool("Phases available", phases, 100 );
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            utils.singleTableCool("Phases available", phases, 100 );
 
             int index = utils.readNumbers(0, phaseList.size());
             selectedPhase = phaseList.get(index);
@@ -406,11 +382,7 @@ public class CLI implements ViewInterface {
             nameOfAvailableComponents[i] = listOfStringComponent.get(listOfAvailableComponents.get(i));
         }
 
-        try {
-            utils.singleTableCool("Blocks available", nameOfAvailableComponents, 100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        utils.singleTableCool("Blocks available", nameOfAvailableComponents, 100);
         int componentCode = utils.readNumbers(0, Component.allNames().length -1 );
         CoordinatesMessage buildCoord = new CoordinatesMessage(cellToBuild.getCoordX(), cellToBuild.getCoordY());
 

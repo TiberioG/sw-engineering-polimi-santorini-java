@@ -1,7 +1,10 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.messages.Message;
+import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
+import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
@@ -37,6 +40,8 @@ public class GUI extends Application implements ViewInterface {
 
     private GameScreenController gameScreenController;
 
+    private CardScreenController cardScreenController;
+
     private FXMLLoader fxmlLoader;
 
     /* Methods */
@@ -56,8 +61,9 @@ public class GUI extends Application implements ViewInterface {
         client = new Client();
         client.setView(this);
 
-        displaySetup();
+        //displaySetup();
         //testDisplayGame();
+        testCardManager();
     }
 
     @Override
@@ -163,6 +169,37 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
 
+        fxmlLoader.setLocation(getClass().getResource("/FXML/CardScreen.fxml"));
+
+        Parent root;
+        Scene scene;
+
+        try {
+            root = fxmlLoader.load();
+            scene = new Scene(root);
+
+        }
+        catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "SetupScreen.fxml not found");
+            scene = new Scene(new Label(errorString));
+        }
+
+        primaryStage.setScene(scene);
+
+        primaryStage.setTitle("Santorini");
+        primaryStage.setResizable(false);
+
+        primaryStage.show();
+
+        cardScreenController = fxmlLoader.getController();
+        cardScreenController.initialize(cards, numPlayers);
+
+
+        int[] selection = cardScreenController.selection();
+
+        /* sending to server */
+        client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+
     }
 
     @Override
@@ -237,6 +274,39 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLoserPlayer(Player player) {
+
+    }
+
+
+
+
+    public void testCardManager(){
+
+        fxmlLoader.setLocation(getClass().getResource("/FXML/CardScreen.fxml"));
+
+        Parent root;
+        Scene scene;
+
+        try {
+            root = fxmlLoader.load();
+            scene = new Scene(root);
+
+        }
+        catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "SetupScreen.fxml not found");
+            scene = new Scene(new Label(errorString));
+        }
+
+        primaryStage.setScene(scene);
+
+        primaryStage.setTitle("Santorini");
+        primaryStage.setResizable(false);
+
+        primaryStage.show();
+
+        cardScreenController = fxmlLoader.getController();
+        cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 2);
+
 
     }
 }
