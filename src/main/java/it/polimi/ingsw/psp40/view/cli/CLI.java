@@ -411,6 +411,10 @@ public class CLI implements ViewInterface {
     }
 
 
+    @Override
+    public void displayCellUpdated(Cell cell) {
+
+    }
 
     private void showIsland() {
         Location location = client.getLocationCache();
@@ -455,8 +459,6 @@ public class CLI implements ViewInterface {
         return workerInfo;
     }
 
-
-
     /**
      * This private method is used to convert a list of Cells into a list of their location as arrays of CoordX,CoordY
      * @param cellList
@@ -470,6 +472,9 @@ public class CLI implements ViewInterface {
         return coord;
     }
 
+    @Override
+    public void displayLocationUpdated() {
+    }
 
     private boolean contains (List<int[]> lista, int[] candidate){
         boolean bool = false;

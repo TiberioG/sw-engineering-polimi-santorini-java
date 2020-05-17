@@ -15,6 +15,7 @@ import java.util.List;
 
 public class CardScreenController extends ScreenController {
 
+
     HashMap<Integer, Card> cards;
     private int toSelect;
     List<Integer> positionSelectedList = new ArrayList<Integer>();
@@ -22,8 +23,10 @@ public class CardScreenController extends ScreenController {
 
     @FXML
     public ImageView cardArea;
+
     @FXML
     public ImageView selection;
+
     @FXML
     private Button nextButton;
     @FXML

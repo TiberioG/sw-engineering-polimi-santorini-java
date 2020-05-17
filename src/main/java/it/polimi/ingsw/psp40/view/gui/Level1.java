@@ -22,11 +22,6 @@ public class Level1 extends Block {
     }
 
     @Override
-    void handleClick() {
-        GameScreenController.blockClicked(row, col, z);
-    }
-
-    @Override
     void loadImage(GUIProperties.CameraType cameraType) {
         switch (cameraType) {
             case RIGHT:

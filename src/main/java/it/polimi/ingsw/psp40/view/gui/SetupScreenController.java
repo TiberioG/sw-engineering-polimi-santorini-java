@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.function.UnaryOperator;
 
 public class SetupScreenController extends ScreenController {
+
     /* Attributes */
+
     private HashMap<Control, Boolean> validationMap = new HashMap<>();
 
     @FXML
@@ -63,6 +65,27 @@ public class SetupScreenController extends ScreenController {
 
 
         numOfPlayerComboBox.getItems().addAll(2,3);
+    }
+
+    // todo remove me, just for testing
+    protected void mockSendConnect() {
+        getClient().setServerIP("localhost");
+        getClient().setServerPort(Integer.parseInt("1234"));
+        getClient().connectToServer();
+    }
+    // todo remove me, just for testing
+    protected void mockSendLogin() {
+        String username = (new Date()).toString();
+        Date birthday = new Date();
+        int numOfPlayers = 2;
+        getClient().setUsername(username);
+        LoginMessage loginMessage = new LoginMessage(username, birthday, numOfPlayers, TypeOfMessage.LOGIN);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        getClient().sendToServer(loginMessage);
     }
 
 

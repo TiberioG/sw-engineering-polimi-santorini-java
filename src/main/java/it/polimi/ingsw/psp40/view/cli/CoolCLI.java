@@ -688,6 +688,13 @@ public class CoolCLI implements ViewInterface {
 
     }
 
+    @Override
+    public void displayCellUpdated(Cell cell) {
+    }
+
+    @Override
+    public void displayLocationUpdated() {
+    }
 
     /* Private heleper methods starting here */
 

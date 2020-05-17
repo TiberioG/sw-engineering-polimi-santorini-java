@@ -177,7 +177,7 @@ public class Client implements ServerObserver {
         view.displayDisconnected("Connection lost"); // will close the socket and terminate the execution
         break;
 
-      case HEARTBEAT:
+      case HEARTBEAT: // I won't receive this here anymore. Check ServerAdapter.java
         //System.out.println("SERVER IS ALIVE");
         break;
 
@@ -227,6 +227,12 @@ public class Client implements ServerObserver {
 
       case LOCATION_UPDATED:
         locationCache = (Location) message.getPayload(Location.class);
+        view.displayLocationUpdated();
+        break;
+
+      case TOWER_UPDATED:
+        Cell cellUpdated = (Cell) message.getPayload(Cell.class);
+        view.displayCellUpdated(cellUpdated);
         break;
 
       case CHOOSE_POSITION_OF_WORKERS:

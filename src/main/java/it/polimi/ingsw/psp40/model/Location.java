@@ -1,5 +1,9 @@
 package it.polimi.ingsw.psp40.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.commons.JsonAdapter;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.Publisher;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
@@ -20,6 +24,7 @@ public class Location extends Publisher<Message> {
     /* Attributes */
 
     private HashMap<Cell, Worker> map = new HashMap<>();
+    private List<Worker> modifiedWorkers = new ArrayList<>();
 
 
     /* Constructor(s) */
@@ -52,7 +57,7 @@ public class Location extends Publisher<Message> {
             Cell oldCell = getLocation(worker);
             if (oldCell != null) this.map.remove(oldCell);
             this.map.put(cell, worker);
-
+            modifiedWorkers.add(worker);
             this.update();  //every time i change the location I send a copy of the complete updated location bravo!
         }
     }
@@ -67,6 +72,9 @@ public class Location extends Publisher<Message> {
         Worker worker2 = getOccupant(cell2);
         this.map.put(cell1, worker2);
         this.map.put(cell2, worker1);
+
+        modifiedWorkers.add(worker1);
+        modifiedWorkers.add(worker2);
 
         this.update();  //every time i change the location I send a copy of the complete updated location
     }
@@ -92,7 +100,7 @@ public class Location extends Publisher<Message> {
      * @param cell
      * @return Worker in that cell
      */
-    public  Worker getOccupant(Cell cell) {
+    public Worker getOccupant(Cell cell) {
         return this.map.get(cell);
     }
 
@@ -102,7 +110,7 @@ public class Location extends Publisher<Message> {
      * @param y coordinate y
      * @return worker in that position
      */
-    public  Worker getOccupant(int x, int y) {
+    public Worker getOccupant(int x, int y) {
         Worker worker = null;
         for (HashMap.Entry<Cell, Worker> entry : this.map.entrySet()) {
             if (entry.getKey().getCoordX() == x && entry.getKey().getCoordY() == y) {
@@ -114,9 +122,8 @@ public class Location extends Publisher<Message> {
 
     /**
      * Method to get a list of all the occupied cells
-     * @return
+     * @return list of all occupied cells
      */
-
     public List<Cell> getAllOccupied(){
         return new ArrayList<>(this.map.keySet());
     }
@@ -131,12 +138,20 @@ public class Location extends Publisher<Message> {
         map.put(cell, null);
     }
 
-
-    private void update (){
-        publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this));
+    public List<Worker> getModifiedWorkers() {
+        return modifiedWorkers;
     }
 
+    public Location copy() {
+        String locationString = JsonAdapter.toJsonClass(this);
+        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
+        return gson.fromJson(locationString, Location.class);
+    }
 
+    private void update () {
+        publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this));
+        modifiedWorkers.clear();
+    }
 }
 
 

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * @author sup3rgiu
@@ -21,8 +23,6 @@ public abstract class Block extends ImageView {
         this.setPickOnBounds(false);
     }
 
-    abstract void handleClick();
-
     abstract void loadImage(GUIProperties.CameraType cameraType);
 
     abstract void display(int row, int col);
@@ -30,6 +30,15 @@ public abstract class Block extends ImageView {
     abstract Block copy();
 
     abstract Block copyAndSetCamera(GUIProperties.CameraType cameraType);
+
+    protected void setBlockEffect(Effect effect) {
+        this.setEffect(effect);
+    }
+
+    protected void handleClick() {
+        if(GUI.gameScreenController != null)
+            GUI.gameScreenController.blockClicked(row, col, z);
+    }
 
     protected void setXPosition(double x) {
         this.setX( x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera) ); // fix X position depending row, col and CameraType values
@@ -58,8 +67,34 @@ public abstract class Block extends ImageView {
                     // todo
                     break;
             }
-            System.out.println("x: " + this.getX() + ", y:" + this.getY());
+            //System.out.println("x: " + this.getX() + ", y:" + this.getY());
+            //System.out.println(this.getFitHeight());
         }
+    }
+
+    protected final void highlightBlock() {
+        ImageView clipImage = new ImageView(this.getImage());
+        clipImage.setPreserveRatio(true);
+        clipImage.setFitWidth(this.getFitWidth());
+        clipImage.setFitHeight(this.getFitHeight());
+        clipImage.setX(this.getX());
+        clipImage.setY(this.getY());
+        this.setClip(clipImage);
+        ColorAdjust monochrome = new ColorAdjust();
+        monochrome.setSaturation(-1.0);
+        Blend blush = new Blend(
+                BlendMode.MULTIPLY,
+                monochrome,
+                new ColorInput(
+                        this.getX(),
+                        this.getY(),
+                        this.getImage().getWidth(),
+                        this.getImage().getHeight(),
+                        Color.YELLOW // todo change me. Something better. Maybe use RGBA
+                )
+        );
+
+        this.setEffect(blush);
     }
 
 }

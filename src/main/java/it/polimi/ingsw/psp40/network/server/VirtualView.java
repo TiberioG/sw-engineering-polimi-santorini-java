@@ -53,19 +53,17 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
      */
     @Override
     public void update(Message message) {
-        switch (message.getTypeOfMessage()){
-            case TOWER_UPDATED:
-                Cell[][] island = match.getIsland().getField();
-                displayMessage(new Message("ALL", TypeOfMessage.TOWER_UPDATED, island));
-
+        switch (message.getTypeOfMessage()) {
             case SETTED_CARDS_TO_GAME: //mando a far vedere le carte selezionate
                 List<Card> cardInGame = match.getCards();
                 displayMessage(new Message("ALL", TypeOfMessage.SETTED_CARDS_TO_GAME, cardInGame ));
+                break;
+
+            default:
+                displayMessage(message);
+                break;
+
         }
-
-        if (message.getUsername() != null && message.getUsername().equals("VIRTUAL_VIEW")) {
-
-        } else displayMessage(message);
     }
 
     /**

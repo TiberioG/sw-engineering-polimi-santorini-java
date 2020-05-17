@@ -1,6 +1,8 @@
-.setup-pane
-.game-pane {
+.setup-pane {
     -fx-background-image: url("../images/background.png");
+}
+
+.game-pane {
 }
 
 TextField {

@@ -1,8 +1,11 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
+import it.polimi.ingsw.psp40.commons.messages.Message;
+import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.CardManager;
+import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.ViewInterface;
@@ -34,7 +37,9 @@ public class GUI extends Application implements ViewInterface {
     private static final Logger LOGGER = Logger.getLogger("GUI");
 
     private SetupScreenController setupScreenController;
-    private GameScreenController gameScreenController;
+
+    protected static GameScreenController gameScreenController = null;
+
     private CardScreenController cardScreenController;
 
     private FXMLLoader fxmlLoader;
@@ -56,7 +61,6 @@ public class GUI extends Application implements ViewInterface {
         client.setView(this);
 
         displaySetup();
-        //testDisplayGame();
         //testCardManager();
     }
 
@@ -84,13 +88,18 @@ public class GUI extends Application implements ViewInterface {
             primaryStage.show();
             setupScreenController = fxmlLoader.getController();
             setupScreenController.setClient(client);
+
+            // todo remove me, just for testing
+            setupScreenController.mockSendConnect();
         });
     }
 
-    private void testDisplayGame() {
+    private void displayGame(List<Player> playerList) {
         createMainScene("/FXML/GameScreen.fxml", () -> {
             gameScreenController = fxmlLoader.getController();
             gameScreenController.setClient(client);
+            gameScreenController.updateWholeIsland();
+            gameScreenController.setInitialPosition(playerList);
         });
     }
 
@@ -102,6 +111,9 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayLogin() {
         setupScreenController.displayUserForm();
+
+        // todo remove me, just for testing
+        setupScreenController.mockSendLogin();
     }
 
     @Override
@@ -141,19 +153,43 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void displayLocationUpdated() {
+        if(gameScreenController != null) {
+            Platform.runLater(()-> {
+                gameScreenController.updateWorkersPosition();
+            });
+        }
+    }
+
+    @Override
+    public void displayCellUpdated(Cell cell) {
+        if(gameScreenController != null) {
+            Platform.runLater(()-> {
+                gameScreenController.updateCell(cell);
+            });
+        }
+    }
+
+    @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        createMainScene("/FXML/CardScreen.fxml", () -> {
+
+        // todo remove me, just for testing
+        int[] selection = {0, 1};
+        client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+
+/*        createMainScene("/FXML/CardScreen.fxml", () -> {
             cardScreenController = fxmlLoader.getController();
             cardScreenController.setClient(client);
             //int[] selection = cardScreenController.selection();
-            /* sending to server */
+            *//* sending to server *//*
             //client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-        });
+        });*/
     }
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-
+        int personalIdCard = availableCards.get(0).getId();
+        client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
     }
 
     @Override
@@ -163,37 +199,47 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayForcedCard(Card card) {
-
+        System.out.println("Your card has been forced. It is: " + card.getName());
     }
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
-
+        Platform.runLater(()-> {
+            displayGame(playerList);
+            //gameScreenController.setInitialPosition(playerList);
+        });
     }
 
     @Override
     public void displayAskFirstPlayer(List<Player> allPlayers) {
-
+        String playerSelected = allPlayers.get(0).getName();
+        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected));
     }
 
     @Override
     public void displayChoiceOfAvailablePhases() {
-
+        Platform.runLater(()-> {
+            gameScreenController.askDesiredPhase();
+        });
     }
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-
+        Platform.runLater(()-> {
+            gameScreenController.highlightAvailableCellsForMove();
+        });
     }
 
     @Override
     public void displayChoiceSelectionOfWorker() {
-
+        // nothing here
     }
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
-
+        Platform.runLater(()-> {
+            gameScreenController.highlightAvailableCellsForBuild();
+        });
     }
 
     @Override

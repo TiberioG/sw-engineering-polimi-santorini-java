@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
+import it.polimi.ingsw.psp40.model.Worker;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,8 @@ public interface ViewInterface {
     void displayChoiceOfAvailableCellForMove();
     void displayChoiceSelectionOfWorker();
     void displayChoiceOfAvailableCellForBuild();
+    void displayLocationUpdated();
+    void displayCellUpdated(Cell cell);
     void displayMoveWorker();
     void displayBuildBlock();
     void displayWinnerMessage();

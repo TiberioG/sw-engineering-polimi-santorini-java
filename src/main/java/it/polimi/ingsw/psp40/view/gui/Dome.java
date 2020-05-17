@@ -9,11 +9,15 @@ import javafx.scene.image.Image;
 public class Dome extends Block {
 
     Dome(int row, int col) {
-        this(row, col, GUIProperties.CameraType.RIGHT);
+        this(row, col, 4);
     }
 
-    Dome(int row, int col, GUIProperties.CameraType cameraType) {
-        super(row, col, 4);
+    Dome(int row, int col, int z) {
+        this(row, col, z, GUIProperties.CameraType.RIGHT);
+    }
+
+    Dome(int row, int col, int z, GUIProperties.CameraType cameraType) {
+        super(row, col, z);
         this.setPreserveRatio(true);
         this.setFitWidth(GUIProperties.domeWidth);
         this.setFitHeight(GUIProperties.domeHeight);
@@ -22,8 +26,8 @@ public class Dome extends Block {
     }
 
     @Override
-    void handleClick() {
-        GameScreenController.blockClicked(row, col, z);
+    protected void handleClick() {
+        GUI.gameScreenController.blockClicked(row, col, z);
     }
 
     @Override
@@ -44,17 +48,35 @@ public class Dome extends Block {
 
     @Override
     void display(int row, int col) {
+        switch (this.z) {
+            case 1:
+                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 145);
+                break;
+
+            case 2:
+                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 83);
+                break;
+
+            case 3:
+                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 32);
+                break;
+
+            case 4:
+                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix);
+                break;
+        }
+
         this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + GUIProperties.level3XFix + GUIProperties.domeXFix);
-        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix);
     }
+
 
     @Override
     Dome copy() {
-        return new Dome(this.row, this.col);
+        return new Dome(this.row, this.col, this.z, this.currentCamera);
     }
 
     @Override
     Dome copyAndSetCamera(GUIProperties.CameraType cameraType) {
-        return new Dome(this.row, this.col, cameraType);
+        return new Dome(this.row, this.col, this.z, cameraType);
     }
 }

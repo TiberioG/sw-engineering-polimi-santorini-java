@@ -92,12 +92,15 @@ public class ServerAdapter implements Runnable
         }
 
         /* notify the observers that we got a message from the server */
-        for (ServerObserver observer : observersCpy) {
-          //new Thread(() -> {
-            observer.handleMessage(msg);
-      // }).start();
+        //if (msg.getTypeOfMessage() != TypeOfMessage.HEARTBEAT) { // do not start a thread for each heartbeat message!
+          for (ServerObserver observer : observersCpy) {
+            //new Thread(() -> {
+              observer.handleMessage(msg);
+            //}).start();
+          //}
         }
-      } catch (EOFException e) {
+
+      } catch(EOFException e){
       }
     }
   }

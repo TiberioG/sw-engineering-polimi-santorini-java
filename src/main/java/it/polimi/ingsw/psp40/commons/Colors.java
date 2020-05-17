@@ -1,27 +1,31 @@
 package it.polimi.ingsw.psp40.commons;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public enum Colors {
-    WHITE ("\u001B[97m"),
-    BLACK ("\u001B[30m"),
-    BLUE("\u001B[34m"),
-    RED ("\u001B[31m"),
-    GREEN("\u001B[32m"),
-    YELLOW("\u001B[33m"),
-    MAGENTA("\u001B[35m"),
-    CYAN("\u001B[36m"),
-    GREY("\u001B[37m");
+    WHITE ("\u001B[97m", Color.WHITE),
+    BLACK ("\u001B[30m", Color.BLACK),
+    BLUE("\u001B[34m", Color.BLUE),
+    RED ("\u001B[31m", Color.RED),
+    GREEN("\u001B[32m", Color.GREEN),
+    YELLOW("\u001B[33m", Color.YELLOW),
+    MAGENTA("\u001B[35m", Color.MAGENTA),
+    CYAN("\u001B[36m", Color.CYAN),
+    GREY("\u001B[37m", Color.GREY);
 
     private final String ansiCode;
+    private final Color color;
 
     /**
      * Constructor
      * @param ansiCode
      */
-    Colors(String ansiCode) {
+    Colors(String ansiCode, Color color) {
         this.ansiCode = ansiCode;
+        this.color = color;
     }
 
     /**
@@ -30,6 +34,10 @@ public enum Colors {
      */
     public String getAnsiCode() {
         return ansiCode;
+    }
+
+    public Color getPaintColor() {
+        return color;
     }
 
     public static String[] allNames(){
@@ -56,7 +64,7 @@ public enum Colors {
      *
      * @return the resetcolor ANSI code
      */
-      public static String reset(){
+    public static String reset(){
         return  "\u001B[0m";
     }
 

@@ -1,7 +1,10 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Colors;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * @author sup3rgiu
@@ -9,15 +12,19 @@ import javafx.scene.image.Image;
 
 public class Worker extends Block {
 
-    protected Colors color;
-    protected String owner;
+    protected final Colors color;
+    protected final String ownerUsername;
+    protected final int id;
 
-    Worker(int row, int col) {
-        this(row, col, 1, GUIProperties.CameraType.RIGHT);
+    Worker(int row, int col, String ownerUsername, int id, Colors color) {
+        this(row, col, 1, GUIProperties.CameraType.RIGHT, ownerUsername, id, color);
     }
 
-    private Worker(int row, int col, int z, GUIProperties.CameraType cameraType) {
+    private Worker(int row, int col, int z, GUIProperties.CameraType cameraType, String ownerUsername, int id, Colors color) {
         super(row, col, z);
+        this.ownerUsername = ownerUsername;
+        this.id = id;
+        this.color = color;
         this.setPreserveRatio(true);
         this.setFitWidth(GUIProperties.workerWidth);
         this.setFitHeight(GUIProperties.workerHeight);
@@ -26,8 +33,9 @@ public class Worker extends Block {
     }
 
     @Override
-    void handleClick() {
-        GameScreenController.workerClicked(this);
+    protected void handleClick() {
+        if(GUI.gameScreenController != null)
+            GUI.gameScreenController.workerClicked(this);
     }
 
     @Override
@@ -103,15 +111,52 @@ public class Worker extends Block {
                 this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix - 56.5); // 56.5
                 break;
         }
+
+        applyColor();
+    }
+
+    private void applyColor() {
+        ImageView clipImage = new ImageView(this.getImage());
+        clipImage.setPreserveRatio(true);
+        clipImage.setFitWidth(this.getFitWidth());
+        clipImage.setFitHeight(this.getFitHeight());
+        clipImage.setX(this.getX());
+        clipImage.setY(this.getY());
+        this.setClip(clipImage);
+        ColorAdjust monochrome = new ColorAdjust();
+        monochrome.setSaturation(-1.0);
+        Blend blush = new Blend(
+                BlendMode.MULTIPLY,
+                monochrome,
+                new ColorInput(
+                        this.getX(),
+                        this.getY(),
+                        this.getImage().getWidth(),
+                        this.getImage().getHeight(),
+                        this.color.getPaintColor()
+                )
+        );
+
+        this.setEffect(blush);
+    }
+
+    @Override
+    protected void setBlockEffect(Effect effect) {
+        if(effect != null) { // apply custom effect
+            this.setEffect(effect);
+        } else { // restore worker color
+            applyColor();
+        }
+
     }
 
     @Override
     Worker copy() {
-        return new Worker(this.row, this.col, this.z, this.currentCamera);
+        return new Worker(this.row, this.col, this.z, this.currentCamera, this.ownerUsername, this.id, this.color);
     }
 
     @Override
     Worker copyAndSetCamera(GUIProperties.CameraType cameraType) {
-        return new Worker(this.row, this.col, this.z, cameraType);
+        return new Worker(this.row, this.col, this.z, cameraType, this.ownerUsername, this.id, this.color);
     }
 }
