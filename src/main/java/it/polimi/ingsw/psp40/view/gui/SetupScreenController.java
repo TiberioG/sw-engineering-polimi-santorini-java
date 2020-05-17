@@ -2,14 +2,16 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.view.cli.Utils;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
@@ -18,15 +20,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.function.UnaryOperator;
 
-public class SetupScreenController {
+public class SetupScreenController extends ScreenController {
     /* Attributes */
-
-    private Client client;
     private HashMap<Control, Boolean> validationMap = new HashMap<>();
 
     @FXML
-    private Button connectButton;
+    private AnchorPane anchorPane;
 
+    @FXML
+    private Button connectButton;
 
     @FXML
     private VBox vBoxForServerProps;
@@ -64,16 +66,11 @@ public class SetupScreenController {
     }
 
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-
     @FXML
     public void handleConnectButton(ActionEvent actionEvent) {
-        client.setServerIP(ipAddressTextField.getText());
-        client.setServerPort(Integer.parseInt("0" + portTextField.getText().trim()));
-        client.connectToServer();
+        getClient().setServerIP(ipAddressTextField.getText());
+        getClient().setServerPort(Integer.parseInt("0" + portTextField.getText().trim()));
+        getClient().connectToServer();
     }
 
     @FXML
@@ -125,11 +122,21 @@ public class SetupScreenController {
 
         Integer numOfPlayers = numOfPlayerComboBox.getValue();
 
-        client.setUsername(username);
+        getClient().setUsername(username);
         LoginMessage loginMessage = new LoginMessage(username, birthday, numOfPlayers, TypeOfMessage.LOGIN);
-        client.sendToServer(loginMessage);
+        getClient().sendToServer(loginMessage);
     }
 
+    public void usernameBusy() {
+        Platform.runLater(() -> {
+            TilePane r = new TilePane();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Il nome è già utilizzato, inserito un'altro nome!");
+            alert.show();
+            anchorPane.getChildren().add(r);
+            UtilsGUI.addClassToElement(usernameTextField, "error-text");
+        });
+    }
 
     private void validateFields() {
         if (validationMap.values().stream().filter(valid -> valid.equals(Boolean.FALSE)).findFirst().orElse(true)) {

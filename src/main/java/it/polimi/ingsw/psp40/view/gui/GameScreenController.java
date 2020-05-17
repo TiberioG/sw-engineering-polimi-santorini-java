@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import it.polimi.ingsw.psp40.network.client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Dimension2D;
@@ -20,11 +19,9 @@ import java.util.List;
  */
 
 
-public class GameScreenController {
+public class GameScreenController extends  ScreenController {
 
     /* Attributes */
-
-    private Client client;
 
     @FXML
     private Circle originLeft;
@@ -291,11 +288,6 @@ public class GameScreenController {
 
     private void gridClicked(int col, int row) {
         System.out.printf("Mouse entered cell [%d, %d]%n", col, row);
-    }
-
-
-    public void setClient(Client client) {
-        this.client = client;
     }
 
     @FXML

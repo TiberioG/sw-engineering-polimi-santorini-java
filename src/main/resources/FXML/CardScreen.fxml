@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="setup-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.CardScreenController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="card-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.CardScreenController">
     <children>
         <ImageView fitHeight="131.0" fitWidth="411.0" layoutX="394.0" layoutY="49.0" opacity="0.85" pickOnBounds="true">
             <Image url="@../images/santorini-logo.png" />
