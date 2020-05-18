@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.messages.Message;
+import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -48,12 +50,13 @@ public class CardScreenController extends ScreenController {
         this.cardArea.setImage(new Image(GUIProperties.class.getResource("/cards/" + current +".png").toString()));
         this.selection.setImage(new Image(GUIProperties.class.getResource("/images/gold.png").toString()));
         this.selection.setVisible(false);
-
+        this.textDescription.setText(cards.get(current).getDescription());
     }
 
 
     @FXML
-     void loadImage(int id) {
+     void loadImage(int position) {
+        int id = cards.get(position).getId();
         this.cardArea.setImage(new Image(GUIProperties.class.getResource("/cards/" + id +".png").toString()));
         this.textDescription.setText(cards.get(id).getDescription());
         if (positionSelectedList.contains(id)){
@@ -68,10 +71,11 @@ public class CardScreenController extends ScreenController {
 
     @FXML
     void nextCard(){
-        if (current < cards.size()){
+        if (current < cards.size() - 1 ){
             current ++;
         }
         loadImage(current);
+        System.out.println(current);
     }
 
     @FXML
@@ -80,28 +84,39 @@ public class CardScreenController extends ScreenController {
             current --;
         }
         loadImage(current);
+        System.out.println(current);
     }
 
 
     @FXML
     void selectCard(){
-        if (!positionSelectedList.contains(current) && positionSelectedList.size()<toSelect) {
+        if (positionSelectedList.contains(current)){
+            System.out.println("removable: " + current + " inlist: " + positionSelectedList.size());
+            for (int i = 0; i < positionSelectedList.size(); i++) {
+                if (current == positionSelectedList.get(i)) {
+                    positionSelectedList.remove(i);
+                }
+            }
+            this.selection.setVisible(false);
+        }
+        else if (positionSelectedList.size() < toSelect){
+            System.out.println("settable: " + current + " inlist: " + positionSelectedList.size());
             positionSelectedList.add(current);
             this.selection.setVisible(true);
         }
-        else if(positionSelectedList.contains(current)){
-            positionSelectedList.remove(current);
-            this.selection.setVisible(false);
-        }
     }
 
-
-    public int[] selection(){
-        int[] ret = new int[toSelect];
-        for (int i=0; i < toSelect; i++)
-        {
-            ret[i] = cards.get(positionSelectedList.get(i)).getId();
+    @FXML
+    void end(){
+        if (positionSelectedList.size() == toSelect){
+            int[] ret = new int[toSelect];
+            for (int i=0; i < toSelect; i++)
+            {
+                ret[i] = cards.get(positionSelectedList.get(i)).getId();
+            }
+            getClient().sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, ret));
         }
-        return ret;
+
     }
+
 }
