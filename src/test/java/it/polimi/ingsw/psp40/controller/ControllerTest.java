@@ -1,15 +1,23 @@
 package it.polimi.ingsw.psp40.controller;
 
+import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.commons.messages.CoordinatesMessage;
 import it.polimi.ingsw.psp40.commons.messages.Message;
+import it.polimi.ingsw.psp40.commons.messages.SelectWorkersMessage;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
+import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.FieldSetter;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -99,4 +107,46 @@ public class ControllerTest {
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_POSITION_OF_WORKERS));
 
     }
-}
+
+
+    @Test
+    public void setPositionOfWorker_testChoosePositionOfWorkersMessage() {
+        Match match = Mockito.spy(new Match(0));
+        match.createPlayer("player1", new Date());
+        match.createPlayer("player2", new Date());
+        match.setCurrentPlayer("player1");
+        try {
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        List<CoordinatesMessage> coordinatesMessageList = new ArrayList<>();
+        coordinatesMessageList.add(new CoordinatesMessage(0,1));
+        coordinatesMessageList.add(new CoordinatesMessage(1,1));
+        controller.update(new Message("ALL", TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.BLUE,  coordinatesMessageList)));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_POSITION_OF_WORKERS));
+    }
+
+    @Test
+    public void setPositionOfWorker_testInitTurn() {
+        Match match = Mockito.spy(new Match(0));
+        match.createPlayer("player1", new Date());
+        match.getPlayerByName("player1").setCurrentCard(cardManager.getCardById(0));
+        match.createPlayer("player2", new Date());
+        match.getPlayerByName("player2").setCurrentCard(cardManager.getCardById(1));
+        match.setCurrentPlayer("player1");
+        try {
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        List<CoordinatesMessage> coordinatesMessageList = new ArrayList<>();
+        coordinatesMessageList.add(new CoordinatesMessage(1,1));
+        coordinatesMessageList.add(new CoordinatesMessage(2,1));
+        controller.update(new Message("ALL", TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.BLUE,  coordinatesMessageList)));
+        coordinatesMessageList = new ArrayList<>();
+        coordinatesMessageList.add(new CoordinatesMessage(3,1));
+        coordinatesMessageList.add(new CoordinatesMessage(2,2));
+        controller.update(new Message("ALL", TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.RED,  coordinatesMessageList)));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.INIT_TURN));
+    }}

@@ -223,10 +223,10 @@ public class TurnManager {
         turnsMap.remove(nameOfTheLosePlayer);
         match.removePlayer(nameOfTheLosePlayer);
 
-        if (match.getPlayers().size() == 1) {
-            match.setWinningPlayer(match.getCurrentPlayer().getName());
+        currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
+        if (turnsMap.size() == 1) {
+            match.setWinningPlayer(currentTurn.getPlayer().getName());
         } else {
-            currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
             inizializedCurrentTurn();
         }
     }
