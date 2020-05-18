@@ -174,16 +174,15 @@ public class GUI extends Application implements ViewInterface {
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
 
         // todo remove me, just for testing
-        int[] selection = {0, 1};
-        client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        //int[] selection = {0, 1};
+        //client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
 
-/*        createMainScene("/FXML/CardScreen.fxml", () -> {
+     createMainScene("/FXML/CardScreen.fxml", () -> {
             cardScreenController = fxmlLoader.getController();
             cardScreenController.setClient(client);
-            //int[] selection = cardScreenController.selection();
-            *//* sending to server *//*
-            //client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-        });*/
+         cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 2);
+
+        });
     }
 
     @Override
@@ -274,34 +273,13 @@ public class GUI extends Application implements ViewInterface {
 
 
 
-
     public void testCardManager(){
+        createMainScene("/FXML/CardScreen.fxml", () -> {
+            cardScreenController = fxmlLoader.getController();
+            cardScreenController.setClient(client);
 
-        fxmlLoader.setLocation(getClass().getResource("/FXML/CardScreen.fxml"));
 
-        Parent root;
-        Scene scene;
-
-        try {
-            root = fxmlLoader.load();
-            scene = new Scene(root);
-
-        }
-        catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "SetupScreen.fxml not found");
-            scene = new Scene(new Label(errorString));
-        }
-
-        primaryStage.setScene(scene);
-
-        primaryStage.setTitle("Santorini");
-        primaryStage.setResizable(false);
-
-        primaryStage.show();
-
-        cardScreenController = fxmlLoader.getController();
-        cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 2);
-
+        });
 
     }
 }
