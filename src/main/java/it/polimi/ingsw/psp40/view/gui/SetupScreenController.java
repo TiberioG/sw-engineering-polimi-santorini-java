@@ -77,14 +77,17 @@ public class SetupScreenController extends ScreenController {
         numOfPlayerComboBox.getItems().addAll(2,3);
     }
 
-    // todo remove me, just for testing
-    protected void mockSendConnect() {
+
+
+
+        // todo remove me, just for testing
+        protected void mockSendConnect () {
         getClient().setServerIP("localhost");
         getClient().setServerPort(Integer.parseInt("1234"));
         getClient().connectToServer();
     }
-    // todo remove me, just for testing
-    protected void mockSendLogin() {
+        // todo remove me, just for testing
+        protected void mockSendLogin () {
         String username = (new Date()).toString();
         Date birthday = new Date();
         int numOfPlayers = 2;
