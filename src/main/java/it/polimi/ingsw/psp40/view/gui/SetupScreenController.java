@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.cli.Utils;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.UnaryOperator;
@@ -63,6 +65,14 @@ public class SetupScreenController extends ScreenController {
         validationMap.put(ipAddressTextField, false);
         validationMap.put(portTextField, false);
 
+        LocalDate minDate = LocalDate.parse(Configuration.minDate, DateTimeFormatter.ofPattern(Configuration.formatDate));
+        LocalDate maxDate = LocalDate.now();
+        birthdayDatePicker.setDayCellFactory(d ->
+            new DateCell() {
+            @Override public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
+        }});
 
         numOfPlayerComboBox.getItems().addAll(2,3);
     }
@@ -140,6 +150,7 @@ public class SetupScreenController extends ScreenController {
         String username = usernameTextField.getText();
 
         ZoneId defaultZoneId = ZoneId.systemDefault();
+        birthdayDatePicker.setValue(birthdayDatePicker.getConverter().fromString(birthdayDatePicker.getEditor().getText()));
         LocalDate birthdayFromDataPicker = birthdayDatePicker.getValue();
         Date birthday = Date.from(birthdayFromDataPicker.atStartOfDay(defaultZoneId).toInstant());
 

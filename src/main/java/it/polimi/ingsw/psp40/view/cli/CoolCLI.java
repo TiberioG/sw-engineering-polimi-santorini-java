@@ -244,7 +244,7 @@ public class CoolCLI implements ViewInterface {
             username = new Date().toString();
             DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
             try {
-                date =  dateFormat.parse("01/01/1900");
+                date =  dateFormat.parse(Configuration.minDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

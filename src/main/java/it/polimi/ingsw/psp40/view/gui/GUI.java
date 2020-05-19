@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -48,6 +49,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void start(Stage primaryStage) {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/InkBlossoms.ttf"), 28);
         this.primaryStage = primaryStage;
 
         primaryStage.setOnCloseRequest((WindowEvent t) -> {
@@ -66,6 +68,7 @@ public class GUI extends Application implements ViewInterface {
 
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
         Platform.runLater(() -> {
+
             fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource(pathOfFxmlFile));
             Scene scene;
@@ -118,6 +121,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLoginSuccessful() {
+        //create lobby
         System.out.println("You have been logged in successfully");
     }
 
@@ -180,7 +184,7 @@ public class GUI extends Application implements ViewInterface {
      createMainScene("/FXML/CardScreen.fxml", () -> {
             cardScreenController = fxmlLoader.getController();
             cardScreenController.setClient(client);
-         cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
+            cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
 
         });
     }

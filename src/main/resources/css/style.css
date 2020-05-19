@@ -1,4 +1,12 @@
+.root {
+    -fx-font-family: "Ink Blossoms";
+}
+
 .setup-pane {
+    -fx-background-image: url("../images/background.png");
+}
+
+.card-pane {
     -fx-background-image: url("../images/background.png");
 }
 
@@ -7,6 +15,10 @@
 
 TextField {
     -fx-border-radius: 1%;
+}
+
+Button {
+    -fx-font-family: "Ink Blossoms";
 }
 
 .error-text {
