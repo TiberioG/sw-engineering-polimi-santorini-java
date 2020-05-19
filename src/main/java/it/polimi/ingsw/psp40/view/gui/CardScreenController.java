@@ -71,10 +71,11 @@ public class CardScreenController extends ScreenController {
 
     @FXML
     void nextCard(){
-        if (current < cards.size()){
+        if (current < cards.size() - 1 ){
             current ++;
         }
         loadImage(current);
+        System.out.println(current);
     }
 
     @FXML
@@ -83,18 +84,25 @@ public class CardScreenController extends ScreenController {
             current --;
         }
         loadImage(current);
+        System.out.println(current);
     }
 
 
     @FXML
     void selectCard(){
-        if (!positionSelectedList.contains(current) && positionSelectedList.size()<toSelect) {
+        if (positionSelectedList.contains(current)){
+            System.out.println("removable: " + current + " inlist: " + positionSelectedList.size());
+            for (int i = 0; i < positionSelectedList.size(); i++) {
+                if (current == positionSelectedList.get(i)) {
+                    positionSelectedList.remove(i);
+                }
+            }
+            this.selection.setVisible(false);
+        }
+        else if (positionSelectedList.size() < toSelect){
+            System.out.println("settable: " + current + " inlist: " + positionSelectedList.size());
             positionSelectedList.add(current);
             this.selection.setVisible(true);
-        }
-        else if(positionSelectedList.contains(current)){
-            positionSelectedList.remove(current);
-            this.selection.setVisible(false);
         }
     }
 

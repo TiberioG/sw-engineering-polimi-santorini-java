@@ -180,7 +180,7 @@ public class GUI extends Application implements ViewInterface {
      createMainScene("/FXML/CardScreen.fxml", () -> {
             cardScreenController = fxmlLoader.getController();
             cardScreenController.setClient(client);
-         cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 2);
+         cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
 
         });
     }
