@@ -1,0 +1,233 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PhaseSelector</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PhaseSelector (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PhaseSelector</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 66)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.controller.Phase;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.model.Player;
+<i>6</i>&nbsp;import org.davidmoten.text.utils.WordWrap;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.io.IOException;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; *
+<i>13</i>&nbsp; * @author TiberioG
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class PhaseSelector {
+<i>16</i>&nbsp;    private final static int  SPACING = 3;
+<b class="nc"><i>17</i>&nbsp;    private String title =&quot;Select Phase&quot;;</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    private List&lt;Phase&gt; phaseList;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    private Frame container;
+<i>22</i>&nbsp;
+<b class="nc"><i>23</i>&nbsp;    public PhaseSelector(List&lt;Phase&gt; phaseList, Frame container){</b>
+<b class="nc"><i>24</i>&nbsp;        this.phaseList = phaseList;</b>
+<b class="nc"><i>25</i>&nbsp;        this.container = container;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    Phase selection (){
+<i>30</i>&nbsp;        try {
+<b class="nc"><i>31</i>&nbsp;            Terminal.noBuffer();</b>
+<b class="nc"><i>32</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>33</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>34</i>&nbsp;        }</b>
+<b class="nc"><i>35</i>&nbsp;        int selection = 0;</b>
+<i>36</i>&nbsp;
+<b class="nc"><i>37</i>&nbsp;        Terminal.hideCursor();</b>
+<b class="nc"><i>38</i>&nbsp;        print(selection);</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;        while (true) {
+<i>41</i>&nbsp;            try {
+<b class="nc"><i>42</i>&nbsp;                if (System.in.available() != 0) {</b>
+<b class="nc"><i>43</i>&nbsp;                    int c = System.in.read();  //read one char at a time in ascii code</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;                    //GETTING SPACEBAR to positiom
+<b class="nc"><i>46</i>&nbsp;                    if (c == 32) {</b>
+<b class="nc"><i>47</i>&nbsp;                     break;</b>
+<i>48</i>&nbsp;                    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;                    //getting an ARROW KEY
+<b class="nc"><i>51</i>&nbsp;                    else if (c == 27) { // first part of arrow key == ESC</b>
+<b class="nc"><i>52</i>&nbsp;                        int next1 = System.in.read();</b>
+<b class="nc"><i>53</i>&nbsp;                        int next2 = System.in.read();</b>
+<b class="nc"><i>54</i>&nbsp;                        if (next1 == 91) { //  read [</b>
+<b class="nc"><i>55</i>&nbsp;                            if (next2 == 65) {                     //UP  arrow</b>
+<b class="nc"><i>56</i>&nbsp;                                if (selection &gt; 0 &amp;&amp; selection &lt;= phaseList.size() -1) {</b>
+<b class="nc"><i>57</i>&nbsp;                                    selection--;</b>
+<i>58</i>&nbsp;                                }
+<b class="nc"><i>59</i>&nbsp;                            } else if (next2 == 66) {              //DOWN arrow</b>
+<b class="nc"><i>60</i>&nbsp;                                if (selection &gt;= 0 &amp;&amp; selection &lt; phaseList.size() -1) {</b>
+<b class="nc"><i>61</i>&nbsp;                                    selection++;</b>
+<i>62</i>&nbsp;                                }
+<i>63</i>&nbsp;                            }
+<i>64</i>&nbsp;                        }
+<b class="nc"><i>65</i>&nbsp;                        print(selection);</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;                    }//end arrow management
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;                } //end system in available
+<b class="nc"><i>71</i>&nbsp;            } catch (IOException e) {</b>
+<i>72</i>&nbsp;                //todo frame per except
+<b class="nc"><i>73</i>&nbsp;            }</b>
+<i>74</i>&nbsp;        }// end while true
+<i>75</i>&nbsp;
+<b class="nc"><i>76</i>&nbsp;        return  phaseList.get(selection);</b>
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    }
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    private void print (int current) {
+<b class="nc"><i>82</i>&nbsp;        int height = phaseList.size();</b>
+<b class="nc"><i>83</i>&nbsp;        String[] phases = phaseList.stream().map(phase -&gt; phase.getType().toString()).toArray(String[]::new);</b>
+<i>84</i>&nbsp;
+<b class="nc"><i>85</i>&nbsp;        int width = Math.max(Utils.longestArray(phases), title.length()) + 5;</b>
+<b class="nc"><i>86</i>&nbsp;        int innerwidth = width - 4;</b>
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;
+<b class="nc"><i>90</i>&nbsp;        String titleString = Utils.centerString(width, title);</b>
+<b class="nc"><i>91</i>&nbsp;        StringBuilder title = new StringBuilder();</b>
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;        //top line
+<b class="nc"><i>94</i>&nbsp;        Terminal.moveAbsoluteCursor(container.getInit()[0], container.getInit()[1]);</b>
+<b class="nc"><i>95</i>&nbsp;        System.out.print(&quot;?&quot;);</b>
+<b class="nc"><i>96</i>&nbsp;        for (int i = 0; i &lt; (width); i++) {</b>
+<b class="nc"><i>97</i>&nbsp;            System.out.print(&quot;?&quot;);</b>
+<i>98</i>&nbsp;        }
+<b class="nc"><i>99</i>&nbsp;        System.out.print(&quot;?&quot;);</b>
+<i>100</i>&nbsp;
+<b class="nc"><i>101</i>&nbsp;        Terminal.moveAbsoluteCursor(container.getInit()[0] + 1, container.getInit()[1]); // goo down one line</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;        //title line
+<b class="nc"><i>104</i>&nbsp;        title.append(&quot;?&quot;).append(titleString.replaceAll(&quot;\n&quot;, &quot; &quot;).toUpperCase()).append(&quot;?&quot;);</b>
+<b class="nc"><i>105</i>&nbsp;        System.out.print(title);</b>
+<i>106</i>&nbsp;
+<b class="nc"><i>107</i>&nbsp;        Terminal.moveAbsoluteCursor(container.getInit()[0] + 2, container.getInit()[1]); // goo down one line</b>
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;        //close tile line
+<b class="nc"><i>110</i>&nbsp;        System.out.print(&quot;?&quot;);</b>
+<b class="nc"><i>111</i>&nbsp;        for (int i = 0; i &lt; (width); i++) {</b>
+<b class="nc"><i>112</i>&nbsp;            System.out.print(&quot;?&quot;);</b>
+<i>113</i>&nbsp;        }
+<b class="nc"><i>114</i>&nbsp;        System.out.print(&quot;?&quot;);</b>
+<i>115</i>&nbsp;
+<b class="nc"><i>116</i>&nbsp;        Terminal.moveAbsoluteCursor(container.getInit()[0] + 3, container.getInit()[1]); // goo down one line</b>
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;        //middle item lines
+<b class="nc"><i>119</i>&nbsp;        for (int i = 0; i &lt; height; i++) {</b>
+<b class="nc"><i>120</i>&nbsp;            String nonewline = phases[i];</b>
+<b class="nc"><i>121</i>&nbsp;            String output = String.format(&quot;. %-&quot; + innerwidth + &quot;s&quot;, nonewline);</b>
+<i>122</i>&nbsp;
+<b class="nc"><i>123</i>&nbsp;            System.out.print(&quot;? &quot;);</b>
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;            if (i == current) {</b>
+<b class="nc"><i>126</i>&nbsp;                System.out.print(&quot;\u001b[48;5;&quot; + 243 + &quot;m&quot;); //grigio</b>
+<b class="nc"><i>127</i>&nbsp;                System.out.print(i);</b>
+<b class="nc"><i>128</i>&nbsp;                System.out.print(output);</b>
+<b class="nc"><i>129</i>&nbsp;                System.out.print(Colors.reset());</b>
+<i>130</i>&nbsp;            } else {
+<b class="nc"><i>131</i>&nbsp;                System.out.print(i);</b>
+<b class="nc"><i>132</i>&nbsp;                System.out.print(output);</b>
+<i>133</i>&nbsp;            }
+<b class="nc"><i>134</i>&nbsp;            System.out.print(&quot;?&quot;);</b>
+<i>135</i>&nbsp;
+<b class="nc"><i>136</i>&nbsp;            Terminal.moveAbsoluteCursor(container.getInit()[0] + 4 + i, container.getInit()[1]);</b>
+<i>137</i>&nbsp;        }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;        //closeline
+<b class="nc"><i>140</i>&nbsp;        System.out.print(&quot;?&quot;);</b>
+<b class="nc"><i>141</i>&nbsp;        for (int i = 0; i&lt; (width); i++ ){</b>
+<b class="nc"><i>142</i>&nbsp;            System.out.print(&quot;?&quot;);</b>
+<i>143</i>&nbsp;        }
+<b class="nc"><i>144</i>&nbsp;        System.out.print(&quot;?&quot;);</b>
+<i>145</i>&nbsp;    }
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;
+<i>148</i>&nbsp;}
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-19 10:15</div>
+</div>
+</body>
+</html>
