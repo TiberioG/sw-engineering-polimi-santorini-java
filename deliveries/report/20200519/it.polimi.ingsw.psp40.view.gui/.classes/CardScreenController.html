@@ -1,0 +1,205 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CardScreenController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CardScreenController (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CardScreenController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 39)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.model.Card;
+<i>6</i>&nbsp;import javafx.fxml.FXML;
+<i>7</i>&nbsp;import javafx.scene.control.Button;
+<i>8</i>&nbsp;import javafx.scene.control.TextArea;
+<i>9</i>&nbsp;import javafx.scene.control.TextFormatter;
+<i>10</i>&nbsp;import javafx.scene.image.Image;
+<i>11</i>&nbsp;import javafx.scene.image.ImageView;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import java.io.FileInputStream;
+<i>14</i>&nbsp;import java.util.ArrayList;
+<i>15</i>&nbsp;import java.util.HashMap;
+<i>16</i>&nbsp;import java.util.List;
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;public class CardScreenController extends ScreenController {</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    HashMap&lt;Integer, Card&gt; cards;
+<i>22</i>&nbsp;    private int toSelect;
+<b class="nc"><i>23</i>&nbsp;    List&lt;Integer&gt; positionSelectedList = new ArrayList&lt;Integer&gt;();</b>
+<b class="nc"><i>24</i>&nbsp;    private  int current = 0;</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @FXML
+<i>27</i>&nbsp;    public ImageView cardArea;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @FXML
+<i>30</i>&nbsp;    public ImageView selection;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    @FXML
+<i>33</i>&nbsp;    private Button nextButton;
+<i>34</i>&nbsp;    @FXML
+<i>35</i>&nbsp;    private Button prevButton;
+<i>36</i>&nbsp;    @FXML
+<i>37</i>&nbsp;    private Button selectButton;
+<i>38</i>&nbsp;    @FXML
+<i>39</i>&nbsp;    private Button endButton;
+<i>40</i>&nbsp;    @FXML
+<i>41</i>&nbsp;    private TextArea textDescription;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    @FXML
+<i>46</i>&nbsp;    public void initialize(HashMap&lt;Integer, Card&gt; cards, int toSelect) {
+<b class="nc"><i>47</i>&nbsp;        this.cards = cards;</b>
+<b class="nc"><i>48</i>&nbsp;        this.toSelect = toSelect;</b>
+<b class="nc"><i>49</i>&nbsp;        this.textDescription.setWrapText(true);</b>
+<b class="nc"><i>50</i>&nbsp;        this.cardArea.setImage(new Image(GUIProperties.class.getResource(&quot;/cards/&quot; + current +&quot;.png&quot;).toString()));</b>
+<b class="nc"><i>51</i>&nbsp;        this.selection.setImage(new Image(GUIProperties.class.getResource(&quot;/images/gold.png&quot;).toString()));</b>
+<b class="nc"><i>52</i>&nbsp;        this.selection.setVisible(false);</b>
+<b class="nc"><i>53</i>&nbsp;        this.textDescription.setText(cards.get(current).getDescription());</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    @FXML
+<i>58</i>&nbsp;     void loadImage(int position) {
+<b class="nc"><i>59</i>&nbsp;        int id = cards.get(position).getId();</b>
+<b class="nc"><i>60</i>&nbsp;        this.cardArea.setImage(new Image(GUIProperties.class.getResource(&quot;/cards/&quot; + id +&quot;.png&quot;).toString()));</b>
+<b class="nc"><i>61</i>&nbsp;        this.textDescription.setText(cards.get(id).getDescription());</b>
+<b class="nc"><i>62</i>&nbsp;        if (positionSelectedList.contains(id)){</b>
+<b class="nc"><i>63</i>&nbsp;            this.selection.setVisible(true);</b>
+<i>64</i>&nbsp;        }
+<i>65</i>&nbsp;        else {
+<b class="nc"><i>66</i>&nbsp;            this.selection.setVisible(false);</b>
+<i>67</i>&nbsp;        }
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    @FXML
+<i>73</i>&nbsp;    void nextCard(){
+<b class="nc"><i>74</i>&nbsp;        if (current &lt; cards.size() - 1 ){</b>
+<b class="nc"><i>75</i>&nbsp;            current ++;</b>
+<i>76</i>&nbsp;        }
+<b class="nc"><i>77</i>&nbsp;        loadImage(current);</b>
+<b class="nc"><i>78</i>&nbsp;        System.out.println(current);</b>
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    @FXML
+<i>82</i>&nbsp;    void prevCard(){
+<b class="nc"><i>83</i>&nbsp;        if (current &gt; 0){</b>
+<b class="nc"><i>84</i>&nbsp;            current --;</b>
+<i>85</i>&nbsp;        }
+<b class="nc"><i>86</i>&nbsp;        loadImage(current);</b>
+<b class="nc"><i>87</i>&nbsp;        System.out.println(current);</b>
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    @FXML
+<i>92</i>&nbsp;    void selectCard(){
+<b class="nc"><i>93</i>&nbsp;        if (positionSelectedList.contains(current)){</b>
+<b class="nc"><i>94</i>&nbsp;            System.out.println(&quot;removable: &quot; + current + &quot; inlist: &quot; + positionSelectedList.size());</b>
+<b class="nc"><i>95</i>&nbsp;            for (int i = 0; i &lt; positionSelectedList.size(); i++) {</b>
+<b class="nc"><i>96</i>&nbsp;                if (current == positionSelectedList.get(i)) {</b>
+<b class="nc"><i>97</i>&nbsp;                    positionSelectedList.remove(i);</b>
+<i>98</i>&nbsp;                }
+<i>99</i>&nbsp;            }
+<b class="nc"><i>100</i>&nbsp;            this.selection.setVisible(false);</b>
+<i>101</i>&nbsp;        }
+<b class="nc"><i>102</i>&nbsp;        else if (positionSelectedList.size() &lt; toSelect){</b>
+<b class="nc"><i>103</i>&nbsp;            System.out.println(&quot;settable: &quot; + current + &quot; inlist: &quot; + positionSelectedList.size());</b>
+<b class="nc"><i>104</i>&nbsp;            positionSelectedList.add(current);</b>
+<b class="nc"><i>105</i>&nbsp;            this.selection.setVisible(true);</b>
+<i>106</i>&nbsp;        }
+<i>107</i>&nbsp;    }
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;    @FXML
+<i>110</i>&nbsp;    void end(){
+<b class="nc"><i>111</i>&nbsp;        if (positionSelectedList.size() == toSelect){</b>
+<b class="nc"><i>112</i>&nbsp;            int[] ret = new int[toSelect];</b>
+<b class="nc"><i>113</i>&nbsp;            for (int i=0; i &lt; toSelect; i++)</b>
+<i>114</i>&nbsp;            {
+<b class="nc"><i>115</i>&nbsp;                ret[i] = cards.get(positionSelectedList.get(i)).getId();</b>
+<i>116</i>&nbsp;            }
+<b class="nc"><i>117</i>&nbsp;            getClient().sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, ret));</b>
+<i>118</i>&nbsp;        }
+<i>119</i>&nbsp;
+<i>120</i>&nbsp;    }
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-19 10:15</div>
+</div>
+</body>
+</html>

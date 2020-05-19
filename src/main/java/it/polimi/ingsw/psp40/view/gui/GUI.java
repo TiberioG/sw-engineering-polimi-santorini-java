@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -28,6 +29,8 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
+    private boolean mocking = true;
+
     private Stage primaryStage;
 
     private Client client;
@@ -40,7 +43,7 @@ public class GUI extends Application implements ViewInterface {
 
     protected static GameScreenController gameScreenController = null;
 
-    private CardScreenController cardScreenController;
+    private CardScreenController2 cardScreenController;
 
     private FXMLLoader fxmlLoader;
 
@@ -48,6 +51,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void start(Stage primaryStage) {
+        Font.loadFont(getClass().getResourceAsStream("/fonts/InkBlossoms.ttf"), 28);
         this.primaryStage = primaryStage;
 
         primaryStage.setOnCloseRequest((WindowEvent t) -> {
@@ -66,6 +70,7 @@ public class GUI extends Application implements ViewInterface {
 
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
         Platform.runLater(() -> {
+
             fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource(pathOfFxmlFile));
             Scene scene;
@@ -90,7 +95,9 @@ public class GUI extends Application implements ViewInterface {
             setupScreenController.setClient(client);
 
             // todo remove me, just for testing
-            setupScreenController.mockSendConnect();
+            if (mocking) {
+                setupScreenController.mockSendConnect();
+            }
         });
     }
 
@@ -113,11 +120,14 @@ public class GUI extends Application implements ViewInterface {
         setupScreenController.displayUserForm();
 
         // todo remove me, just for testing
-        setupScreenController.mockSendLogin();
+        if (mocking) {
+            setupScreenController.mockSendLogin();
+        }
     }
 
     @Override
     public void displayLoginSuccessful() {
+        //create lobby
         System.out.println("You have been logged in successfully");
     }
 
@@ -174,21 +184,34 @@ public class GUI extends Application implements ViewInterface {
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
 
         // todo remove me, just for testing
-        //int[] selection = {0, 1};
-        //client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        //if (mocking) {
+           // int[] selection = {0, 1};
+           // client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        //}
+        //else {
+            createMainScene("/FXML/CardScreen2.fxml", () -> {
+                cardScreenController = fxmlLoader.getController();
+                cardScreenController.setClient(client);
+                cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
 
-     createMainScene("/FXML/CardScreen.fxml", () -> {
-            cardScreenController = fxmlLoader.getController();
-            cardScreenController.setClient(client);
-         cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
-
-        });
+            });
+        //}
     }
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        int personalIdCard = availableCards.get(0).getId();
-        client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
+        if (mocking) {
+            int personalIdCard = availableCards.get(0).getId();
+            client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
+        }
+        else {
+            createMainScene("/FXML/CardScreen2.fxml", () -> {
+                cardScreenController = fxmlLoader.getController();
+                cardScreenController.setClient(client);
+                cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 1);
+
+            });
+        }
     }
 
     @Override

@@ -33,7 +33,7 @@
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></TextField>
-            <DatePicker fx:id="birthdayDatePicker" promptText="Data di nascità">
+            <DatePicker fx:id="birthdayDatePicker" showWeekNumbers="false" promptText="Data di nascità">
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></DatePicker>

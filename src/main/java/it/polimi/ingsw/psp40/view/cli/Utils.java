@@ -121,7 +121,7 @@ public class Utils {
         Date today = new Date();
         Date oldest = new Date();
         try {
-            oldest = dateFormat.parse("01/01/1900");
+            oldest = dateFormat.parse(Configuration.minDate);
         } catch (ParseException e) {
             //it's impossible to trow excep here ehe
         }
@@ -160,7 +160,7 @@ public class Utils {
         Date today = new Date();
         Date oldest = new Date();
         try {
-            oldest = dateFormat.parse("01/01/1900");
+            oldest = dateFormat.parse(Configuration.minDate);
         } catch (ParseException e) {
             //it's impossible to trow excep here ehe
         }

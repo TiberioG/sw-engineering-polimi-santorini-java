@@ -63,7 +63,7 @@ public class CoolCLI implements ViewInterface {
     private static Frame left = new Frame(new int[]{10,0}, new int[]{ROWS -3, 58}, in, out);
     private static Frame islandFrame = new Frame(new int[]{8,80}, new int[]{ROWS -3, 58}, in, out);
 
-    private boolean fastboot = true;
+    private boolean fastboot = false;
     private boolean debug = false;
 
     private IslandAdapter myisland;
@@ -244,7 +244,7 @@ public class CoolCLI implements ViewInterface {
             username = new Date().toString();
             DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
             try {
-                date =  dateFormat.parse("01/01/1900");
+                date =  dateFormat.parse(Configuration.minDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
