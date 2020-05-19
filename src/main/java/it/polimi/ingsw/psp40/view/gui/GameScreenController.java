@@ -24,10 +24,7 @@ import javafx.scene.layout.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -95,6 +92,7 @@ public class GameScreenController extends ScreenController {
     private Colors chosenColor = null;
 
     private ColorAdjust grayscale = new ColorAdjust(0, -1, 0, 0); // grayscale.setSaturation(-1);
+    private boolean isMapDisabled = false;
 
     /* Methods */
 
@@ -119,6 +117,8 @@ public class GameScreenController extends ScreenController {
         myPane_dx.getChildren().add(map_dx);
         myPane_sx.getChildren().add(map_sx);
         myPane_sx.setVisible(false);
+
+        disableMap(true); // start with map disabled
 
         //testGrid();
 
@@ -179,11 +179,8 @@ public class GameScreenController extends ScreenController {
                 stackPane.getChildren().remove(vbButtons);
                 disableMap(false);
                 chosenColor = Colors.valueOf(color);
-
-                waiting = false;
-                currentPhase = null; // just to be sure
-                shouldPositionWorkers = true;
                 instructionsTextArea.setText("Posiziona i tuoi due worker in delle celle libere");
+                highlightAvailableCellsInitialPosition();
             });
             button.setPrefWidth(vbButtons.getPrefWidth());
             vbButtons.getChildren().add(button);
@@ -193,6 +190,17 @@ public class GameScreenController extends ScreenController {
         vbButtons.setAlignment(Pos.TOP_CENTER);
         stackPane.getChildren().add(vbButtons);
     }
+
+    private void highlightAvailableCellsInitialPosition() {
+        List<Cell> availableCells = Arrays.stream(getClient().getFieldCache()).flatMap(Arrays::stream).collect(Collectors.toList()); // 2-dimensional array to List
+        List<Cell> occupiedCells = new ArrayList<>(getClient().getLocationCache().getAllOccupied());
+        availableCells.removeIf( cell -> occupiedCells.stream().anyMatch( occupiedCell -> cell.getCoordX() == occupiedCell.getCoordX() && cell.getCoordY() == occupiedCell.getCoordY()));
+        highlightAvailableCells(availableCells);
+        waiting = false;
+        currentPhase = null; // just to be sure
+        shouldPositionWorkers = true;
+    }
+
 
     private void placeWorker(int x, int y, int z) {
         if(z == 0) { // just to be sure, but z != 0 could not happen
@@ -318,8 +326,7 @@ public class GameScreenController extends ScreenController {
 
     protected void highlightAvailableCellsForBuild() {
         List<Cell> availableCells = new ArrayList<>(getClient().getAvailableBuildCells().keySet());
-        highlightAvailableCellsInView(availableCells, levels_dx);
-        highlightAvailableCellsInView(availableCells, levels_sx);
+        highlightAvailableCells(availableCells);
         currentPhase = PhaseType.BUILD_COMPONENT;
         waiting = false;
     }
@@ -337,7 +344,6 @@ public class GameScreenController extends ScreenController {
 
                 CoordinatesMessage moveCoord = new CoordinatesMessage(x, y);
                 sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
-                selectedWorker = null;
             }
             else {
                 // todo: u can't move here (non dovrebbe poter capitare)
@@ -357,8 +363,7 @@ public class GameScreenController extends ScreenController {
 
     protected void highlightAvailableCellsForMove() {
         List<Cell> availableCells = getClient().getAvailableMoveCells();
-        highlightAvailableCellsInView(availableCells, levels_dx);
-        highlightAvailableCellsInView(availableCells, levels_sx);
+        highlightAvailableCells(availableCells);
         currentPhase = PhaseType.MOVE_WORKER;
         waiting = false;
     }
@@ -412,7 +417,21 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /* METHODS TO HANDLE END TURN */
+
+    protected void endTurn() {
+        selectedWorker = null;
+        //disableMap(true); // todo farlo o no?
+    }
+
     /* HELPER METHODS */
+
+    private void highlightAvailableCells(List<Cell> availableCells) {
+        highlightAvailableCellsInView(availableCells, levels_dx);
+        highlightAvailableCellsInView(availableCells, map_dx.getTiles());
+        highlightAvailableCellsInView(availableCells, levels_sx);
+        highlightAvailableCellsInView(availableCells, map_sx.getTiles());
+    }
 
     private void highlightAvailableCellsInView(List<Cell> availableCells, List<Block> view) {
         availableCells.forEach( cell -> {
@@ -426,7 +445,9 @@ public class GameScreenController extends ScreenController {
 
     private void restoreHighlight() {
         restoreHighlightInView(levels_dx);
+        restoreHighlightInView(map_dx.getTiles());
         restoreHighlightInView(levels_sx);
+        restoreHighlightInView(map_sx.getTiles());
     }
 
     private void restoreHighlightInView(List<Block> view) {
@@ -439,14 +460,14 @@ public class GameScreenController extends ScreenController {
         tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
         updateWorkersInView(workers_dx);
         updateWorkersInView(workers_sx);
+        getClient().clearModifiedWorkersCache();
         refresh();
     }
 
     private void updateWorkersInView(List<Worker> workers_view) {
         //Location location = getClient().getLocationCache();
-        //Location location = locationCache;
 
-        tmpLocation.getModifiedWorkers().forEach( worker -> {
+        new ArrayList<>(getClient().getModifiedWorkersCache()).forEach( worker -> {
             Cell newCell = cellOfModifiedWorker(worker);
             Worker worker_view = modifiedWorkerInView(worker, workers_view);
             if(worker_view != null) {
@@ -544,11 +565,14 @@ public class GameScreenController extends ScreenController {
     }
 
     private void disableMap(boolean disable) {
-        islandsGroup.setDisable(disable);
-        if(disable) {
-            islandsGroup.setEffect(grayscale);
-        } else {
-            islandsGroup.setEffect(null);
+        if(isMapDisabled != disable) {
+            isMapDisabled = disable;
+            islandsGroup.setDisable(disable);
+            if (disable) {
+                islandsGroup.setEffect(grayscale);
+            } else {
+                islandsGroup.setEffect(null);
+            }
         }
     }
 
@@ -638,8 +662,10 @@ public class GameScreenController extends ScreenController {
         getClient().sendToServer(message);
         waiting = true;
 
-        if(message.getTypeOfMessage() == TypeOfMessage.BUILD_CELL || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER) {
-            restoreHighlight();
+        if(    message.getTypeOfMessage() == TypeOfMessage.BUILD_CELL
+            || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER
+            || message.getTypeOfMessage() == TypeOfMessage.SET_POSITION_OF_WORKER) {
+                restoreHighlight();
         }
     }
 

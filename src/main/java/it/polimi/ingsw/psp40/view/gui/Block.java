@@ -94,6 +94,10 @@ public abstract class Block extends ImageView {
                 )
         );
 
+        if(this.getOpacity() == 0) { // tiles (Ground elements)
+            this.setOpacity(0.55);
+        }
+
         this.setEffect(blush);
     }
 

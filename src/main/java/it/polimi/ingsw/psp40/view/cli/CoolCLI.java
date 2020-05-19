@@ -682,6 +682,9 @@ public class CoolCLI implements ViewInterface {
         left.println("I'm sorry, you lose!"); // todoo cool
     }
 
+    @Override
+    public void displayEndTurn() {
+    }
 
     @Override
     public void displayLoserPlayer(Player player) {

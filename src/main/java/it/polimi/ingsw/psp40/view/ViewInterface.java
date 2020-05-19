@@ -43,8 +43,11 @@ public interface ViewInterface {
     void displayWinnerMessage();
     void displayLoserMessage();
     void displayLoserPlayer(Player player);
+    void displayEndTurn();
 
     void displayLobbyCreated(String playersWaiting);
+
+
 }
 
 

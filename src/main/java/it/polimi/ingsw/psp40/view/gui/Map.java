@@ -4,6 +4,9 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Map extends Group {
 
     public Map(Dimension2D dimension, GUIProperties.CameraType cameraType) {
@@ -18,7 +21,17 @@ public class Map extends Group {
                 this.getChildren().add(tile);
             }
         }
-
     }
+
+    protected List<Block> getTiles() {
+        List<Block> tiles = new ArrayList<>();
+        this.getChildren().forEach(node -> {
+            if(node instanceof Block) {
+                tiles.add((Block) node);
+            }
+        });
+        return tiles;
+    }
+
 }
 

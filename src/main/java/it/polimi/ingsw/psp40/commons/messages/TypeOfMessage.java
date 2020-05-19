@@ -29,6 +29,7 @@ public enum TypeOfMessage {
     SET_FIRST_PLAYER("setFirstPlayer"),
     SET_POSITION_OF_WORKER("setPositionOfWorker"),
     INIT_TURN,
+    END_TURN,
     SELECT_WORKER("selectWorker"),
     NEXT_PHASE_AVAILABLE,
     RETRIEVE_CELL_FOR_MOVE("retrieveCellForMove"),

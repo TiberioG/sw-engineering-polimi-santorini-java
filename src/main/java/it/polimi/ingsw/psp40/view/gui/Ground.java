@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 
 /**
@@ -41,6 +42,14 @@ public class Ground extends Block {
     void display(int row, int col) {
         this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing));
         this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing));
+    }
+
+    @Override
+    protected void setBlockEffect(Effect effect) {
+        if(effect == null) {
+            this.setOpacity(0);
+        }
+        this.setEffect(effect);
     }
 
     @Override

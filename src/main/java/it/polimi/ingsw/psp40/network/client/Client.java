@@ -48,7 +48,7 @@ public class Client implements ServerObserver {
   private static final Logger LOGGER = Logger.getLogger("Client");
 
   private Cell[][] fieldCache;
-  private Location locationCache;
+  private Location locationCache = new Location();
   private List<Player> playerListCache;
   private List<Cell> availableMoveCells;
   private HashMap<Cell, List<Integer>> availableBuildCells;
@@ -226,7 +226,8 @@ public class Client implements ServerObserver {
         break;
 
       case LOCATION_UPDATED:
-        locationCache = (Location) message.getPayload(Location.class);
+        Location locationUpdate = (Location) message.getPayload(Location.class);
+        setLocationCache(locationUpdate);
         view.displayLocationUpdated();
         break;
 
@@ -246,6 +247,10 @@ public class Client implements ServerObserver {
         view.displayChoiceOfAvailablePhases();
         break;
 
+      case END_TURN:
+        view.displayEndTurn();
+        break;
+
       case NEXT_PHASE_AVAILABLE:
         listOfPhasesCache = (List<Phase>) message.getPayload(new TypeToken<List<Phase>>() {}.getType());
         view.displayChoiceOfAvailablePhases();
@@ -260,6 +265,7 @@ public class Client implements ServerObserver {
         availableBuildCells =  (HashMap<Cell, List<Integer>>) message.getPayload(new TypeToken<HashMap<Cell, List<Integer>>>() {}.getType());
         view.displayChoiceOfAvailableCellForBuild();
         break;
+
       case WINNING_PLATER_UPDATED:
         Player winningPlayer = (Player) message.getPayload(Player.class);
         if (winningPlayer.getName().equals(username)) {
@@ -268,6 +274,7 @@ public class Client implements ServerObserver {
           view.displayLoserMessage();
         }
         break;
+
       case PLAYER_HAS_LOST:
         Player player = (Player) message.getPayload(Player.class);
         if (player.getName().equals(username)) {
@@ -276,6 +283,7 @@ public class Client implements ServerObserver {
           view.displayLoserPlayer(player);
         }
         break;
+
       default:
         break;
 
@@ -341,8 +349,28 @@ public class Client implements ServerObserver {
     this.username = username;
   }
 
+  private void setLocationCache(Location location) {
+    this.locationCache = location;
+    updateModifiedWorkersCache();
+  }
+
   public Location getLocationCache() {
     return this.locationCache;
+  }
+
+  private List<Worker> modifiedWorkersCache = new ArrayList<>();
+
+  private void updateModifiedWorkersCache() {
+    if(locationCache != null)
+      modifiedWorkersCache.addAll(new ArrayList<>(locationCache.getModifiedWorkers()));
+  }
+
+  public void clearModifiedWorkersCache() {
+    this.modifiedWorkersCache.clear();
+  }
+
+  public List<Worker> getModifiedWorkersCache() {
+    return modifiedWorkersCache;
   }
 
   public Cell[][] getFieldCache() {
