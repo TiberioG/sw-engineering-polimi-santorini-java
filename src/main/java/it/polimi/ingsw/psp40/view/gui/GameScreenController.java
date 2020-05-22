@@ -24,10 +24,7 @@ import javafx.scene.layout.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -95,6 +92,7 @@ public class GameScreenController extends ScreenController {
     private Colors chosenColor = null;
 
     private ColorAdjust grayscale = new ColorAdjust(0, -1, 0, 0); // grayscale.setSaturation(-1);
+    private boolean isMapDisabled = false;
 
     /* Methods */
 
@@ -119,6 +117,8 @@ public class GameScreenController extends ScreenController {
         myPane_dx.getChildren().add(map_dx);
         myPane_sx.getChildren().add(map_sx);
         myPane_sx.setVisible(false);
+
+        disableMap(true); // start with map disabled
 
         //testGrid();
 
@@ -153,13 +153,31 @@ public class GameScreenController extends ScreenController {
         System.out.println("Worker clicked! " + worker.row + ", " + worker.col + ", " + worker.z);
         if(currentPhase == PhaseType.SELECT_WORKER &&  !waiting) {
             if(worker.ownerUsername.equals(getClient().getUsername())) {
+                highlightAvailableWorkersForSelection(false);
                 selectedWorker = worker.copy();
                 sendToServer(new Message(TypeOfMessage.SELECT_WORKER, selectedWorker.id));
             }
         }
-        else if(currentPhase == PhaseType.MOVE_WORKER &&  !waiting) {
+        else if(currentPhase == PhaseType.MOVE_WORKER &&  !waiting) { // handle click on worker if I'm in MOVE_WORKER phase. Useful when workers can be swapped
             moveWorker(worker.row, worker.col, worker.z - 1);
         }
+    }
+
+    private void highlightAvailableWorkersForSelection(boolean highlight) {
+        highlightAvailableWorkersForSelectionInView(workers_dx, highlight);
+        highlightAvailableWorkersForSelectionInView(workers_sx, highlight);
+    }
+
+    private void highlightAvailableWorkersForSelectionInView(List<Worker> workers_view, boolean highlight) {
+        workers_view.forEach( worker -> {
+            if(worker.ownerUsername.equals(getClient().getUsername())) {
+                if(highlight) {
+                    worker.startSelectionAnimation();
+                } else {
+                    worker.stopSelectionAnimation();
+                }
+            }
+        });
     }
 
     /* METHODS TO HANDLE INITIAL POSITIONING OF MY WORKERS */
@@ -179,11 +197,8 @@ public class GameScreenController extends ScreenController {
                 stackPane.getChildren().remove(vbButtons);
                 disableMap(false);
                 chosenColor = Colors.valueOf(color);
-
-                waiting = false;
-                currentPhase = null; // just to be sure
-                shouldPositionWorkers = true;
                 instructionsTextArea.setText("Posiziona i tuoi due worker in delle celle libere");
+                highlightAvailableCellsInitialPosition();
             });
             button.setPrefWidth(vbButtons.getPrefWidth());
             vbButtons.getChildren().add(button);
@@ -194,9 +209,21 @@ public class GameScreenController extends ScreenController {
         stackPane.getChildren().add(vbButtons);
     }
 
+    private void highlightAvailableCellsInitialPosition() {
+        List<Cell> availableCells = Arrays.stream(getClient().getFieldCache()).flatMap(Arrays::stream).collect(Collectors.toList()); // 2-dimensional array to List
+        List<Cell> occupiedCells = new ArrayList<>(getClient().getLocationCache().getAllOccupied());
+        availableCells.removeIf( cell -> occupiedCells.stream().anyMatch( occupiedCell -> cell.getCoordX() == occupiedCell.getCoordX() && cell.getCoordY() == occupiedCell.getCoordY()));
+        highlightAvailableCells(availableCells);
+        waiting = false;
+        currentPhase = null; // just to be sure
+        shouldPositionWorkers = true;
+    }
+
+
     private void placeWorker(int x, int y, int z) {
         if(z == 0) { // just to be sure, but z != 0 could not happen
             boolean isCellOccupied = getClient().getLocationCache().getAllOccupied().stream().anyMatch( cell -> (cell.getCoordX() == x && cell.getCoordY() == y));
+            isCellOccupied = isCellOccupied || workers_dx.stream().anyMatch(worker -> worker.row == x && worker.col == y); // check if I'm not placing one worker over another worker just placed and not yet present in locationCache
             if(!isCellOccupied) {
                 int id = (int)workers_dx.stream().filter(worker -> worker.ownerUsername.equals(getClient().getUsername())).count();
                 Worker worker = new Worker(x, y, getClient().getUsername(), id, chosenColor);
@@ -318,8 +345,7 @@ public class GameScreenController extends ScreenController {
 
     protected void highlightAvailableCellsForBuild() {
         List<Cell> availableCells = new ArrayList<>(getClient().getAvailableBuildCells().keySet());
-        highlightAvailableCellsInView(availableCells, levels_dx);
-        highlightAvailableCellsInView(availableCells, levels_sx);
+        highlightAvailableCells(availableCells);
         currentPhase = PhaseType.BUILD_COMPONENT;
         waiting = false;
     }
@@ -332,12 +358,15 @@ public class GameScreenController extends ScreenController {
             boolean isAvailableCell = availableCells.stream().anyMatch( cell -> cell.getCoordX() == x && cell.getCoordY() == y);
             if(isAvailableCell) {
                 moveSelectedWorkerInView(x, y, z, workers_dx);
-                moveSelectedWorkerInView(x, y, z, workers_sx);
+                Worker worker = moveSelectedWorkerInView(x, y, z, workers_sx);
+                if(worker != null) {
+                    worker.moveAnimation.setOnFinished(e -> {
+                        selectedWorker = worker.copy(); // update selectedWorker to update position after movement
+                        CoordinatesMessage moveCoord = new CoordinatesMessage(x, y);
+                        sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
+                    });
+                }
                 refresh();
-
-                CoordinatesMessage moveCoord = new CoordinatesMessage(x, y);
-                sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));
-                selectedWorker = null;
             }
             else {
                 // todo: u can't move here (non dovrebbe poter capitare)
@@ -348,17 +377,19 @@ public class GameScreenController extends ScreenController {
         }
     }
 
-    private void moveSelectedWorkerInView(int x, int y, int z, List<Worker> workers_view) {
-        workers_view.forEach( worker -> {
-                if(worker.row == selectedWorker.row && worker.col == selectedWorker.col && worker.z == selectedWorker.z)
-                    worker.move(x, y, z);
-        });
+    private Worker moveSelectedWorkerInView(int x, int y, int z, List<Worker> workers_view) {
+        for (Worker worker : workers_view) {
+            if (worker.row == selectedWorker.row && worker.col == selectedWorker.col && worker.z == selectedWorker.z) {
+                worker.move(x, y, z);
+                return worker;
+            }
+        }
+        return null;
     }
 
     protected void highlightAvailableCellsForMove() {
         List<Cell> availableCells = getClient().getAvailableMoveCells();
-        highlightAvailableCellsInView(availableCells, levels_dx);
-        highlightAvailableCellsInView(availableCells, levels_sx);
+        highlightAvailableCells(availableCells);
         currentPhase = PhaseType.MOVE_WORKER;
         waiting = false;
     }
@@ -397,6 +428,7 @@ public class GameScreenController extends ScreenController {
             case SELECT_WORKER:
                 waiting = false;
                 currentPhase = PhaseType.SELECT_WORKER;
+                highlightAvailableWorkersForSelection(true);
                 instructionsTextArea.setText("Seleziona su un tuo worker");
                 break;
             case MOVE_WORKER:
@@ -412,7 +444,22 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /* METHODS TO HANDLE END TURN */
+
+    protected void endTurn() {
+        selectedWorker = null;
+        instructionsTextArea.setText("Aspetta il tuo turno...");
+        //disableMap(true); // todo farlo o no?
+    }
+
     /* HELPER METHODS */
+
+    private void highlightAvailableCells(List<Cell> availableCells) {
+        highlightAvailableCellsInView(availableCells, levels_dx);
+        highlightAvailableCellsInView(availableCells, map_dx.getTiles());
+        highlightAvailableCellsInView(availableCells, levels_sx);
+        highlightAvailableCellsInView(availableCells, map_sx.getTiles());
+    }
 
     private void highlightAvailableCellsInView(List<Cell> availableCells, List<Block> view) {
         availableCells.forEach( cell -> {
@@ -426,42 +473,45 @@ public class GameScreenController extends ScreenController {
 
     private void restoreHighlight() {
         restoreHighlightInView(levels_dx);
+        restoreHighlightInView(map_dx.getTiles());
         restoreHighlightInView(levels_sx);
+        restoreHighlightInView(map_sx.getTiles());
     }
 
     private void restoreHighlightInView(List<Block> view) {
         view.forEach(block -> disableBlock(block, false));
     }
 
-    private Location tmpLocation = null;
+    //private Location tmpLocation = null;
 
     protected void updateWorkersPosition() {
-        tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
+        //tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
         updateWorkersInView(workers_dx);
         updateWorkersInView(workers_sx);
+        getClient().clearModifiedWorkersCache();
         refresh();
     }
 
     private void updateWorkersInView(List<Worker> workers_view) {
         //Location location = getClient().getLocationCache();
-        //Location location = locationCache;
 
-        tmpLocation.getModifiedWorkers().forEach( worker -> {
+        new ArrayList<>(getClient().getModifiedWorkersCache()).forEach( worker -> {
             Cell newCell = cellOfModifiedWorker(worker);
             Worker worker_view = modifiedWorkerInView(worker, workers_view);
-            if(worker_view != null) {
-                worker_view.move(newCell.getCoordX(), newCell.getCoordY(), newCell.getTower().getTopComponent().getComponentCode());
-            }
-            else { // this happens when the game starts and different players are positioning their workers
-                Worker newWorker = new Worker(newCell.getCoordX(), newCell.getCoordY(), worker.getPlayerName(), worker.getId(), worker.getColor());
-                addWorker(newWorker);
+            if(newCell != null) {
+                if (worker_view != null) {
+                    worker_view.move(newCell.getCoordX(), newCell.getCoordY(), newCell.getTower().getTopComponent().getComponentCode(), false);
+                } else { // this happens when the game starts and different players are positioning their workers
+                    Worker newWorker = new Worker(newCell.getCoordX(), newCell.getCoordY(), worker.getPlayerName(), worker.getId(), worker.getColor());
+                    addWorker(newWorker);
+                }
             }
         });
     }
 
     private Cell cellOfModifiedWorker(it.polimi.ingsw.psp40.model.Worker worker) {
-        //Location location = getClient().getLocationCache();
-        // return location.getLocation(worker); // non posso fare così perche la serializzazione con GSON non preserve le reference
+        // return location.getLocation(worker); // non posso fare così perchè la serializzazione con GSON non preserve le reference
+        Location tmpLocation = getClient().getLocationCache();
         return tmpLocation.getAllOccupied().stream()
                 .filter(cell -> tmpLocation.getOccupant(cell).getPlayerName().equals(worker.getPlayerName()) && tmpLocation.getOccupant(cell).getId() == worker.getId())
                 .findFirst().orElse(null);
@@ -544,11 +594,14 @@ public class GameScreenController extends ScreenController {
     }
 
     private void disableMap(boolean disable) {
-        islandsGroup.setDisable(disable);
-        if(disable) {
-            islandsGroup.setEffect(grayscale);
-        } else {
-            islandsGroup.setEffect(null);
+        if(isMapDisabled != disable) {
+            isMapDisabled = disable;
+            islandsGroup.setDisable(disable);
+            if (disable) {
+                islandsGroup.setEffect(grayscale);
+            } else {
+                islandsGroup.setEffect(null);
+            }
         }
     }
 
@@ -638,8 +691,10 @@ public class GameScreenController extends ScreenController {
         getClient().sendToServer(message);
         waiting = true;
 
-        if(message.getTypeOfMessage() == TypeOfMessage.BUILD_CELL || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER) {
-            restoreHighlight();
+        if(    message.getTypeOfMessage() == TypeOfMessage.BUILD_CELL
+            || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER
+            || message.getTypeOfMessage() == TypeOfMessage.SET_POSITION_OF_WORKER) {
+                restoreHighlight();
         }
     }
 

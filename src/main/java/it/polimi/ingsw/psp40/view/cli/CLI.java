@@ -401,7 +401,7 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayLoserMessage() {
+    public void displayLoserMessage(Player winningPlayer) {
         out.println("I'm sorry, you lose!");
     }
 
@@ -410,10 +410,12 @@ public class CLI implements ViewInterface {
         out.println(player.getName() + " lost!");
     }
 
-
     @Override
     public void displayCellUpdated(Cell cell) {
+    }
 
+    @Override
+    public void displayEndTurn() {
     }
 
     private void showIsland() {

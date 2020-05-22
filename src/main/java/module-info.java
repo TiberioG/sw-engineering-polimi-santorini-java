@@ -6,4 +6,5 @@ open module it.polimi.ingsw.psp40 {
     requires jdk.jshell;
     requires com.github.davidmoten.javabuilder2;
     requires java.desktop;
+    requires AnimateFX;
 }

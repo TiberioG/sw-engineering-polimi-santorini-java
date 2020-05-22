@@ -675,13 +675,17 @@ public class CoolCLI implements ViewInterface {
 
     /**
      * Method to show a message to a loser
+     * @param winningPlayer winning player if someone won or null if you lost
      */
     @Override
-    public void displayLoserMessage() {
+    public void displayLoserMessage(Player winningPlayer) {
         left.clear();
         left.println("I'm sorry, you lose!"); // todoo cool
     }
 
+    @Override
+    public void displayEndTurn() {
+    }
 
     @Override
     public void displayLoserPlayer(Player player) {

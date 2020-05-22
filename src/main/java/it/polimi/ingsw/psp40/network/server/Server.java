@@ -254,10 +254,15 @@ public class Server
       messageToSend = new Message(username, TypeOfMessage.ADDED_TO_QUEUE, details);
       sendToClient(messageToSend);
 
-      if (lobby.size() == howManyPlayers) {
+      if (checkLobby()) {
         startMatch();
       }
     }
+  }
+
+  private boolean checkLobby() {
+      boolean nullRemoved = lobby.removeIf(Objects::isNull); // if there is a null value in the lobby (means something went wrong before, but we fix it now)
+      return lobby.size() == howManyPlayers && !nullRemoved;
   }
 
   // todo: controllare se nel frattempo qualcuno si è disconnesso

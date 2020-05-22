@@ -195,6 +195,7 @@ public class TurnManager {
         if (currentTurn.getCurrentPhase().getNextPhases() == null) {
             //richiamare la virtual view per notificare la fine del turno
             //seleziono il prossimo turno
+            updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.END_TURN));
             selectNextTurn();
         } else {
             List<Phase> listOfNextPhase = currentTurn.getCurrentPhase().getNextPhases();

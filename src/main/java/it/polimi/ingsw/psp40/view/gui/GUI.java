@@ -12,9 +12,13 @@ import it.polimi.ingsw.psp40.view.ViewInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -22,7 +26,6 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GUI extends Application implements ViewInterface {
@@ -70,12 +73,10 @@ public class GUI extends Application implements ViewInterface {
         client.setView(this);
 
         displaySetup();
-        //testCardManager();
     }
 
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
         Platform.runLater(() -> {
-
             fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource(pathOfFxmlFile));
             Scene scene;
@@ -106,13 +107,24 @@ public class GUI extends Application implements ViewInterface {
         });
     }
 
-    private void displayGame(List<Player> playerList) {
-        createMainScene("/FXML/GameScreen.fxml", () -> {
-            gameScreenController = fxmlLoader.getController();
-            gameScreenController.setClient(client);
-            gameScreenController.updateWholeIsland();
-            gameScreenController.setInitialPosition(playerList);
-        });
+    private void displayGame() {
+        new Thread(() -> { // todo controllami. displaySetInitialPosition() potrebbe essere chiamato prima di displayGame() a causa di Platform.runLater()
+            createMainScene("/FXML/GameScreen.fxml", () -> {
+                gameScreenController = fxmlLoader.getController();
+                gameScreenController.setClient(client);
+                //gameScreenController.updateWholeIsland();
+            });
+        }).start();
+
+    }
+
+    @Override
+    public void displaySetInitialPosition(List<Player> playerList) {
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                gameScreenController.setInitialPosition(playerList);
+            });
+        }).start();
     }
 
     @Override
@@ -154,12 +166,17 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayStartingMatch() {
-
+            displayGame();
     }
 
     @Override
     public void displayDisconnected(String details) {
-
+        Platform.runLater(() -> {
+            // Init Popup
+            PopupStage popupStage = new DisconnectedPopup(primaryStage, details);
+            // Show Popup
+            popupStage.show();
+        });
     }
 
     @Override
@@ -190,18 +207,17 @@ public class GUI extends Application implements ViewInterface {
         System.out.println("Card selection");
 
         // todo remove me, just for testing
-        //if (mocking) {
-           // int[] selection = {0, 1};
-           // client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-        //}
-        //else {
+        if (mocking) {
+           int[] selection = {0, 1};
+           client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        }
+        else {
             createMainScene("/FXML/CardScreen2.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
                 cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
-
             });
-        //}
+        }
     }
 
     @Override
@@ -229,14 +245,6 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayForcedCard(Card card) {
         System.out.println("Your card has been forced. It is: " + card.getName());
-    }
-
-    @Override
-    public void displaySetInitialPosition(List<Player> playerList) {
-        Platform.runLater(()-> {
-            displayGame(playerList);
-            //gameScreenController.setInitialPosition(playerList);
-        });
     }
 
     @Override
@@ -272,6 +280,13 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void displayEndTurn() {
+        Platform.runLater(()-> {
+            gameScreenController.endTurn();
+        });
+    }
+
+    @Override
     public void displayMoveWorker() {
 
     }
@@ -288,28 +303,27 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayWinnerMessage() {
-
+        Platform.runLater(() -> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);
+            popup.show();
+        });
     }
+
     @Override
-    public void displayLoserMessage() {
-
+    public void displayLoserMessage(Player winningPlayer) {
+        Platform.runLater(()-> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
+            popup.setWinner(winningPlayer);
+            popup.show();
+        });
     }
-
 
     @Override
     public void displayLoserPlayer(Player player) {
-
-    }
-
-
-
-    public void testCardManager(){
-        createMainScene("/FXML/CardScreen.fxml", () -> {
-            cardScreenController = fxmlLoader.getController();
-            cardScreenController.setClient(client);
-
-
+        Platform.runLater(()-> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
+            popup.setLoser(player);
+            popup.show();
         });
-
     }
 }

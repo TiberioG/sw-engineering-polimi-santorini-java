@@ -9,7 +9,6 @@ import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
-import it.polimi.ingsw.psp40.view.cli.CLI;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 import javafx.application.Application;
@@ -48,7 +47,7 @@ public class Client implements ServerObserver {
   private static final Logger LOGGER = Logger.getLogger("Client");
 
   private Cell[][] fieldCache;
-  private Location locationCache;
+  private Location locationCache = new Location();
   private List<Player> playerListCache;
   private List<Cell> availableMoveCells;
   private HashMap<Cell, List<Integer>> availableBuildCells;
@@ -226,7 +225,8 @@ public class Client implements ServerObserver {
         break;
 
       case LOCATION_UPDATED:
-        locationCache = (Location) message.getPayload(Location.class);
+        Location locationUpdate = (Location) message.getPayload(Location.class);
+        setLocationCache(locationUpdate);
         view.displayLocationUpdated();
         break;
 
@@ -246,6 +246,10 @@ public class Client implements ServerObserver {
         view.displayChoiceOfAvailablePhases();
         break;
 
+      case END_TURN:
+        view.displayEndTurn();
+        break;
+
       case NEXT_PHASE_AVAILABLE:
         listOfPhasesCache = (List<Phase>) message.getPayload(new TypeToken<List<Phase>>() {}.getType());
         view.displayChoiceOfAvailablePhases();
@@ -260,22 +264,25 @@ public class Client implements ServerObserver {
         availableBuildCells =  (HashMap<Cell, List<Integer>>) message.getPayload(new TypeToken<HashMap<Cell, List<Integer>>>() {}.getType());
         view.displayChoiceOfAvailableCellForBuild();
         break;
-      case WINNING_PLATER_UPDATED:
+
+      case WINNING_PLAYER_UPDATED:
         Player winningPlayer = (Player) message.getPayload(Player.class);
         if (winningPlayer.getName().equals(username)) {
           view.displayWinnerMessage();
         } else {
-          view.displayLoserMessage();
+          view.displayLoserMessage(winningPlayer);
         }
         break;
+
       case PLAYER_HAS_LOST:
         Player player = (Player) message.getPayload(Player.class);
         if (player.getName().equals(username)) {
-          view.displayLoserMessage();
+          view.displayLoserMessage(null);
         } else {
           view.displayLoserPlayer(player);
         }
         break;
+
       default:
         break;
 
@@ -341,8 +348,28 @@ public class Client implements ServerObserver {
     this.username = username;
   }
 
+  private void setLocationCache(Location location) {
+    this.locationCache = location;
+    updateModifiedWorkersCache();
+  }
+
   public Location getLocationCache() {
     return this.locationCache;
+  }
+
+  private List<Worker> modifiedWorkersCache = new ArrayList<>();
+
+  private void updateModifiedWorkersCache() {
+    if(locationCache != null)
+      modifiedWorkersCache.addAll(new ArrayList<>(locationCache.getModifiedWorkers()));
+  }
+
+  public void clearModifiedWorkersCache() {
+    this.modifiedWorkersCache.clear();
+  }
+
+  public List<Worker> getModifiedWorkersCache() {
+    return modifiedWorkersCache;
   }
 
   public Cell[][] getFieldCache() {

@@ -189,7 +189,7 @@ public class Match extends Publisher<Message> {
         Player player = getPlayerByName(name);
         if (player != null) {
             this.winningPlayer = player;
-            publish(new Message("ALL", TypeOfMessage.WINNING_PLATER_UPDATED, this.winningPlayer));
+            publish(new Message("ALL", TypeOfMessage.WINNING_PLAYER_UPDATED, this.winningPlayer));
         }
     }
 }

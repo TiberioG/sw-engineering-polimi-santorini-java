@@ -41,10 +41,13 @@ public interface ViewInterface {
     void displayMoveWorker();
     void displayBuildBlock();
     void displayWinnerMessage();
-    void displayLoserMessage();
+    void displayLoserMessage(Player winningPlayer);
     void displayLoserPlayer(Player player);
+    void displayEndTurn();
 
     void displayLobbyCreated(String playersWaiting);
+
+
 }
 
 
