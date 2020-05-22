@@ -17,10 +17,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -169,52 +167,10 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayDisconnected(String details) {
         Platform.runLater(() -> {
-            // Blur and Disable the current scene
-            this.primaryStage.getScene().getRoot().setEffect(new GaussianBlur());
-            this.primaryStage.getScene().getRoot().setDisable(true);
-
-            VBox pauseRoot = new VBox(5);
-            pauseRoot.getChildren().add(new Label(details));
-            pauseRoot.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-            pauseRoot.setAlignment(Pos.CENTER);
-            pauseRoot.setPadding(new Insets(20));
-
-            Button resume = new Button("Something");
-            pauseRoot.getChildren().add(resume);
-
-            Stage popupStage = new Stage(StageStyle.TRANSPARENT);
-            popupStage.initOwner(primaryStage);
-            //popupStage.initModality(Modality.APPLICATION_MODAL);
-            popupStage.setScene(new Scene(pauseRoot, Color.TRANSPARENT));
-
-            resume.setOnAction(event -> {
-                this.primaryStage.getScene().getRoot().setEffect(null);
-                this.primaryStage.getScene().getRoot().setDisable(false);
-                popupStage.hide();
-            });
-
-            // Calculate the center position of the parent Stage
-            double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
-            double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
-            // Hide the pop-up stage before it is shown and becomes relocated
-            popupStage.setOnShowing(ev -> popupStage.hide());
-            // Relocate the pop-up Stage
-            popupStage.setOnShown(ev -> {
-                popupStage.setX(centerXPosition - popupStage.getWidth()/2d);
-                popupStage.setY(centerYPosition - popupStage.getHeight()/2d);
-                popupStage.show();
-            });
-
-            // Show the popup
+            // Init Popup
+            PopupStage popupStage = new DisconnectedPopup(primaryStage, details);
+            // Show Popup
             popupStage.show();
-
-            // Relocate the pop-up if the primary stage is moved
-            primaryStage.xProperty().addListener((obs, oldVal, newVal) -> {
-                popupStage.setX(popupStage.getX() + (newVal.intValue() - oldVal.intValue()));
-            });
-            primaryStage.yProperty().addListener((obs, oldVal, newVal) -> {
-                popupStage.setY(popupStage.getY() + (newVal.intValue() - oldVal.intValue()));
-            });
         });
     }
 
@@ -254,7 +210,6 @@ public class GUI extends Application implements ViewInterface {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
                 cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
-
             });
         }
     }
@@ -270,7 +225,6 @@ public class GUI extends Application implements ViewInterface {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
                 cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 1);
-
             });
         }
     }
@@ -341,15 +295,27 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayWinnerMessage() {
-
+        Platform.runLater(() -> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);
+            popup.show();
+        });
     }
-    @Override
-    public void displayLoserMessage() {
 
+    @Override
+    public void displayLoserMessage(Player winningPlayer) {
+        Platform.runLater(()-> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
+            popup.setWinner(winningPlayer);
+            popup.show();
+        });
     }
 
     @Override
     public void displayLoserPlayer(Player player) {
-
+        Platform.runLater(()-> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
+            popup.setLoser(player);
+            popup.show();
+        });
     }
 }

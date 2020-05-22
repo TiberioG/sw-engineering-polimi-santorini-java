@@ -13,6 +13,23 @@
 .game-pane {
 }
 
+.popup-stage {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-border-width: 3;
+}
+
+.winner-popup {
+    -fx-border-color: green;
+}
+
+.loser-popup {
+    -fx-border-color: red;
+}
+
+.disconnected-popup {
+    -fx-border-color: red;
+}
+
 TextField {
     -fx-border-radius: 1%;
 }

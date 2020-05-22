@@ -46,7 +46,7 @@ public enum TypeOfMessage {
     PLAYER_UPDATED,
     SET_WORKERS_COLOR,
     LOCATION_UPDATED,  //obj_type : Location
-    WINNING_PLATER_UPDATED,
+    WINNING_PLAYER_UPDATED,
     PLAYER_HAS_LOST;
 
     private String typeOfMessage;

@@ -401,7 +401,7 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayLoserMessage() {
+    public void displayLoserMessage(Player winningPlayer) {
         out.println("I'm sorry, you lose!");
     }
 

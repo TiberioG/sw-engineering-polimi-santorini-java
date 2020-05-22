@@ -44,8 +44,16 @@ public abstract class Block extends ImageView {
         this.setX( x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera) ); // fix X position depending row, col and CameraType values
     }
 
+    protected double getFixedXPosition(double x) {
+        return x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera);
+    }
+
     protected void setYPosition(double y) {
         this.setY( y + GUIProperties.getIncrementalFix_y(this.row, this.col, currentCamera) ); // fix Y position depending row, col and CameraType values
+    }
+
+    protected double getFixedYPosition(double y) {
+        return y + GUIProperties.getIncrementalFix_y(this.row, this.col, currentCamera);
     }
 
     protected final void setCamera(GUIProperties.CameraType cameraType) {

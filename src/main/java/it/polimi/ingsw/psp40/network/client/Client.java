@@ -9,7 +9,6 @@ import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
-import it.polimi.ingsw.psp40.view.cli.CLI;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 import javafx.application.Application;
@@ -266,19 +265,19 @@ public class Client implements ServerObserver {
         view.displayChoiceOfAvailableCellForBuild();
         break;
 
-      case WINNING_PLATER_UPDATED:
+      case WINNING_PLAYER_UPDATED:
         Player winningPlayer = (Player) message.getPayload(Player.class);
         if (winningPlayer.getName().equals(username)) {
           view.displayWinnerMessage();
         } else {
-          view.displayLoserMessage();
+          view.displayLoserMessage(winningPlayer);
         }
         break;
 
       case PLAYER_HAS_LOST:
         Player player = (Player) message.getPayload(Player.class);
         if (player.getName().equals(username)) {
-          view.displayLoserMessage();
+          view.displayLoserMessage(null);
         } else {
           view.displayLoserPlayer(player);
         }

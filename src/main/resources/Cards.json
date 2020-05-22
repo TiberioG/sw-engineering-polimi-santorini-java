@@ -16,11 +16,13 @@
       "type": "selectWorker",
       "nextPhases": [{
         "type": "moveWorker",
+        "needCheckForVictory": true,
         "nextPhases": [{
           "type": "buildComponent"
         },
           {
             "type": "moveWorker",
+            "needCheckForVictory": true,
             "nextPhases": [{
               "type": "buildComponent"
             }]
@@ -60,6 +62,7 @@
       "type": "selectWorker",
       "nextPhases": [{
         "type": "moveWorker",
+        "needCheckForVictory": true,
         "nextPhases": [{
           "type": "buildComponent",
           "nextPhases": [{
@@ -81,6 +84,7 @@
       "type": "selectWorker",
       "nextPhases": [{
         "type": "moveWorker",
+        "needCheckForVictory": true,
         "nextPhases": [{
           "type": "buildComponent",
           "nextPhases": [{
@@ -122,12 +126,14 @@
         "type": "buildComponent",
         "nextPhases": [{
           "type": "moveWorker",
+          "needCheckForVictory": true,
           "nextPhases": [{
             "type": "buildComponent"
           }]
         }]
       }, {
         "type": "moveWorker",
+        "needCheckForVictory": true,
         "nextPhases": [{
           "type": "buildComponent"
         }]
