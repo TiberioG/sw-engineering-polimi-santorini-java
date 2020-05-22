@@ -29,7 +29,7 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mocking = true;
+    private boolean mocking = false;
 
     private Stage primaryStage;
 
@@ -44,6 +44,9 @@ public class GUI extends Application implements ViewInterface {
     protected static GameScreenController gameScreenController = null;
 
     private CardScreenController2 cardScreenController;
+    private CardScreenControllerPersonal cardScreenControllerPersonal;
+
+
 
     private FXMLLoader fxmlLoader;
 
@@ -52,6 +55,8 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void start(Stage primaryStage) {
         Font.loadFont(getClass().getResourceAsStream("/fonts/InkBlossoms.ttf"), 28);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Garamond.ttf"), 28);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/negotiatefree.ttf"), 28);
         this.primaryStage = primaryStage;
 
         primaryStage.setOnCloseRequest((WindowEvent t) -> {
@@ -182,6 +187,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
+        System.out.println("Card selection");
 
         // todo remove me, just for testing
         //if (mocking) {
@@ -200,15 +206,16 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
+        System.out.println("Card personal");
         if (mocking) {
             int personalIdCard = availableCards.get(0).getId();
             client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
         }
         else {
-            createMainScene("/FXML/CardScreen2.fxml", () -> {
-                cardScreenController = fxmlLoader.getController();
-                cardScreenController.setClient(client);
-                cardScreenController.initialize(CardManager.initCardManager().getCardMap(), 1);
+            createMainScene("/FXML/CardScreenPersonal.fxml", () -> {
+                cardScreenControllerPersonal = fxmlLoader.getController();
+                cardScreenControllerPersonal.setClient(client);
+                cardScreenControllerPersonal.initialize(availableCards);
 
             });
         }

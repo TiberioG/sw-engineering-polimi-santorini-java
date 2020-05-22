@@ -4,9 +4,7 @@ import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
 import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.ColorAdjust;
@@ -14,16 +12,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CardScreenController2 extends ScreenController {
+public class CardScreenControllerPersonal extends ScreenController {
     private boolean waiting = false;
-
     @FXML
-    private GridPane grid;
+    private HBox hbox;
     @FXML
     private Button endButton;
     @FXML
@@ -33,22 +31,20 @@ public class CardScreenController2 extends ScreenController {
     @FXML
     private TextArea selected;
 
-    private int toSelect;
+
     List<Integer> selectedList = new ArrayList<Integer>();
 
     List<Card> cards;
 
 
     @FXML
-    public void initialize(HashMap<Integer, Card> cardsMap, int toSelect) {
-        this.toSelect = toSelect;
-       cards  = new ArrayList<>(cardsMap.values());
+    public void initialize(List<Card> cards) {
+       this.cards =cards;
 
         List<ImageView> cardimage = new ArrayList<>();
 
         textDescr.setWrapText(true);
         //UtilsGUI.addClassToElement(textTitle, "card-title");
-
 
         cards.forEach( card -> {
           ImageView cardView =  new ImageView( new Image(GUIProperties.class.getResource("/cardsFrame/" + card.getId() +".png").toString()) ) ;
@@ -80,7 +76,7 @@ public class CardScreenController2 extends ScreenController {
                                 }
                             }
                         }
-                        else if (selectedList.size() < toSelect){
+                        else if (selectedList.size() < 1){
                             System.out.println("settable: " + card.getId());
                             selectedList.add(card.getId());
                             ColorAdjust colorAdjust = new ColorAdjust();
@@ -89,18 +85,12 @@ public class CardScreenController2 extends ScreenController {
                         }
             });
 
-
           cardimage.add(cardView);
-           System.out.println(card.getId());
 
         });
 
-        int index = 0;
-        for (int row = 0; row < 3; row ++){
-            for (int col = 0; col < 3; col ++){
-                grid.add(cardimage.get(index), row, col);
-                index ++;
-            }
+        for (int i = 0; i< cardimage.size(); i++){
+            hbox.getChildren().add(cardimage.get(i));
         }
 
     }
@@ -108,17 +98,10 @@ public class CardScreenController2 extends ScreenController {
 
     @FXML
     void end(){
+        if (selectedList.size() == 1){
+                getClient().sendToServer(new Message( TypeOfMessage.SET_CARD_TO_PLAYER, selectedList.get(0)));
 
-        int[] ret = new int[toSelect];
-        if (selectedList.size() == toSelect){
-            for (int i=0; i < selectedList.size(); i++)
-            {
-                ret[i] = selectedList.get(i);
-                System.out.println(selectedList.size() + " " + toSelect);
         }
-            getClient().sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, ret));
-        }
-
     }
 
 

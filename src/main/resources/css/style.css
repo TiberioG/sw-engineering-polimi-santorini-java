@@ -24,3 +24,26 @@ Button {
 .error-text {
     -fx-border-color: red;
 }
+
+
+.card-title, .card-title .viewport, .card-title .content{
+    -fx-font-family: "Garamond";
+    -fx-alignment: center;
+    -fx-font-size: 40;
+    -fx-background-color: transparent;
+}
+
+
+.card-description, .card-description .viewport, .card-description .content {
+    -fx-font-family: "Garamond";
+    -fx-alignment: center;
+    -fx-font-size: 18;
+    -fx-background-color: transparent;
+}
+
+
+.card-image{
+    -fx-border-radius: 30;
+}
+
+
