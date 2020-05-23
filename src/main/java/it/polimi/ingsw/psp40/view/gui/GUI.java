@@ -4,7 +4,6 @@ import it.polimi.ingsw.psp40.commons.FunctionInterface;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -12,13 +11,8 @@ import it.polimi.ingsw.psp40.view.ViewInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -32,7 +26,8 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mocking = false;
+    private boolean mockingConnection = true;
+    private boolean mockingCard = false;
 
     private Stage primaryStage;
 
@@ -46,10 +41,7 @@ public class GUI extends Application implements ViewInterface {
 
     protected static GameScreenController gameScreenController = null;
 
-    private CardScreenController2 cardScreenController;
-    private CardScreenControllerPersonal cardScreenControllerPersonal;
-
-
+    private CardScreenController cardScreenController;
 
     private FXMLLoader fxmlLoader;
 
@@ -101,30 +93,22 @@ public class GUI extends Application implements ViewInterface {
             setupScreenController.setClient(client);
 
             // todo remove me, just for testing
-            if (mocking) {
+            if (mockingConnection) {
                 setupScreenController.mockSendConnect();
             }
         });
     }
 
-    private void displayGame() {
-        new Thread(() -> { // todo controllami. displaySetInitialPosition() potrebbe essere chiamato prima di displayGame() a causa di Platform.runLater()
+    @Override
+    public void displaySetInitialPosition(List<Player> playerList) {
+        Platform.runLater(() -> {
             createMainScene("/FXML/GameScreen.fxml", () -> {
                 gameScreenController = fxmlLoader.getController();
                 gameScreenController.setClient(client);
-                //gameScreenController.updateWholeIsland();
-            });
-        }).start();
-
-    }
-
-    @Override
-    public void displaySetInitialPosition(List<Player> playerList) {
-        new Thread(() -> {
-            Platform.runLater(() -> {
+                gameScreenController.updateWholeIsland();
                 gameScreenController.setInitialPosition(playerList);
             });
-        }).start();
+        });
     }
 
     @Override
@@ -137,7 +121,7 @@ public class GUI extends Application implements ViewInterface {
         setupScreenController.displayUserForm();
 
         // todo remove me, just for testing
-        if (mocking) {
+        if (mockingConnection) {
             setupScreenController.mockSendLogin();
         }
     }
@@ -166,7 +150,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayStartingMatch() {
-            displayGame();
+
     }
 
     @Override
@@ -207,15 +191,15 @@ public class GUI extends Application implements ViewInterface {
         System.out.println("Card selection");
 
         // todo remove me, just for testing
-        if (mocking) {
+        if (mockingCard) {
            int[] selection = {0, 1};
            client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
         }
         else {
-            createMainScene("/FXML/CardScreen2.fxml", () -> {
+            createMainScene("/FXML/CardScreen.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
-                cardScreenController.initialize(CardManager.initCardManager().getCardMap(), numPlayers);
+                cardScreenController.displayCardsForInitialSelection(numPlayers);
             });
         }
     }
@@ -223,17 +207,20 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
         System.out.println("Card personal");
-        if (mocking) {
+        if (mockingCard) {
             int personalIdCard = availableCards.get(0).getId();
             client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
         }
         else {
-            createMainScene("/FXML/CardScreenPersonal.fxml", () -> {
-                cardScreenControllerPersonal = fxmlLoader.getController();
-                cardScreenControllerPersonal.setClient(client);
-                cardScreenControllerPersonal.initialize(availableCards);
-
-            });
+            if(cardScreenController != null)
+                cardScreenController.displayCardsForPersonalSelection(availableCards);
+            else {
+                createMainScene("/FXML/CardScreen.fxml", () -> {
+                    cardScreenController = fxmlLoader.getController();
+                    cardScreenController.setClient(client);
+                    cardScreenController.displayCardsForPersonalSelection(availableCards);
+                });
+            }
         }
     }
 

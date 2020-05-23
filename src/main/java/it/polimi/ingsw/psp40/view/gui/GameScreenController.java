@@ -119,18 +119,6 @@ public class GameScreenController extends ScreenController {
         myPane_sx.setVisible(false);
 
         disableMap(true); // start with map disabled
-
-        //testGrid();
-
-        // todo remove me, just for testing without server
-/*        try {
-            init();
-        } catch (WorkerAlreadyPresentException | BuildLowerComponentException | CellOutOfBoundsException | ParseException e) {
-            e.printStackTrace();
-        }
-
-        updateWholeIsland();
-        askDesiredPhase();*/
     }
 
     /* METHODS TO HANDLE BLOCKS CLICK */
@@ -555,9 +543,6 @@ public class GameScreenController extends ScreenController {
 
         Location location = getClient().getLocationCache();
         Cell[][] field = getClient().getFieldCache();
-        //Location location = locationCache;
-        //Cell[][] field = fieldCache;
-
 
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field.length; j++) {
@@ -585,7 +570,7 @@ public class GameScreenController extends ScreenController {
                 it.polimi.ingsw.psp40.model.Worker occupant = location.getOccupant(i, j);
                 if (occupant != null) {
                     Worker worker = new Worker(i,j, occupant.getPlayerName(), occupant.getId(), occupant.getColor());
-                    worker.move(i,j, tower.getComponents().size()-1);
+                    worker.move(i,j, tower.getComponents().size()-1, false);
                     addWorker(worker);
                 }
             }
