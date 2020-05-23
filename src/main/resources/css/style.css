@@ -62,7 +62,16 @@ Label {
 .card-title, .card-title .viewport, .card-title .content{
     -fx-font-family: "Garamond";
     -fx-alignment: center;
+    -fx-text-alignment: center;
     -fx-font-size: 40;
+    -fx-background-color: transparent;
+}
+
+.player-name, .player-name .viewport, .player-name .content , .player-name .text {
+    -fx-font-family: "Garamond";
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-font-size: 30;
     -fx-background-color: transparent;
 }
 
@@ -70,6 +79,7 @@ Label {
 .card-description, .card-description .viewport, .card-description .content {
     -fx-font-family: "Garamond";
     -fx-alignment: center;
+    -fx-text-alignment: center;
     -fx-font-size: 18;
     -fx-background-color: transparent;
 }

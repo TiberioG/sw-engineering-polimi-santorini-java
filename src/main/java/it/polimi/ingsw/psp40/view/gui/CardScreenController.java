@@ -38,8 +38,7 @@ public class CardScreenController extends ScreenController {
     private TextArea textDescr;
     @FXML
     private TextArea textTitle;
-    @FXML
-    private TextArea selected;
+
     @FXML
     private HBox hbox;
 
@@ -58,11 +57,10 @@ public class CardScreenController extends ScreenController {
         endButton.visibleProperty().bind(binding);
     }
 
-    protected void displayCardsForInitialSelection(int toSelect) {
+    protected void displayCardsForInitialSelection(List<Card> cards, int toSelect) {
         this.toSelect = toSelect;
         this.toSelectProperty.setValue(this.toSelect);
         typeOfMessageToSend = TypeOfMessage.SET_CARDS_TO_GAME;
-        List<Card> cards = new ArrayList<>(CardManager.initCardManager().getCardMap().values());
         buildCards(cards); // build images
 
         // add images to GridPane

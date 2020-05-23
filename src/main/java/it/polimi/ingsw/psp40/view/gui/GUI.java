@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,7 +27,7 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mockingConnection = true;
+    private boolean mockingConnection = false;
     private boolean mockingCard = false;
 
     private Stage primaryStage;
@@ -44,6 +45,8 @@ public class GUI extends Application implements ViewInterface {
     protected static GameScreenController gameScreenController = null;
 
     private CardScreenController cardScreenController;
+
+    private PlayerScreenController playerScreenController;
 
     private FXMLLoader fxmlLoader;
 
@@ -223,7 +226,7 @@ public class GUI extends Application implements ViewInterface {
             createMainScene("/FXML/CardScreen.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
-                cardScreenController.displayCardsForInitialSelection(numPlayers);
+                cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
             });
         }
     }
@@ -260,8 +263,12 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayAskFirstPlayer(List<Player> allPlayers) {
-        String playerSelected = allPlayers.get(0).getName();
-        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected));
+        createMainScene("/FXML/PlayerScreen.fxml", () -> {
+            playerScreenController = fxmlLoader.getController();
+            playerScreenController.setClient(client);
+            playerScreenController.displayPlayersForInitialSelection(allPlayers);
+        });
+
     }
 
     @Override
