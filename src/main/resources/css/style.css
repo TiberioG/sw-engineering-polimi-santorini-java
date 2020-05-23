@@ -3,11 +3,13 @@
 }
 
 .setup-pane {
-    -fx-background-image: url("../images/background.png");
+    -fx-background-image: url("../images/bg_modeselect.png");
+    -fx-background-size: cover;
 }
 
 .card-pane {
     -fx-background-image: url("../images/background.png");
+    -fx-background-size: cover;
 }
 
 .game-pane {
@@ -35,6 +37,20 @@ TextField {
 }
 
 Button {
+    -fx-font-family: "Ink Blossoms";
+    -fx-background-image: url('../images/btn_blue.png');
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
+    -fx-text-origin: top;
+    -fx-text-alignment: center;
+}
+
+ListView {
+    -fx-background-color: transparent;
+}
+
+Label {
     -fx-font-family: "Ink Blossoms";
 }
 

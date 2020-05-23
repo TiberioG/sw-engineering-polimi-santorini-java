@@ -22,8 +22,9 @@ public class DefaultWin implements StrategyWin {
     public boolean checkWin() {
         boolean hasWin = false;
         for(Worker worker : match.getCurrentPlayer().getWorkers()) {
-            if(match.getLocation().getLocation(worker) != match.getMatchProperties().getInitialPositionMap().get(worker)) // check if the worker has moved
-                hasWin = match.getLocation().getLocation(worker).getTower().getTopComponent() == Component.THIRD_LEVEL || hasWin;
+            boolean workerComeFromThirdLevel = match.getMatchProperties().getInitialPositionMap().get(worker).getTower().getTopComponent() == Component.THIRD_LEVEL,  // check if the worker comes from the third level
+                    workerHasMoved = match.getLocation().getLocation(worker) != match.getMatchProperties().getInitialPositionMap().get(worker);  // check if the worker has moved
+            if (workerHasMoved && !workerComeFromThirdLevel) hasWin = match.getLocation().getLocation(worker).getTower().getTopComponent() == Component.THIRD_LEVEL || hasWin;
         }
         return hasWin;
     }

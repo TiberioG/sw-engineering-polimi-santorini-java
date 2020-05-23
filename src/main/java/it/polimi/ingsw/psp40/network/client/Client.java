@@ -2,12 +2,9 @@ package it.polimi.ingsw.psp40.network.client;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
-import it.polimi.ingsw.psp40.commons.messages.ChooseGameCardMessage;
-import it.polimi.ingsw.psp40.commons.messages.Message;
-import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
-import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
@@ -157,11 +154,13 @@ public class Client implements ServerObserver {
         break;
 
       case USER_JOINED:
-        view.displayUserJoined((String)message.getPayload(String.class));
+        TuplaGenerics detailOfUserJoined = (TuplaGenerics) message.getPayload(new TypeToken<TuplaGenerics<String,Integer>>() {}.getType());
+        view.displayUserJoined((String) detailOfUserJoined.getFirst(), (Integer) detailOfUserJoined.getSecond());
         break;
 
       case ADDED_TO_QUEUE:
-        view.displayAddedToQueue((String)message.getPayload(String.class));
+        TuplaGenerics detailsOfLobby = (TuplaGenerics) message.getPayload(new TypeToken<TuplaGenerics<List<String>,Integer>>() {}.getType());
+        view.displayAddedToQueue((List<String>) detailsOfLobby.getFirst(), (Integer) detailsOfLobby.getSecond());
         break;
 
       case START_MATCH:

@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp40.network.server;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.Message;
+import it.polimi.ingsw.psp40.commons.messages.TuplaGenerics;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 
 import java.io.IOException;
@@ -233,25 +234,24 @@ public class Server
     if(howManyPlayers == 0) {
       howManyPlayers = message.getNumOfPlayers();
       LOGGER.log(Level.INFO, "Notifying the first user that the lobby has been created and is waiting for new players...");
-      details = Integer.toString(howManyPlayers-1);
-      messageToSend = new Message(username, TypeOfMessage.LOBBY_CREATED, details);
+      messageToSend = new Message(username, TypeOfMessage.LOBBY_CREATED, Integer.toString(howManyPlayers-1));
       sendToClient(messageToSend);
     } else {
       LOGGER.log(Level.INFO, "Notifying other users about new user joined to the queue");
-      details = username + " joined!\n";
-      details += howManyPlayers == lobby.size() ? "Match starting soon..." : "Waiting for " + (howManyPlayers - lobby.size()) + " other(s) player(s)...";
+      //details = username + " joined!\n";
+      //details += howManyPlayers == lobby.size() ? "Match starting soon..." : "Waiting for " + (howManyPlayers - lobby.size()) + " other(s) player(s)...";
 
       List<String> tmpLobby = new ArrayList<>(lobby);
       tmpLobby.remove(username);
-      String finalDetails = details; // damn lambda
+      //String finalDetails = details; // damn lambda
       tmpLobby.forEach(_username -> {
-        sendToClient(new Message(_username, TypeOfMessage.USER_JOINED, finalDetails));
+        sendToClient(new Message(_username, TypeOfMessage.USER_JOINED, new TuplaGenerics<>(username, howManyPlayers - lobby.size())));
       });
 
       LOGGER.log(Level.INFO, "Notifying the user about he has been added to a queue");
-      details = "There was already a lobby created. You joined a " + howManyPlayers + "-player match.\n";
-      details += howManyPlayers == lobby.size() ? "You were the last player required! Match starting soon..." : "Waiting for " + (howManyPlayers - lobby.size()) + " other(s) player(s)...";
-      messageToSend = new Message(username, TypeOfMessage.ADDED_TO_QUEUE, details);
+      //details = "There was already a lobby created. You joined a " + howManyPlayers + "-player match.\n";
+      //details += howManyPlayers == lobby.size() ? "You were the last player required! Match starting soon..." : "Waiting for " + (howManyPlayers - lobby.size()) + " other(s) player(s)...";
+      messageToSend = new Message(username, TypeOfMessage.ADDED_TO_QUEUE, new TuplaGenerics<>(tmpLobby, howManyPlayers - lobby.size()));
       sendToClient(messageToSend);
 
       if (checkLobby()) {

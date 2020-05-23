@@ -135,12 +135,15 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayUserJoined(String details) {
+    public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayer) {
+        String details = remainingPlayer == 0 ? "Match starting soon..." : "Waiting for " + remainingPlayer + " other(s) player(s)...";
         out.println(details);
     }
 
     @Override
-    public void displayAddedToQueue(String details) {
+    public void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer) {
+        String details = "There was already a lobby created. You joined a " + remainingPlayer + otherPlayer.size() + "-player match.\n";
+        details += remainingPlayer == 0 ? "You were the last player required! Match starting soon..." : "Waiting for " + remainingPlayer + " other(s) player(s)...";
         out.println(details);
     }
 

@@ -280,10 +280,11 @@ public class CoolCLI implements ViewInterface {
 
     /**
      * Method to show details when a user has joined match
-     * @param details
+     * @param nameOfOPlayer
+     * @param remainingPlayer
      */
     @Override
-    public void displayUserJoined(String details) {
+    public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayer) {
        /*
        left.clear();
         left.printWrapped(details); //I think user doesn't really care about this
@@ -301,10 +302,11 @@ public class CoolCLI implements ViewInterface {
 
     /**
      * Method to show "waiting for other players "
-     * @param details I'm not showing this
+     * @param otherPlayer
+     * @param remainingPlayer
      */
     @Override
-    public void displayAddedToQueue(String details) {
+    public void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer) {
         center.clear();
         executor.execute(hour);
         left.clear();

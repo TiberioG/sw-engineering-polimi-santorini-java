@@ -39,6 +39,8 @@ public class GUI extends Application implements ViewInterface {
 
     private SetupScreenController setupScreenController;
 
+    private LobbyScreenController lobbyScreenController;
+
     protected static GameScreenController gameScreenController = null;
 
     private CardScreenController cardScreenController;
@@ -83,6 +85,22 @@ public class GUI extends Application implements ViewInterface {
         });
     }
 
+    private String getTextForRemainingPlayers(Integer remainingPlayers) {
+        String text;
+        switch (remainingPlayers) {
+            case 0:
+                text = "La partita sta per iniziare!";
+                break;
+            case 1:
+                text = "In attesa di un altro giocatore";
+                break;
+            default:
+                text = "In attesa di altri " + remainingPlayers + " giocatori";
+                break;
+        }
+        return text;
+    }
+
     @Override
     public void displaySetup() {
         createMainScene("/FXML/SetupScreen.fxml", () -> {
@@ -113,7 +131,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displaySetupFailure() {
-
+        setupScreenController.errorAlert("Il server non è raggiungibile, inserisci un altro indirizzo!");
     }
 
     @Override
@@ -135,17 +153,23 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayLoginFailure(String details) {
         System.out.println(details);
-        setupScreenController.usernameBusy();
+        setupScreenController.errorAlert("Il nome è già utilizzato, inserisci un'altro nome!");
     }
 
     @Override
-    public void displayUserJoined(String details) {
-
+    public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayers) {
+        lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
+        lobbyScreenController.addPlayerToLobby(nameOfOPlayer);
     }
 
     @Override
-    public void displayAddedToQueue(String details) {
-
+    public void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayers) {
+        createMainScene("/FXML/LobbyScreen.fxml", () -> {
+            lobbyScreenController = fxmlLoader.getController();
+            lobbyScreenController.setClient(client);
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
+            otherPlayer.forEach(player -> lobbyScreenController.addPlayerToLobby(player));
+        });
     }
 
     @Override
@@ -285,7 +309,11 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLobbyCreated(String playersWaiting) {
-
+        createMainScene("/FXML/LobbyScreen.fxml", () -> {
+            lobbyScreenController = fxmlLoader.getController();
+            lobbyScreenController.setClient(client);
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(Integer.parseInt(playersWaiting)));
+        });
     }
 
     @Override

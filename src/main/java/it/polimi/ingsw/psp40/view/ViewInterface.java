@@ -20,8 +20,8 @@ public interface ViewInterface {
     void displayLogin();
     void displayLoginSuccessful();
     void displayLoginFailure(String details);
-    void displayUserJoined(String details);
-    void displayAddedToQueue(String details);
+    void displayUserJoined(String playerJoined, Integer remainingPlayer);
+    void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer);
     void displayStartingMatch();
     void displayDisconnected(String details);
     void displayGenericMessage(String message);

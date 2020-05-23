@@ -81,13 +81,14 @@ public class SetupScreenController extends ScreenController {
 
 
         // todo remove me, just for testing
-        protected void mockSendConnect () {
+    protected void mockSendConnect () {
         getClient().setServerIP("localhost");
         getClient().setServerPort(Integer.parseInt("1234"));
         getClient().connectToServer();
     }
-        // todo remove me, just for testing
-        protected void mockSendLogin () {
+
+    // todo remove me, just for testing
+    protected void mockSendLogin () {
         String username = (new Date()).toString();
         Date birthday = new Date();
         int numOfPlayers = 2;
@@ -164,11 +165,11 @@ public class SetupScreenController extends ScreenController {
         getClient().sendToServer(loginMessage);
     }
 
-    public void usernameBusy() {
+    public void errorAlert(String text) {
         Platform.runLater(() -> {
             TilePane r = new TilePane();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Il nome è già utilizzato, inserito un'altro nome!");
+            alert.setContentText(text);
             alert.show();
             anchorPane.getChildren().add(r);
             UtilsGUI.addClassToElement(usernameTextField, "error-text");
