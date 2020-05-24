@@ -47,14 +47,14 @@ public class CardScreenController extends ScreenController {
     private final ObservableList<Integer> selectedList = FXCollections.observableArrayList();
     private final HashMap<Card, ImageView> cardsMap = new HashMap<>();
     private TypeOfMessage typeOfMessageToSend;
-    BooleanBinding binding;
 
     @FXML
     public void initialize() {
         //UtilsGUI.addClassToElement(textTitle, "card-title");
         textDescr.setWrapText(true);
-        binding = Bindings.size(selectedList).isEqualTo(toSelectProperty);
+        BooleanBinding binding = Bindings.size(selectedList).isEqualTo(toSelectProperty);
         endButton.visibleProperty().bind(binding);
+        UtilsGUI.buttonHoverEffect(endButton);
     }
 
     protected void displayCardsForInitialSelection(List<Card> cards, int toSelect) {

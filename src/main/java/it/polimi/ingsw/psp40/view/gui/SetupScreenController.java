@@ -35,6 +35,9 @@ public class SetupScreenController extends ScreenController {
     private Button connectButton;
 
     @FXML
+    private Button sendInfoButton;
+
+    @FXML
     private VBox vBoxForServerProps;
 
     @FXML
@@ -75,10 +78,10 @@ public class SetupScreenController extends ScreenController {
         }});
 
         numOfPlayerComboBox.getItems().addAll(2,3);
+
+        UtilsGUI.buttonHoverEffect(connectButton);
+        UtilsGUI.buttonHoverEffect(sendInfoButton);
     }
-
-
-
 
         // todo remove me, just for testing
     protected void mockSendConnect () {
