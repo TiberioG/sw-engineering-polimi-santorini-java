@@ -37,7 +37,6 @@ TextField {
 }
 
 Button {
-    -fx-font-family: "Ink Blossoms";
     -fx-background-image: url('../images/btn_blue.png');
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
@@ -47,8 +46,20 @@ Button {
 }
 
 ListView {
+    -fx-text-fill: #346b93;
     -fx-background-color: transparent;
 }
+
+ListView .list-cell:odd {
+    -fx-text-fill: #346b93;
+    -fx-background-color: transparent;
+}
+
+ListView .list-cell:even {
+    -fx-text-fill: #346b93;
+    -fx-background-color: transparent;
+}
+
 
 Label {
     -fx-font-family: "Ink Blossoms";

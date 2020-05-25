@@ -19,7 +19,6 @@
             <Font size="25.0" />
          </font>
       </Label>
-      <Accordion layoutX="106.0" layoutY="107.0" />
       <ListView fx:id="listViewPlayers" layoutX="501.0" layoutY="314.0" prefHeight="200.0" prefWidth="200.0" />
       <Label fx:id="subTitleLobbyLabel" alignment="CENTER" layoutX="208.0" layoutY="242.0" prefHeight="72.0" prefWidth="787.0" text="Giocatori in attesa:" textAlignment="CENTER" textFill="#346b93" visible="false">
          <font>

@@ -50,7 +50,7 @@ public class CardScreenController extends ScreenController {
 
     @FXML
     public void initialize() {
-        //UtilsGUI.addClassToElement(textTitle, "card-title");
+        //ScreenController.addClassToElement(textTitle, "card-title");
         textDescr.setWrapText(true);
         BooleanBinding binding = Bindings.size(selectedList).isEqualTo(toSelectProperty);
         endButton.visibleProperty().bind(binding);

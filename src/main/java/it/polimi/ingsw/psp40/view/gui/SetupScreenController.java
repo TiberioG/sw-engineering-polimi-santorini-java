@@ -128,9 +128,9 @@ public class SetupScreenController extends ScreenController {
         boolean hasInsertedValidIp = Utils.isValidIp(ipAddressTextField.getText());
         validationMap.put(ipAddressTextField, hasInsertedValidIp);
         if (hasInsertedValidIp) {
-            UtilsGUI.removeClassToElement(ipAddressTextField, "error-text");
+            ScreenController.removeClassToElement(ipAddressTextField, "error-text");
         } else {
-            UtilsGUI.addClassToElement(ipAddressTextField, "error-text");
+            ScreenController.addClassToElement(ipAddressTextField, "error-text");
         }
         validateFields();
     }
@@ -139,9 +139,9 @@ public class SetupScreenController extends ScreenController {
      public void portChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidPort = Utils.isValidPort(Integer.parseInt("0" + portTextField.getText().trim()));
         if (hasInsertedValidPort) {
-            UtilsGUI.removeClassToElement(portTextField, "error-text");
+            ScreenController.removeClassToElement(portTextField, "error-text");
         } else {
-            UtilsGUI.addClassToElement(portTextField, "error-text");
+            ScreenController.addClassToElement(portTextField, "error-text");
         }
         validationMap.put(portTextField, hasInsertedValidPort);
         validateFields();
@@ -175,7 +175,7 @@ public class SetupScreenController extends ScreenController {
             alert.setContentText(text);
             alert.show();
             anchorPane.getChildren().add(r);
-            UtilsGUI.addClassToElement(usernameTextField, "error-text");
+            ScreenController.addClassToElement(usernameTextField, "error-text");
         });
     }
 

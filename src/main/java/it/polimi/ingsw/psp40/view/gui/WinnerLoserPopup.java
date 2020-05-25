@@ -42,7 +42,7 @@ public class WinnerLoserPopup extends PopupStage {
         // Create scene
         Text text = createText(getDetails());
         this.vBox.getChildren().add(text);
-        UtilsGUI.addClassToElement(vBox, getCSSClassName());
+        ScreenController.addClassToElement(vBox, getCSSClassName());
 
         Button button = buildButton();
         this.vBox.getChildren().add(button);
