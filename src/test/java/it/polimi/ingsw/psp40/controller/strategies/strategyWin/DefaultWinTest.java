@@ -121,6 +121,8 @@ public class DefaultWinTest {
 
     @Test
     public void checkWin_true_defaultMove() throws SantoriniException {
+        match.getMatchProperties().getInitialPositionMap().put(worker2_1, this.match.getLocation().getLocation(worker2_1));
+        match.getMatchProperties().getInitialPositionMap().put(worker2_2, this.match.getLocation().getLocation(worker2_2));
         match.setCurrentPlayer(player2);
         //TurnManager turnManager = new TurnManager(match);
 
@@ -133,6 +135,8 @@ public class DefaultWinTest {
 
     @Test
     public void checkWin_false_defaultMove() throws SantoriniException {
+        match.getMatchProperties().getInitialPositionMap().put(worker1_1, this.match.getLocation().getLocation(worker1_1));
+        match.getMatchProperties().getInitialPositionMap().put(worker1_2, this.match.getLocation().getLocation(worker1_2));
         match.setCurrentPlayer(player1);
         TurnManager turnManager = new TurnManager(match);
 
