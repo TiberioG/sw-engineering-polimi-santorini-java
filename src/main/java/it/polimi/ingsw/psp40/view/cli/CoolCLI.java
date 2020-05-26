@@ -524,6 +524,9 @@ public class CoolCLI implements ViewInterface {
             case BUILD_COMPONENT:
                 client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
                 break;
+            case END_TURN:
+                client.sendToServer(new Message(TypeOfMessage.REQUEST_END_TURN));
+                break;
         }
 
     }

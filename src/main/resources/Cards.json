@@ -67,7 +67,11 @@
           "type": "buildComponent",
           "nextPhases": [{
             "type": "buildComponent"
-          }]
+          },
+            {
+              "type": "endTurn"
+            }
+          ]
         }]
       }]
     },
@@ -89,6 +93,10 @@
           "type": "buildComponent",
           "nextPhases": [{
             "type": "buildComponent"
+          },
+          {
+            "type": "endTurn"
+
           }]
         }]
       }]

@@ -104,6 +104,8 @@ public class CardManager {
             phaseType = PhaseType.MOVE_WORKER;
         } else if (string.equals("buildComponent")) {
             phaseType = PhaseType.BUILD_COMPONENT;
+        } else if (string.equals("endTurn")) {
+            phaseType = PhaseType.END_TURN;
         }
         return phaseType;
     }

@@ -153,6 +153,15 @@ public class TurnManager {
     }
 
     /**
+     * This method permit the ending of the turn if is possible
+     */
+    public void endTurn() {
+        if (checkForPermittedPhase(PhaseType.END_TURN)) {
+            updateCurrentPhase(PhaseType.END_TURN);
+        }
+    }
+
+    /**
      * This method check if the list of the next phases contains the phase type in the param
      * @param type the type of phase to check
      * @return a boolean which indicate if the next phases list contains the phase in the param
@@ -160,12 +169,7 @@ public class TurnManager {
     private Boolean checkForPermittedPhase(PhaseType type) {
         return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -> phase.getType().equals(type));
     }
-
-    /*
-    public List<Phase> getNextPhases() {
-        return currentTurn.getCurrentPhase().getNextPhases();
-    }
-    */
+    
 
     /**
      * This method call the setSelectedWorker method of the current turn and update the virtual view with a message which contains the next phase available

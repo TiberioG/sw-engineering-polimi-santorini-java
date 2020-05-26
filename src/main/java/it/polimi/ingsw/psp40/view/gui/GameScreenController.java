@@ -476,6 +476,11 @@ public class GameScreenController extends ScreenController {
                 instructionsTextArea.setText("Costruisci in una delle celle disponibili");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
                 break;
+            case END_TURN:
+                currentPhase = PhaseType.END_TURN;
+                instructionsTextArea.setText("");
+                sendToServer(new Message(TypeOfMessage.REQUEST_END_TURN));
+                break;
         }
     }
 

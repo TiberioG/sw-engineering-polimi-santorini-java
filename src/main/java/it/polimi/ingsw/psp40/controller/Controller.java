@@ -179,6 +179,13 @@ public class Controller implements Listener<Message> {
         }
     }
 
+
+
+    @SuppressWarnings("unused")
+    private void endTurn(Message message) {
+       turnManager.endTurn();
+    }
+
     /*private void initNewMatch(Message message) {
         if (match.isMatchedEnded() == true) {
             String nameOfWinningPlayer = match.getCurrentPlayer().getName();

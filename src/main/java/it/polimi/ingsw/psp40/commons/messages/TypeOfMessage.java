@@ -38,6 +38,7 @@ public enum TypeOfMessage {
     RETRIEVE_CELL_FOR_BUILD("retrieveCellForBuild"),
     AVAILABLE_CELL_FOR_BUILD,
     BUILD_CELL("buildCell"),
+    REQUEST_END_TURN("endTurn"),
     INIT_NEW_MATCH,
 
     TOWER_UPDATED,
