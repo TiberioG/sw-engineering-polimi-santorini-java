@@ -480,7 +480,7 @@ public class Utils {
     }
 
     public static boolean isValidIp(String input) {
-        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost") || input.equals("tiberio.xyz");
+        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost") || input.equals("tiberio.xyz") || input.equalsIgnoreCase("santorini40.xyz");
     }
 
     public static boolean isValidPort(Integer input) {

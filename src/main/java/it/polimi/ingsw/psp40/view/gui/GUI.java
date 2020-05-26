@@ -227,8 +227,10 @@ public class GUI extends Application implements ViewInterface {
             createMainScene("/FXML/CardScreen.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
+                cardScreenController.setPrimaryStage(primaryStage);
                 cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
             });
+
         }
     }
 
@@ -246,6 +248,7 @@ public class GUI extends Application implements ViewInterface {
                 createMainScene("/FXML/CardScreen.fxml", () -> {
                     cardScreenController = fxmlLoader.getController();
                     cardScreenController.setClient(client);
+                    cardScreenController.setPrimaryStage(primaryStage);
                     cardScreenController.displayCardsForPersonalSelection(availableCards);
                 });
             }
@@ -267,9 +270,9 @@ public class GUI extends Application implements ViewInterface {
         createMainScene("/FXML/PlayerScreen.fxml", () -> {
             playerScreenController = fxmlLoader.getController();
             playerScreenController.setClient(client);
+            playerScreenController.setPrimaryStage(primaryStage);
             playerScreenController.displayPlayersForInitialSelection(allPlayers);
         });
-
     }
 
     @Override

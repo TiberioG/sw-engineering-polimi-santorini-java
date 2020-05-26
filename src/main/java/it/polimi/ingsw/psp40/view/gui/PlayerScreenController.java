@@ -148,6 +148,7 @@ public class PlayerScreenController extends ScreenController {
         if (playerSelected.getValue() != null) {
             getClient().sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected.getValue()));
         }
+
     }
 
 }

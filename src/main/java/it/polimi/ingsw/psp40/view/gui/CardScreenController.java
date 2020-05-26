@@ -176,6 +176,10 @@ public class CardScreenController extends ScreenController {
                 message.setPayload(selectedListTmp.get(0));
 
             getClient().sendToServer(message);
+
+            WaitingPopup popup = new WaitingPopup(getPrimaryStage(), "Waiting other players");
+            popup.show();
+
         }
 
     }
