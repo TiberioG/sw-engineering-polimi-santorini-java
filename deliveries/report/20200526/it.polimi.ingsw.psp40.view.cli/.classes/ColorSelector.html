@@ -1,0 +1,201 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ColorSelector</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ColorSelector (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ColorSelector</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 43)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.model.Card;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.IOException;
+<i>7</i>&nbsp;import java.io.InputStream;
+<i>8</i>&nbsp;import java.net.URL;
+<i>9</i>&nbsp;import java.nio.charset.StandardCharsets;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;public class ColorSelector {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    private final static int SPACING = 3;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    private final static int LEN = 13;
+<i>18</i>&nbsp;    private final static int HEI = 7;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    int init;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    private Frame frame;
+<i>23</i>&nbsp;    List&lt;String&gt; colorsAvailable;
+<i>24</i>&nbsp;
+<b class="nc"><i>25</i>&nbsp;     public ColorSelector(List&lt;String&gt; colorsAvailable, Frame frame ){</b>
+<b class="nc"><i>26</i>&nbsp;        this.frame = frame;</b>
+<b class="nc"><i>27</i>&nbsp;        this.colorsAvailable = colorsAvailable;</b>
+<i>28</i>&nbsp;
+<b class="nc"><i>29</i>&nbsp;        init  = frame.getInit()[1] + ( frame.getColSpan() - (LEN*colorsAvailable.size() + SPACING*(colorsAvailable.size() -1) )  )/2;</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;    int selection (){
+<i>33</i>&nbsp;        try {
+<b class="nc"><i>34</i>&nbsp;            Terminal.noBuffer();</b>
+<b class="nc"><i>35</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>36</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>37</i>&nbsp;        }</b>
+<b class="nc"><i>38</i>&nbsp;        int selection = 0;</b>
+<b class="nc"><i>39</i>&nbsp;        List&lt;Integer&gt; selected = new ArrayList&lt;Integer&gt;();</b>
+<i>40</i>&nbsp;
+<b class="nc"><i>41</i>&nbsp;        Terminal.hideCursor();</b>
+<b class="nc"><i>42</i>&nbsp;        print(selection);</b>
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;        while (true) {
+<i>45</i>&nbsp;            try {
+<b class="nc"><i>46</i>&nbsp;                if (System.in.available() != 0) {</b>
+<b class="nc"><i>47</i>&nbsp;                    int c = System.in.read();  //read one char at a time in ascii code</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;                    //GETTING SPACEBAR to positiom
+<b class="nc"><i>50</i>&nbsp;                    if (c == 32) {</b>
+<b class="nc"><i>51</i>&nbsp;                        break;</b>
+<i>52</i>&nbsp;                    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;                    //getting an ARROW KEY
+<b class="nc"><i>55</i>&nbsp;                    else if (c == 27) { // first part of arrow key == ESC</b>
+<b class="nc"><i>56</i>&nbsp;                        int next1 = System.in.read();</b>
+<b class="nc"><i>57</i>&nbsp;                        int next2 = System.in.read();</b>
+<b class="nc"><i>58</i>&nbsp;                        if (next1 == 91) { //  read [</b>
+<b class="nc"><i>59</i>&nbsp;                            if (next2 == 67) {                     //RIGHT  arrow</b>
+<b class="nc"><i>60</i>&nbsp;                                if (selection &gt;= 0 &amp;&amp; selection &lt; colorsAvailable.size() -1) {</b>
+<b class="nc"><i>61</i>&nbsp;                                    selection++;</b>
+<i>62</i>&nbsp;                                }
+<b class="nc"><i>63</i>&nbsp;                            } else if (next2 == 68) {              //LEFT arrow</b>
+<b class="nc"><i>64</i>&nbsp;                                if (selection &gt; 0 &amp;&amp; selection &lt;= colorsAvailable.size() -1) {</b>
+<b class="nc"><i>65</i>&nbsp;                                    selection--;</b>
+<i>66</i>&nbsp;                                }
+<i>67</i>&nbsp;                            }
+<i>68</i>&nbsp;                        }
+<b class="nc"><i>69</i>&nbsp;                        Terminal.moveAbsoluteCursor(frame.getInit()[0] + HEI , 0);</b>
+<b class="nc"><i>70</i>&nbsp;                        Terminal.clearLine();</b>
+<b class="nc"><i>71</i>&nbsp;                        print(selection);</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;                    }//end arrow management
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;                } //end system in available
+<b class="nc"><i>76</i>&nbsp;            } catch (IOException e) {</b>
+<i>77</i>&nbsp;                //todo frame per except
+<b class="nc"><i>78</i>&nbsp;            }</b>
+<i>79</i>&nbsp;        }// end while true
+<i>80</i>&nbsp;
+<b class="nc"><i>81</i>&nbsp;        return selection;</b>
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    private void print(int current)  {
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;
+<b class="nc"><i>89</i>&nbsp;        for(int i= 0; i &lt; colorsAvailable.size(); i++ ){</b>
+<b class="nc"><i>90</i>&nbsp;            Terminal.moveAbsoluteCursor(frame.getInit()[0], init + i*(LEN + SPACING));</b>
+<b class="nc"><i>91</i>&nbsp;            for (int k = 0; k &lt; HEI ; k ++){</b>
+<b class="nc"><i>92</i>&nbsp;                Terminal.moveAbsoluteCursor(frame.getInit()[0] + k, init + i*(LEN + SPACING)); // scendo di una riga ogni volta</b>
+<b class="nc"><i>93</i>&nbsp;                for (int j = 0; j &lt; LEN; j++){</b>
+<b class="nc"><i>94</i>&nbsp;                    System.out.print(Colors.valueOf(colorsAvailable.get(i)).getAnsiCode()+ &quot;█&quot;); //verdino</b>
+<i>95</i>&nbsp;                }
+<i>96</i>&nbsp;            }
+<i>97</i>&nbsp;
+<b class="nc"><i>98</i>&nbsp;            System.out.print(Colors.reset());</b>
+<i>99</i>&nbsp;
+<b class="nc"><i>100</i>&nbsp;            if (i == current){</b>
+<b class="nc"><i>101</i>&nbsp;                Terminal.moveAbsoluteCursor(frame.getInit()[0] + HEI , init + i*(LEN + SPACING));</b>
+<b class="nc"><i>102</i>&nbsp;                for (int j = 0; j &lt; LEN; j++){</b>
+<b class="nc"><i>103</i>&nbsp;                    System.out.print(&quot;▂&quot;);</b>
+<i>104</i>&nbsp;                }
+<i>105</i>&nbsp;            }
+<i>106</i>&nbsp;        }
+<i>107</i>&nbsp;     }
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;}
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 10:59</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DefaultMove</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.controller.strategies.strategyMove</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DefaultMove (it.polimi.ingsw.psp40.controller.strategies.strategyMove)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DefaultMove</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (22/ 22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.controller.strategies.strategyMove;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedMoveException;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableMoveException;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.model.Cell;
+<i>9</i>&nbsp;import it.polimi.ingsw.psp40.model.Match;
+<i>10</i>&nbsp;import it.polimi.ingsw.psp40.model.Worker;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;import java.util.stream.Collectors;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class DefaultMove implements StrategyMove {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /* Attributes */
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    protected Match match;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /* Constructor(s) */
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;    public DefaultMove(Match match) {</b>
+<b class="fc"><i>24</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /* Methods */
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Override
+<i>30</i>&nbsp;    public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException, CellOutOfBoundsException {
+<b class="fc"><i>31</i>&nbsp;        List&lt;Cell&gt; availableCells = getAvailableCells(worker);</b>
+<b class="fc"><i>32</i>&nbsp;        if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }</b>
+<b class="fc"><i>33</i>&nbsp;        else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }</b>
+<i>34</i>&nbsp;        else {
+<b class="fc"><i>35</i>&nbsp;            match.getLocation().setLocation(cell, worker);</b>
+<i>36</i>&nbsp;        }
+<b class="fc"><i>37</i>&nbsp;    }</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    @Override
+<i>40</i>&nbsp;    public List&lt;Cell&gt; getAvailableCells(Worker worker) {
+<b class="fc"><i>41</i>&nbsp;        Cell workerCell = match.getLocation().getLocation(worker);</b>
+<b class="fc"><i>42</i>&nbsp;        List&lt;Cell&gt; adjCells = this.getAdjCells(workerCell);</b>
+<b class="fc"><i>43</i>&nbsp;        return adjCells.stream()</b>
+<b class="fc"><i>44</i>&nbsp;                .filter(cell -&gt; cell.getTower().getTopComponent().getComponentCode() &lt;= workerCell.getTower().getTopComponent().getComponentCode() + 1) // remove cells where tower is 2 or more level higher than where the worker is</b>
+<b class="fc"><i>45</i>&nbsp;                .filter(cell -&gt; cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete</b>
+<b class="fc"><i>46</i>&nbsp;                .filter(cell -&gt; match.getLocation().getOccupant(cell) == null) // removes cells where there is a worker</b>
+<b class="fc"><i>47</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Override
+<i>51</i>&nbsp;    public List&lt;Cell&gt; getAdjCells(Cell cell) {
+<b class="fc"><i>52</i>&nbsp;        boolean cantLevelUp = match.getMatchProperties().isOthersCantLevelUp();</b>
+<b class="fc"><i>53</i>&nbsp;        List&lt;Cell&gt; adjCells = match.getIsland().getAdjCells(cell);</b>
+<i>54</i>&nbsp;
+<b class="fc"><i>55</i>&nbsp;        if(cantLevelUp) {</b>
+<b class="fc"><i>56</i>&nbsp;            adjCells = adjCells.stream()</b>
+<b class="fc"><i>57</i>&nbsp;                        .filter(_cell -&gt; _cell.getTower().getTopComponent().getComponentCode() &lt;= cell.getTower().getTopComponent().getComponentCode()) // remove cells where tower is higher than where the worker is</b>
+<b class="fc"><i>58</i>&nbsp;                        .collect(Collectors.toList());</b>
+<i>59</i>&nbsp;        }
+<i>60</i>&nbsp;
+<b class="fc"><i>61</i>&nbsp;        return adjCells;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 10:59</div>
+</div>
+</body>
+</html>

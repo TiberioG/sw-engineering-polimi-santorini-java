@@ -1,0 +1,236 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PlayerScreenController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PlayerScreenController (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlayerScreenController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 69)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.model.Card;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.model.Player;
+<i>7</i>&nbsp;import javafx.animation.*;
+<i>8</i>&nbsp;import javafx.beans.binding.Bindings;
+<i>9</i>&nbsp;import javafx.beans.binding.BooleanBinding;
+<i>10</i>&nbsp;import javafx.beans.property.IntegerProperty;
+<i>11</i>&nbsp;import javafx.beans.property.SimpleIntegerProperty;
+<i>12</i>&nbsp;import javafx.beans.property.SimpleStringProperty;
+<i>13</i>&nbsp;import javafx.beans.property.StringProperty;
+<i>14</i>&nbsp;import javafx.collections.FXCollections;
+<i>15</i>&nbsp;import javafx.collections.ObservableList;
+<i>16</i>&nbsp;import javafx.fxml.FXML;
+<i>17</i>&nbsp;import javafx.scene.Group;
+<i>18</i>&nbsp;import javafx.scene.Node;
+<i>19</i>&nbsp;import javafx.scene.control.Button;
+<i>20</i>&nbsp;import javafx.scene.control.Label;
+<i>21</i>&nbsp;import javafx.scene.control.TextArea;
+<i>22</i>&nbsp;import javafx.scene.effect.ColorAdjust;
+<i>23</i>&nbsp;import javafx.scene.image.Image;
+<i>24</i>&nbsp;import javafx.scene.image.ImageView;
+<i>25</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>26</i>&nbsp;import javafx.scene.layout.GridPane;
+<i>27</i>&nbsp;import javafx.scene.layout.HBox;
+<i>28</i>&nbsp;import javafx.scene.layout.Pane;
+<i>29</i>&nbsp;import javafx.scene.layout.VBox;
+<i>30</i>&nbsp;import javafx.scene.text.Font;
+<i>31</i>&nbsp;import javafx.scene.text.Text;
+<i>32</i>&nbsp;import javafx.scene.text.TextAlignment;
+<i>33</i>&nbsp;import javafx.util.Duration;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;import java.util.ArrayList;
+<i>36</i>&nbsp;import java.util.HashMap;
+<i>37</i>&nbsp;import java.util.List;
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;public class PlayerScreenController extends ScreenController {</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    @FXML
+<i>42</i>&nbsp;    private Button endButton;
+<i>43</i>&nbsp;    @FXML
+<i>44</i>&nbsp;    private TextArea textDescr;
+<i>45</i>&nbsp;    @FXML
+<i>46</i>&nbsp;    private TextArea textTitle;
+<i>47</i>&nbsp;    @FXML
+<i>48</i>&nbsp;    private VBox vBox;
+<i>49</i>&nbsp;
+<b class="nc"><i>50</i>&nbsp;    private final StringProperty playerSelected = new SimpleStringProperty(null);</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @FXML
+<i>53</i>&nbsp;    public void initialize() {
+<b class="nc"><i>54</i>&nbsp;        textDescr.setWrapText(true);</b>
+<b class="nc"><i>55</i>&nbsp;        BooleanBinding binding = Bindings.isNotNull(playerSelected);</b>
+<b class="nc"><i>56</i>&nbsp;        endButton.visibleProperty().bind(binding);</b>
+<b class="nc"><i>57</i>&nbsp;        UtilsGUI.buttonHoverEffect(endButton);</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    protected void  displayPlayersForInitialSelection(List&lt;Player&gt; allPlayers) {
+<b class="nc"><i>61</i>&nbsp;        allPlayers.forEach(this::displayPapiro);</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    private void displayPapiro(Player player) {
+<b class="nc"><i>65</i>&nbsp;        ImageView papiro = new ImageView(new Image(getClass().getResource(&quot;/images/papiro.png&quot;).toString()));</b>
+<b class="nc"><i>66</i>&nbsp;        String username = player.getName();</b>
+<b class="nc"><i>67</i>&nbsp;        papiro.setUserData(username);</b>
+<b class="nc"><i>68</i>&nbsp;        papiro.setFitWidth(400);</b>
+<b class="nc"><i>69</i>&nbsp;        papiro.setPreserveRatio(true);</b>
+<b class="nc"><i>70</i>&nbsp;        papiro.setSmooth(true);</b>
+<b class="nc"><i>71</i>&nbsp;        papiro.setCache(true);</b>
+<b class="nc"><i>72</i>&nbsp;        papiro.setPickOnBounds(false);</b>
+<b class="nc"><i>73</i>&nbsp;        Transition transition = buildTransition(papiro);</b>
+<b class="nc"><i>74</i>&nbsp;        papiro.hoverProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<b class="nc"><i>75</i>&nbsp;            if (newValue) {</b>
+<b class="nc"><i>76</i>&nbsp;                textDescr.setText(player.getCurrentCard().getDescription());</b>
+<b class="nc"><i>77</i>&nbsp;                textTitle.setText(player.getCurrentCard().getName());</b>
+<b class="nc"><i>78</i>&nbsp;                transition.play();</b>
+<i>79</i>&nbsp;            } else {
+<b class="nc"><i>80</i>&nbsp;                textDescr.setText(&quot;&quot;);</b>
+<b class="nc"><i>81</i>&nbsp;                textTitle.setText(&quot;&quot;);</b>
+<i>82</i>&nbsp;
+<b class="nc"><i>83</i>&nbsp;                transition.stop();</b>
+<b class="nc"><i>84</i>&nbsp;                papiro.scaleXProperty().setValue(1);</b>
+<b class="nc"><i>85</i>&nbsp;                papiro.scaleYProperty().setValue(1);</b>
+<i>86</i>&nbsp;            }
+<i>87</i>&nbsp;        });
+<b class="nc"><i>88</i>&nbsp;        papiro.addEventHandler(MouseEvent.MOUSE_PRESSED,</b>
+<i>89</i>&nbsp;                mouseEvent -&gt; {
+<b class="nc"><i>90</i>&nbsp;                    if (playerSelected.getValue() == null){</b>
+<b class="nc"><i>91</i>&nbsp;                        playerSelected.setValue((String) papiro.getUserData());</b>
+<b class="nc"><i>92</i>&nbsp;                        ColorAdjust colorAdjust = new ColorAdjust();</b>
+<b class="nc"><i>93</i>&nbsp;                        colorAdjust.setBrightness(0.3);</b>
+<b class="nc"><i>94</i>&nbsp;                        papiro.setEffect(colorAdjust);</b>
+<b class="nc"><i>95</i>&nbsp;                    }</b>
+<b class="nc"><i>96</i>&nbsp;                    else if (playerSelected.getValue().equals(papiro.getUserData())) {</b>
+<b class="nc"><i>97</i>&nbsp;                        playerSelected.setValue(null);</b>
+<b class="nc"><i>98</i>&nbsp;                        papiro.setEffect(null);</b>
+<i>99</i>&nbsp;                    }
+<i>100</i>&nbsp;                });
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;        /* Add text over papiro */
+<b class="nc"><i>104</i>&nbsp;        Label label = new Label(username);</b>
+<b class="nc"><i>105</i>&nbsp;        int fontSize = (int) (papiro.layoutBoundsProperty().getValue().getWidth() * 0.08); // calculate font size depending on the width of the papiro</b>
+<b class="nc"><i>106</i>&nbsp;        label.setFont(new Font(fontSize));</b>
+<b class="nc"><i>107</i>&nbsp;        Text text = new Text(label.getText());</b>
+<b class="nc"><i>108</i>&nbsp;        text.setFont(label.getFont());</b>
+<b class="nc"><i>109</i>&nbsp;        text.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>110</i>&nbsp;        text.setMouseTransparent(true); // text is transparent to mouse events</b>
+<i>111</i>&nbsp;
+<b class="nc"><i>112</i>&nbsp;        double textWidth = text.getBoundsInLocal().getWidth();</b>
+<b class="nc"><i>113</i>&nbsp;        double maxTextWidth = papiro.getBoundsInLocal().getWidth() * 0.60;</b>
+<b class="nc"><i>114</i>&nbsp;        if(textWidth &gt; maxTextWidth) { // if username is too long, truncate it</b>
+<b class="nc"><i>115</i>&nbsp;            double estimatedWidthForChar = textWidth / text.getText().length();</b>
+<b class="nc"><i>116</i>&nbsp;            int charsToRemove = (int) ((textWidth - maxTextWidth) / estimatedWidthForChar);</b>
+<b class="nc"><i>117</i>&nbsp;            String truncatedUsername = username.substring(0, username.length() - charsToRemove - 1);</b>
+<b class="nc"><i>118</i>&nbsp;            truncatedUsername += &quot;...&quot;;</b>
+<b class="nc"><i>119</i>&nbsp;            text.setText(truncatedUsername);</b>
+<i>120</i>&nbsp;        }
+<i>121</i>&nbsp;
+<b class="nc"><i>122</i>&nbsp;        double x = papiro.getX() + papiro.getBoundsInLocal().getWidth() * 0.50 - text.getBoundsInLocal().getWidth()/2;</b>
+<b class="nc"><i>123</i>&nbsp;        double y = papiro.getY() + papiro.getBoundsInLocal().getHeight() * 0.30 + text.getBoundsInLocal().getHeight()/2;</b>
+<b class="nc"><i>124</i>&nbsp;        text.setX(x);</b>
+<b class="nc"><i>125</i>&nbsp;        text.setY(y);</b>
+<b class="nc"><i>126</i>&nbsp;        text.scaleXProperty().bind(papiro.scaleXProperty());</b>
+<b class="nc"><i>127</i>&nbsp;        text.scaleYProperty().bind(papiro.scaleYProperty());</b>
+<i>128</i>&nbsp;
+<b class="nc"><i>129</i>&nbsp;        Group group = new Group(papiro, text);</b>
+<b class="nc"><i>130</i>&nbsp;        vBox.getChildren().add(group);</b>
+<i>131</i>&nbsp;    }
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    private Transition buildTransition(Node node) {
+<b class="nc"><i>134</i>&nbsp;        Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);</b>
+<b class="nc"><i>135</i>&nbsp;        Duration duration = Duration.millis(500);</b>
+<i>136</i>&nbsp;
+<b class="nc"><i>137</i>&nbsp;        ScaleTransition st = new ScaleTransition(duration, node);</b>
+<b class="nc"><i>138</i>&nbsp;        st.setInterpolator(interpolator);</b>
+<b class="nc"><i>139</i>&nbsp;        st.setToX(1.1);</b>
+<b class="nc"><i>140</i>&nbsp;        st.setToY(1.1);</b>
+<i>141</i>&nbsp;
+<b class="nc"><i>142</i>&nbsp;        ParallelTransition p = new ParallelTransition(st);</b>
+<b class="nc"><i>143</i>&nbsp;        return p;</b>
+<i>144</i>&nbsp;    }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    @FXML
+<i>147</i>&nbsp;    void end() {
+<b class="nc"><i>148</i>&nbsp;        if (playerSelected.getValue() != null) {</b>
+<b class="nc"><i>149</i>&nbsp;            getClient().sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected.getValue()));</b>
+<i>150</i>&nbsp;        }
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 10:59</div>
+</div>
+</body>
+</html>

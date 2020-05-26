@@ -1,0 +1,354 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Match</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Match (it.polimi.ingsw.psp40.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Match</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (19/ 19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,5%
+  </span>
+  <span class="absValue">
+    (65/ 66)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$0v14EUF0</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$6XKtRHh6</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$8DKBDCdH</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$9k5bxDIq</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$9NKph6Hh</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$avvGO2Z1</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$C8ommgYN</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$cVMSooAK</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$d3fgqtoz</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$dbPBpS7Q</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$dR0MkSXi</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$E3dTirD0</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$ENL4OGSR</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$fHNVPD4L</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$Gf1w7oFI</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$Lo5dDVvJ</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$lpqqcBsD</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$OotPxMde</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$pQOpqOJv</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$TaXXN2ys</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$u2wxIHud</td>
+  </tr>
+  <tr>
+    <td class="name">Match$MockitoMock$276575387$auxiliary$upDaZanz</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (19/ 19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,5%
+  </span>
+  <span class="absValue">
+    (65/ 66)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.Publisher;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.network.server.VirtualView;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.*;
+<i>9</i>&nbsp;import java.util.stream.Collectors;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;/**
+<i>12</i>&nbsp; * This is the class for the Match
+<i>13</i>&nbsp; * @author tiberioG
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class Match extends Publisher&lt;Message&gt; {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /* Attributes */
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    private Location location;
+<i>20</i>&nbsp;    private int matchID;
+<i>21</i>&nbsp;    private Island island;
+<b class="fc"><i>22</i>&nbsp;    private List&lt;Player&gt; listPlayers = new ArrayList&lt;&gt;();</b>
+<i>23</i>&nbsp;    private Player currentPlayer;
+<b class="fc"><i>24</i>&nbsp;    private List&lt;Card&gt; listCardsInGame = new ArrayList&lt;&gt;();</b>
+<i>25</i>&nbsp;    private VirtualView virtualView;
+<i>26</i>&nbsp;    private MatchProperties matchProperties;
+<i>27</i>&nbsp;    private Player winningPlayer;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * Constructor
+<i>31</i>&nbsp;     */
+<b class="fc"><i>32</i>&nbsp;    public Match(int matchID, VirtualView virtualView) {</b>
+<b class="fc"><i>33</i>&nbsp;        addListener(virtualView);</b>
+<b class="fc"><i>34</i>&nbsp;        this.matchID = matchID ;</b>
+<b class="fc"><i>35</i>&nbsp;        this.island = new Island(virtualView);</b>
+<b class="fc"><i>36</i>&nbsp;        this.location = new Location(virtualView);</b>
+<b class="fc"><i>37</i>&nbsp;        this.matchProperties = new MatchProperties();</b>
+<b class="fc"><i>38</i>&nbsp;        this.virtualView = virtualView;</b>
+<b class="fc"><i>39</i>&nbsp;        publish(new Message(&quot;ALL&quot;, TypeOfMessage.CREATED_MATCH));</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    // Constructor for testing
+<b class="fc"><i>43</i>&nbsp;    public Match(int matchID) {</b>
+<b class="fc"><i>44</i>&nbsp;        this.matchID = matchID ;</b>
+<b class="fc"><i>45</i>&nbsp;        this.island = new Island();</b>
+<b class="fc"><i>46</i>&nbsp;        this.location = new Location();</b>
+<b class="fc"><i>47</i>&nbsp;        this.matchProperties = new MatchProperties();</b>
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /* Methods */
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    public int getMatchID() {
+<b class="fc"><i>54</i>&nbsp;        return matchID;</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="fc"><i>57</i>&nbsp;        return Collections.unmodifiableList(new ArrayList&lt;&gt;(listPlayers));</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;    public Island getIsland() {
+<b class="fc"><i>60</i>&nbsp;        return island;</b>
+<i>61</i>&nbsp;    }
+<i>62</i>&nbsp;    public Player getCurrentPlayer(){
+<b class="fc"><i>63</i>&nbsp;        return currentPlayer;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;    public List&lt;Card&gt; getCards() {
+<b class="fc"><i>66</i>&nbsp;        return listCardsInGame;</b>
+<i>67</i>&nbsp;    }
+<i>68</i>&nbsp;    public void addCard(Card card){
+<b class="fc"><i>69</i>&nbsp;        this.listCardsInGame.add(card);</b>
+<b class="fc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;    public Location getLocation() {
+<b class="fc"><i>72</i>&nbsp;        return location;</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;    public MatchProperties getMatchProperties() {
+<b class="fc"><i>75</i>&nbsp;        return matchProperties;</b>
+<i>76</i>&nbsp;    }
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    /**
+<i>79</i>&nbsp;     * Method to set the current player of the match, if it exists in  the array of players of the match.
+<i>80</i>&nbsp;     * @param currentPlayer player object that you want to add as current player
+<i>81</i>&nbsp;     * @return if the currentPlayer was successfully added, returns the index in the array of players, else returns -1
+<i>82</i>&nbsp;     */
+<i>83</i>&nbsp;    public int setCurrentPlayer(Player currentPlayer) {
+<b class="fc"><i>84</i>&nbsp;        int indexOfPlayer = listPlayers.indexOf(currentPlayer);</b>
+<b class="fc"><i>85</i>&nbsp;        if (indexOfPlayer != -1) this.currentPlayer = currentPlayer;</b>
+<b class="fc"><i>86</i>&nbsp;        return indexOfPlayer;</b>
+<i>87</i>&nbsp;    }
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    /**
+<i>90</i>&nbsp;     * Method to retrieve player from the listPlayer from name
+<i>91</i>&nbsp;     * @param name player name that you want to retrieve
+<i>92</i>&nbsp;     * @return the player founded or null if no exists player with the name of the params
+<i>93</i>&nbsp;     */
+<i>94</i>&nbsp;    public Player getPlayerByName(String name) {
+<b class="fc"><i>95</i>&nbsp;         return listPlayers.stream().filter(player -&gt; player.getName().equals(name)).findFirst().orElse(null);</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    /**
+<i>99</i>&nbsp;     * Method to set the current player of the match, if it exists in  the array of players of the match.
+<i>100</i>&nbsp;     * @param name player name that you want to add as current player
+<i>101</i>&nbsp;     * @return if the currentPlayer was successfully added, returns the index in the listPlayers, else returns -1
+<i>102</i>&nbsp;     */
+<i>103</i>&nbsp;    public int setCurrentPlayer(String name) {
+<b class="fc"><i>104</i>&nbsp;        Player player = getPlayerByName(name);</b>
+<b class="fc"><i>105</i>&nbsp;        if (player == null){</b>
+<b class="nc"><i>106</i>&nbsp;            return -1;</b>
+<i>107</i>&nbsp;        } else {
+<b class="fc"><i>108</i>&nbsp;            this.currentPlayer = player;</b>
+<b class="fc"><i>109</i>&nbsp;            return listPlayers.indexOf(currentPlayer);</b>
+<i>110</i>&nbsp;        }
+<i>111</i>&nbsp;    }
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    /**
+<i>115</i>&nbsp;     * Method to add add player to the list of player of the Match
+<i>116</i>&nbsp;     * @param name name of the player you wanna add to the Match
+<i>117</i>&nbsp;     * @param birthday birthday of the player you wanna add to the Match
+<i>118</i>&nbsp;     * @return the reference to the player obj just created
+<i>119</i>&nbsp;     */
+<i>120</i>&nbsp;    public Player createPlayer(String name, Date birthday) {
+<b class="fc"><i>121</i>&nbsp;        Player playToAdd = new Player(name,birthday, virtualView);</b>
+<b class="fc"><i>122</i>&nbsp;        this.listPlayers.add(playToAdd);</b>
+<b class="fc"><i>123</i>&nbsp;        publish(new Message(&quot;ALL&quot;, TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));</b>
+<b class="fc"><i>124</i>&nbsp;        return playToAdd;</b>
+<i>125</i>&nbsp;    }
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    /**
+<i>129</i>&nbsp;     * Method for select the next current player with the order of listPlayers
+<i>130</i>&nbsp;     * @return the index of the new currentPlayer
+<i>131</i>&nbsp;     */
+<i>132</i>&nbsp;    public int selectNextCurrentPlayer() {
+<b class="fc"><i>133</i>&nbsp;        if (listPlayers.size() == 0) return -1;</b>
+<b class="fc"><i>134</i>&nbsp;        int indexOfCurrentPlayer = listPlayers.indexOf(currentPlayer);</b>
+<b class="fc"><i>135</i>&nbsp;        int indexOfNextCurrentPlayer = indexOfCurrentPlayer != listPlayers.size() - 1 ? indexOfCurrentPlayer + 1 : 0;</b>
+<b class="fc"><i>136</i>&nbsp;        currentPlayer = listPlayers.get(indexOfNextCurrentPlayer);</b>
+<b class="fc"><i>137</i>&nbsp;        return indexOfNextCurrentPlayer;</b>
+<i>138</i>&nbsp;    }
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**
+<i>142</i>&nbsp;     * Method for order the list of player with a specified compator
+<i>143</i>&nbsp;     * @param comparator the comparator used for order the list of player
+<i>144</i>&nbsp;     * @return the list of player
+<i>145</i>&nbsp;     */
+<i>146</i>&nbsp;    public List&lt;Player&gt; buildOrderedList(Comparator&lt;Player&gt; comparator) {
+<i>147</i>&nbsp;        //example of comparator Comparator&lt;Player&gt; comparator = Comparator.comparing(Player::getBirthday);
+<b class="fc"><i>148</i>&nbsp;        listPlayers = listPlayers.stream().sorted(comparator).collect(Collectors.toList());</b>
+<b class="fc"><i>149</i>&nbsp;        publish(new Message(&quot;ALL&quot;, TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));</b>
+<b class="fc"><i>150</i>&nbsp;        return getPlayers();</b>
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * Method to translate the index of the currentPlayer to 0 translating all other players as well
+<i>155</i>&nbsp;     */
+<i>156</i>&nbsp;    public void rescaleListFromCurrentPlayer() {
+<b class="fc"><i>157</i>&nbsp;        int indexOfCurrentPlayer = listPlayers.indexOf(currentPlayer);</b>
+<b class="fc"><i>158</i>&nbsp;        if (indexOfCurrentPlayer &gt; 0) {</b>
+<b class="fc"><i>159</i>&nbsp;            List&lt;Player&gt; rescaledListOfPlayer = listPlayers.subList(indexOfCurrentPlayer, listPlayers.size());</b>
+<b class="fc"><i>160</i>&nbsp;            rescaledListOfPlayer.addAll(listPlayers.subList(0, indexOfCurrentPlayer));</b>
+<b class="fc"><i>161</i>&nbsp;            listPlayers = rescaledListOfPlayer;</b>
+<b class="fc"><i>162</i>&nbsp;            publish(new Message(&quot;ALL&quot;, TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));</b>
+<i>163</i>&nbsp;        }
+<b class="fc"><i>164</i>&nbsp;    }</b>
+<i>165</i>&nbsp;
+<i>166</i>&nbsp;    /**
+<i>167</i>&nbsp;     * Method to remove a player who have lost from the match
+<i>168</i>&nbsp;     * @param name player name that you want to remove
+<i>169</i>&nbsp;     * @return the list of remaining players
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    public List&lt;Player&gt; removePlayer(String name) {
+<b class="fc"><i>172</i>&nbsp;        Player player = getPlayerByName(name);</b>
+<b class="fc"><i>173</i>&nbsp;        if (player != null) {</b>
+<b class="fc"><i>174</i>&nbsp;            player.getWorkers().forEach(worker -&gt; location.removeLocation(worker));</b>
+<b class="fc"><i>175</i>&nbsp;            listPlayers.remove(player);</b>
+<b class="fc"><i>176</i>&nbsp;            publish(new Message(&quot;ALL&quot;, TypeOfMessage.PLAYER_HAS_LOST, player));</b>
+<i>177</i>&nbsp;        }
+<i>178</i>&nbsp;
+<b class="fc"><i>179</i>&nbsp;        publish(new Message(&quot;ALL&quot;, TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));</b>
+<b class="fc"><i>180</i>&nbsp;        return getPlayers();</b>
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;    /**
+<i>185</i>&nbsp;     * Method to set the winningplayer of the match and for notify the winning player to the virtualView
+<i>186</i>&nbsp;     * @param name name of the winning player
+<i>187</i>&nbsp;     */
+<i>188</i>&nbsp;    public void setWinningPlayer(String name) {
+<b class="fc"><i>189</i>&nbsp;        Player player = getPlayerByName(name);</b>
+<b class="fc"><i>190</i>&nbsp;        if (player != null) {</b>
+<b class="fc"><i>191</i>&nbsp;            this.winningPlayer = player;</b>
+<b class="fc"><i>192</i>&nbsp;            publish(new Message(&quot;ALL&quot;, TypeOfMessage.WINNING_PLAYER_UPDATED, this.winningPlayer));</b>
+<i>193</i>&nbsp;        }
+<b class="fc"><i>194</i>&nbsp;    }</b>
+<i>195</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 10:59</div>
+</div>
+</body>
+</html>

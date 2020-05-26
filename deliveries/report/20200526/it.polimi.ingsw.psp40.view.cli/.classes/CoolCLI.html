@@ -1,0 +1,1201 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CoolCLI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CoolCLI (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CoolCLI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 40)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 506)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CoolCLI$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 41)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 507)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.gson.stream.JsonReader;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.Component;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.commons.Configuration;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.*;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.controller.Phase;
+<i>9</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.OldUserException;
+<i>10</i>&nbsp;import it.polimi.ingsw.psp40.exceptions.YoungUserException;
+<i>11</i>&nbsp;import it.polimi.ingsw.psp40.model.*;
+<i>12</i>&nbsp;import it.polimi.ingsw.psp40.network.client.Client;
+<i>13</i>&nbsp;import it.polimi.ingsw.psp40.view.ViewInterface;
+<i>14</i>&nbsp;import java.io.IOException;
+<i>15</i>&nbsp;import java.io.InputStream;
+<i>16</i>&nbsp;import java.io.PrintWriter;
+<i>17</i>&nbsp;import java.net.URL;
+<i>18</i>&nbsp;import java.nio.charset.StandardCharsets;
+<i>19</i>&nbsp;import java.text.DateFormat;
+<i>20</i>&nbsp;import java.text.ParseException;
+<i>21</i>&nbsp;import java.text.SimpleDateFormat;
+<i>22</i>&nbsp;import java.util.*;
+<i>23</i>&nbsp;import java.util.List;
+<i>24</i>&nbsp;import java.util.concurrent.*;
+<i>25</i>&nbsp;import java.util.stream.Collectors;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;/**
+<i>29</i>&nbsp; * This is the class used to display a beautiful and cool cli.
+<i>30</i>&nbsp; * Works with UNIX terminals, need support of Unicode and 255-colors
+<i>31</i>&nbsp; *
+<i>32</i>&nbsp; * &quot;We made the buttons on the screen look so good you&#39;ll want to lick them&quot; S.Jobs
+<i>33</i>&nbsp; * @author TiberioG
+<i>34</i>&nbsp; */
+<i>35</i>&nbsp;public class CoolCLI implements ViewInterface {
+<i>36</i>&nbsp;    private int DELAY; // used to set delay of animations
+<i>37</i>&nbsp;    private final Client client;
+<b class="nc"><i>38</i>&nbsp;    private static PrintWriter out = new PrintWriter(System.out, true);</b>
+<b class="nc"><i>39</i>&nbsp;    private static Scanner in = new Scanner(System.in);</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    private Colors colorWorker; //this is the color of the workers of the player
+<b class="nc"><i>42</i>&nbsp;    private int currentWorkerId = 0; //temp var used to store the selected worker before move/build</b>
+<i>43</i>&nbsp;    private Card thiscard;
+<i>44</i>&nbsp;
+<b class="nc"><i>45</i>&nbsp;    private Date date = null; //</b>
+<b class="nc"><i>46</i>&nbsp;    private int numOfPlayers = 0;</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    private static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
+<i>49</i>&nbsp;    private static final int MAX_PORT = 50000;
+<i>50</i>&nbsp;    private static final int ROWS = 50;  //number of rows of terminal window
+<i>51</i>&nbsp;    private static final int COLS = 160; //number of columns of terminal window
+<i>52</i>&nbsp;    private static final int SPEED = 1000; //seconds to keep showing message before going on
+<i>53</i>&nbsp;
+<b class="nc"><i>54</i>&nbsp;    private final Utils utils = new Utils(in, out);</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    /* Frames */
+<b class="nc"><i>57</i>&nbsp;    private static Frame upper = new Frame(new int[]{0,0}, new int[]{10, COLS}, in, out);</b>
+<b class="nc"><i>58</i>&nbsp;    private static Frame center = new Frame(new int[]{10,0}, new int[]{ROWS-2, COLS}, in, out);</b>
+<b class="nc"><i>59</i>&nbsp;    private static Frame center2 = new Frame(new int[]{16,0}, new int[]{ROWS-3, COLS}, in, out);</b>
+<b class="nc"><i>60</i>&nbsp;    private static Frame center3 = new Frame(new int[]{24,0}, new int[]{ROWS-3, COLS}, in, out);</b>
+<b class="nc"><i>61</i>&nbsp;    private static Frame lower = new Frame (new int[]{ROWS - 6 ,0}, new int[]{ROWS, COLS}, in, out);</b>
+<b class="nc"><i>62</i>&nbsp;    private static Frame lower2 = new Frame (new int[]{ROWS - 2 ,0}, new int[]{ROWS, COLS}, in, out);</b>
+<b class="nc"><i>63</i>&nbsp;    private static Frame left = new Frame(new int[]{10,0}, new int[]{ROWS -3, 58}, in, out);</b>
+<b class="nc"><i>64</i>&nbsp;    private static Frame islandFrame = new Frame(new int[]{8,80}, new int[]{ROWS -3, 58}, in, out);</b>
+<i>65</i>&nbsp;
+<b class="nc"><i>66</i>&nbsp;    private boolean fastboot = false;</b>
+<b class="nc"><i>67</i>&nbsp;    private boolean debug = false;</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    private IslandAdapter myisland;
+<i>70</i>&nbsp;    private Hourglass hour;
+<i>71</i>&nbsp;    private ExecutorService executor;
+<i>72</i>&nbsp;    //private KeyboardDaemon keyboardDaemon;
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    /**
+<i>75</i>&nbsp;     * Constructor
+<i>76</i>&nbsp;     * @param client
+<i>77</i>&nbsp;     */
+<b class="nc"><i>78</i>&nbsp;    public CoolCLI(Client client) {</b>
+<b class="nc"><i>79</i>&nbsp;        if(!fastboot) {</b>
+<b class="nc"><i>80</i>&nbsp;            DELAY = 100;</b>
+<i>81</i>&nbsp;        }
+<i>82</i>&nbsp;        else {
+<b class="nc"><i>83</i>&nbsp;            DELAY = 0;</b>
+<i>84</i>&nbsp;        }
+<b class="nc"><i>85</i>&nbsp;        this.client = client; //associate with client</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;        /* Clear Terminal, a bit overkill but I&#39;m sure terminal window is clean with no history */
+<b class="nc"><i>88</i>&nbsp;        Terminal.resize(ROWS, COLS);  //force terminal window size</b>
+<b class="nc"><i>89</i>&nbsp;        Terminal.superClear();   //this clears all the previous history of terminal</b>
+<b class="nc"><i>90</i>&nbsp;        Terminal.clearAll(); //this clear</b>
+<b class="nc"><i>91</i>&nbsp;        Terminal.clearScreen();</b>
+<b class="nc"><i>92</i>&nbsp;        center.clear();</b>
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;        try {
+<b class="nc"><i>95</i>&nbsp;            maketitle();</b>
+<b class="nc"><i>96</i>&nbsp;        } catch (IOException e) {</b>
+<i>97</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>98</i>&nbsp;        }</b>
+<i>99</i>&nbsp;
+<b class="nc"><i>100</i>&nbsp;        hour = new Hourglass(center, lower);</b>
+<b class="nc"><i>101</i>&nbsp;        executor = Executors.newFixedThreadPool(1);</b>
+<i>102</i>&nbsp;    }
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * Method used to Read the server ip/URL and port
+<i>106</i>&nbsp;     */
+<i>107</i>&nbsp;    @Override
+<i>108</i>&nbsp;    public void displaySetup() {
+<b class="nc"><i>109</i>&nbsp;        int port = 0;</b>
+<i>110</i>&nbsp;        String ip ;
+<b class="nc"><i>111</i>&nbsp;        center.clear();</b>
+<i>112</i>&nbsp;        /* Real working  mode: gets input from user */
+<b class="nc"><i>113</i>&nbsp;        if(!fastboot) {</b>
+<i>114</i>&nbsp;            /* reading ip/URL of server */
+<b class="nc"><i>115</i>&nbsp;            center.center(utils.form(&quot;enter address of server&quot;, 30), DELAY); //print form</b>
+<b class="nc"><i>116</i>&nbsp;            Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>117</i>&nbsp;            ip = in.nextLine();</b>
+<b class="nc"><i>118</i>&nbsp;            while (!Utils.isValidIp(ip)) {</b>
+<b class="nc"><i>119</i>&nbsp;                lower.print(&quot;This is not a valid IPv4 address. Please, try again:&quot;);</b>
+<b class="nc"><i>120</i>&nbsp;                center.center(utils.form(&quot;enter address of server&quot;, 30), DELAY);</b>
+<b class="nc"><i>121</i>&nbsp;                Terminal.moveRelativeCursor(-1, -29);</b>
+<b class="nc"><i>122</i>&nbsp;                ip = in.nextLine();</b>
+<i>123</i>&nbsp;            }
+<b class="nc"><i>124</i>&nbsp;            lower.clear(); // used to clear lower part where are displayed errors</b>
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;            /* reading port of server */
+<b class="nc"><i>127</i>&nbsp;            center2.center(utils.form(&quot;Enter port number&quot;, 30), DELAY);</b>
+<b class="nc"><i>128</i>&nbsp;            Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<i>129</i>&nbsp;            try {
+<b class="nc"><i>130</i>&nbsp;                port = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt</b>
+<b class="nc"><i>131</i>&nbsp;            } catch (NumberFormatException e) {</b>
+<b class="nc"><i>132</i>&nbsp;                center2.center(utils.form(&quot;enter port number&quot;, 30), DELAY);</b>
+<b class="nc"><i>133</i>&nbsp;                Terminal.moveRelativeCursor(-1, -29);</b>
+<b class="nc"><i>134</i>&nbsp;                in.nextLine();</b>
+<b class="nc"><i>135</i>&nbsp;            }</b>
+<b class="nc"><i>136</i>&nbsp;            while (port &lt; MIN_PORT || port &gt; MAX_PORT) {</b>
+<b class="nc"><i>137</i>&nbsp;                lower.print(&quot;Value must be between &quot; + MIN_PORT + &quot; and &quot; + MAX_PORT + &quot;. Please, try again:&quot;);</b>
+<b class="nc"><i>138</i>&nbsp;                center2.center(utils.form(&quot;enter port number&quot;, 30), DELAY);</b>
+<b class="nc"><i>139</i>&nbsp;                Terminal.moveRelativeCursor(-1, -29);</b>
+<i>140</i>&nbsp;                try {
+<b class="nc"><i>141</i>&nbsp;                    port = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt</b>
+<b class="nc"><i>142</i>&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc"><i>143</i>&nbsp;                    center2.center(utils.form(&quot;enter port number&quot;, 30), DELAY);</b>
+<b class="nc"><i>144</i>&nbsp;                    Terminal.moveRelativeCursor(-1, -29);</b>
+<b class="nc"><i>145</i>&nbsp;                    in.nextLine();</b>
+<b class="nc"><i>146</i>&nbsp;                }</b>
+<i>147</i>&nbsp;            }
+<i>148</i>&nbsp;        }//end real use mode
+<i>149</i>&nbsp;        /* DEBUG MODE aka fastboot: connects to localhost port 1234 */
+<i>150</i>&nbsp;        else{
+<b class="nc"><i>151</i>&nbsp;            ip = &quot;localhost&quot;;</b>
+<b class="nc"><i>152</i>&nbsp;            port = 1234;</b>
+<b class="nc"><i>153</i>&nbsp;            out.println(&quot;DEBUG server localhost:1234&quot;);</b>
+<i>154</i>&nbsp;        }
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;        /* send data to server */
+<b class="nc"><i>157</i>&nbsp;        client.setServerIP(ip);</b>
+<b class="nc"><i>158</i>&nbsp;        client.setServerPort(port);</b>
+<b class="nc"><i>159</i>&nbsp;        client.connectToServer();</b>
+<i>160</i>&nbsp;    }
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    /**
+<i>163</i>&nbsp;     * Method used to show server is not reachable
+<i>164</i>&nbsp;     */
+<i>165</i>&nbsp;    @Override
+<i>166</i>&nbsp;    public void displaySetupFailure() {
+<b class="nc"><i>167</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>168</i>&nbsp;        lower.center(&quot;Can not reach the server, please try again&quot;, DELAY);</b>
+<b class="nc"><i>169</i>&nbsp;        displaySetup();</b>
+<i>170</i>&nbsp;    }
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;    /**
+<i>173</i>&nbsp;     * Method used to ask username and birthday
+<i>174</i>&nbsp;     */
+<i>175</i>&nbsp;    @Override
+<i>176</i>&nbsp;    public void displayLogin() {
+<i>177</i>&nbsp;        String username;
+<b class="nc"><i>178</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>179</i>&nbsp;        center2.clear();</b>
+<b class="nc"><i>180</i>&nbsp;        left.clear();</b>
+<i>181</i>&nbsp;
+<b class="nc"><i>182</i>&nbsp;        if(!fastboot) {</b>
+<i>183</i>&nbsp;            /* reading username */
+<b class="nc"><i>184</i>&nbsp;            center.center(utils.form(&quot;Enter username &quot;, 30), DELAY); //print form</b>
+<b class="nc"><i>185</i>&nbsp;            Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>186</i>&nbsp;            username = in.nextLine();</b>
+<b class="nc"><i>187</i>&nbsp;            while (!Utils.isValidUsername(username)) {</b>
+<b class="nc"><i>188</i>&nbsp;                lower.print(&quot;This is not a valid username&quot;);</b>
+<b class="nc"><i>189</i>&nbsp;                center.center(utils.form(&quot;Enter username &quot;, 30), 0); //print form</b>
+<b class="nc"><i>190</i>&nbsp;                Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>191</i>&nbsp;                username = in.nextLine();</b>
+<i>192</i>&nbsp;            }
+<b class="nc"><i>193</i>&nbsp;            lower.clear(); // used to clear lower part where are displayed errors</b>
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;            //reading birthdate
+<i>196</i>&nbsp;            do{
+<i>197</i>&nbsp;                try{
+<b class="nc"><i>198</i>&nbsp;                    center2.center(utils.formPrefilled(&quot;Enter birthdate &quot;, 30, &quot;dd/mm/yyyy&quot;), DELAY); //print form</b>
+<b class="nc"><i>199</i>&nbsp;                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>200</i>&nbsp;                    date = utils.isValidDate(in.nextLine());</b>
+<i>201</i>&nbsp;                }
+<b class="nc"><i>202</i>&nbsp;                catch (ParseException e) {</b>
+<b class="nc"><i>203</i>&nbsp;                    lower.print(&quot;Wrong format of date&quot;);</b>
+<b class="nc"><i>204</i>&nbsp;                    center2.center(utils.formPrefilled(&quot;Enter birthdate &quot;, 30, &quot;dd/mm/yyyy&quot;), 0); //print form delay 0!!</b>
+<b class="nc"><i>205</i>&nbsp;                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>206</i>&nbsp;                } catch (YoungUserException e) {</b>
+<b class="nc"><i>207</i>&nbsp;                    lower.print(&quot;You&#39;re too young to play this game&quot;);</b>
+<b class="nc"><i>208</i>&nbsp;                    center2.center(utils.formPrefilled(&quot;Enter birthdate &quot;, 30, &quot;dd/mm/yyyy&quot;), 0); //print form delay 0!!</b>
+<b class="nc"><i>209</i>&nbsp;                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>210</i>&nbsp;                } catch (OldUserException e) {</b>
+<b class="nc"><i>211</i>&nbsp;                    lower.print(&quot;You&#39;re too old to play this game&quot;);</b>
+<b class="nc"><i>212</i>&nbsp;                    center2.center(utils.formPrefilled(&quot;Enter birthdate &quot;, 30, &quot;dd/mm/yyyy&quot;), 0); //print form delay 0!!</b>
+<b class="nc"><i>213</i>&nbsp;                    Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<b class="nc"><i>214</i>&nbsp;                }</b>
+<b class="nc"><i>215</i>&nbsp;            }while (date == null);</b>
+<b class="nc"><i>216</i>&nbsp;            lower.clear(); // used to clear lower part where are displayed errors</b>
+<i>217</i>&nbsp;
+<i>218</i>&nbsp;            /* reading port of server */
+<b class="nc"><i>219</i>&nbsp;            center3.center(utils.form(&quot;How many players?&quot;, 30), DELAY);</b>
+<b class="nc"><i>220</i>&nbsp;            Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form</b>
+<i>221</i>&nbsp;            try {
+<b class="nc"><i>222</i>&nbsp;                numOfPlayers = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt</b>
+<b class="nc"><i>223</i>&nbsp;            } catch (NumberFormatException e) {</b>
+<b class="nc"><i>224</i>&nbsp;                center3.center(utils.form(&quot;how many players?&quot;, 30), 0); //only the first has delay, this is the following (case first not valid) and should be displayed immediatel</b>
+<b class="nc"><i>225</i>&nbsp;                Terminal.moveRelativeCursor(-1, -29);</b>
+<b class="nc"><i>226</i>&nbsp;                in.nextLine();</b>
+<b class="nc"><i>227</i>&nbsp;            }</b>
+<i>228</i>&nbsp;
+<b class="nc"><i>229</i>&nbsp;            while (numOfPlayers &lt; 2 || numOfPlayers &gt; 3) {</b>
+<b class="nc"><i>230</i>&nbsp;                lower.print(&quot;Value must be between &quot; + 2 + &quot; and &quot; + 3 + &quot;. Please, try again:&quot;);</b>
+<b class="nc"><i>231</i>&nbsp;                center3.center(utils.form(&quot;how many players?&quot;, 30), 0); //only the first has delay, this is the following (case first not valid) and should be displayed immediatel</b>
+<b class="nc"><i>232</i>&nbsp;                Terminal.moveRelativeCursor(-1, -29);</b>
+<i>233</i>&nbsp;                try {
+<b class="nc"><i>234</i>&nbsp;                    numOfPlayers = Integer.parseInt(in.nextLine()); // better use nextLine and parse int than using nextInt</b>
+<b class="nc"><i>235</i>&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc"><i>236</i>&nbsp;                    center3.center(utils.form(&quot;how many players?&quot;, 30), 0);</b>
+<b class="nc"><i>237</i>&nbsp;                    Terminal.moveRelativeCursor(-1, -29);</b>
+<b class="nc"><i>238</i>&nbsp;                    in.nextLine();</b>
+<b class="nc"><i>239</i>&nbsp;                }</b>
+<i>240</i>&nbsp;            }
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;        }//if fastboot enabled
+<i>243</i>&nbsp;        else {
+<b class="nc"><i>244</i>&nbsp;            username = new Date().toString();</b>
+<b class="nc"><i>245</i>&nbsp;            DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);</b>
+<i>246</i>&nbsp;            try {
+<b class="nc"><i>247</i>&nbsp;                date =  dateFormat.parse(Configuration.minDate);</b>
+<b class="nc"><i>248</i>&nbsp;            } catch (ParseException e) {</b>
+<b class="nc"><i>249</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>250</i>&nbsp;            }</b>
+<b class="nc"><i>251</i>&nbsp;            numOfPlayers = 2;</b>
+<i>252</i>&nbsp;        }
+<i>253</i>&nbsp;
+<i>254</i>&nbsp;        //send to server
+<b class="nc"><i>255</i>&nbsp;        client.setUsername(username);</b>
+<b class="nc"><i>256</i>&nbsp;        LoginMessage loginMessage = new LoginMessage(username, date, numOfPlayers, TypeOfMessage.LOGIN);</b>
+<b class="nc"><i>257</i>&nbsp;        client.sendToServer(loginMessage);</b>
+<i>258</i>&nbsp;    }
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;    /**
+<i>261</i>&nbsp;     * Method to just show login was completed
+<i>262</i>&nbsp;     */
+<i>263</i>&nbsp;    @Override
+<i>264</i>&nbsp;    public void displayLoginSuccessful() {
+<i>265</i>&nbsp;        /*
+<i>266</i>&nbsp;        left.clear();
+<i>267</i>&nbsp;        lower.center(&quot;You have been logged in successfully&quot;);
+<i>268</i>&nbsp;        */
+<i>269</i>&nbsp;    }
+<i>270</i>&nbsp;
+<i>271</i>&nbsp;    /**
+<i>272</i>&nbsp;     * Method to just show login was not completed and to restart the DisplayLogin
+<i>273</i>&nbsp;     */
+<i>274</i>&nbsp;    @Override
+<i>275</i>&nbsp;    public void displayLoginFailure(String details) {
+<b class="nc"><i>276</i>&nbsp;        lower.print(details);</b>
+<b class="nc"><i>277</i>&nbsp;        Utils.doTimeUnitSleep(SPEED); //show user message 1 sec before wiping out</b>
+<b class="nc"><i>278</i>&nbsp;        displayLogin(); //let&#39;s do it again</b>
+<i>279</i>&nbsp;    }
+<i>280</i>&nbsp;
+<i>281</i>&nbsp;    /**
+<i>282</i>&nbsp;     * Method to show details when a user has joined match
+<i>283</i>&nbsp;     * @param nameOfOPlayer
+<i>284</i>&nbsp;     * @param remainingPlayer
+<i>285</i>&nbsp;     */
+<i>286</i>&nbsp;    @Override
+<i>287</i>&nbsp;    public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayer) {
+<i>288</i>&nbsp;       /*
+<i>289</i>&nbsp;       left.clear();
+<i>290</i>&nbsp;        left.printWrapped(details); //I think user doesn&#39;t really care about this
+<i>291</i>&nbsp;        */
+<i>292</i>&nbsp;    }
+<i>293</i>&nbsp;
+<i>294</i>&nbsp;    /**
+<i>295</i>&nbsp;     * Method to show &quot;waiting for other players &quot;
+<i>296</i>&nbsp;     * @param playersWaiting I&#39;m not showing this
+<i>297</i>&nbsp;     */
+<i>298</i>&nbsp;    @Override
+<i>299</i>&nbsp;    public void displayLobbyCreated(String playersWaiting) {
+<b class="nc"><i>300</i>&nbsp;        executor.execute(hour); //starts beautiful hourglass</b>
+<i>301</i>&nbsp;    }
+<i>302</i>&nbsp;
+<i>303</i>&nbsp;    /**
+<i>304</i>&nbsp;     * Method to show &quot;waiting for other players &quot;
+<i>305</i>&nbsp;     * @param otherPlayer
+<i>306</i>&nbsp;     * @param remainingPlayer
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;    @Override
+<i>309</i>&nbsp;    public void displayAddedToQueue(List&lt;String&gt; otherPlayer, Integer remainingPlayer) {
+<b class="nc"><i>310</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>311</i>&nbsp;        executor.execute(hour);</b>
+<b class="nc"><i>312</i>&nbsp;        left.clear();</b>
+<i>313</i>&nbsp;        //left.printWrapped(details);
+<i>314</i>&nbsp;    }
+<i>315</i>&nbsp;
+<i>316</i>&nbsp;    /**
+<i>317</i>&nbsp;     * This method kills the hourglass and tells players match is starting!!
+<i>318</i>&nbsp;     */
+<i>319</i>&nbsp;    @Override
+<i>320</i>&nbsp;    public void displayStartingMatch() {
+<b class="nc"><i>321</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>322</i>&nbsp;        hour.cancel();</b>
+<b class="nc"><i>323</i>&nbsp;        executor.shutdownNow();</b>
+<b class="nc"><i>324</i>&nbsp;        Utils.doTimeUnitSleep(SPEED);</b>
+<i>325</i>&nbsp;
+<b class="nc"><i>326</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>327</i>&nbsp;        lower.clear();</b>
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;        try {
+<b class="nc"><i>330</i>&nbsp;            lower.center(URLReader(getClass().getResource(&quot;/ascii/starting&quot;)), DELAY);</b>
+<b class="nc"><i>331</i>&nbsp;        } catch (IOException e) {</b>
+<i>332</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>333</i>&nbsp;        }</b>
+<b class="nc"><i>334</i>&nbsp;        Utils.doTimeUnitSleep(SPEED);</b>
+<i>335</i>&nbsp;
+<i>336</i>&nbsp;    }
+<i>337</i>&nbsp;
+<i>338</i>&nbsp;
+<i>339</i>&nbsp;    /**
+<i>340</i>&nbsp;     * Method used to show generic messages, mainly for debug purposes
+<i>341</i>&nbsp;     * @param message the String from server
+<i>342</i>&nbsp;     */
+<i>343</i>&nbsp;    @Override
+<i>344</i>&nbsp;    public void displayGenericMessage(String message) {
+<b class="nc"><i>345</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>346</i>&nbsp;        lower.center(message,DELAY);</b>
+<b class="nc"><i>347</i>&nbsp;        Utils.doTimeUnitSleep(SPEED);</b>
+<i>348</i>&nbsp;    }
+<i>349</i>&nbsp;
+<i>350</i>&nbsp;    /**
+<i>351</i>&nbsp;     * Method used to show disconnection of user
+<i>352</i>&nbsp;     * @param details it&#39;s the string received from Server
+<i>353</i>&nbsp;     */
+<i>354</i>&nbsp;    @Override
+<i>355</i>&nbsp;    public void displayDisconnected(String details) {
+<b class="nc"><i>356</i>&nbsp;        left.printWrapped(details);</b>
+<b class="nc"><i>357</i>&nbsp;        client.close();</b>
+<i>358</i>&nbsp;    }
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;    /**
+<i>361</i>&nbsp;     * Method used to show all the cards available and get from the user the selection of cards he want to use in the game
+<i>362</i>&nbsp;     * @param cards, an hashmap containing the {@link Card} instances indexed by ID
+<i>363</i>&nbsp;     * @param numPlayers number the player in game must be equal to number of cards to be selected
+<i>364</i>&nbsp;     */
+<i>365</i>&nbsp;    @Override
+<i>366</i>&nbsp;    public void displayCardSelection(HashMap&lt;Integer, Card&gt; cards, int numPlayers) {
+<b class="nc"><i>367</i>&nbsp;        hour.cancel();</b>
+<b class="nc"><i>368</i>&nbsp;        executor.shutdownNow();</b>
+<b class="nc"><i>369</i>&nbsp;        Utils.doTimeUnitSleep(DELAY);</b>
+<b class="nc"><i>370</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>371</i>&nbsp;        lower.clear();</b>
+<b class="nc"><i>372</i>&nbsp;        left.clear(); // must be last clear</b>
+<i>373</i>&nbsp;
+<b class="nc"><i>374</i>&nbsp;        CardSelector cardSelector = new CardSelector(cards, numPlayers, center);</b>
+<i>375</i>&nbsp;
+<b class="nc"><i>376</i>&nbsp;        int[] selection = cardSelector.selectionMultiple();</b>
+<i>377</i>&nbsp;
+<i>378</i>&nbsp;        /* sending to server */
+<b class="nc"><i>379</i>&nbsp;        client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));</b>
+<i>380</i>&nbsp;
+<i>381</i>&nbsp;    }
+<i>382</i>&nbsp;
+<i>383</i>&nbsp;    @Override
+<i>384</i>&nbsp;    public void displayChoicePersonalCard(List&lt;Card&gt; availableCards) {
+<b class="nc"><i>385</i>&nbsp;        hour.cancel();</b>
+<b class="nc"><i>386</i>&nbsp;        executor.shutdownNow();</b>
+<b class="nc"><i>387</i>&nbsp;        Utils.doTimeUnitSleep(DELAY);</b>
+<i>388</i>&nbsp;
+<b class="nc"><i>389</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>390</i>&nbsp;        lower.clear();</b>
+<i>391</i>&nbsp;
+<b class="nc"><i>392</i>&nbsp;        left.clear(); // must be last clear</b>
+<b class="nc"><i>393</i>&nbsp;        Utils.doTimeUnitSleep(DELAY);</b>
+<i>394</i>&nbsp;
+<b class="nc"><i>395</i>&nbsp;        CardSelector cardSelector = new CardSelector(availableCards, 1,  center);</b>
+<b class="nc"><i>396</i>&nbsp;        int personalIdCard = cardSelector.selectionSingol();</b>
+<b class="nc"><i>397</i>&nbsp;        client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));</b>
+<i>398</i>&nbsp;
+<b class="nc"><i>399</i>&nbsp;        center.clear();</b>
+<i>400</i>&nbsp;        try {
+<b class="nc"><i>401</i>&nbsp;            center.center(URLReader(getClass().getResource(&quot;/ascii/cards/&quot; + personalIdCard)), DELAY);</b>
+<b class="nc"><i>402</i>&nbsp;        } catch (IOException e) {</b>
+<i>403</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>404</i>&nbsp;        }</b>
+<i>405</i>&nbsp;
+<b class="nc"><i>406</i>&nbsp;        String nameCard = availableCards.stream().filter(card -&gt; card.getId() == personalIdCard).map(card -&gt; card.getName()).findFirst().orElse(null);</b>
+<i>407</i>&nbsp;
+<b class="nc"><i>408</i>&nbsp;        lower2.center(client.getUsername() + &quot; your card is: &quot; + nameCard, DELAY);</b>
+<i>409</i>&nbsp;
+<i>410</i>&nbsp;    }
+<i>411</i>&nbsp;
+<i>412</i>&nbsp;    @Override
+<i>413</i>&nbsp;    public void displayCardInGame(List&lt;Card&gt; cardInGame) {
+<b class="nc"><i>414</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>415</i>&nbsp;        CardSelector cardSelector = new CardSelector(cardInGame, 0,  center);</b>
+<i>416</i>&nbsp;        //non printa nulla
+<b class="nc"><i>417</i>&nbsp;        left.clear();</b>
+<i>418</i>&nbsp;    }
+<i>419</i>&nbsp;
+<i>420</i>&nbsp;    @Override
+<i>421</i>&nbsp;    public void displayForcedCard(Card card) {
+<b class="nc"><i>422</i>&nbsp;        thiscard = card;</b>
+<b class="nc"><i>423</i>&nbsp;        center.clear();</b>
+<i>424</i>&nbsp;        try {
+<b class="nc"><i>425</i>&nbsp;            center.center(URLReader(getClass().getResource(&quot;/ascii/cards/&quot; + card.getId())), DELAY);</b>
+<b class="nc"><i>426</i>&nbsp;        } catch (IOException e) {</b>
+<i>427</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>428</i>&nbsp;        }</b>
+<i>429</i>&nbsp;
+<b class="nc"><i>430</i>&nbsp;        lower2.center(client.getUsername() + &quot; your card is: &quot;+ card.getName(), DELAY);</b>
+<b class="nc"><i>431</i>&nbsp;        Utils.doTimeUnitSleep(2000);</b>
+<i>432</i>&nbsp;
+<i>433</i>&nbsp;    }
+<i>434</i>&nbsp;
+<i>435</i>&nbsp;    @Override
+<i>436</i>&nbsp;    public void displaySetInitialPosition(List&lt;Player&gt; playerList) {
+<b class="nc"><i>437</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>438</i>&nbsp;        left.clear();</b>
+<i>439</i>&nbsp;
+<b class="nc"><i>440</i>&nbsp;        List&lt;String&gt; colorAlreadyUsed = playerList.stream().flatMap(player -&gt; player.getWorkers().stream()).map(worker -&gt; worker.getColor().toString()).distinct().collect(Collectors.toList());</b>
+<b class="nc"><i>441</i>&nbsp;        List&lt;String&gt; colorsAvailable = Arrays.asList(Colors.allNames()).stream().filter(colorAvailable -&gt; colorAlreadyUsed.indexOf(colorAvailable) == -1).collect(Collectors.toList());</b>
+<i>442</i>&nbsp;
+<i>443</i>&nbsp;
+<b class="nc"><i>444</i>&nbsp;        center.center(&quot;Choose with keyboard arrows one color for your workers, confirm with SPACEBAR&quot;, DELAY);</b>
+<b class="nc"><i>445</i>&nbsp;        ColorSelector colorSelector = new ColorSelector(colorsAvailable, center2);</b>
+<b class="nc"><i>446</i>&nbsp;        int selection = colorSelector.selection();</b>
+<b class="nc"><i>447</i>&nbsp;        colorWorker = Colors.valueOf(colorsAvailable.get(selection));</b>
+<b class="nc"><i>448</i>&nbsp;        client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, colorWorker));</b>
+<i>449</i>&nbsp;
+<b class="nc"><i>450</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>451</i>&nbsp;        center2.clear();</b>
+<i>452</i>&nbsp;
+<i>453</i>&nbsp;        //START ISLAND
+<i>454</i>&nbsp;
+<b class="nc"><i>455</i>&nbsp;        left.clear();</b>
+<i>456</i>&nbsp;
+<i>457</i>&nbsp;        try {
+<b class="nc"><i>458</i>&nbsp;            Terminal.noBuffer();</b>
+<b class="nc"><i>459</i>&nbsp;            this.updateIsland();</b>
+<b class="nc"><i>460</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>461</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>462</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>463</i>&nbsp;        }</b>
+<b class="nc"><i>464</i>&nbsp;        List&lt;int[]&gt; occupy = cellAdapter(client.getLocationCache().getAllOccupied()) ;</b>
+<i>465</i>&nbsp;
+<b class="nc"><i>466</i>&nbsp;        left.printWrapped(&quot;Use arrow keys to select where you want to position your worker, confirm with SPACEBAR&quot;);</b>
+<b class="nc"><i>467</i>&nbsp;        int[] work1 =position(occupy, new int[]{0,0});</b>
+<i>468</i>&nbsp;
+<b class="nc"><i>469</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>470</i>&nbsp;        left.printWrapped(&quot;Use arrow keys to select where you want to position your worker, confirm with SPACEBAR&quot;);</b>
+<i>471</i>&nbsp;
+<b class="nc"><i>472</i>&nbsp;        occupy.add(work1);</b>
+<b class="nc"><i>473</i>&nbsp;        int[] work2 = position(occupy, work1);</b>
+<b class="nc"><i>474</i>&nbsp;        left.clear();</b>
+<i>475</i>&nbsp;
+<b class="nc"><i>476</i>&nbsp;        List&lt;CoordinatesMessage&gt; workercord = new ArrayList&lt;&gt;();</b>
+<i>477</i>&nbsp;
+<b class="nc"><i>478</i>&nbsp;        workercord.add(new CoordinatesMessage(work1[0], work1[1]));</b>
+<b class="nc"><i>479</i>&nbsp;        workercord.add(new CoordinatesMessage(work2[0], work2[1]));</b>
+<i>480</i>&nbsp;
+<b class="nc"><i>481</i>&nbsp;        client.sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(colorWorker, workercord)) );</b>
+<i>482</i>&nbsp;    }
+<i>483</i>&nbsp;
+<i>484</i>&nbsp;    @Override
+<i>485</i>&nbsp;    public void displayAskFirstPlayer(List&lt;Player&gt; allPlayers) {
+<b class="nc"><i>486</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>487</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>488</i>&nbsp;        PlayerSelector playerSelector = new PlayerSelector(allPlayers, center);</b>
+<i>489</i>&nbsp;
+<b class="nc"><i>490</i>&nbsp;        String playerSelected = playerSelector.selection();</b>
+<b class="nc"><i>491</i>&nbsp;        client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected));</b>
+<i>492</i>&nbsp;    }
+<i>493</i>&nbsp;
+<i>494</i>&nbsp;    @Override
+<i>495</i>&nbsp;    public void displayChoiceOfAvailablePhases() {
+<b class="nc"><i>496</i>&nbsp;        List&lt;Phase&gt; phaseList = client.getListOfPhasesCache();</b>
+<b class="nc"><i>497</i>&nbsp;        left.clear();</b>
+<i>498</i>&nbsp;        try {
+<b class="nc"><i>499</i>&nbsp;            updateIsland();</b>
+<b class="nc"><i>500</i>&nbsp;            myisland.clearMovable();</b>
+<b class="nc"><i>501</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>502</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>503</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>504</i>&nbsp;        }</b>
+<i>505</i>&nbsp;
+<i>506</i>&nbsp;        Phase selectedPhase;
+<b class="nc"><i>507</i>&nbsp;        if (phaseList.size() == 1) {</b>
+<b class="nc"><i>508</i>&nbsp;            selectedPhase = phaseList.get(0);</b>
+<b class="nc"><i>509</i>&nbsp;            left.println(&quot;there is only available this phase: &quot; + selectedPhase.getType().toString());</b>
+<b class="nc"><i>510</i>&nbsp;            Utils.doTimeUnitSleep(SPEED);</b>
+<i>511</i>&nbsp;
+<i>512</i>&nbsp;        } else {
+<b class="nc"><i>513</i>&nbsp;            PhaseSelector phaseSelector = new PhaseSelector(phaseList, left);</b>
+<b class="nc"><i>514</i>&nbsp;            selectedPhase = phaseSelector.selection();</b>
+<i>515</i>&nbsp;        }
+<i>516</i>&nbsp;
+<b class="nc"><i>517</i>&nbsp;        switch (selectedPhase.getType()) {</b>
+<i>518</i>&nbsp;            case SELECT_WORKER:
+<b class="nc"><i>519</i>&nbsp;                displayChoiceSelectionOfWorker();</b>
+<b class="nc"><i>520</i>&nbsp;                break;</b>
+<i>521</i>&nbsp;            case MOVE_WORKER:
+<b class="nc"><i>522</i>&nbsp;                client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));</b>
+<b class="nc"><i>523</i>&nbsp;                break;</b>
+<i>524</i>&nbsp;            case BUILD_COMPONENT:
+<b class="nc"><i>525</i>&nbsp;                client.sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));</b>
+<i>526</i>&nbsp;                break;
+<i>527</i>&nbsp;        }
+<i>528</i>&nbsp;
+<i>529</i>&nbsp;    }
+<i>530</i>&nbsp;
+<i>531</i>&nbsp;    @Override
+<i>532</i>&nbsp;    public void displayChoiceOfAvailableCellForMove() {
+<i>533</i>&nbsp;
+<b class="nc"><i>534</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>535</i>&nbsp;        List&lt;Cell&gt; availableCells = client.getAvailableMoveCells();</b>
+<i>536</i>&nbsp;
+<i>537</i>&nbsp;        try {
+<b class="nc"><i>538</i>&nbsp;            updateIsland();</b>
+<b class="nc"><i>539</i>&nbsp;            myisland.clearMovable();</b>
+<b class="nc"><i>540</i>&nbsp;            myisland.setMovable(availableCells);</b>
+<b class="nc"><i>541</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>542</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>543</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>544</i>&nbsp;        }</b>
+<i>545</i>&nbsp;
+<b class="nc"><i>546</i>&nbsp;        List&lt;int[]&gt; availableCellsCoord = cellAdapter(availableCells) ;</b>
+<b class="nc"><i>547</i>&nbsp;        left.printWrapped(&quot;These are the cells available for move, go back to selection of worker pressing B &quot;);</b>
+<b class="nc"><i>548</i>&nbsp;        if(debug) {</b>
+<b class="nc"><i>549</i>&nbsp;            availableCellsCoord.forEach(cell -&gt; left.append(cell[0] + &quot;,&quot; + cell[1]));</b>
+<i>550</i>&nbsp;        }
+<i>551</i>&nbsp;
+<b class="nc"><i>552</i>&nbsp;        displayMoveWorker();</b>
+<i>553</i>&nbsp;    }
+<i>554</i>&nbsp;
+<i>555</i>&nbsp;    @Override
+<i>556</i>&nbsp;    public void displayChoiceSelectionOfWorker() {
+<b class="nc"><i>557</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>558</i>&nbsp;        left.printWrapped(&quot;Choose worker using TAB, confirm with SPACEBAR, after selection press B if you want to go back to the selection of worker&quot;);</b>
+<b class="nc"><i>559</i>&nbsp;        Integer[] starting = getMyWorkers().get(currentWorkerId);</b>
+<i>560</i>&nbsp;
+<i>561</i>&nbsp;        try {
+<b class="nc"><i>562</i>&nbsp;            this.updateIsland();</b>
+<b class="nc"><i>563</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>564</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>565</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>566</i>&nbsp;        }</b>
+<i>567</i>&nbsp;
+<b class="nc"><i>568</i>&nbsp;        currentWorkerId = swapWorker();</b>
+<b class="nc"><i>569</i>&nbsp;        client.sendToServer(new Message(TypeOfMessage.SELECT_WORKER, currentWorkerId));</b>
+<i>570</i>&nbsp;    }
+<i>571</i>&nbsp;
+<i>572</i>&nbsp;
+<i>573</i>&nbsp;    @Override
+<i>574</i>&nbsp;    public void displayMoveWorker() {
+<b class="nc"><i>575</i>&nbsp;        Integer[] starting = getMyWorkers().get(currentWorkerId);</b>
+<i>576</i>&nbsp;
+<b class="nc"><i>577</i>&nbsp;        int[] position = positionAllowed(starting, cellAdapter(client.getAvailableMoveCells()), &#39;m&#39;);</b>
+<i>578</i>&nbsp;
+<b class="nc"><i>579</i>&nbsp;        if(position[0] &gt;= 0 &amp;&amp; position[1] &gt;= 0) {</b>
+<b class="nc"><i>580</i>&nbsp;            CoordinatesMessage moveCoord = new CoordinatesMessage(position[0], position[1]);</b>
+<b class="nc"><i>581</i>&nbsp;            client.sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));</b>
+<b class="nc"><i>582</i>&nbsp;        }</b>
+<i>583</i>&nbsp;        else{
+<b class="nc"><i>584</i>&nbsp;            displayChoiceSelectionOfWorker();</b>
+<i>585</i>&nbsp;        }
+<i>586</i>&nbsp;    }
+<i>587</i>&nbsp;
+<i>588</i>&nbsp;    @Override
+<i>589</i>&nbsp;    public void displayChoiceOfAvailableCellForBuild() {
+<b class="nc"><i>590</i>&nbsp;        left.clear();</b>
+<i>591</i>&nbsp;
+<b class="nc"><i>592</i>&nbsp;        List&lt;Cell&gt; availableCells = new ArrayList&lt;&gt;(client.getAvailableBuildCells().keySet());</b>
+<b class="nc"><i>593</i>&nbsp;        if (availableCells.size() &gt; 0) {</b>
+<b class="nc"><i>594</i>&nbsp;            left.printWrapped(&quot;These are the cells available for build&quot;);</b>
+<b class="nc"><i>595</i>&nbsp;            if (debug){</b>
+<i>596</i>&nbsp;               // availableCells.forEach(cell -&gt;  left.append(cell[0] + &quot;,&quot; + cell[1]));
+<i>597</i>&nbsp;            }
+<i>598</i>&nbsp;            try {
+<b class="nc"><i>599</i>&nbsp;                updateIsland();</b>
+<b class="nc"><i>600</i>&nbsp;                myisland.clearMovable();</b>
+<b class="nc"><i>601</i>&nbsp;                myisland.setMovable(availableCells);</b>
+<b class="nc"><i>602</i>&nbsp;                myisland.print();</b>
+<b class="nc"><i>603</i>&nbsp;            } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>604</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>605</i>&nbsp;            }</b>
+<i>606</i>&nbsp;
+<b class="nc"><i>607</i>&nbsp;            displayBuildBlock();</b>
+<i>608</i>&nbsp;        } else {
+<b class="nc"><i>609</i>&nbsp;            left.printWrapped(&quot;There are no cells available to build at this stage! Select another phase.&quot;);</b>
+<i>610</i>&nbsp;
+<b class="nc"><i>611</i>&nbsp;            displayChoiceOfAvailablePhases();</b>
+<i>612</i>&nbsp;        }
+<i>613</i>&nbsp;    }
+<i>614</i>&nbsp;
+<i>615</i>&nbsp;    @Override
+<i>616</i>&nbsp;    public void displayBuildBlock() {
+<b class="nc"><i>617</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>618</i>&nbsp;        left.printWrapped(&quot;What cell would you like to build in? Use arrow to select and confirm with SPACEBAR&quot;);</b>
+<i>619</i>&nbsp;
+<b class="nc"><i>620</i>&nbsp;        Integer[] starting = getMyWorkers().get(currentWorkerId); //this this are the coordinates of the current worker</b>
+<b class="nc"><i>621</i>&nbsp;        List&lt;Cell&gt; availableBuildCell = client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList()); // i get te list of all the Cells that can be built by</b>
+<i>622</i>&nbsp;
+<b class="nc"><i>623</i>&nbsp;        int[] position = positionAllowed(starting, cellAdapter(availableBuildCell), &#39;b&#39;); // read the coordinates where the user wants to build</b>
+<b class="nc"><i>624</i>&nbsp;        Cell cellToBuild = availableBuildCell.stream().filter(cell -&gt; cell.getCoordX() == position[0] &amp;&amp; cell.getCoordY() == position[1]).findFirst().orElse(null); // use this to get the corresponding Cell obj</b>
+<i>625</i>&nbsp;
+<b class="nc"><i>626</i>&nbsp;        CoordinatesMessage buildCoord = new CoordinatesMessage(position[0], position[1]);</b>
+<i>627</i>&nbsp;
+<b class="nc"><i>628</i>&nbsp;        List&lt;Integer&gt; listOfAvailableComponents = client.getAvailableBuildCells().get(cellToBuild); // getting the components buildable in the selected cell</b>
+<b class="nc"><i>629</i>&nbsp;        List&lt;String&gt; listOfStringComponent = Arrays.asList(Component.allNames());</b>
+<i>630</i>&nbsp;
+<i>631</i>&nbsp;        //using this to get the names of the components form all the names available
+<b class="nc"><i>632</i>&nbsp;        String[] nameOfAvailableComponents = new String[listOfAvailableComponents.size()];</b>
+<b class="nc"><i>633</i>&nbsp;        for(int i=0; i&lt;listOfAvailableComponents.size(); i++){</b>
+<b class="nc"><i>634</i>&nbsp;            nameOfAvailableComponents[i] = listOfStringComponent.get(listOfAvailableComponents.get(i));</b>
+<i>635</i>&nbsp;        }
+<i>636</i>&nbsp;
+<b class="nc"><i>637</i>&nbsp;        if(listOfAvailableComponents.size()==1){</b>
+<b class="nc"><i>638</i>&nbsp;            myisland.clearMovable();</b>
+<b class="nc"><i>639</i>&nbsp;            myisland.clearSelected();</b>
+<b class="nc"><i>640</i>&nbsp;            myisland.setTempLevel(position[0], position[1], Component.valueOf(nameOfAvailableComponents[0]).getComponentCode());</b>
+<i>641</i>&nbsp;            try {
+<b class="nc"><i>642</i>&nbsp;                myisland.print();</b>
+<b class="nc"><i>643</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>644</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>645</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>646</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>647</i>&nbsp;            }</b>
+<b class="nc"><i>648</i>&nbsp;            client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics&lt;&gt;(Component.valueOf(nameOfAvailableComponents[0]), buildCoord)));</b>
+<i>649</i>&nbsp;
+<i>650</i>&nbsp;        }
+<i>651</i>&nbsp;        else {
+<b class="nc"><i>652</i>&nbsp;            left.printWrapped(&quot;Choose one of the following blocks to build using TAB \n press SPACEBAR when ready:&quot;);</b>
+<b class="nc"><i>653</i>&nbsp;            left.append(utils.tableString(&quot;Blocks available&quot;, nameOfAvailableComponents));</b>
+<i>654</i>&nbsp;
+<b class="nc"><i>655</i>&nbsp;            int blockSelected = chooseblock(listOfAvailableComponents, position);</b>
+<i>656</i>&nbsp;
+<b class="nc"><i>657</i>&nbsp;            client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics&lt;&gt;(Component.valueOf(nameOfAvailableComponents[blockSelected]), buildCoord)));</b>
+<i>658</i>&nbsp;        }
+<i>659</i>&nbsp;    }
+<i>660</i>&nbsp;
+<i>661</i>&nbsp;
+<i>662</i>&nbsp;    /**
+<i>663</i>&nbsp;     * Method to show a message to the winner
+<i>664</i>&nbsp;     */
+<i>665</i>&nbsp;    @Override
+<i>666</i>&nbsp;    public void displayWinnerMessage() {
+<b class="nc"><i>667</i>&nbsp;        center.clear();</b>
+<b class="nc"><i>668</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>669</i>&nbsp;        lower.clear();</b>
+<i>670</i>&nbsp;        try {
+<b class="nc"><i>671</i>&nbsp;            center.centerFixed(URLReader(getClass().getResource(&quot;/ascii/welcome&quot;)), 40, DELAY);</b>
+<b class="nc"><i>672</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>673</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>674</i>&nbsp;        }</b>
+<b class="nc"><i>675</i>&nbsp;        lower.center(&quot;Congratulations, you won!&quot;, DELAY); //todocoool</b>
+<i>676</i>&nbsp;    }
+<i>677</i>&nbsp;
+<i>678</i>&nbsp;    /**
+<i>679</i>&nbsp;     * Method to show a message to a loser
+<i>680</i>&nbsp;     * @param winningPlayer winning player if someone won or null if you lost
+<i>681</i>&nbsp;     */
+<i>682</i>&nbsp;    @Override
+<i>683</i>&nbsp;    public void displayLoserMessage(Player winningPlayer) {
+<b class="nc"><i>684</i>&nbsp;        left.clear();</b>
+<b class="nc"><i>685</i>&nbsp;        left.println(&quot;I&#39;m sorry, you lose!&quot;); // todoo cool</b>
+<i>686</i>&nbsp;    }
+<i>687</i>&nbsp;
+<i>688</i>&nbsp;    @Override
+<i>689</i>&nbsp;    public void displayEndTurn() {
+<i>690</i>&nbsp;    }
+<i>691</i>&nbsp;
+<i>692</i>&nbsp;    @Override
+<i>693</i>&nbsp;    public void displayLoserPlayer(Player player) {
+<i>694</i>&nbsp;
+<i>695</i>&nbsp;    }
+<i>696</i>&nbsp;
+<i>697</i>&nbsp;    @Override
+<i>698</i>&nbsp;    public void displayCellUpdated(Cell cell) {
+<i>699</i>&nbsp;    }
+<i>700</i>&nbsp;
+<i>701</i>&nbsp;    @Override
+<i>702</i>&nbsp;    public void displayLocationUpdated() {
+<i>703</i>&nbsp;    }
+<i>704</i>&nbsp;
+<i>705</i>&nbsp;    /* Private heleper methods starting here */
+<i>706</i>&nbsp;
+<i>707</i>&nbsp;    /**
+<i>708</i>&nbsp;     * Helper method used to instantiate the island adapter and recreate the island for the view using the one stored in the client&#39;s cache
+<i>709</i>&nbsp;     */
+<i>710</i>&nbsp;    private void updateIsland() {
+<b class="nc"><i>711</i>&nbsp;        myisland = new IslandAdapter(client.getFieldCache(), client.getLocationCache(), islandFrame );</b>
+<i>712</i>&nbsp;    }
+<i>713</i>&nbsp;
+<i>714</i>&nbsp;    /**
+<i>715</i>&nbsp;     * Method used to position the first time the workers
+<i>716</i>&nbsp;     * @param occupied list of coordinates already occupied by a worker, so nt allowed
+<i>717</i>&nbsp;     * @param starting coordinates where to start displaying the selector
+<i>718</i>&nbsp;     * @return the coordinates of the chosen cell
+<i>719</i>&nbsp;     */
+<i>720</i>&nbsp;    private int[] position( List&lt;int[]&gt; occupied, int[] starting ){
+<b class="nc"><i>721</i>&nbsp;        int curRow = starting[0];</b>
+<b class="nc"><i>722</i>&nbsp;        int curCol = starting[1];</b>
+<b class="nc"><i>723</i>&nbsp;        myisland.setSelected(curRow, curCol);</b>
+<i>724</i>&nbsp;        try {
+<b class="nc"><i>725</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>726</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>727</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>728</i>&nbsp;        }</b>
+<i>729</i>&nbsp;
+<i>730</i>&nbsp;        while (true) {
+<i>731</i>&nbsp;            try {
+<b class="nc"><i>732</i>&nbsp;                if (System.in.available() != 0) {</b>
+<b class="nc"><i>733</i>&nbsp;                    int c = System.in.read();  //read one char at a time in ascii code</b>
+<i>734</i>&nbsp;
+<i>735</i>&nbsp;                    //GETTING SPACEBAR to positiom
+<b class="nc"><i>736</i>&nbsp;                    if (c == 32) {</b>
+<b class="nc"><i>737</i>&nbsp;                        if (!contains(occupied, curRow, curCol)) {</b>
+<b class="nc"><i>738</i>&nbsp;                            myisland.setWorker(curRow, curCol, colorWorker);</b>
+<b class="nc"><i>739</i>&nbsp;                            myisland.clearSelected();</b>
+<b class="nc"><i>740</i>&nbsp;                            myisland.print();</b>
+<b class="nc"><i>741</i>&nbsp;                            break;</b>
+<i>742</i>&nbsp;                        }
+<i>743</i>&nbsp;                    }
+<i>744</i>&nbsp;
+<i>745</i>&nbsp;                    //getting an ARROW KEY
+<b class="nc"><i>746</i>&nbsp;                    else if (c == 27) { // first part of arrow key == ESC</b>
+<b class="nc"><i>747</i>&nbsp;                        int next1 = System.in.read();</b>
+<b class="nc"><i>748</i>&nbsp;                        int next2 = System.in.read();</b>
+<b class="nc"><i>749</i>&nbsp;                        if (next1 == 91) { //  read [</b>
+<b class="nc"><i>750</i>&nbsp;                            if (next2 == 65) {                     //UP  arrow</b>
+<b class="nc"><i>751</i>&nbsp;                                if (curRow &gt; 0 &amp;&amp; curRow &lt;= 5) {</b>
+<b class="nc"><i>752</i>&nbsp;                                    curRow--;</b>
+<i>753</i>&nbsp;                                }
+<b class="nc"><i>754</i>&nbsp;                            } else if (next2 == 66) {              //DOWN arrow</b>
+<b class="nc"><i>755</i>&nbsp;                                if (curRow &gt;= 0 &amp;&amp; curRow &lt; 4) {</b>
+<b class="nc"><i>756</i>&nbsp;                                    curRow++;</b>
+<i>757</i>&nbsp;                                }
+<b class="nc"><i>758</i>&nbsp;                            } else if (next2 == 67) {              //RIGHT arrow</b>
+<b class="nc"><i>759</i>&nbsp;                                if (curCol &gt;= 0 &amp;&amp; curCol &lt; 4) {</b>
+<b class="nc"><i>760</i>&nbsp;                                    curCol++;</b>
+<i>761</i>&nbsp;                                }
+<b class="nc"><i>762</i>&nbsp;                            } else if (next2 == 68) {               //LEFT  arrow</b>
+<b class="nc"><i>763</i>&nbsp;                                if (curCol &gt; 0 &amp;&amp; curCol &lt;= 5) {</b>
+<b class="nc"><i>764</i>&nbsp;                                    curCol--;</b>
+<i>765</i>&nbsp;                                }
+<i>766</i>&nbsp;                            }
+<i>767</i>&nbsp;                        }
+<b class="nc"><i>768</i>&nbsp;                        myisland.setSelected(curRow, curCol);</b>
+<b class="nc"><i>769</i>&nbsp;                        myisland.print();</b>
+<b class="nc"><i>770</i>&nbsp;                    }//end arrow management</b>
+<i>771</i>&nbsp;
+<i>772</i>&nbsp;                    // gettind D for debug option
+<b class="nc"><i>773</i>&nbsp;                    else if (c == 100) {</b>
+<b class="nc"><i>774</i>&nbsp;                        debug = !debug;</b>
+<b class="nc"><i>775</i>&nbsp;                        if (!debug) {</b>
+<b class="nc"><i>776</i>&nbsp;                            myisland.print();</b>
+<i>777</i>&nbsp;                        }
+<i>778</i>&nbsp;                    }
+<b class="nc"><i>779</i>&nbsp;                    if (debug) {</b>
+<b class="nc"><i>780</i>&nbsp;                        myisland.debug();</b>
+<i>781</i>&nbsp;                    }
+<i>782</i>&nbsp;
+<i>783</i>&nbsp;                } //end system in available
+<b class="nc"><i>784</i>&nbsp;            } catch (IOException | InterruptedException e) {</b>
+<i>785</i>&nbsp;                //todo frame per except
+<b class="nc"><i>786</i>&nbsp;            }</b>
+<i>787</i>&nbsp;        }// end while true
+<i>788</i>&nbsp;
+<b class="nc"><i>789</i>&nbsp;        return new int[]{curRow, curCol};</b>
+<i>790</i>&nbsp;    }
+<i>791</i>&nbsp;
+<i>792</i>&nbsp;    /**
+<i>793</i>&nbsp;     * Method used when a player can select a cell for build or to move
+<i>794</i>&nbsp;     * @param starting coordinates of the cell where start displaying the selector
+<i>795</i>&nbsp;     * @param allowed List of coordinates allowed to choose
+<i>796</i>&nbsp;     * @param kind m for a move else it&#39;sa build
+<i>797</i>&nbsp;     * @return the coordinates choosen for move or for build, if user wants to back to selection of workers it returns a negative coordinate -1,-1
+<i>798</i>&nbsp;     */
+<i>799</i>&nbsp;    private int[] positionAllowed(Integer[] starting, List&lt;int[]&gt; allowed , char kind){
+<b class="nc"><i>800</i>&nbsp;        int curRow = starting[0];</b>
+<b class="nc"><i>801</i>&nbsp;        int curCol = starting[1];</b>
+<i>802</i>&nbsp;
+<b class="nc"><i>803</i>&nbsp;        myisland.setSelected(curRow, curCol);</b>
+<i>804</i>&nbsp;        try {
+<b class="nc"><i>805</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>806</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>807</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>808</i>&nbsp;        }</b>
+<i>809</i>&nbsp;
+<i>810</i>&nbsp;        while (true) {
+<i>811</i>&nbsp;            try {
+<b class="nc"><i>812</i>&nbsp;                if (System.in.available() != 0) {</b>
+<b class="nc"><i>813</i>&nbsp;                    int c = System.in.read();  //read one char at a time in ascii code</b>
+<i>814</i>&nbsp;
+<i>815</i>&nbsp;                    //GETTING SPACEBAR to positiom
+<b class="nc"><i>816</i>&nbsp;                    if (c == 32) {</b>
+<b class="nc"><i>817</i>&nbsp;                        if(contains(allowed, curRow, curCol)) {</b>
+<b class="nc"><i>818</i>&nbsp;                            if(kind == &#39;m&#39;) {</b>
+<b class="nc"><i>819</i>&nbsp;                                myisland.setWorker(curRow, curCol, colorWorker);</b>
+<b class="nc"><i>820</i>&nbsp;                                myisland.clearSelected();</b>
+<b class="nc"><i>821</i>&nbsp;                                myisland.print();</b>
+<i>822</i>&nbsp;                            }
+<i>823</i>&nbsp;                            else {
+<b class="nc"><i>824</i>&nbsp;                                myisland.clearMovable();</b>
+<b class="nc"><i>825</i>&nbsp;                                myisland.setSelected(curRow, curCol);</b>
+<b class="nc"><i>826</i>&nbsp;                                myisland.print();</b>
+<i>827</i>&nbsp;                            }
+<b class="nc"><i>828</i>&nbsp;                            break;</b>
+<i>829</i>&nbsp;                        }
+<i>830</i>&nbsp;                    }
+<i>831</i>&nbsp;
+<i>832</i>&nbsp;                    //getting an ARROW KEY
+<b class="nc"><i>833</i>&nbsp;                    else if (c == 27) { // first part of arrow key == ESC</b>
+<b class="nc"><i>834</i>&nbsp;                        int next1 = System.in.read();</b>
+<b class="nc"><i>835</i>&nbsp;                        int next2 = System.in.read();</b>
+<b class="nc"><i>836</i>&nbsp;                        if (next1 == 91) { //  read [</b>
+<b class="nc"><i>837</i>&nbsp;                            if (next2 == 65) {                     //UP  arrow</b>
+<b class="nc"><i>838</i>&nbsp;                                if (curRow &gt; 0 &amp;&amp; curRow &lt;= 5) {</b>
+<b class="nc"><i>839</i>&nbsp;                                    curRow--;</b>
+<i>840</i>&nbsp;                                }
+<b class="nc"><i>841</i>&nbsp;                            } else if (next2 == 66) {              //DOWN arrow</b>
+<b class="nc"><i>842</i>&nbsp;                                if (curRow &gt;= 0 &amp;&amp; curRow &lt; 4) {</b>
+<b class="nc"><i>843</i>&nbsp;                                    curRow++;</b>
+<i>844</i>&nbsp;                                }
+<b class="nc"><i>845</i>&nbsp;                            } else if (next2 == 67) {              //RIGHT arrow</b>
+<b class="nc"><i>846</i>&nbsp;                                if (curCol &gt;= 0 &amp;&amp; curCol &lt; 4) {</b>
+<b class="nc"><i>847</i>&nbsp;                                    curCol++;</b>
+<i>848</i>&nbsp;                                }
+<b class="nc"><i>849</i>&nbsp;                            } else if (next2 == 68) {               //LEFT  arrow</b>
+<b class="nc"><i>850</i>&nbsp;                                if (curCol &gt; 0 &amp;&amp; curCol &lt;= 5) {</b>
+<b class="nc"><i>851</i>&nbsp;                                    curCol--;</b>
+<i>852</i>&nbsp;                                }
+<i>853</i>&nbsp;                            }
+<i>854</i>&nbsp;                        }
+<b class="nc"><i>855</i>&nbsp;                        myisland.setSelected(curRow, curCol);</b>
+<b class="nc"><i>856</i>&nbsp;                        myisland.print();</b>
+<b class="nc"><i>857</i>&nbsp;                    }//end arrow management</b>
+<i>858</i>&nbsp;
+<i>859</i>&nbsp;                    // getting B for back only for move
+<b class="nc"><i>860</i>&nbsp;                    else if (c == 98){</b>
+<b class="nc"><i>861</i>&nbsp;                        if(kind == &#39;m&#39;) { // if this it means I want to go back</b>
+<b class="nc"><i>862</i>&nbsp;                            curCol = -1;</b>
+<b class="nc"><i>863</i>&nbsp;                            curRow = -1;</b>
+<b class="nc"><i>864</i>&nbsp;                            break;</b>
+<i>865</i>&nbsp;                        }
+<i>866</i>&nbsp;                    }
+<i>867</i>&nbsp;                    // gettind D for debug option
+<b class="nc"><i>868</i>&nbsp;                    else if (c == 100) {</b>
+<b class="nc"><i>869</i>&nbsp;                        debug = !debug;</b>
+<b class="nc"><i>870</i>&nbsp;                        if (!debug) {</b>
+<b class="nc"><i>871</i>&nbsp;                            myisland.print();</b>
+<i>872</i>&nbsp;                        }
+<i>873</i>&nbsp;                    }
+<i>874</i>&nbsp;
+<b class="nc"><i>875</i>&nbsp;                    if (debug) {</b>
+<b class="nc"><i>876</i>&nbsp;                        myisland.debug();</b>
+<i>877</i>&nbsp;                    }
+<i>878</i>&nbsp;
+<i>879</i>&nbsp;                } //end system in available
+<b class="nc"><i>880</i>&nbsp;            } catch (IOException | InterruptedException e) {</b>
+<i>881</i>&nbsp;                //todo frame per except
+<b class="nc"><i>882</i>&nbsp;            }</b>
+<i>883</i>&nbsp;        }// end while true
+<i>884</i>&nbsp;
+<b class="nc"><i>885</i>&nbsp;        return new int[]{curRow, curCol};</b>
+<i>886</i>&nbsp;    }
+<i>887</i>&nbsp;
+<i>888</i>&nbsp;
+<i>889</i>&nbsp;    /**
+<i>890</i>&nbsp;     * Method used when a payer can position two or more different kind of blocks in a  cell.
+<i>891</i>&nbsp;     * This allows to choose using the keyboard and displays a preview of the block to build
+<i>892</i>&nbsp;     * @param listOfAvailableComponents list ok the levels availabel to build (as inteer)
+<i>893</i>&nbsp;     * @param position coordinates on map where to show the block
+<i>894</i>&nbsp;     * @return the level to build as integer
+<i>895</i>&nbsp;     */
+<i>896</i>&nbsp;    private int chooseblock(List&lt;Integer&gt; listOfAvailableComponents, int[] position){
+<b class="nc"><i>897</i>&nbsp;        int curRow = position[0];</b>
+<b class="nc"><i>898</i>&nbsp;        int curCol = position[1];</b>
+<i>899</i>&nbsp;
+<b class="nc"><i>900</i>&nbsp;        int curBlk = 0;</b>
+<b class="nc"><i>901</i>&nbsp;        myisland.setSelected(curRow, curCol);</b>
+<i>902</i>&nbsp;        try {
+<b class="nc"><i>903</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>904</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc"><i>905</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>906</i>&nbsp;        }</b>
+<i>907</i>&nbsp;
+<i>908</i>&nbsp;        while (true) {
+<i>909</i>&nbsp;            try {
+<b class="nc"><i>910</i>&nbsp;                if (System.in.available() != 0) {</b>
+<b class="nc"><i>911</i>&nbsp;                    int c = System.in.read();  //read one char at a time in ascii code</b>
+<i>912</i>&nbsp;
+<i>913</i>&nbsp;                    //GETTING SPACEBAR to confirm block
+<b class="nc"><i>914</i>&nbsp;                    if (c == 32) {</b>
+<b class="nc"><i>915</i>&nbsp;                        myisland.clearSelected();</b>
+<b class="nc"><i>916</i>&nbsp;                        myisland.print();</b>
+<b class="nc"><i>917</i>&nbsp;                        break;</b>
+<i>918</i>&nbsp;                    }
+<i>919</i>&nbsp;
+<i>920</i>&nbsp;                    //GETTING tab to change build block
+<b class="nc"><i>921</i>&nbsp;                    if (c == 9){</b>
+<b class="nc"><i>922</i>&nbsp;                        if (curBlk &lt; listOfAvailableComponents.size() -1){</b>
+<b class="nc"><i>923</i>&nbsp;                            curBlk ++;</b>
+<i>924</i>&nbsp;                        }
+<b class="nc"><i>925</i>&nbsp;                        else if (curBlk == listOfAvailableComponents.size() -1 ){</b>
+<b class="nc"><i>926</i>&nbsp;                            curBlk = 0;</b>
+<i>927</i>&nbsp;                        }
+<b class="nc"><i>928</i>&nbsp;                        myisland.setTempLevel(position[0], position[1], listOfAvailableComponents.get(curBlk));</b>
+<b class="nc"><i>929</i>&nbsp;                        myisland.print();</b>
+<i>930</i>&nbsp;                    }
+<i>931</i>&nbsp;
+<i>932</i>&nbsp;                    // gettind D for debug option
+<b class="nc"><i>933</i>&nbsp;                    else if (c == 100) {</b>
+<b class="nc"><i>934</i>&nbsp;                        debug = !debug;</b>
+<b class="nc"><i>935</i>&nbsp;                        if (!debug) {</b>
+<b class="nc"><i>936</i>&nbsp;                            myisland.print();</b>
+<i>937</i>&nbsp;                        }
+<i>938</i>&nbsp;                    }
+<i>939</i>&nbsp;
+<b class="nc"><i>940</i>&nbsp;                    if (debug) {</b>
+<b class="nc"><i>941</i>&nbsp;                        myisland.debug();</b>
+<i>942</i>&nbsp;                    }
+<i>943</i>&nbsp;
+<i>944</i>&nbsp;                } //end system in available
+<b class="nc"><i>945</i>&nbsp;            } catch (IOException | InterruptedException ignored) {</b>
+<i>946</i>&nbsp;
+<b class="nc"><i>947</i>&nbsp;            }</b>
+<i>948</i>&nbsp;        }// end while true
+<i>949</i>&nbsp;
+<b class="nc"><i>950</i>&nbsp;        return curBlk;</b>
+<i>951</i>&nbsp;    }
+<i>952</i>&nbsp;
+<i>953</i>&nbsp;
+<i>954</i>&nbsp;    /**
+<i>955</i>&nbsp;     * Private helper method used to choose between workers using TAB
+<i>956</i>&nbsp;     * @return id of worker
+<i>957</i>&nbsp;     */
+<i>958</i>&nbsp;    private int swapWorker(){
+<b class="nc"><i>959</i>&nbsp;        int curWorkId = 0;</b>
+<b class="nc"><i>960</i>&nbsp;        myisland.setSelected(getMyWorkers().get(curWorkId)[0], getMyWorkers().get(curWorkId)[1]);</b>
+<i>961</i>&nbsp;        try {
+<b class="nc"><i>962</i>&nbsp;            myisland.print();</b>
+<b class="nc"><i>963</i>&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<i>964</i>&nbsp;            //e.printStackTrace();
+<b class="nc"><i>965</i>&nbsp;        }</b>
+<i>966</i>&nbsp;        while (true) {
+<i>967</i>&nbsp;            try {
+<b class="nc"><i>968</i>&nbsp;                if (System.in.available() != 0) {</b>
+<b class="nc"><i>969</i>&nbsp;                    int c = System.in.read();  //read one char at a time in ascii code</b>
+<i>970</i>&nbsp;
+<i>971</i>&nbsp;                    //GETTING SPACE_BAR to confirm
+<b class="nc"><i>972</i>&nbsp;                    if (c == 32) {</b>
+<b class="nc"><i>973</i>&nbsp;                        break;</b>
+<i>974</i>&nbsp;                    }
+<i>975</i>&nbsp;
+<i>976</i>&nbsp;                    //GETTING tab
+<b class="nc"><i>977</i>&nbsp;                   if (c == 9){</b>
+<b class="nc"><i>978</i>&nbsp;                       if(curWorkId == 0){ //swap selection</b>
+<b class="nc"><i>979</i>&nbsp;                           curWorkId = 1;</b>
+<i>980</i>&nbsp;                       }else {
+<b class="nc"><i>981</i>&nbsp;                           curWorkId = 0;</b>
+<i>982</i>&nbsp;                       }
+<b class="nc"><i>983</i>&nbsp;                       myisland.setSelected(getMyWorkers().get(curWorkId)[0], getMyWorkers().get(curWorkId)[1]);</b>
+<b class="nc"><i>984</i>&nbsp;                       myisland.print();</b>
+<i>985</i>&nbsp;                   }
+<i>986</i>&nbsp;
+<i>987</i>&nbsp;                    // gettind D for debug option
+<b class="nc"><i>988</i>&nbsp;                    else if (c == 100) {</b>
+<b class="nc"><i>989</i>&nbsp;                        debug = !debug;</b>
+<b class="nc"><i>990</i>&nbsp;                        if (!debug) {</b>
+<b class="nc"><i>991</i>&nbsp;                            myisland.print();</b>
+<i>992</i>&nbsp;                        }
+<i>993</i>&nbsp;                    }
+<i>994</i>&nbsp;
+<b class="nc"><i>995</i>&nbsp;                    if (debug) {</b>
+<b class="nc"><i>996</i>&nbsp;                        myisland.debug();</b>
+<i>997</i>&nbsp;                    }
+<i>998</i>&nbsp;
+<i>999</i>&nbsp;                } //end system in available
+<b class="nc"><i>1000</i>&nbsp;            } catch (IOException | InterruptedException e) {</b>
+<i>1001</i>&nbsp;                //todo frame per except
+<b class="nc"><i>1002</i>&nbsp;            }</b>
+<i>1003</i>&nbsp;        }// end while true
+<i>1004</i>&nbsp;
+<b class="nc"><i>1005</i>&nbsp;        return curWorkId;</b>
+<i>1006</i>&nbsp;    }
+<i>1007</i>&nbsp;
+<i>1008</i>&nbsp;    /**
+<i>1009</i>&nbsp;     * Helper method used to show the title of &quot;SANTORINI&quot; game
+<i>1010</i>&nbsp;     * @throws IOException
+<i>1011</i>&nbsp;     */
+<i>1012</i>&nbsp;    private void maketitle() throws IOException {
+<b class="nc"><i>1013</i>&nbsp;        Terminal.hideCursor();</b>
+<b class="nc"><i>1014</i>&nbsp;        String welcome = URLReader(getClass().getResource(&quot;/ascii/welcome&quot;));</b>
+<b class="nc"><i>1015</i>&nbsp;        String to = URLReader(getClass().getResource(&quot;/ascii/to&quot;));</b>
+<b class="nc"><i>1016</i>&nbsp;        String santorini = URLReader(getClass().getResource(&quot;/ascii/santorini&quot;));</b>
+<i>1017</i>&nbsp;
+<b class="nc"><i>1018</i>&nbsp;        upper.clear();</b>
+<b class="nc"><i>1019</i>&nbsp;        upper.center(welcome, DELAY);           //WELCOME</b>
+<b class="nc"><i>1020</i>&nbsp;        Utils.doTimeUnitSleep(DELAY);</b>
+<i>1021</i>&nbsp;
+<b class="nc"><i>1022</i>&nbsp;        upper.clear();</b>
+<b class="nc"><i>1023</i>&nbsp;        upper.center(to, DELAY);                //TO</b>
+<b class="nc"><i>1024</i>&nbsp;        Utils.doTimeUnitSleep(DELAY);</b>
+<i>1025</i>&nbsp;
+<b class="nc"><i>1026</i>&nbsp;        upper.clear();</b>
+<b class="nc"><i>1027</i>&nbsp;        upper.center(santorini, DELAY);        //SANTORINI</b>
+<b class="nc"><i>1028</i>&nbsp;        Utils.doTimeUnitSleep(DELAY);</b>
+<b class="nc"><i>1029</i>&nbsp;        Terminal.showCursor();</b>
+<i>1030</i>&nbsp;    }
+<i>1031</i>&nbsp;
+<i>1032</i>&nbsp;    /**
+<i>1033</i>&nbsp;     * Helper method to convert a list of cells into a list of array coordinates
+<i>1034</i>&nbsp;     * @param cellList intput list of Cells
+<i>1035</i>&nbsp;     * @return list of int[] of coordinates x,y
+<i>1036</i>&nbsp;     */
+<i>1037</i>&nbsp;    private List&lt;int[]&gt; cellAdapter(List&lt;Cell&gt; cellList){
+<b class="nc"><i>1038</i>&nbsp;        List&lt;int[]&gt; coord = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>1039</i>&nbsp;        if(cellList.size() != 0) {</b>
+<b class="nc"><i>1040</i>&nbsp;            coord = cellList.stream().map(Cell::getCoordXY).collect(Collectors.toList());</b>
+<i>1041</i>&nbsp;        }
+<b class="nc"><i>1042</i>&nbsp;        return coord;</b>
+<i>1043</i>&nbsp;    }
+<i>1044</i>&nbsp;
+<i>1045</i>&nbsp;    /**
+<i>1046</i>&nbsp;     * Helper method to het a map of all the workers of a player with their location
+<i>1047</i>&nbsp;     * @return a map with for each id of worker it&#39;s location as array of integer [x,y]
+<i>1048</i>&nbsp;     */
+<i>1049</i>&nbsp;    private HashMap&lt;Integer, Integer[]&gt; getMyWorkers() {
+<b class="nc"><i>1050</i>&nbsp;        Location location = client.getLocationCache();</b>
+<b class="nc"><i>1051</i>&nbsp;        Cell[][] field = client.getFieldCache();</b>
+<b class="nc"><i>1052</i>&nbsp;        HashMap&lt;Integer, Integer[]&gt; workerInfo = new HashMap&lt;&gt;();</b>
+<b class="nc"><i>1053</i>&nbsp;        for (int i = 0; i &lt; field.length; i++) {</b>
+<b class="nc"><i>1054</i>&nbsp;            for (int j = 0; j &lt; field.length; j++) {</b>
+<b class="nc"><i>1055</i>&nbsp;                Worker occupant = location.getOccupant(i, j);</b>
+<b class="nc"><i>1056</i>&nbsp;                if (occupant != null &amp;&amp; occupant.getPlayerName().equals(client.getUsername())){</b>
+<b class="nc"><i>1057</i>&nbsp;                    workerInfo.put(occupant.getId(), new Integer[]{i, j});</b>
+<i>1058</i>&nbsp;                }
+<i>1059</i>&nbsp;            }
+<i>1060</i>&nbsp;        }
+<b class="nc"><i>1061</i>&nbsp;        return workerInfo;</b>
+<i>1062</i>&nbsp;    }
+<i>1063</i>&nbsp;
+<i>1064</i>&nbsp;
+<i>1065</i>&nbsp;    /**
+<i>1066</i>&nbsp;     * Helper method to check if in a list of coordinates array there are the specified coordinates x, y
+<i>1067</i>&nbsp;     * @param intsList input list of coordinates as int[]
+<i>1068</i>&nbsp;     * @param x coordinate x
+<i>1069</i>&nbsp;     * @param y coordinate y
+<i>1070</i>&nbsp;     * @return true if x,y is contained in the list of coordinates
+<i>1071</i>&nbsp;     */
+<i>1072</i>&nbsp;    private boolean contains (List&lt;int[]&gt; intsList, int x, int y){
+<b class="nc"><i>1073</i>&nbsp;        return intsList.stream().anyMatch(ints -&gt; ints[0] == x &amp;&amp; ints[1] == y);</b>
+<i>1074</i>&nbsp;    }
+<i>1075</i>&nbsp;
+<i>1076</i>&nbsp;    /**
+<i>1077</i>&nbsp;     * Method to read from resources a file as String
+<i>1078</i>&nbsp;     * @param url path in resources folder
+<i>1079</i>&nbsp;     * @return the string contained in the searched file
+<i>1080</i>&nbsp;     * @throws IOException
+<i>1081</i>&nbsp;     */
+<i>1082</i>&nbsp;    private static String URLReader(URL url) throws IOException {
+<b class="nc"><i>1083</i>&nbsp;        try (InputStream in = url.openStream()) {</b>
+<b class="nc"><i>1084</i>&nbsp;            byte[] bytes = in.readAllBytes();</b>
+<b class="nc"><i>1085</i>&nbsp;            return new String(bytes, StandardCharsets.UTF_8);</b>
+<b class="nc"><i>1086</i>&nbsp;        }</b>
+<i>1087</i>&nbsp;    }
+<i>1088</i>&nbsp;
+<i>1089</i>&nbsp;}
+<i>1090</i>&nbsp;
+<i>1091</i>&nbsp;
+<i>1092</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 10:59</div>
+</div>
+</body>
+</html>

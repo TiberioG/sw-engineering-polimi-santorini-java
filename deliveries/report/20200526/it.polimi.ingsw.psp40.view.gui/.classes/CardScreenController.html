@@ -1,0 +1,266 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CardScreenController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CardScreenController (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CardScreenController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 86)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.model.Card;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.model.CardManager;
+<i>7</i>&nbsp;import javafx.animation.*;
+<i>8</i>&nbsp;import javafx.beans.binding.Bindings;
+<i>9</i>&nbsp;import javafx.beans.binding.BooleanBinding;
+<i>10</i>&nbsp;import javafx.beans.property.IntegerProperty;
+<i>11</i>&nbsp;import javafx.beans.property.SimpleIntegerProperty;
+<i>12</i>&nbsp;import javafx.collections.FXCollections;
+<i>13</i>&nbsp;import javafx.collections.ObservableList;
+<i>14</i>&nbsp;import javafx.fxml.FXML;
+<i>15</i>&nbsp;import javafx.scene.Node;
+<i>16</i>&nbsp;import javafx.scene.control.Button;
+<i>17</i>&nbsp;import javafx.scene.control.TextArea;
+<i>18</i>&nbsp;import javafx.scene.effect.ColorAdjust;
+<i>19</i>&nbsp;import javafx.scene.image.Image;
+<i>20</i>&nbsp;import javafx.scene.image.ImageView;
+<i>21</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>22</i>&nbsp;import javafx.scene.layout.GridPane;
+<i>23</i>&nbsp;import javafx.scene.layout.HBox;
+<i>24</i>&nbsp;import javafx.util.Duration;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;import java.util.ArrayList;
+<i>27</i>&nbsp;import java.util.HashMap;
+<i>28</i>&nbsp;import java.util.List;
+<i>29</i>&nbsp;
+<b class="nc"><i>30</i>&nbsp;public class CardScreenController extends ScreenController {</b>
+<b class="nc"><i>31</i>&nbsp;    private boolean waiting = false;</b>
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @FXML
+<i>34</i>&nbsp;    private GridPane grid;
+<i>35</i>&nbsp;    @FXML
+<i>36</i>&nbsp;    private Button endButton;
+<i>37</i>&nbsp;    @FXML
+<i>38</i>&nbsp;    private TextArea textDescr;
+<i>39</i>&nbsp;    @FXML
+<i>40</i>&nbsp;    private TextArea textTitle;
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    @FXML
+<i>43</i>&nbsp;    private HBox hbox;
+<i>44</i>&nbsp;
+<b class="nc"><i>45</i>&nbsp;    private int toSelect = 9999;</b>
+<b class="nc"><i>46</i>&nbsp;    private final IntegerProperty toSelectProperty = new SimpleIntegerProperty(toSelect);</b>
+<b class="nc"><i>47</i>&nbsp;    private final ObservableList&lt;Integer&gt; selectedList = FXCollections.observableArrayList();</b>
+<b class="nc"><i>48</i>&nbsp;    private final HashMap&lt;Card, ImageView&gt; cardsMap = new HashMap&lt;&gt;();</b>
+<i>49</i>&nbsp;    private TypeOfMessage typeOfMessageToSend;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @FXML
+<i>52</i>&nbsp;    public void initialize() {
+<i>53</i>&nbsp;        //ScreenController.addClassToElement(textTitle, &quot;card-title&quot;);
+<b class="nc"><i>54</i>&nbsp;        textDescr.setWrapText(true);</b>
+<b class="nc"><i>55</i>&nbsp;        BooleanBinding binding = Bindings.size(selectedList).isEqualTo(toSelectProperty);</b>
+<b class="nc"><i>56</i>&nbsp;        endButton.visibleProperty().bind(binding);</b>
+<b class="nc"><i>57</i>&nbsp;        UtilsGUI.buttonHoverEffect(endButton);</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    protected void displayCardsForInitialSelection(List&lt;Card&gt; cards, int toSelect) {
+<b class="nc"><i>61</i>&nbsp;        this.toSelect = toSelect;</b>
+<b class="nc"><i>62</i>&nbsp;        this.toSelectProperty.setValue(this.toSelect);</b>
+<b class="nc"><i>63</i>&nbsp;        typeOfMessageToSend = TypeOfMessage.SET_CARDS_TO_GAME;</b>
+<b class="nc"><i>64</i>&nbsp;        buildCards(cards); // build images</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;        // add images to GridPane
+<b class="nc"><i>67</i>&nbsp;        List&lt;ImageView&gt; cardImages = new ArrayList&lt;&gt;(cardsMap.values());</b>
+<b class="nc"><i>68</i>&nbsp;        int index = 0;</b>
+<b class="nc"><i>69</i>&nbsp;        for (int row = 0; row &lt; 3; row ++){</b>
+<b class="nc"><i>70</i>&nbsp;            for (int col = 0; col &lt; 3; col ++){</b>
+<b class="nc"><i>71</i>&nbsp;                grid.add(cardImages.get(index), row, col);</b>
+<b class="nc"><i>72</i>&nbsp;                index ++;</b>
+<i>73</i>&nbsp;            }
+<i>74</i>&nbsp;        }
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    protected void displayCardsForPersonalSelection(List&lt;Card&gt; availableCards) {
+<b class="nc"><i>78</i>&nbsp;        this.toSelect = 1;</b>
+<b class="nc"><i>79</i>&nbsp;        this.toSelectProperty.setValue(this.toSelect);</b>
+<b class="nc"><i>80</i>&nbsp;        typeOfMessageToSend = TypeOfMessage.SET_CARD_TO_PLAYER;</b>
+<b class="nc"><i>81</i>&nbsp;        selectedList.clear();</b>
+<b class="nc"><i>82</i>&nbsp;        buildCards(availableCards);</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;        // add images to HBox
+<b class="nc"><i>85</i>&nbsp;        List&lt;ImageView&gt; cardImages = new ArrayList&lt;&gt;(cardsMap.values());</b>
+<b class="nc"><i>86</i>&nbsp;        cardImages.forEach( cardImage -&gt; hbox.getChildren().add(cardImage));</b>
+<b class="nc"><i>87</i>&nbsp;        grid.setVisible(false);</b>
+<b class="nc"><i>88</i>&nbsp;        hbox.setVisible(true);</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    private void buildCards(List&lt;Card&gt; cards) {
+<b class="nc"><i>93</i>&nbsp;        cardsMap.clear();</b>
+<b class="nc"><i>94</i>&nbsp;        cards.forEach(card -&gt; {</b>
+<b class="nc"><i>95</i>&nbsp;            ImageView cardView = new ImageView(new Image(GUIProperties.class.getResource(&quot;/images/cardsFrame/&quot; + card.getId() + &quot;.png&quot;).toString()));</b>
+<b class="nc"><i>96</i>&nbsp;            cardView.setFitHeight(230);</b>
+<b class="nc"><i>97</i>&nbsp;            cardView.setPreserveRatio(true);</b>
+<b class="nc"><i>98</i>&nbsp;            cardView.setSmooth(true);</b>
+<b class="nc"><i>99</i>&nbsp;            cardView.setCache(true);</b>
+<b class="nc"><i>100</i>&nbsp;            cardView.getStyleClass().add(&quot;card-image&quot;);</b>
+<b class="nc"><i>101</i>&nbsp;            Transition transition = buildTransition(cardView);</b>
+<b class="nc"><i>102</i>&nbsp;            cardView.hoverProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<b class="nc"><i>103</i>&nbsp;                if (newValue) {</b>
+<b class="nc"><i>104</i>&nbsp;                    textDescr.setText(card.getDescription());</b>
+<b class="nc"><i>105</i>&nbsp;                    textTitle.setText(card.getName());</b>
+<b class="nc"><i>106</i>&nbsp;                    transition.play();</b>
+<i>107</i>&nbsp;                } else {
+<b class="nc"><i>108</i>&nbsp;                    textDescr.setText(&quot;&quot;);</b>
+<b class="nc"><i>109</i>&nbsp;                    textTitle.setText(&quot;&quot;);</b>
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;                    transition.stop();</b>
+<b class="nc"><i>112</i>&nbsp;                    cardView.scaleXProperty().setValue(1);</b>
+<b class="nc"><i>113</i>&nbsp;                    cardView.scaleYProperty().setValue(1);</b>
+<b class="nc"><i>114</i>&nbsp;                    cardView.scaleZProperty().setValue(1);</b>
+<b class="nc"><i>115</i>&nbsp;                    cardView.translateYProperty().setValue(0);</b>
+<i>116</i>&nbsp;                }
+<i>117</i>&nbsp;            });
+<i>118</i>&nbsp;
+<b class="nc"><i>119</i>&nbsp;            cardsMap.put(card, cardView);</b>
+<b class="nc"><i>120</i>&nbsp;            System.out.println(card.getId());</b>
+<i>121</i>&nbsp;        });
+<i>122</i>&nbsp;
+<b class="nc"><i>123</i>&nbsp;        addHandlerToCards();</b>
+<i>124</i>&nbsp;    }
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    private Transition buildTransition(Node node) {
+<b class="nc"><i>127</i>&nbsp;        Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);</b>
+<b class="nc"><i>128</i>&nbsp;        Duration duration = Duration.millis(500);</b>
+<i>129</i>&nbsp;
+<b class="nc"><i>130</i>&nbsp;        ScaleTransition st = new ScaleTransition(duration, node);</b>
+<b class="nc"><i>131</i>&nbsp;        st.setInterpolator(interpolator);</b>
+<b class="nc"><i>132</i>&nbsp;        st.setToX(1.1);</b>
+<b class="nc"><i>133</i>&nbsp;        st.setToY(1.1);</b>
+<i>134</i>&nbsp;
+<b class="nc"><i>135</i>&nbsp;        TranslateTransition tt = new TranslateTransition(duration, node);</b>
+<b class="nc"><i>136</i>&nbsp;        tt.setInterpolator(interpolator);</b>
+<b class="nc"><i>137</i>&nbsp;        tt.setToY(-20);</b>
+<i>138</i>&nbsp;
+<b class="nc"><i>139</i>&nbsp;        ParallelTransition p = new ParallelTransition(st, tt);</b>
+<b class="nc"><i>140</i>&nbsp;        return p;</b>
+<i>141</i>&nbsp;    }
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;    private void addHandlerToCards() {
+<b class="nc"><i>144</i>&nbsp;        cardsMap.keySet().forEach(card -&gt; {</b>
+<b class="nc"><i>145</i>&nbsp;            ImageView cardView = cardsMap.get(card);</b>
+<b class="nc"><i>146</i>&nbsp;            cardView.addEventHandler(MouseEvent.MOUSE_PRESSED,</b>
+<i>147</i>&nbsp;                    mouseEvent -&gt; {
+<b class="nc"><i>148</i>&nbsp;                        if (selectedList.contains(card.getId())){</b>
+<b class="nc"><i>149</i>&nbsp;                            for (int i = 0; i &lt; selectedList.size(); i++) {</b>
+<b class="nc"><i>150</i>&nbsp;                                if (card.getId() == selectedList.get(i)) {</b>
+<b class="nc"><i>151</i>&nbsp;                                    selectedList.remove(i);</b>
+<b class="nc"><i>152</i>&nbsp;                                    cardView.setEffect(null);</b>
+<i>153</i>&nbsp;                                }
+<i>154</i>&nbsp;                            }
+<i>155</i>&nbsp;                        }
+<b class="nc"><i>156</i>&nbsp;                        else if (selectedList.size() &lt; toSelect){</b>
+<b class="nc"><i>157</i>&nbsp;                            System.out.println(&quot;settable: &quot; + card.getId());</b>
+<b class="nc"><i>158</i>&nbsp;                            selectedList.add(card.getId());</b>
+<b class="nc"><i>159</i>&nbsp;                            ColorAdjust colorAdjust = new ColorAdjust();</b>
+<b class="nc"><i>160</i>&nbsp;                            colorAdjust.setBrightness(0.5);</b>
+<b class="nc"><i>161</i>&nbsp;                            cardView.setEffect(colorAdjust);</b>
+<i>162</i>&nbsp;                        }
+<i>163</i>&nbsp;                    });
+<i>164</i>&nbsp;        });
+<i>165</i>&nbsp;    }
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;    @FXML
+<i>168</i>&nbsp;    void end() {
+<b class="nc"><i>169</i>&nbsp;        List&lt;Integer&gt; selectedListTmp = new ArrayList&lt;&gt;(selectedList);</b>
+<b class="nc"><i>170</i>&nbsp;        if (selectedListTmp.size() == toSelect) {</b>
+<b class="nc"><i>171</i>&nbsp;            Message message = new Message(typeOfMessageToSend);</b>
+<i>172</i>&nbsp;
+<b class="nc"><i>173</i>&nbsp;            if(typeOfMessageToSend == TypeOfMessage.SET_CARDS_TO_GAME)</b>
+<b class="nc"><i>174</i>&nbsp;                message.setPayload(selectedListTmp);</b>
+<b class="nc"><i>175</i>&nbsp;            else if(typeOfMessageToSend == TypeOfMessage.SET_CARD_TO_PLAYER)</b>
+<b class="nc"><i>176</i>&nbsp;                message.setPayload(selectedListTmp.get(0));</b>
+<i>177</i>&nbsp;
+<b class="nc"><i>178</i>&nbsp;            getClient().sendToServer(message);</b>
+<i>179</i>&nbsp;        }
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 10:59</div>
+</div>
+</body>
+</html>
