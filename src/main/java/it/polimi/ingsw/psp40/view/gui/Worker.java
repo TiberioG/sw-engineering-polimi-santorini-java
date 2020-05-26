@@ -166,7 +166,7 @@ public class Worker extends Block {
 
         Timeline move2 = new Timeline();
         move2.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(1.5),
+                Duration.seconds(1.0),
                 new KeyValue(this.xProperty(), endX),
                 new KeyValue(this.yProperty(), endY-100)
         ));

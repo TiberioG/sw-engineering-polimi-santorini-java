@@ -67,6 +67,7 @@ public class Dome extends Block {
         }
 
         this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + GUIProperties.level3XFix + GUIProperties.domeXFix);
+        UtilsGUI.slideInDownAnimation(this);
     }
 
 

@@ -37,6 +37,7 @@ public class Level2 extends Block {
     void display(int row, int col) {
         this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + GUIProperties.level2XFix);
         this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level2YFix);
+        UtilsGUI.slideInDownAnimation(this);
     }
 
     @Override

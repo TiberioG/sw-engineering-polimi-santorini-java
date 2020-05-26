@@ -41,6 +41,7 @@ public class Level1 extends Block {
     void display(int row, int col) {
         this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing));
         this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf);
+        UtilsGUI.slideInDownAnimation(this);
     }
 
     @Override
