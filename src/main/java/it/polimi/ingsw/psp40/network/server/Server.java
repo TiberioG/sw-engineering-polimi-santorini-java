@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  */
 public class Server
 {
-  private static final int MIN_PORT = 1000;
-  private static final int MAX_PORT = 50000;
+  public static final int MIN_PORT = 1000;
+  public static final int MAX_PORT = 50000;
 
   private static final int MIN_NUM_OF_PLAYERS = 2;
   private static final int MAX_NUM_OF_PLAYERS = 3;

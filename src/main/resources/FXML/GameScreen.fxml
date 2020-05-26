@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.GameScreenController">
+<BorderPane fx:id="borderPane" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.GameScreenController">
    <center>
       <AnchorPane fx:id="centerAnchorPane" prefHeight="677.0" prefWidth="1053.0" styleClass="game-pane" stylesheets="@../css/style.css">
          <children>
@@ -190,7 +185,7 @@
                         </Pane>
                      </children>
                   </Group>
-                  <TextArea fx:id="instructionsTextArea" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="109.0" prefWidth="157.0" wrapText="true" StackPane.alignment="BOTTOM_LEFT" />
+                  <TextArea fx:id="instructionsTextArea" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="109.0" prefWidth="157.0" translateX="30.0" translateY="-35.0" wrapText="true" StackPane.alignment="BOTTOM_LEFT" />
                </children></StackPane>
 
          </children>

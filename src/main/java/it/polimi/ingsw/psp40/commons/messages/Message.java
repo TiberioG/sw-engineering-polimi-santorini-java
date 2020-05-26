@@ -26,7 +26,6 @@ public class Message implements Serializable {
         this.typeOfMessage = typeOfMessage;
     }
 
-    //todo quanti bei costruttori
     public Message(TypeOfMessage typeOfMessage) {
         this.typeOfMessage = typeOfMessage;
     }

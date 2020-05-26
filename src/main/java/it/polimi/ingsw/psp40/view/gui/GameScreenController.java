@@ -5,11 +5,7 @@ import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
-import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
-import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
-import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.model.*;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Dimension2D;
@@ -23,10 +19,10 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -129,58 +125,29 @@ public class GameScreenController extends ScreenController {
         myPane_sx.getChildren().add(map_sx);
         myPane_sx.setVisible(false);
 
+        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep me in position when switch camerafrom right to left and viceversa
+            rightAnchorPane.getChildren().forEach(node -> {
+                double fixAnchor = (double) newValue > (double) oldValue ? (double) newValue - (double) oldValue : 0;
+                AnchorPane.setRightAnchor(node, 10.0 + fixAnchor);
+            });
+        });
+
         disableMap(true); // start with map disabled
     }
-
-    protected void setPlayersInfo(List<Player> playerList) {
-        Platform.runLater(() -> {
-            listOfPlayerImage = new ArrayList<>();
-            playerList.forEach(player -> {
-                ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
-                imageView.setFitHeight(150);
-                imageView.setPreserveRatio(true);
-                listOfPlayerImage.add(imageView);
-            });
-
-            rightAnchorPane.getChildren().add(listOfPlayerImage.get(0));
-            AnchorPane.setBottomAnchor(listOfPlayerImage.get(0), 10.0);
-            Label labelFirstPlayer = new Label(playerList.get(0).getName());
-            rightAnchorPane.getChildren().add(labelFirstPlayer);
-            AnchorPane.setRightAnchor(labelFirstPlayer, 30.0);
-            AnchorPane.setBottomAnchor(labelFirstPlayer, 30.0);
-
-            leftAnchorPane.getChildren().add(listOfPlayerImage.get(1));
-            AnchorPane.setBottomAnchor(listOfPlayerImage.get(1), 10.0);
-            Label labelSecondPlayer = new Label(playerList.get(1).getName());
-            leftAnchorPane.getChildren().add(labelSecondPlayer);
-            AnchorPane.setLeftAnchor(labelSecondPlayer, 30.0);
-            AnchorPane.setBottomAnchor(labelSecondPlayer, 30.0);
-
-            if (listOfPlayerImage.size() == 3) {
-                leftAnchorPane.getChildren().add(listOfPlayerImage.get(2));
-                AnchorPane.setTopAnchor(listOfPlayerImage.get(2), 10.0);
-                Label labelThirdPlayer = new Label(playerList.get(2).getName());
-                leftAnchorPane.getChildren().add(labelThirdPlayer);
-                AnchorPane.setLeftAnchor(labelThirdPlayer, 30.0);
-                AnchorPane.setTopAnchor(labelThirdPlayer, 120.0);
-            }
-        });
-    }
-
 
     /* METHODS TO HANDLE BLOCKS CLICK */
 
     public void blockClicked(int x, int y, int z) {
-       System.out.println("Clicked: "+ x + ", " + y + ", " + z);
-       if(!waiting) {
-           if (currentPhase == PhaseType.MOVE_WORKER) {
-               moveWorker(x, y, z);
-           } else if (currentPhase == PhaseType.BUILD_COMPONENT) {
-               build(x, y, z);
-           } else if (shouldPositionWorkers && currentPhase == null && !hasEnoughWorkers()) {
-               placeWorker(x, y, z);
-           }
-       }
+        System.out.println("Clicked: "+ x + ", " + y + ", " + z);
+        if(!waiting) {
+            if (currentPhase == PhaseType.MOVE_WORKER) {
+                moveWorker(x, y, z);
+            } else if (currentPhase == PhaseType.BUILD_COMPONENT) {
+                build(x, y, z);
+            } else if (shouldPositionWorkers && currentPhase == null && !hasEnoughWorkers()) {
+                placeWorker(x, y, z);
+            }
+        }
 
     }
 
@@ -281,8 +248,8 @@ public class GameScreenController extends ScreenController {
 
     private boolean hasEnoughWorkers() {
         return 2 == workers_dx.stream()
-                        .filter(worker -> worker.ownerUsername.equals(getClient().getUsername()))
-                        .count();
+                .filter(worker -> worker.ownerUsername.equals(getClient().getUsername()))
+                .count();
     }
 
     /* METHODS TO HANDLE BUILD PHASE */
@@ -433,19 +400,18 @@ public class GameScreenController extends ScreenController {
 
     protected void askDesiredPhase() {
         List<Phase> phaseList = getClient().getListOfPhasesCache();
-        //List<Phase> phaseList = new ArrayList<>();
-        //phaseList.add(new Phase(PhaseType.MOVE_WORKER, null, false));
-        //phaseList.add(new Phase(PhaseType.BUILD_COMPONENT, null, false));
 
         VBox vbButtons = new VBox();
         vbButtons.setSpacing(10);
-        vbButtons.setPadding(new Insets(10, 20, 10, 20));
+        //vbButtons.setPadding(new Insets(10, 20, 10, 20));
         vbButtons.setPrefWidth(150);
+        vbButtons.setAlignment(Pos.CENTER);
 
         phaseList.forEach( phase -> {
             Button button = new Button(phase.getType().toString());
             button.setOnAction(actionEvent ->  {
-                stackPane.getChildren().remove(vbButtons);
+                //stackPane.getChildren().remove(vbButtons);
+                rightAnchorPane.getChildren().remove(vbButtons);
                 disableMap(false);
                 phaseButtonClicked(phase.getType());
             });
@@ -453,9 +419,15 @@ public class GameScreenController extends ScreenController {
             vbButtons.getChildren().add(button);
         });
 
+        vbButtons.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
         disableMap(true);
-        vbButtons.setAlignment(Pos.TOP_CENTER);
-        stackPane.getChildren().add(vbButtons);
+        //vbButtons.setAlignment(Pos.TOP_CENTER);
+        //stackPane.getChildren().add(vbButtons);
+
+        rightAnchorPane.getChildren().add(vbButtons);
+        AnchorPane.setTopAnchor(vbButtons, 10.0);
+        AnchorPane.setRightAnchor(vbButtons, 10.0);
     }
 
     private void phaseButtonClicked(PhaseType selectedPhase) {
@@ -490,6 +462,65 @@ public class GameScreenController extends ScreenController {
         selectedWorker = null;
         instructionsTextArea.setText("Aspetta il tuo turno...");
         //disableMap(true); // todo farlo o no?
+    }
+
+    /* METHODS TO SHOW PLAYERS INFO */
+
+    protected void setPlayersInfo(List<Player> playerList) {
+        listOfPlayerImage = new ArrayList<>();
+        playerList.forEach(player -> {
+            ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
+            imageView.setFitHeight(150);
+            imageView.setPreserveRatio(true);
+            listOfPlayerImage.add(imageView);
+        });
+
+        Text textFirstPlayer = getUsernameText(playerList.get(0).getName(), rightAnchorPane);
+        VBox vBoxFirstPlayer = new VBox(textFirstPlayer, listOfPlayerImage.get(0));
+        vBoxFirstPlayer.setSpacing(15);
+        vBoxFirstPlayer.setAlignment(Pos.CENTER);
+        rightAnchorPane.getChildren().add(vBoxFirstPlayer);
+        AnchorPane.setBottomAnchor(vBoxFirstPlayer, 10.0);
+        AnchorPane.setRightAnchor(vBoxFirstPlayer, 10.0);
+
+        Text textSecondPlayer = getUsernameText(playerList.get(1).getName(), leftAnchorPane);
+        VBox vBoxSecondPlayer = new VBox(textSecondPlayer, listOfPlayerImage.get(1));
+        vBoxSecondPlayer.setSpacing(15);
+        vBoxSecondPlayer.setAlignment(Pos.CENTER);
+        leftAnchorPane.getChildren().add(vBoxSecondPlayer);
+        AnchorPane.setBottomAnchor(vBoxSecondPlayer, 10.0);
+        AnchorPane.setLeftAnchor(vBoxSecondPlayer, 10.0);
+
+        if (listOfPlayerImage.size() == 3) {
+            Text textThirdPlayer = getUsernameText(playerList.get(2).getName(), leftAnchorPane);
+            VBox vBoxThirdPlayer = new VBox(listOfPlayerImage.get(2), textThirdPlayer);
+            vBoxThirdPlayer.setSpacing(15);
+            vBoxThirdPlayer.setAlignment(Pos.CENTER);
+            vBoxThirdPlayer.setPadding(new Insets(0, 0, 0, 10));
+            leftAnchorPane.getChildren().add(vBoxThirdPlayer);
+            AnchorPane.setTopAnchor(vBoxThirdPlayer, 10.0);
+            AnchorPane.setRightAnchor(vBoxFirstPlayer, 10.0);
+        }
+    }
+
+    private Text getUsernameText(String username, AnchorPane pane) {
+        Label label = new Label(username);
+        label.setFont(new Font(20));
+        Text text = new Text(label.getText());
+        text.setFont(label.getFont());
+        text.setTextAlignment(TextAlignment.CENTER);
+
+        double textWidth = text.getBoundsInLocal().getWidth();
+        double maxTextWidth = pane.getBoundsInLocal().getWidth() * 0.90;
+        if(textWidth > maxTextWidth) { // if username is too long, truncate it
+            double estimatedWidthForChar = textWidth / text.getText().length();
+            int charsToRemove = (int) ((textWidth - maxTextWidth) / estimatedWidthForChar);
+            String truncatedUsername = username.substring(0, username.length() - charsToRemove - 1);
+            truncatedUsername += "...";
+            text.setText(truncatedUsername);
+        }
+
+        return text;
     }
 
     /* HELPER METHODS */
@@ -729,9 +760,9 @@ public class GameScreenController extends ScreenController {
         waiting = true;
 
         if(    message.getTypeOfMessage() == TypeOfMessage.BUILD_CELL
-            || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER
-            || message.getTypeOfMessage() == TypeOfMessage.SET_POSITION_OF_WORKER) {
-                restoreHighlight();
+                || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER
+                || message.getTypeOfMessage() == TypeOfMessage.SET_POSITION_OF_WORKER) {
+            restoreHighlight();
         }
     }
 
@@ -761,99 +792,5 @@ public class GameScreenController extends ScreenController {
     @FXML
     public void topViewButtonClicked(ActionEvent actionEvent) {
         // todo
-    }
-
-    //todo rimuovi da qui in giù
-
-    // PER FUNZIONARE IN FASE DI TEST, BISOGNA COMMENTARE modifiedWorkers.clear() NEL update() IN Location.java
-    @FXML
-    public void test1ButtonClicked(ActionEvent actionEvent) throws CellOutOfBoundsException, WorkerAlreadyPresentException {
-        Cell cell = match.getIsland().getCell(4, 4);
-        match.getLocation().setLocation(cell, worker1_1);
-        updateWorkersPosition();
-    }
-
-    public void test2ButtonClicked(ActionEvent actionEvent) throws CellOutOfBoundsException, BuildLowerComponentException {
-        Cell cell4_4 = match.getIsland().getCell(4, 4);
-        match.getIsland().addComponent(Component.DOME, cell4_4);
-        updateCell(cell4_4);
-
-        Cell cell1_1 = match.getIsland().getCell(1, 1);
-        match.getIsland().addComponent(Component.DOME, cell1_1);
-        updateCell(cell1_1);
-
-
-        Cell cell3_0 = match.getIsland().getCell(3, 0);
-        match.getIsland().addComponent(Component.FIRST_LEVEL, cell3_0);
-        updateCell(cell3_0);
-    }
-
-
-    @FXML
-    public void placeWorkerButtonClicked(ActionEvent actionEvent) {
-
-    }
-
-    @FXML
-    public void moveButtonClicked(ActionEvent actionEvent) {
-
-    }
-
-    private Match match;
-    private Player player1;
-    private Player player2;
-    private Cell[][] fieldCache;
-    private Location locationCache;
-    private it.polimi.ingsw.psp40.model.Worker worker1_1;
-    private it.polimi.ingsw.psp40.model.Worker worker1_2;
-    private it.polimi.ingsw.psp40.model.Worker worker2_1;
-    private it.polimi.ingsw.psp40.model.Worker worker2_2;
-    public void init() throws WorkerAlreadyPresentException, CellOutOfBoundsException, ParseException, BuildLowerComponentException {
-        match = new Match(66666);
-
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String birthDate1 = "22/03/1998";
-        String birthDate2 = "26/07/1997";
-        Date date1 = dateFormat.parse(birthDate1);
-        Date date2 = dateFormat.parse(birthDate2);
-        player1 = match.createPlayer("Mariossssss", date1);
-        player2 = match.createPlayer("Luigi", date2);
-
-        worker1_1 = player1.addWorker(Colors.RED);
-        worker1_2 = player1.addWorker(Colors.YELLOW);
-        worker2_1 = player2.addWorker(Colors.BLUE);
-        worker2_2 = player2.addWorker(Colors.GREEN);
-
-        Cell initCellWorker1_1 = match.getIsland().getCell(0, 1);
-        Cell initCellWorker1_2 = match.getIsland().getCell(3, 3);
-        Cell initCellWorker2_1 = match.getIsland().getCell(1, 2);
-        Cell initCellWorker2_2 = match.getIsland().getCell(1, 0);
-
-
-        match.getLocation().setLocation(initCellWorker1_1, worker1_1);
-        match.getLocation().setLocation(initCellWorker1_2, worker1_2);
-        match.getLocation().setLocation(initCellWorker2_1, worker2_1);
-        match.getLocation().setLocation(initCellWorker2_2, worker2_2);
-
-
-        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(0, 1));
-        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(0, 1));
-
-        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 0));
-        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(1, 0));
-        match.getIsland().addComponent(Component.THIRD_LEVEL, match.getIsland().getCell(1, 0));
-
-        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
-
-        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(3, 3));
-        match.getIsland().addComponent(Component.SECOND_LEVEL, match.getIsland().getCell(3, 3));
-        match.getIsland().addComponent(Component.THIRD_LEVEL, match.getIsland().getCell(3, 3));
-
-        match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(4, 4));
-
-        match.getMatchProperties().resetAllParameter();
-
-        fieldCache = match.getIsland().getField();
-        locationCache = match.getLocation();
     }
 }

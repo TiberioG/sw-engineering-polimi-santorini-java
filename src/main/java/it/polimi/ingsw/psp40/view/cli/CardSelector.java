@@ -116,7 +116,6 @@ public class CardSelector {
 
                 } //end system in available
             } catch (IOException e) {
-                //todo frame per except
             }
         }// end while true
 
@@ -173,7 +172,6 @@ public class CardSelector {
 
                 } //end system in available
             } catch (IOException e) {
-                //todo frame per except
             }
         }// end while true
 

@@ -45,8 +45,8 @@ public class CoolCLI implements ViewInterface {
     private Date date = null; //
     private int numOfPlayers = 0;
 
-    private static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
-    private static final int MAX_PORT = 50000;
+    private static final int MIN_PORT = Client.MIN_PORT;
+    private static final int MAX_PORT = Client.MAX_PORT;
     private static final int ROWS = 50;  //number of rows of terminal window
     private static final int COLS = 160; //number of columns of terminal window
     private static final int SPEED = 1000; //seconds to keep showing message before going on
@@ -785,7 +785,6 @@ public class CoolCLI implements ViewInterface {
 
                 } //end system in available
             } catch (IOException | InterruptedException e) {
-                //todo frame per except
             }
         }// end while true
 
@@ -881,7 +880,6 @@ public class CoolCLI implements ViewInterface {
 
                 } //end system in available
             } catch (IOException | InterruptedException e) {
-                //todo frame per except
             }
         }// end while true
 
@@ -1001,7 +999,6 @@ public class CoolCLI implements ViewInterface {
 
                 } //end system in available
             } catch (IOException | InterruptedException e) {
-                //todo frame per except
             }
         }// end while true
 

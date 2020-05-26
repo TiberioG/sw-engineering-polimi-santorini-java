@@ -43,9 +43,6 @@ public class CLI implements ViewInterface {
     private static final PrintWriter out = new PrintWriter(System.out, true);
     private static final Scanner in = new Scanner(System.in);
 
-    private static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
-    private static final int MAX_PORT = 50000;
-
     private final Utils utils = new Utils(in, out);
 
     private boolean debug = Configuration.DEBUG;
@@ -75,7 +72,7 @@ public class CLI implements ViewInterface {
             out.println("IP address of server?");
             ip = utils.readIp();
             System.out.println("Port number?");
-            port = utils.validateIntInput(MIN_PORT, MAX_PORT);
+            port = utils.validateIntInput(Client.MIN_PORT, Client.MAX_PORT);
         }
         client.setServerIP(ip);
         client.setServerPort(port);
@@ -273,7 +270,6 @@ public class CLI implements ViewInterface {
         String[] names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
 
         utils.singleTableCool("Players available", names, 100);
-        //todo double column for also card display
 
         int selection = utils.readNumbers(0, names.length -1);
         client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, names[selection]));

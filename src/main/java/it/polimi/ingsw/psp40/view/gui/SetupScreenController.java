@@ -86,14 +86,14 @@ public class SetupScreenController extends ScreenController {
         UtilsGUI.buttonHoverEffect(sendInfoButton);
     }
 
-        // todo remove me, just for testing
+    // just for testing
     protected void mockSendConnect () {
         getClient().setServerIP("localhost");
         getClient().setServerPort(Integer.parseInt("1234"));
         getClient().connectToServer();
     }
 
-    // todo remove me, just for testing
+    // just for testing
     protected void mockSendLogin () {
         String username = (new Date()).toString();
         Date birthday = new Date();

@@ -141,7 +141,6 @@ public class Turn {
      * @return a {@link boolean} which indicate if the player has win or not
      */
     public void setSelectedWorker(Worker selectedWorker) {
-        //todo aggiungere check che il worker appartenga al player
         this.selectedWorker = selectedWorker;
     }
 

@@ -32,6 +32,8 @@ public class GUI extends Application implements ViewInterface {
 
     private Stage primaryStage;
 
+    private static PopupStage popup;
+
     private Client client;
 
     private final String errorString = "ERROR";
@@ -84,6 +86,7 @@ public class GUI extends Application implements ViewInterface {
                 scene = new Scene(new Label(errorString));
             }
             primaryStage.setScene(scene);
+            GUI.deletePopup();
             functionInterface.executeFunction();
         });
     }
@@ -113,7 +116,7 @@ public class GUI extends Application implements ViewInterface {
             setupScreenController = fxmlLoader.getController();
             setupScreenController.setClient(client);
 
-            // todo remove me, just for testing
+            // just for testing
             if (mockingConnection) {
                 setupScreenController.mockSendConnect();
             }
@@ -142,7 +145,7 @@ public class GUI extends Application implements ViewInterface {
     public void displayLogin() {
         setupScreenController.displayUserForm();
 
-        // todo remove me, just for testing
+        // just for testing
         if (mockingConnection) {
             setupScreenController.mockSendLogin();
         }
@@ -218,7 +221,7 @@ public class GUI extends Application implements ViewInterface {
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
         System.out.println("Card selection");
 
-        // todo remove me, just for testing
+        // just for testing
         if (mockingCard) {
            int[] selection = {0, 1};
            client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
@@ -230,7 +233,6 @@ public class GUI extends Application implements ViewInterface {
                 cardScreenController.setPrimaryStage(primaryStage);
                 cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
             });
-
         }
     }
 
@@ -273,6 +275,7 @@ public class GUI extends Application implements ViewInterface {
             playerScreenController.setPrimaryStage(primaryStage);
             playerScreenController.displayPlayersForInitialSelection(allPlayers);
         });
+
     }
 
     @Override
@@ -341,5 +344,17 @@ public class GUI extends Application implements ViewInterface {
             popup.setLoser(player);
             popup.show();
         });
+    }
+
+    static void showPopup(PopupStage popupArg) {
+        popup = popupArg;
+        popup.show();
+    }
+
+    static void deletePopup() {
+        if(popup != null) {
+            popup.close();
+            popup = null;
+        }
     }
 }

@@ -40,7 +40,6 @@ public class Controller implements Listener<Message> {
     private void createNewMatch(int matchID) {
         virtualView.setMatchID(matchID);
         match = new Match(matchID, this.virtualView);
-        virtualView.setMatch(match);
     }
 
     private void addPlayerToMatch(String name, Date birthday) {

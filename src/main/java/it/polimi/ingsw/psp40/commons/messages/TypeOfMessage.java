@@ -7,7 +7,7 @@ public enum TypeOfMessage {
     DISCONNECTED_SERVER_SIDE,
     LOGIN_SUCCESSFUL,
     LOGIN_FAILURE,
-    NUM_PLAYERS_FAILURE, // todo implementarlo client side
+    NUM_PLAYERS_FAILURE,
     LOBBY_CREATED,
     CREATED_MATCH,      //obj_type : null
     START_MATCH("startMatch"),      //obj_type : null

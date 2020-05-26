@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
+import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
@@ -23,9 +24,8 @@ public class Client implements ServerObserver {
 
   /* Attributes */
 
-  // todo rimuovere quelli in CLI
-  public static final int MIN_PORT = 1000; // todo usare quelli del server. Possibile?
-  public static final int MAX_PORT = 50000;
+  public static final int MIN_PORT = Server.MIN_PORT;
+  public static final int MAX_PORT = Server.MAX_PORT;
 
   private ViewInterface view;
 
@@ -127,15 +127,6 @@ public class Client implements ServerObserver {
    */
   public void handleMessage(Message message){
     switch (message.getTypeOfMessage()) {
-      /*case CARD_GET:
-        //deserializzare qui
-        view.cardSelection();
-        //todo passare una lista di carte
-
-      case REQUEST_INITIAL_POSITION:
-        //deserial
-        view.setInitialPositionco(List < CoordinatesMessage >); //ci piace??*/
-
       case GENERIC_MESSAGE:
         view.displayGenericMessage((String)message.getPayload(String.class));
         break;
@@ -187,7 +178,6 @@ public class Client implements ServerObserver {
 
       case CHOOSE_PERSONAL_CARD:
         List<TuplaGenerics> listAvailableCardFromServer = (List<TuplaGenerics>) message.getPayload(new TypeToken<List<TuplaGenerics<Card,String>>>() {}.getType());
-        //todo migrate this to cli and gui for different logic
         List<Card> availableCards = new ArrayList<>();
         listAvailableCardFromServer.forEach(tupla -> {
           if (tupla.getSecond() == null) {
