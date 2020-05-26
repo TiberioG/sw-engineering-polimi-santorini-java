@@ -573,7 +573,6 @@ public class CoolCLI implements ViewInterface {
     }
 
 
-    @Override
     public void displayMoveWorker() {
         Integer[] starting = getMyWorkers().get(currentWorkerId);
 
@@ -615,7 +614,6 @@ public class CoolCLI implements ViewInterface {
         }
     }
 
-    @Override
     public void displayBuildBlock() {
         left.clear();
         left.printWrapped("What cell would you like to build in? Use arrow to select and confirm with SPACEBAR");
@@ -690,6 +688,8 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayEndTurn() {
+        left.clear();
+        left.println("Your turn is over"); // todoo cool
     }
 
     @Override

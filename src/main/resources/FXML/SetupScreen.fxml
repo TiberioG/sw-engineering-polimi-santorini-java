@@ -40,7 +40,7 @@
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></DatePicker>
-            <Label text="Numero Giocatori:" textFill="#346b93" />
+            <Label text="Number of Players:" textFill="#346b93" />
             <ComboBox fx:id="numOfPlayerComboBox" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="30.0" />

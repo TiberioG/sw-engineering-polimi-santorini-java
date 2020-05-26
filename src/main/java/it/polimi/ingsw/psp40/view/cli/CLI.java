@@ -350,7 +350,6 @@ public class CLI implements ViewInterface {
     }
 
 
-    @Override
     public void displayMoveWorker() {
         out.println("Now you can mover your worker");
         Cell cellToMove = null;
@@ -365,7 +364,6 @@ public class CLI implements ViewInterface {
     }
 
 
-    @Override
     public void displayBuildBlock(){
         out.println("what cell would you like to build in?");
         List<Cell> availableCell = client.getAvailableBuildCells().keySet().stream().collect(Collectors.toList());
@@ -422,6 +420,7 @@ public class CLI implements ViewInterface {
 
     @Override
     public void displayEndTurn() {
+        out.println("Your turn is over");
     }
 
     private void showIsland() {

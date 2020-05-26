@@ -92,13 +92,13 @@ public class GUI extends Application implements ViewInterface {
         String text;
         switch (remainingPlayers) {
             case 0:
-                text = "La partita sta per iniziare!";
+                text = "The game's starting!";
                 break;
             case 1:
-                text = "In attesa di un altro giocatore";
+                text = "Waiting for another player";
                 break;
             default:
-                text = "In attesa di altri " + remainingPlayers + " giocatori";
+                text = "Waiting for others " + remainingPlayers + " players";
                 break;
         }
         return text;
@@ -135,7 +135,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displaySetupFailure() {
-        setupScreenController.errorAlert("Il server non è raggiungibile, inserisci un altro indirizzo!");
+        setupScreenController.errorAlert("The server is not reachable, please enter another address!");
     }
 
     @Override
@@ -157,7 +157,7 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayLoginFailure(String details) {
         System.out.println(details);
-        setupScreenController.errorAlert("Il nome è già utilizzato, inserisci un'altro nome!");
+        setupScreenController.errorAlert("The name is already used, enter another name!");
     }
 
     @Override
@@ -306,16 +306,6 @@ public class GUI extends Application implements ViewInterface {
         Platform.runLater(()-> {
             gameScreenController.endTurn();
         });
-    }
-
-    @Override
-    public void displayMoveWorker() {
-
-    }
-
-    @Override
-    public void displayBuildBlock() {
-
     }
 
     @Override
