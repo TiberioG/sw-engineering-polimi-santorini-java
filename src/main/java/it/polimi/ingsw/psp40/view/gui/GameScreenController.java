@@ -9,6 +9,7 @@ import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.model.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Dimension2D;
@@ -16,8 +17,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
@@ -61,6 +64,12 @@ public class GameScreenController extends ScreenController {
     @FXML
     private BorderPane borderPane;
 
+    @FXML
+    private AnchorPane rightAnchorPane;
+    @FXML
+    private AnchorPane leftAnchorPane;
+
+
     /* BORDER PANE: CENTER */
     @FXML
     private AnchorPane centerAnchorPane;
@@ -94,6 +103,8 @@ public class GameScreenController extends ScreenController {
     private ColorAdjust grayscale = new ColorAdjust(0, -1, 0, 0); // grayscale.setSaturation(-1);
     private boolean isMapDisabled = false;
 
+    private List<ImageView> listOfPlayerImage = new ArrayList<>();
+
     /* Methods */
 
     @FXML
@@ -120,6 +131,42 @@ public class GameScreenController extends ScreenController {
 
         disableMap(true); // start with map disabled
     }
+
+    protected void setPlayersInfo(List<Player> playerList) {
+        Platform.runLater(() -> {
+            listOfPlayerImage = new ArrayList<>();
+            playerList.forEach(player -> {
+                ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
+                imageView.setFitHeight(150);
+                imageView.setPreserveRatio(true);
+                listOfPlayerImage.add(imageView);
+            });
+
+            rightAnchorPane.getChildren().add(listOfPlayerImage.get(0));
+            AnchorPane.setBottomAnchor(listOfPlayerImage.get(0), 10.0);
+            Label labelFirstPlayer = new Label(playerList.get(0).getName());
+            rightAnchorPane.getChildren().add(labelFirstPlayer);
+            AnchorPane.setRightAnchor(labelFirstPlayer, 30.0);
+            AnchorPane.setBottomAnchor(labelFirstPlayer, 30.0);
+
+            leftAnchorPane.getChildren().add(listOfPlayerImage.get(1));
+            AnchorPane.setBottomAnchor(listOfPlayerImage.get(1), 10.0);
+            Label labelSecondPlayer = new Label(playerList.get(1).getName());
+            leftAnchorPane.getChildren().add(labelSecondPlayer);
+            AnchorPane.setLeftAnchor(labelSecondPlayer, 30.0);
+            AnchorPane.setBottomAnchor(labelSecondPlayer, 30.0);
+
+            if (listOfPlayerImage.size() == 3) {
+                leftAnchorPane.getChildren().add(listOfPlayerImage.get(2));
+                AnchorPane.setTopAnchor(listOfPlayerImage.get(2), 10.0);
+                Label labelThirdPlayer = new Label(playerList.get(2).getName());
+                leftAnchorPane.getChildren().add(labelThirdPlayer);
+                AnchorPane.setLeftAnchor(labelThirdPlayer, 30.0);
+                AnchorPane.setTopAnchor(labelThirdPlayer, 120.0);
+            }
+        });
+    }
+
 
     /* METHODS TO HANDLE BLOCKS CLICK */
 

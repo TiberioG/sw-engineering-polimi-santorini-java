@@ -63,6 +63,7 @@ ListView .list-cell:even {
 
 Label {
     -fx-font-family: "Ink Blossoms";
+    -fx-text-fill: #346b93;
 }
 
 .error-text {

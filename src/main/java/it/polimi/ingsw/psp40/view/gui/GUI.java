@@ -128,6 +128,7 @@ public class GUI extends Application implements ViewInterface {
                 gameScreenController.setClient(client);
                 gameScreenController.updateWholeIsland();
                 gameScreenController.setInitialPosition(playerList);
+                gameScreenController.setPlayersInfo(playerList);
             });
         });
     }

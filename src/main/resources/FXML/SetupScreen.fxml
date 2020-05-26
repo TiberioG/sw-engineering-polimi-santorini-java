@@ -30,20 +30,20 @@
          </children></VBox>
       <VBox fx:id="vBoxForUserProps" alignment="CENTER" layoutX="460.0" layoutY="191.0" prefHeight="364.0" prefWidth="290.0" visible="false">
          <children>
-            <TextField fx:id="usernameTextField" alignment="CENTER" focusTraversable="false" onAction="#onEnterIpAddress" onKeyTyped="#ipAddressChanged" prefHeight="30.0" promptText="Nome">
+            <TextField fx:id="usernameTextField" alignment="CENTER" focusTraversable="false" onAction="#onEnterIpAddress" onKeyTyped="#ipAddressChanged" prefHeight="30.0" promptText="Name">
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></TextField>
-            <DatePicker fx:id="birthdayDatePicker" promptText="Data di nascita" showWeekNumbers="false">
+            <DatePicker fx:id="birthdayDatePicker" promptText="Birthday" showWeekNumbers="false">
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></DatePicker>
-            <Label text="Numero Giocatori:" textFill="WHITE" />
+            <Label text="Numero Giocatori:" textFill="#346b93" />
             <ComboBox fx:id="numOfPlayerComboBox" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></ComboBox>
-            <Button fx:id="sendInfoButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleSendInfoButton" prefWidth="124.0" styleClass="connect-button" text="Prosegui" textAlignment="CENTER">
+            <Button fx:id="sendInfoButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleSendInfoButton" prefWidth="124.0" styleClass="connect-button" text="Continue" textAlignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
