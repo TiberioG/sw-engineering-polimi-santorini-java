@@ -5,6 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +14,10 @@ public class LobbyScreenController extends ScreenController {
     ObservableList<String> listOfPlayers = FXCollections.observableArrayList ();
 
     @FXML
-    private Label titleLobbyLabel;
+    private Text titleLobbyText;
 
     @FXML
-    private Label subTitleLobbyLabel;
+    private Text subTitleLobbyText;
 
     @FXML
     private ListView listViewPlayers;
@@ -25,7 +27,7 @@ public class LobbyScreenController extends ScreenController {
 
     public void updateTitleLabel(String text) {
         Platform.runLater(() -> {
-            titleLobbyLabel.setText(text);
+            titleLobbyText.setText(text);
         });
     }
 
@@ -33,7 +35,7 @@ public class LobbyScreenController extends ScreenController {
         Platform.runLater(() -> {
             if (!listOfPlayers.contains(nameOfPlayer)) listOfPlayers.add(nameOfPlayer);
             listViewPlayers.setItems(listOfPlayers);
-            subTitleLobbyLabel.setVisible(true);
+            subTitleLobbyText.setVisible(true);
         });
     }
 
@@ -42,7 +44,7 @@ public class LobbyScreenController extends ScreenController {
         Platform.runLater(() -> {
             listOfPlayers.remove(nameOfPlayer);
             listViewPlayers.setItems(listOfPlayers);
-            if (listOfPlayers.size() == 0) subTitleLobbyLabel.setVisible(false);
+            if (listOfPlayers.size() == 0) subTitleLobbyText.setVisible(false);
         });
     }
 

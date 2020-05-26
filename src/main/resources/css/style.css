@@ -61,15 +61,21 @@ ListView .list-cell:even {
 }
 
 
-Label {
+Label, .label, Text, .text {
     -fx-font-family: "Ink Blossoms";
     -fx-text-fill: #346b93;
+}
+
+
+.outline {
+    -fx-fill: white;
+    -fx-stroke: #346b93;
+    -fx-stroke-width: 1px;
 }
 
 .error-text {
     -fx-border-color: red;
 }
-
 
 .card-title, .card-title .viewport, .card-title .content{
     -fx-font-family: "Garamond";

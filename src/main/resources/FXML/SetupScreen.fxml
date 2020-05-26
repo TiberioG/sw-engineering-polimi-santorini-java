@@ -6,6 +6,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.BoxBlur?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -27,7 +28,8 @@
                   <Font size="15.0" />
                </font>
             </Button>
-         </children></VBox>
+         </children>
+      </VBox>
       <VBox fx:id="vBoxForUserProps" alignment="CENTER" layoutX="460.0" layoutY="191.0" prefHeight="364.0" prefWidth="290.0" visible="false">
          <children>
             <TextField fx:id="usernameTextField" alignment="CENTER" focusTraversable="false" onAction="#onEnterIpAddress" onKeyTyped="#ipAddressChanged" prefHeight="30.0" promptText="Name">
