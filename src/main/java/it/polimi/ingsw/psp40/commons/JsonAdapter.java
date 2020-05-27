@@ -15,7 +15,7 @@ public class JsonAdapter {
     private JsonReader jsonReader;
     private JsonObject mainJsonObject;
     private JsonArray mainJsonArray;
-    private static final Gson gsonBuilder = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
+    private static final Gson gsonBuilder = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().enableComplexMapKeySerialization().create();
 
     /* Constructor(s) */
 

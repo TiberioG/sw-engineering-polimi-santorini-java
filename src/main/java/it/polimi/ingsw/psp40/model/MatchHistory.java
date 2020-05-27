@@ -18,7 +18,7 @@ public class MatchHistory {
     public synchronized static void saveMatch(Match match) {
 
         try (Writer writer = new FileWriter("backupOfMatches.json", false)) {
-            Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().enableComplexMapKeySerialization().create();
+            Gson gson = JsonAdapter.getGsonBuilder();
             JsonArray jsonArray = new JsonArray();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("matchId", match.getMatchID());
