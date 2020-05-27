@@ -84,7 +84,7 @@ public class DoubleComponentTest {
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyBuild = new DoubleComponent(match); //Here setup specific
-        match.getMatchProperties().resetAllParameter();
+        match.getMatchProperties().resetParameterForTurn();
     }
 
     @Test

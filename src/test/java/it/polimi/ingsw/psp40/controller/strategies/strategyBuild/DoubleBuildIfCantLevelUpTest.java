@@ -91,7 +91,7 @@ public class DoubleBuildIfCantLevelUpTest {
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyBuild = new DoubleBuildIfCantLevelUp(match);
-        match.getMatchProperties().resetAllParameter();
+        match.getMatchProperties().resetParameterForTurn();
         match.getMatchProperties().getPerformedPhases().add(PhaseType.MOVE_WORKER);
     }
 

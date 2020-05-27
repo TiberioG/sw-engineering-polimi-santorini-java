@@ -192,4 +192,9 @@ public class Match extends Publisher<Message> {
             publish(new Message("ALL", TypeOfMessage.WINNING_PLAYER_UPDATED, this.winningPlayer));
         }
     }
+
+
+    public void saveMatch() {
+        MatchHistory.saveMatch(this);
+    }
 }

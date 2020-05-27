@@ -1,25 +1,21 @@
 package it.polimi.ingsw.psp40.controller;
 
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.Listener;
 import it.polimi.ingsw.psp40.commons.messages.*;
-import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.*;
-import it.polimi.ingsw.psp40.network.client.Client;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
-import it.polimi.ingsw.psp40.view.cli.CoolCLI;
-import it.polimi.ingsw.psp40.view.gui.GUI;
-import javafx.application.Application;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Level;
+
 import java.util.stream.Collectors;
 
 public class Controller implements Listener<Message> {
@@ -27,6 +23,7 @@ public class Controller implements Listener<Message> {
     private CardManager cardManager;
     private VirtualView virtualView;
     private TurnManager turnManager;
+    private JsonObject oldMatch;
 
     /**
      *
@@ -77,18 +74,51 @@ public class Controller implements Listener<Message> {
         virtualView.displayMessage(new Message(nameOfPlayer, TypeOfMessage.CHOOSE_PERSONAL_CARD, listOfSelectableCards));
     }
 
+    private boolean checkExistanceOfOldMatch(Map<String, String> playersData) {
+        List<String> playerNames = new ArrayList<>();
+        playersData.forEach((username, date) -> {
+            playerNames.add(username);
+        });
+        oldMatch = MatchHistory.retrieveNewestMatchFromNames(playerNames);
+        return oldMatch != null;
+    }
+
+    private void restoreOldMatch(Message message) {
+        MatchHistory.restoreMatch(virtualView, oldMatch);
+        virtualView.setMatchID(match.getMatchID());
+
+        MatchHistory.restorePlayers(match, oldMatch);
+
+        MatchHistory.restoreIsland(match, oldMatch);
+
+        MatchHistory.restoreMatchProperties(match, oldMatch);
+
+        MatchHistory.restoreCurrentPlayer(match, oldMatch);
+
+        //gestire location
+
+        turnManager = new TurnManager(match, virtualView);
+
+
+    }
+
     @SuppressWarnings("unused")
     private void startMatch(Message message) {
-        createNewMatch(message.getMatchID());
-        ((Map<String, String>)message.getPayload(Map.class)).forEach((username, date) -> {
-            try {
-                addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        });
-        match.setCurrentPlayer(match.getPlayers().get(0));
-        virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
+        Map<String, String> playersData = (Map<String, String>)message.getPayload(Map.class);
+        if (checkExistanceOfOldMatch(playersData)) {
+            //propose the possibility of restore old match
+        } else {
+            createNewMatch(message.getMatchID());
+            playersData.forEach((username, date) -> {
+                try {
+                    addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            });
+            match.setCurrentPlayer(match.getPlayers().get(0));
+            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
+        }
     }
 
     @SuppressWarnings("unused")

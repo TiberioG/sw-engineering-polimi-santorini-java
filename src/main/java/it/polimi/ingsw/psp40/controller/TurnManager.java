@@ -241,7 +241,8 @@ public class TurnManager {
      * this method initializes the current round by resetting the match properties related to the rounds and checking a player's loss, also notifies the virtual view of the start of the turn
      */
     private void inizializedCurrentTurn() {
-        match.getMatchProperties().resetAllParameter();
+        match.saveMatch();
+        match.getMatchProperties().resetParameterForTurn();
         currentTurn.initializeTurn();
 
         //se non ci sono celle disponibili per muoversi

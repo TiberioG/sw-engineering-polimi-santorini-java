@@ -17,13 +17,12 @@ public class MatchProperties {
     private boolean othersCantLevelUp = false;
 
 
-    public void resetAllParameter() {
+    public void resetParameterForTurn() {
         currentTurnId = -1;
         initialPositionMap = new HashMap<>();
         initialLevels = new HashMap<>();
         builtInThisTurn = new HashMap<>();
         performedPhases = new ArrayList<>();
-        othersCantLevelUp = false;
     }
 
     public HashMap<Worker, Cell> getInitialPositionMap() {

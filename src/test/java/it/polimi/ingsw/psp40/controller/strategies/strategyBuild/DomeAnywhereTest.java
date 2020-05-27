@@ -90,7 +90,7 @@ Initial Map:
 
 
             strategyBuild = new DomeAnywhere(match); //SET HERE STRATEGYY
-            match.getMatchProperties().resetAllParameter();
+            match.getMatchProperties().resetParameterForTurn();
         }
 
         @Test

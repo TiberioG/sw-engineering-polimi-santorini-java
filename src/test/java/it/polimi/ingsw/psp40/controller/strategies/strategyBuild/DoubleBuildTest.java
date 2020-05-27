@@ -83,7 +83,7 @@ public class DoubleBuildTest {
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyBuild = new DoubleBuild(match); //SET HERE STRATEGYY
-        match.getMatchProperties().resetAllParameter();
+        match.getMatchProperties().resetParameterForTurn();
     }
 
     @Test

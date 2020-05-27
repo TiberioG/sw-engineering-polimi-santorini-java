@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.InputStreamReader;
+import java.io.Writer;
 
 /**
  * This is an adapter class for {@link JsonReader} class and {@link Gson} class
@@ -14,6 +15,7 @@ public class JsonAdapter {
     private JsonReader jsonReader;
     private JsonObject mainJsonObject;
     private JsonArray mainJsonArray;
+    private static final Gson gsonBuilder = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
 
     /* Constructor(s) */
 
@@ -111,6 +113,9 @@ public class JsonAdapter {
         } else return 0;
     }
 
+    public static Gson getGsonBuilder() {
+        return gsonBuilder;
+    }
 
     public static boolean getBooleanFromJson(JsonObject jsonObject, String keyValue) {
         JsonElement jsonElement = jsonObject.get(keyValue);
@@ -120,9 +125,7 @@ public class JsonAdapter {
     }
 
     public static String toJsonClass(Object object) {
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().enableComplexMapKeySerialization().create();
-        return gson.toJson(object);
+        return getGsonBuilder().toJson(object);
     }
-
 
 }

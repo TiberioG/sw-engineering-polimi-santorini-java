@@ -68,13 +68,11 @@ public class Message implements Serializable {
     }
 
     public Object getPayload(Class classType) {
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
-        return gson.fromJson(this.jsonMessage, classType);
+        return JsonAdapter.getGsonBuilder().fromJson(this.jsonMessage, classType);
     }
 
     public Object getPayload(Type type) {
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
-        return gson.fromJson(this.jsonMessage, type);
+        return JsonAdapter.getGsonBuilder().fromJson(this.jsonMessage, type);
     }
 
     @Override

@@ -144,8 +144,7 @@ public class Location extends Publisher<Message> {
 
     public Location copy() {
         String locationString = JsonAdapter.toJsonClass(this);
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
-        return gson.fromJson(locationString, Location.class);
+        return JsonAdapter.getGsonBuilder().fromJson(locationString, Location.class);
     }
 
     private void update () {
