@@ -129,13 +129,43 @@ class Frame {
 
     void centerFixed (String toWrite, int len, int delay){
         Terminal.hideCursor();
+        int diff = (colSpan - len) / 2;
+        if (diff < 0){
+            diff = 0;
+        }
         String[] lines = toWrite.split("\\r?\\n");
         for (int i = 0; i<lines.length; i++){
-            int diff = (colSpan - len) / 2;
-            if (diff < 0){
-                diff = 0;
-            }
             Terminal.moveAbsoluteCursor(absInit[0]+ i + 1, absInit[1] + diff);
+            System.out.print(lines[i]);
+            if (delay != 0) {
+                Utils.doTimeUnitSleep(delay);
+            }
+        }
+        lastRowRitten = lastRowRitten + lines.length + 1;
+        Terminal.showCursor();
+    }
+
+    void centerCenterFixed (String toWrite, String title, int len, int hei,  int delay){
+        Terminal.hideCursor();
+        int diffL = (colSpan - len) / 2;
+        if (diffL < 0){
+            diffL= 0;
+        }
+        int diffH = (rowSpan - hei) / 2;
+        if (diffH < 0){
+            diffH = 0;
+        }
+        int lenTitle = title.length();
+        int diff = (colSpan - lenTitle) / 2;
+        if (diff < 0){
+            diff = 0;
+        }
+        Terminal.moveAbsoluteCursor(absInit[0] + diffH - 2 , absInit[1] + diff);
+        System.out.print(title);
+        String[] lines = toWrite.split("\\r?\\n");
+        for (int i = 0; i<lines.length; i++){
+
+            Terminal.moveAbsoluteCursor(absInit[0]+ i + diffH, absInit[1] + diffL);
             System.out.print(lines[i]);
             if (delay != 0) {
                 Utils.doTimeUnitSleep(delay);
