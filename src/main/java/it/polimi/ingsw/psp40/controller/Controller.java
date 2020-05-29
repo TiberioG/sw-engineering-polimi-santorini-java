@@ -113,7 +113,6 @@ public class Controller implements Listener<Message> {
             virtualView.setMatchID(match.getMatchID());
 
             List<String> usernames = MatchHistory.getPlayersFromBrokenMatch(match, oldMatch);
-            match.getPlayers().forEach(player -> usernames.add(player.getName()));
             virtualView.restoreMatch(usernames);
 
             MatchHistory.restorePlayers(match, oldMatch);

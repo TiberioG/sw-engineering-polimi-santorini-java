@@ -427,6 +427,7 @@ public class Server
       }
 
       List<String> uuids = new ArrayList<>();
+      int oldMatchId = UUIDtoMatchMap.get(usernameToUUIDMap.get(usernames.get(0)));
 
       usernames.forEach( username -> {
         String UUID = usernameToUUIDMap.get(username);
@@ -434,7 +435,9 @@ public class Server
         UUIDtoMatchMap.put(UUID, matchID);
       });
 
+      matchToUUIDsMap.remove(oldMatchId);
       matchToUUIDsMap.put(matchID, uuids);
+      matchToVirtualViewMap.remove(oldMatchId);
       matchToVirtualViewMap.put(matchID, virtualView);
     }
   }
