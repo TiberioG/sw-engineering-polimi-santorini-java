@@ -3,8 +3,9 @@
 }
 
 .setup-pane {
-    -fx-background-image: url("../images/bg_modeselect.png");
-    -fx-background-size: cover;
+    -fx-background-image: url("../images/bgmodd.png");
+
+    -fx-background-position: right bottom;
 }
 
 .card-pane {

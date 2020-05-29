@@ -17,39 +17,60 @@ public class Hourglass implements Runnable{
     private Frame upper;
     private Frame lower;
     private volatile boolean cancelled;
+    private boolean lateral = false;
 
-    public Hourglass(Frame upper, Frame lower) {
+    public Hourglass(Frame upper, Frame lower, boolean lateral) {
         this.upper = upper;
         this.lower = lower;
+        this.lateral = lateral;
     }
 
     @Override
     public void run() {
-        try {
-            Terminal.noBuffer();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        upper.clear();
-        Terminal.hideCursor();
-        while (!cancelled) {
+        if(!lateral) {
             try {
-                lower.center( URLReader(getClass().getResource("/ascii/waiting")), 100);
-            } catch (IOException e) {
-                //
+                Terminal.noBuffer();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
-            for (int i = 1; i <= 39; i++) {
-                if (cancelled){
-                    break;
-                }
+            upper.clear();
+            Terminal.hideCursor();
+            while (!cancelled) {
                 try {
-                    upper.centerFixed(URLReader(getClass().getResource("/ascii/hourglass/" +i)), 26, 10);
+                    lower.center(URLReader(getClass().getResource("/ascii/waiting")), 100);
                 } catch (IOException e) {
                     //
                 }
+                for (int i = 1; i <= 39; i++) {
+                    if (cancelled) {
+                        break;
+                    }
+                    try {
+                        upper.centerFixed(URLReader(getClass().getResource("/ascii/hourglass/" + i)), 26, 10);
+                    } catch (IOException e) {
+                        //
+                    }
+                }
+                Utils.doTimeUnitSleep(500);
             }
-            Utils.doTimeUnitSleep(500);
         }
+        else {
+            Terminal.hideCursor();
+            while (!cancelled) {
+                for (int i = 1; i <= 39; i++) {
+                    if (cancelled) {
+                        break;
+                    }
+                    try {
+                        upper.centerCenterFixed(URLReader(getClass().getResource("/ascii/hourglass/" + i)), "Your turn is over", 26, 23,10);
+                    } catch (IOException e) {
+                        //
+                    }
+                }
+                Utils.doTimeUnitSleep(500);
+            }
+        }
+
     }
 
     public void cancel()
