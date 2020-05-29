@@ -145,6 +145,20 @@ public class CLI implements ViewInterface {
     }
 
     @Override
+    public void displayProposeRestoreMatch() {
+        out.println("A game was found broken, you want to restore it?");
+        out.println("Enter Y to restore, N to create new match\n");
+        String response = in.nextLine();
+        while (!response.equals("Y") && !response.equals("N")) {
+            out.println("Please enter a valid response");
+            out.println("Enter Y to restore, N to create new match\n");
+            response = in.nextLine();
+        }
+
+        client.sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, response.equals("Y")));
+    }
+
+    @Override
     public void displayStartingMatch() {
         out.println("MATCH IS STARTING!!!!");
     }

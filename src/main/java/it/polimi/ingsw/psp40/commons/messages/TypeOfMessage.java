@@ -10,6 +10,8 @@ public enum TypeOfMessage {
     NUM_PLAYERS_FAILURE,
     LOBBY_CREATED,
     CREATED_MATCH,      //obj_type : null
+    PROPOSE_RESTORE_MATCH,
+    RESTORE_MATCH("restoreMatch"),
     START_MATCH("startMatch"),      //obj_type : null
     LOGIN,        //obj_type : Tupla(String, Date)
     USER_JOINED,

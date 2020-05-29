@@ -189,6 +189,7 @@ public class Match extends Publisher<Message> {
         Player player = getPlayerByName(name);
         if (player != null) {
             this.winningPlayer = player;
+            MatchHistory.deleteMatch(this.getMatchID());
             publish(new Message("ALL", TypeOfMessage.WINNING_PLAYER_UPDATED, this.winningPlayer));
         }
     }

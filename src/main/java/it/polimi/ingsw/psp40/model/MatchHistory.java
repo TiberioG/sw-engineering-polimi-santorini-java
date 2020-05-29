@@ -12,14 +12,34 @@ import it.polimi.ingsw.psp40.network.server.VirtualView;
 
 import java.io.*;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 public class MatchHistory {
 
     public synchronized static void saveMatch(Match match) {
+        JsonArray jsonArray = null;
+        try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
+            jsonArray = new Gson().fromJson(jsonReader, JsonArray.class);
+            JsonObject jsonObjectOfOldMatch = null;
+
+            if (jsonArray != null) {
+                Iterator<JsonElement> iterator = jsonArray.iterator();
+                while(iterator.hasNext() && jsonObjectOfOldMatch == null) {
+                    JsonElement currentJsonElement = iterator.next();
+                    Integer oldMatchId = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("matchId"), new TypeToken<Integer>() {}.getType());
+                    if (oldMatchId == match.getMatchID()) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+                }
+                if (jsonObjectOfOldMatch != null) jsonArray.remove(jsonObjectOfOldMatch);
+            }
+        } catch (IOException e) {}
+
+        if (jsonArray == null) jsonArray = new JsonArray();
 
         try (Writer writer = new FileWriter("backupOfMatches.json", false)) {
             Gson gson = JsonAdapter.getGsonBuilder();
-            JsonArray jsonArray = new JsonArray();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("matchId", match.getMatchID());
             jsonObject.addProperty("dateOfBuckup", new Date().toString());
@@ -35,22 +55,47 @@ public class MatchHistory {
         }
     }
 
-    public static JsonObject retrieveNewestMatchFromNames(List<String> names) {
-        JsonReader jsonReader = null;
-        try {
-            jsonReader = new JsonReader(new FileReader("backupOfMatches.json"));
-        } catch (FileNotFoundException e) {
+    public synchronized static void deleteMatch(Integer matchId) {
+        JsonArray jsonArray = null;
+        try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
+            jsonArray = new Gson().fromJson(jsonReader, JsonArray.class);
+            JsonObject jsonObjectOfOldMatch = null;
+
+            if (jsonArray != null) {
+                Iterator<JsonElement> iterator = jsonArray.iterator();
+                while(iterator.hasNext() && jsonObjectOfOldMatch == null) {
+                    JsonElement currentJsonElement = iterator.next();
+                    Integer oldMatchId = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("matchId"), new TypeToken<Integer>() {}.getType());
+                    if (oldMatchId == matchId) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+                }
+                if (jsonObjectOfOldMatch != null) jsonArray.remove(jsonObjectOfOldMatch);
+            }
+        } catch (IOException e) {}
+
+        if (jsonArray == null) jsonArray = new JsonArray();
+
+        try (Writer writer = new FileWriter("backupOfMatches.json", false)) {
+            Gson gson = JsonAdapter.getGsonBuilder();
+            gson.toJson(jsonArray, writer);
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        JsonArray jsonArray = new Gson().fromJson(jsonReader, JsonArray.class);
+    public synchronized static JsonObject retrieveMatchFromNames(List<String> names) {
         JsonObject jsonObjectOfOldMatch = null;
-        for (JsonElement element : jsonArray) {
-            Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
-            List<Player> playerList = gson.fromJson(element.getAsJsonObject().get("players"), new TypeToken<List<Player>>() {}.getType());
-            //check for comparision name
-            if (true && jsonObjectOfOldMatch == null) jsonObjectOfOldMatch = element.getAsJsonObject();
-        }
+        try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
+            JsonArray jsonArray = new Gson().fromJson(jsonReader, JsonArray.class);
+            Iterator<JsonElement> iterator = jsonArray.iterator();
+            while(iterator.hasNext() && jsonObjectOfOldMatch == null) {
+                JsonElement currentJsonElement = iterator.next();
+                List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("players"), new TypeToken<List<Player>>() {}.getType());
+
+                //check to compare names
+                if (playerList.stream().filter(player -> names.contains(player.getName())).collect(Collectors.toList()).size() == names.size()) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+            }
+        } catch (IOException e) {}
+
         return jsonObjectOfOldMatch;
     }
 
@@ -92,21 +137,16 @@ public class MatchHistory {
 
 
     public static void restoreCurrentPlayer(Match match, JsonObject oldMatch) {
-        Player oldCurrentPlayer = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("player"), new TypeToken<Player>() {}.getType());
+        Player oldCurrentPlayer = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("currentPlayer"), new TypeToken<Player>() {}.getType());
         match.setCurrentPlayer(oldCurrentPlayer.getName());
     }
 
 
     public static void restoreMatchProperties(Match match, JsonObject oldMatch) {
-        MatchProperties oldMatchProperties = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("matchProperties"), new TypeToken<Player>() {}.getType());
+        MatchProperties oldMatchProperties = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("matchProperties"), new TypeToken<MatchProperties>() {}.getType());
         MatchProperties newMatchProperties = match.getMatchProperties();
 
         newMatchProperties.setOthersCantLevelUp(oldMatchProperties.isOthersCantLevelUp());
     }
 
-
-
-    public static void main( String[] args ) {
-        MatchHistory.saveMatch(new Match(1));
-    }
 }

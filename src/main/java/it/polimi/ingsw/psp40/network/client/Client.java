@@ -154,6 +154,10 @@ public class Client implements ServerObserver {
         view.displayAddedToQueue((List<String>) detailsOfLobby.getFirst(), (Integer) detailsOfLobby.getSecond());
         break;
 
+      case PROPOSE_RESTORE_MATCH:
+        view.displayProposeRestoreMatch();
+        break;
+
       case START_MATCH:
         view.displayStartingMatch();
         break;

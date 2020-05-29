@@ -180,6 +180,11 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void displayProposeRestoreMatch() {
+
+    }
+
+    @Override
     public void displayStartingMatch() {
 
     }

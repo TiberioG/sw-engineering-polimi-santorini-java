@@ -313,6 +313,12 @@ public class CoolCLI implements ViewInterface {
         //left.printWrapped(details);
     }
 
+
+    @Override
+    public void displayProposeRestoreMatch() {
+
+    }
+
     /**
      * This method kills the hourglass and tells players match is starting!!
      */

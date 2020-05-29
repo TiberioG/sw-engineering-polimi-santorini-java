@@ -8,6 +8,7 @@ import it.polimi.ingsw.psp40.commons.Listener;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.*;
+import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
 import java.lang.reflect.InvocationTargetException;
@@ -79,44 +80,50 @@ public class Controller implements Listener<Message> {
         playersData.forEach((username, date) -> {
             playerNames.add(username);
         });
-        oldMatch = MatchHistory.retrieveNewestMatchFromNames(playerNames);
+        oldMatch = MatchHistory.retrieveMatchFromNames(playerNames);
         return oldMatch != null;
-    }
-
-    private void restoreOldMatch(Message message) {
-        MatchHistory.restoreMatch(virtualView, oldMatch);
-        virtualView.setMatchID(match.getMatchID());
-
-        MatchHistory.restorePlayers(match, oldMatch);
-
-        MatchHistory.restoreIsland(match, oldMatch);
-
-        MatchHistory.restoreMatchProperties(match, oldMatch);
-
-        MatchHistory.restoreCurrentPlayer(match, oldMatch);
-
-        //gestire location
-
-        turnManager = new TurnManager(match, virtualView);
-
-
     }
 
     @SuppressWarnings("unused")
     private void startMatch(Message message) {
         Map<String, String> playersData = (Map<String, String>)message.getPayload(Map.class);
+
+        createNewMatch(message.getMatchID());
+        playersData.forEach((username, date) -> {
+        try {
+            addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        });
+        match.setCurrentPlayer(match.getPlayers().get(0));
+
         if (checkExistanceOfOldMatch(playersData)) {
-            //propose the possibility of restore old match
+            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.PROPOSE_RESTORE_MATCH));
         } else {
-            createNewMatch(message.getMatchID());
-            playersData.forEach((username, date) -> {
-                try {
-                    addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            });
-            match.setCurrentPlayer(match.getPlayers().get(0));
+            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private void restoreMatch(Message message) {
+        boolean restoreMatch = (boolean)message.getPayload(boolean.class);
+        if (restoreMatch) {
+            match = MatchHistory.restoreMatch(virtualView, oldMatch);
+            virtualView.setMatchID(match.getMatchID());
+
+            MatchHistory.restorePlayers(match, oldMatch);
+
+            MatchHistory.restoreIsland(match, oldMatch);
+
+            MatchHistory.restoreMatchProperties(match, oldMatch);
+
+            MatchHistory.restoreCurrentPlayer(match, oldMatch);
+
+            //gestire location
+
+            turnManager = new TurnManager(match, virtualView);
+        } else {
             virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
         }
     }

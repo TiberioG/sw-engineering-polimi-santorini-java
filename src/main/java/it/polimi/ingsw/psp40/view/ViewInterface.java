@@ -22,6 +22,7 @@ public interface ViewInterface {
     void displayLoginFailure(String details);
     void displayUserJoined(String playerJoined, Integer remainingPlayer);
     void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer);
+    void displayProposeRestoreMatch();
     void displayStartingMatch();
     void displayDisconnected(String details);
     void displayGenericMessage(String message);
