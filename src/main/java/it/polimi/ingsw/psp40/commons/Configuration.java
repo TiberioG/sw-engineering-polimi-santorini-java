@@ -10,5 +10,5 @@ public class Configuration {
     public static final String strategyBuildPackage = controllerPackage + ".strategies.strategyBuild";
     public static final String strategyWinPackage = controllerPackage + ".strategies.strategyWin";
     public static final String strategyLosePackage = controllerPackage + ".strategies.strategyLose";
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 }

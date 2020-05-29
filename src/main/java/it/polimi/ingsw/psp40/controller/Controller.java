@@ -112,6 +112,10 @@ public class Controller implements Listener<Message> {
             match = MatchHistory.restoreMatch(virtualView, oldMatch);
             virtualView.setMatchID(match.getMatchID());
 
+            List<String> usernames = MatchHistory.getPlayersFromBrokenMatch(match, oldMatch);
+            match.getPlayers().forEach(player -> usernames.add(player.getName()));
+            virtualView.restoreMatch(usernames);
+
             MatchHistory.restorePlayers(match, oldMatch);
 
             MatchHistory.restoreIsland(match, oldMatch);

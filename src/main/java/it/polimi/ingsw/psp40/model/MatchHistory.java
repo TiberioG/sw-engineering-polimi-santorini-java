@@ -104,6 +104,11 @@ public class MatchHistory {
         return new Match(matchId, virtualView);
     }
 
+    public static List<String> getPlayersFromBrokenMatch(Match match, JsonObject oldMatch) {
+        List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
+        return playerList.stream().map(Player::getName).collect(Collectors.toList());
+    }
+
     public static void restorePlayers(Match match, JsonObject oldMatch) {
         List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
         playerList.forEach(oldPlayer -> {

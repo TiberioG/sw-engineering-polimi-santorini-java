@@ -123,9 +123,11 @@ public class Server
     int matchID = message.getMatchID();
     if(!UUID.equals("") || !username.equals("")) {
       if ((UUID.equals("ALL") || username.equals("ALL")) && matchID != 0) {
-        matchToUUIDsMap.get(matchID).forEach( uuid -> {
-          UUIDtoClientMap.get(uuid).sendMessage(message);
-        });
+        if(matchToUUIDsMap.get(matchID) != null) {
+          matchToUUIDsMap.get(matchID).forEach(uuid -> {
+            UUIDtoClientMap.get(uuid).sendMessage(message);
+          });
+        } else { LOGGER.log(Level.WARNING, "Something wrong"); }
       } else {
         String UUIDforUser = !UUID.equals("") ? UUID : usernameToUUIDMap.get(username);
         if (UUIDforUser != null && UUIDtoClientMap.containsKey(UUIDforUser)) {
@@ -416,6 +418,25 @@ public class Server
     UUIDtoUsernameMap.put(UUID, username);
     usernameToUUIDMap.put(username, UUID);
     birthdateMap.put(username, birthdate);
+  }
+
+  protected void restoreMatch(int matchID, VirtualView virtualView, List<String> usernames) {
+    if(virtualView != null) {
+      if(!usernameToUUIDMap.keySet().containsAll(usernames)) {
+        return;
+      }
+
+      List<String> uuids = new ArrayList<>();
+
+      usernames.forEach( username -> {
+        String UUID = usernameToUUIDMap.get(username);
+        uuids.add(UUID);
+        UUIDtoMatchMap.put(UUID, matchID);
+      });
+
+      matchToUUIDsMap.put(matchID, uuids);
+      matchToVirtualViewMap.put(matchID, virtualView);
+    }
   }
 
   /**

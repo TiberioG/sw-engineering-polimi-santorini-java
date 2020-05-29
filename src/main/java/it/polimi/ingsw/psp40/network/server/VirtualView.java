@@ -53,5 +53,9 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
     public void setMatchID(int matchID) {
         this.matchID = matchID;
     }
+
+    public void restoreMatch(List<String> usernames) {
+        server.restoreMatch(matchID, this, usernames);
+    }
 }
 

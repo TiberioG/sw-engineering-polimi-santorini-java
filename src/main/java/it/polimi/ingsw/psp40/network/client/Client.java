@@ -7,6 +7,7 @@ import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.view.ViewInterface;
+import it.polimi.ingsw.psp40.view.cli.CLI;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 import javafx.application.Application;
@@ -61,7 +62,7 @@ public class Client implements ServerObserver {
 
   public static void main( String[] args )
   {
-    boolean cli = false;
+    boolean cli = true;
 
     if (args.length > 0) {
 
@@ -81,8 +82,8 @@ public class Client implements ServerObserver {
 
     if (cli) {
       Client client = new Client();
-      //CLI view = new CLI(client);
-      CoolCLI view = new CoolCLI(client);
+      CLI view = new CLI(client);
+      //CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }
