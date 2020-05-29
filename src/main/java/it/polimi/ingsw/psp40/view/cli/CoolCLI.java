@@ -4,6 +4,7 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
+import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.exceptions.OldUserException;
@@ -67,9 +68,9 @@ public class CoolCLI implements ViewInterface {
     private boolean debug = false;
 
     private IslandAdapter myisland;
-    private Hourglass hour;
+    private Hourglass hourbig;
+    private Hourglass hourlat;
     private ExecutorService executor;
-    //private KeyboardDaemon keyboardDaemon;
 
     /**
      * Constructor
@@ -97,7 +98,7 @@ public class CoolCLI implements ViewInterface {
             //e.printStackTrace();
         }
 
-        hour = new Hourglass(center, lower);
+        hourbig = new Hourglass(center, lower, false);
         executor = Executors.newFixedThreadPool(1);
     }
 
@@ -116,7 +117,7 @@ public class CoolCLI implements ViewInterface {
             Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
             ip = in.nextLine();
             while (!Utils.isValidIp(ip)) {
-                lower.print("This is not a valid IPv4 address. Please, try again:");
+                lower.center("This is not a valid IPv4 address. Please, try again:", 0);
                 center.center(utils.form("enter address of server", 30), DELAY);
                 Terminal.moveRelativeCursor(-1, -29);
                 ip = in.nextLine();
@@ -134,7 +135,7 @@ public class CoolCLI implements ViewInterface {
                 in.nextLine();
             }
             while (port < MIN_PORT || port > MAX_PORT) {
-                lower.print("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:");
+                lower.center("Value must be between " + MIN_PORT + " and " + MAX_PORT + ". Please, try again:", 0);
                 center2.center(utils.form("enter port number", 30), DELAY);
                 Terminal.moveRelativeCursor(-1, -29);
                 try {
@@ -164,7 +165,6 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displaySetupFailure() {
-        left.clear();
         lower.center("Can not reach the server, please try again", DELAY);
         displaySetup();
     }
@@ -185,7 +185,7 @@ public class CoolCLI implements ViewInterface {
             Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
             username = in.nextLine();
             while (!Utils.isValidUsername(username)) {
-                lower.print("This is not a valid username");
+                lower.center("This is not a valid username", 0);
                 center.center(utils.form("Enter username ", 30), 0); //print form
                 Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 username = in.nextLine();
@@ -200,15 +200,15 @@ public class CoolCLI implements ViewInterface {
                     date = utils.isValidDate(in.nextLine());
                 }
                 catch (ParseException e) {
-                    lower.print("Wrong format of date");
+                    lower.center("Wrong format of date",0);
                     center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form delay 0!!
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 } catch (YoungUserException e) {
-                    lower.print("You're too young to play this game");
+                    lower.center("You're too young to play this game", 0);
                     center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form delay 0!!
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 } catch (OldUserException e) {
-                    lower.print("You're too old to play this game");
+                    lower.center("You're too old to play this game", 0);
                     center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), 0); //print form delay 0!!
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
                 }
@@ -227,7 +227,7 @@ public class CoolCLI implements ViewInterface {
             }
 
             while (numOfPlayers < 2 || numOfPlayers > 3) {
-                lower.print("Value must be between " + 2 + " and " + 3 + ". Please, try again:");
+                lower.center("Value must be between " + 2 + " and " + 3 + ". Please, try again:", 0);
                 center3.center(utils.form("how many players?", 30), 0); //only the first has delay, this is the following (case first not valid) and should be displayed immediatel
                 Terminal.moveRelativeCursor(-1, -29);
                 try {
@@ -273,7 +273,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayLoginFailure(String details) {
-        lower.print(details);
+        lower.center(details, 0);
         Utils.doTimeUnitSleep(SPEED); //show user message 1 sec before wiping out
         displayLogin(); //let's do it again
     }
@@ -297,7 +297,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayLobbyCreated(String playersWaiting) {
-        executor.execute(hour); //starts beautiful hourglass
+        executor.execute(hourbig); //starts beautiful hourglass
     }
 
     /**
@@ -308,7 +308,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer) {
         center.clear();
-        executor.execute(hour);
+        executor.execute(hourbig);
         left.clear();
         //left.printWrapped(details);
     }
@@ -325,7 +325,7 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayStartingMatch() {
         center.clear();
-        hour.cancel();
+        hourbig.cancel();
         executor.shutdownNow();
         Utils.doTimeUnitSleep(SPEED);
 
@@ -370,7 +370,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        hour.cancel();
+        hourbig.cancel();
         executor.shutdownNow();
         Utils.doTimeUnitSleep(DELAY);
         center.clear();
@@ -388,7 +388,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        hour.cancel();
+        hourbig.cancel();
         executor.shutdownNow();
         Utils.doTimeUnitSleep(DELAY);
 
@@ -465,7 +465,7 @@ public class CoolCLI implements ViewInterface {
             this.updateIsland();
             myisland.print();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         List<int[]> occupy = cellAdapter(client.getLocationCache().getAllOccupied()) ;
 
@@ -485,6 +485,11 @@ public class CoolCLI implements ViewInterface {
         workercord.add(new CoordinatesMessage(work2[0], work2[1]));
 
         client.sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(colorWorker, workercord)) );
+
+        left.clear();
+        hourlat = new Hourglass(left, center, true);
+        executor = Executors.newFixedThreadPool(1);
+        executor.execute(hourlat);
     }
 
     @Override
@@ -499,6 +504,14 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases() {
+        hourlat.cancel();
+        executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
+
         List<Phase> phaseList = client.getListOfPhasesCache();
         left.clear();
         try {
@@ -506,14 +519,16 @@ public class CoolCLI implements ViewInterface {
             myisland.clearMovable();
             myisland.print();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
 
         Phase selectedPhase;
         if (phaseList.size() == 1) {
             selectedPhase = phaseList.get(0);
-            left.println("there is only available this phase: " + selectedPhase.getType().toString());
-            Utils.doTimeUnitSleep(SPEED);
+            if (selectedPhase.getType() != PhaseType.SELECT_WORKER) {
+                left.println("There is only available this phase: " + selectedPhase.getType().toString());
+                Utils.doTimeUnitSleep(SPEED);
+            }
 
         } else {
             PhaseSelector phaseSelector = new PhaseSelector(phaseList, left);
@@ -539,7 +554,13 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-
+        hourlat.cancel();
+        executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
         left.clear();
         List<Cell> availableCells = client.getAvailableMoveCells();
 
@@ -563,6 +584,13 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceSelectionOfWorker() {
+        hourlat.cancel();
+        executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
         left.clear();
         left.printWrapped("Choose worker using TAB, confirm with SPACEBAR, after selection press B if you want to go back to the selection of worker");
         Integer[] starting = getMyWorkers().get(currentWorkerId);
@@ -580,6 +608,16 @@ public class CoolCLI implements ViewInterface {
 
 
     public void displayMoveWorker() {
+        hourlat.cancel();
+        executor.shutdownNow();
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
+        left.clear();
+        left.printWrapped("These are the cells available for move, go back to selection of worker pressing B ");
         Integer[] starting = getMyWorkers().get(currentWorkerId);
 
         int[] position = positionAllowed(starting, cellAdapter(client.getAvailableMoveCells()), 'm');
@@ -595,6 +633,13 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
+        hourlat.cancel();
+        executor.shutdownNow();
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
         left.clear();
 
         List<Cell> availableCells = new ArrayList<>(client.getAvailableBuildCells().keySet());
@@ -621,6 +666,8 @@ public class CoolCLI implements ViewInterface {
     }
 
     public void displayBuildBlock() {
+        hourlat.cancel();
+        executor.shutdownNow();
         left.clear();
         left.printWrapped("What cell would you like to build in? Use arrow to select and confirm with SPACEBAR");
 
@@ -671,15 +718,20 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayWinnerMessage() {
+        hourlat.cancel();
+        executor.shutdownNow();
+
+        upper.clear();
+        islandFrame.clear();
         center.clear();
         left.clear();
         lower.clear();
         try {
-            center.centerFixed(URLReader(getClass().getResource("/ascii/welcome")), 40, DELAY);
+            center.centerFixed(URLReader(getClass().getResource("/ascii/wincup")), 40, DELAY);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        lower.center("Congratulations, you won!", DELAY); //todocoool
+        lower.center("Congratulations " +  client.getUsername() + ", you won!", DELAY);
     }
 
     /**
@@ -695,7 +747,9 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayEndTurn() {
         left.clear();
-        left.println("Your turn is over"); // todoo cool
+        hourlat = new Hourglass(left, center, true);
+        executor = Executors.newFixedThreadPool(1);
+        executor.execute(hourlat);
     }
 
     @Override

@@ -64,7 +64,6 @@ public class PhaseSelector {
                         }
                         print(selection);
 
-
                     }//end arrow management
 
                 } //end system in available
@@ -83,8 +82,6 @@ public class PhaseSelector {
 
         int width = Math.max(Utils.longestArray(phases), title.length()) + 5;
         int innerwidth = width - 4;
-
-
 
         String titleString = Utils.centerString(width, title);
         StringBuilder title = new StringBuilder();

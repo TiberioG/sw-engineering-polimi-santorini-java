@@ -62,7 +62,8 @@ public class Client implements ServerObserver {
 
   public static void main( String[] args )
   {
-    boolean cli = true;
+    boolean cli = false;
+    boolean basicli = false;
 
     if (args.length > 0) {
 
@@ -70,6 +71,9 @@ public class Client implements ServerObserver {
 
         case "cli":
           cli = true;
+          break;
+        case "basicli":
+          basicli = true;
           break;
         case "gui":
           break;
@@ -82,8 +86,15 @@ public class Client implements ServerObserver {
 
     if (cli) {
       Client client = new Client();
+      //CLI view = new CLI(client);
+      CoolCLI view = new CoolCLI(client);
+      client.setView(view);
+      view.displaySetup(); // ask for server IP and Port
+    }
+
+    else if (basicli) {
+      Client client = new Client();
       CLI view = new CLI(client);
-      //CoolCLI view = new CoolCLI(client);
       client.setView(view);
       view.displaySetup(); // ask for server IP and Port
     }
@@ -153,10 +164,6 @@ public class Client implements ServerObserver {
       case ADDED_TO_QUEUE:
         TuplaGenerics detailsOfLobby = (TuplaGenerics) message.getPayload(new TypeToken<TuplaGenerics<List<String>,Integer>>() {}.getType());
         view.displayAddedToQueue((List<String>) detailsOfLobby.getFirst(), (Integer) detailsOfLobby.getSecond());
-        break;
-
-      case PROPOSE_RESTORE_MATCH:
-        view.displayProposeRestoreMatch();
         break;
 
       case START_MATCH:
