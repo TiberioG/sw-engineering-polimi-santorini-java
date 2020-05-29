@@ -17,9 +17,25 @@
 
 ### Server
 
+If you want to ru the server on your machine you can use the following command
+```bash
+java -jar server.jar
+```
 
-## Building
+We offer you 
 
+## Client 
+
+```bash
+java -jar client.jar [cli/gui] 
+```
+
+## Building with Maven
+
+
+## Documentation
+
+Javadoc is available at this link: http://santorini40.xyz/javadoc
 
 
 ## Screenshots

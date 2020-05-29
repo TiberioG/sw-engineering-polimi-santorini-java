@@ -98,6 +98,7 @@ public class DoubleComponentTest {
     @Test
     public void build_doubleComponentFromGroundAllowed() throws SantoriniException {
         Cell cellToBuild1 = match.getIsland().getCell(4, 4);
+        strategyBuild.build(Component.FIRST_LEVEL, cellToBuild1, worker1_2);
         strategyBuild.build(Component.SECOND_LEVEL, cellToBuild1, worker1_2);
 
         assertEquals(cellToBuild1.getTower().getTopComponent(), Component.SECOND_LEVEL);
@@ -105,8 +106,8 @@ public class DoubleComponentTest {
     @Test
     public void build_doubleComponentFromFirstAllowed() throws SantoriniException {
         Cell cellToBuild1 = match.getIsland().getCell(1, 2);
+        strategyBuild.build(Component.SECOND_LEVEL, cellToBuild1, worker1_1);
         strategyBuild.build(Component.THIRD_LEVEL, cellToBuild1, worker1_1);
-
         assertEquals(cellToBuild1.getTower().getTopComponent(), Component.THIRD_LEVEL);
     }
 
