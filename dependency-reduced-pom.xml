@@ -22,10 +22,6 @@
           <version>3.8.0</version>
         </plugin>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
         </plugin>
@@ -86,6 +82,74 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>notest</id>
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+      </properties>
+    </profile>
+    <profile>
+      <id>client</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.3</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <finalName>client</finalName>
+                  <outputDirectory>./deliveries/final/jar</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <mainClass>it.polimi.ingsw.psp40.network.client.Client</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>server</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.3</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <finalName>server</finalName>
+                  <outputDirectory>./deliveries/final/jar</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <mainClass>it.polimi.ingsw.psp40.network.server.Server</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -100,6 +164,19 @@
       </exclusions>
     </dependency>
   </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          <show>private</show>
+          <nohelp>true</nohelp>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   <properties>
     <maven.compiler.target>13</maven.compiler.target>
     <maven.compiler.source>13</maven.compiler.source>

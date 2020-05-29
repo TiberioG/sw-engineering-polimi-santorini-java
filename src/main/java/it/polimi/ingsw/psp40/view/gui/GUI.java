@@ -29,7 +29,7 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mockingConnection = true;
+    private boolean mockingConnection = false;
     private boolean mockingCard = false;
 
     private Stage primaryStage;
