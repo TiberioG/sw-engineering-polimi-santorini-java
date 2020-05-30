@@ -6,19 +6,29 @@ import java.util.List;
 
 public class DefaultSelector {
     private String title;
-    private Frame mainContainer;
 
     private List<String> listForSelector;
 
     private int width;
 
+    private int[] init;
 
-    public DefaultSelector(Frame mainContainer, String title, List<String> listForSelector) {
-        this.mainContainer = mainContainer;
+
+    public DefaultSelector(Frame mainContainer, String title, List<String> listForSelector, boolean centered) {
         this.title = title;
         this.listForSelector = listForSelector;
 
         this.width = Math.max(listForSelector.stream().mapToInt(String::length).max().orElse(title.length()), title.length()) + 5;
+
+        if (!centered){
+            init = mainContainer.getInit();
+        }
+
+        else {
+            int col = (mainContainer.getColSpan() - width ) / 2;
+            init = new int[] {mainContainer.getInit()[0], col};
+
+        }
 
     }
 
@@ -90,14 +100,14 @@ public class DefaultSelector {
 
     public void printTopLine() {
         //top line
-        Terminal.moveAbsoluteCursor(mainContainer.getInit()[0], mainContainer.getInit()[1]);
+        Terminal.moveAbsoluteCursor(init[0], init[1]);
         System.out.print("╔");
         for (int i = 0; i < (width); i++) {
             System.out.print("═");
         }
         System.out.print("╗");
 
-        Terminal.moveAbsoluteCursor(mainContainer.getInit()[0] + 1, mainContainer.getInit()[1]); // goo down one line
+        Terminal.moveAbsoluteCursor(init[0] + 1, init[1]); // goo down one line
     }
 
     public void printOpenTitleLine() {
@@ -106,7 +116,7 @@ public class DefaultSelector {
         title.append("║").append(titleString.replaceAll("\n", " ").toUpperCase()).append("║");
         System.out.print(title);
 
-        Terminal.moveAbsoluteCursor(mainContainer.getInit()[0] + 2, mainContainer.getInit()[1]); // goo down one line
+        Terminal.moveAbsoluteCursor(init[0] + 2, init[1]); // goo down one line
     }
 
     public void printCloseTitleLine() {
@@ -116,7 +126,7 @@ public class DefaultSelector {
             System.out.print("═");
         }
         System.out.print("╣");
-        Terminal.moveAbsoluteCursor(mainContainer.getInit()[0] + 3, mainContainer.getInit()[1]); // goo down one line
+        Terminal.moveAbsoluteCursor(init[0] + 3, init[1]); // goo down one line
     }
 
     public void printMiddleItemLines(int currentSelection) {
@@ -130,7 +140,7 @@ public class DefaultSelector {
             System.out.print(output);
             if (i == currentSelection) System.out.print(Colors.reset());
             System.out.print("║");
-            Terminal.moveAbsoluteCursor(mainContainer.getInit()[0] + 4 + i, mainContainer.getInit()[1]);
+            Terminal.moveAbsoluteCursor(init[0] + 4 + i, init[1]);
         };
     };
 

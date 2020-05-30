@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.view.cli;
 
-import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
@@ -39,7 +38,6 @@ public class CoolCLI implements ViewInterface {
     private static PrintWriter out = new PrintWriter(System.out, true);
     private static Scanner in = new Scanner(System.in);
 
-    private Colors colorWorker; //this is the color of the workers of the player
     private int currentWorkerId = 0; //temp var used to store the selected worker before move/build
     private Card thiscard;
 
@@ -316,10 +314,14 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayProposeRestoreMatch() {
+         killHourglass();
+        center.clear();
+        lower2.clear();
+        lower.clear();
         List<String> optionList = new ArrayList<>();
         optionList.add("Yes");
         optionList.add("No");
-        DefaultSelector defaultSelector = new DefaultSelector(left, "A game was found broken, you want to restore it?\"", optionList);
+        DefaultSelector defaultSelector = new DefaultSelector(center2, "A game was found broken, you want to restore it?", optionList, true);
         int indexOfSelection = defaultSelector.getSelectionIndex();
         client.sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, optionList.get(indexOfSelection).equals("Yes")));
     }
@@ -329,10 +331,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayStartingMatch() {
-        center.clear();
-        hourbig.cancel();
-        executor.shutdownNow();
-        Utils.doTimeUnitSleep(SPEED);
+        killHourglass();
 
         center.clear();
         lower.clear();
@@ -375,8 +374,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        hourbig.cancel();
-        executor.shutdownNow();
+        killHourglass();
         Utils.doTimeUnitSleep(DELAY);
         center.clear();
         lower.clear();
@@ -393,9 +391,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        hourbig.cancel();
-        executor.shutdownNow();
-        Utils.doTimeUnitSleep(DELAY);
+        killHourglass();
 
         center.clear();
         lower.clear();
@@ -445,6 +441,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
+        killHourglass();
         center.clear();
         left.clear();
 
@@ -455,7 +452,7 @@ public class CoolCLI implements ViewInterface {
         center.center("Choose with keyboard arrows one color for your workers, confirm with SPACEBAR", DELAY);
         ColorSelector colorSelector = new ColorSelector(colorsAvailable, center2);
         int selection = colorSelector.selection();
-        colorWorker = Colors.valueOf(colorsAvailable.get(selection));
+        Colors colorWorker = Colors.valueOf(colorsAvailable.get(selection));
         client.sendToServer(new Message(TypeOfMessage.SET_WORKERS_COLOR, colorWorker));
 
         center.clear();
@@ -499,6 +496,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayAskFirstPlayer(List<Player> allPlayers) {
+        killHourglass();
         left.clear();
         center.clear();
         PlayerSelector playerSelector = new PlayerSelector(allPlayers, center);
@@ -509,13 +507,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases() {
-        hourlat.cancel();
-        executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+    killHourglass();
 
         List<Phase> phaseList = client.getListOfPhasesCache();
         left.clear();
@@ -536,7 +528,7 @@ public class CoolCLI implements ViewInterface {
             }
 
         } else {
-            DefaultSelector defaultSelector = new DefaultSelector(left, "Select Phase", phaseList.stream().map(phase -> phase.getType().toString()).collect(Collectors.toList()));
+            DefaultSelector defaultSelector = new DefaultSelector(left, "Select Phase", phaseList.stream().map(phase -> phase.getType().toString()).collect(Collectors.toList()), false);
             int indexOfSelection = defaultSelector.getSelectionIndex();
             selectedPhase = phaseList.get(indexOfSelection);
         }
@@ -560,13 +552,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-        hourlat.cancel();
-        executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+    killHourglass();
         left.clear();
         List<Cell> availableCells = client.getAvailableMoveCells();
 
@@ -590,14 +576,11 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceSelectionOfWorker() {
-        hourlat.cancel();
-        executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+  killHourglass();
         left.clear();
+        center.clear();
+        lower.clear();
+        lower2.clear();
         left.printWrapped("Choose worker using TAB, confirm with SPACEBAR, after selection press B if you want to go back to the selection of worker");
         Integer[] starting = getMyWorkers().get(currentWorkerId);
 
@@ -614,14 +597,7 @@ public class CoolCLI implements ViewInterface {
 
 
     public void displayMoveWorker() {
-        hourlat.cancel();
-        executor.shutdownNow();
-
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+      killHourglass();
         left.clear();
         left.printWrapped("These are the cells available for move, go back to selection of worker pressing B ");
         Integer[] starting = getMyWorkers().get(currentWorkerId);
@@ -639,13 +615,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
-        hourlat.cancel();
-        executor.shutdownNow();
-        try {
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
+      killHourglass();
         left.clear();
 
         List<Cell> availableCells = new ArrayList<>(client.getAvailableBuildCells().keySet());
@@ -676,8 +646,7 @@ public class CoolCLI implements ViewInterface {
     }
 
     public void displayBuildBlock() {
-        hourlat.cancel();
-        executor.shutdownNow();
+        killHourglass();
         left.clear();
         left.printWrapped("What cell would you like to build in? Use arrow to select and confirm with SPACEBAR");
 
@@ -728,8 +697,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayWinnerMessage() {
-        hourlat.cancel();
-        executor.shutdownNow();
+       killHourglass();
 
         upper.clear();
         islandFrame.clear();
@@ -750,8 +718,7 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayLoserMessage(Player winningPlayer) {
-        hourlat.cancel();
-        executor.shutdownNow();
+       killHourglass();
 
         upper.clear();
         islandFrame.clear();
@@ -761,7 +728,7 @@ public class CoolCLI implements ViewInterface {
         try {
             center.centerFixed(URLReader(getClass().getResource("/ascii/loser")), 60, DELAY);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         lower.center("You lost the game " ,  DELAY);
     }
@@ -810,7 +777,7 @@ public class CoolCLI implements ViewInterface {
         try {
             myisland.print();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         while (true) {
@@ -821,7 +788,7 @@ public class CoolCLI implements ViewInterface {
                     //GETTING SPACEBAR to positiom
                     if (c == 32) {
                         if (!contains(occupied, curRow, curCol)) {
-                            myisland.setWorker(curRow, curCol, colorWorker);
+                            myisland.setWorker(curRow, curCol, client.getMyColor());
                             myisland.clearSelected();
                             myisland.print();
                             break;
@@ -889,7 +856,7 @@ public class CoolCLI implements ViewInterface {
         try {
             myisland.print();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         while (true) {
@@ -901,7 +868,7 @@ public class CoolCLI implements ViewInterface {
                     if (c == 32) {
                         if(contains(allowed, curRow, curCol)) {
                             if(kind == 'm') {
-                                myisland.setWorker(curRow, curCol, colorWorker);
+                                myisland.setWorker(curRow, curCol, client.getMyColor());
                                 myisland.clearSelected();
                                 myisland.print();
                             }
@@ -1169,7 +1136,23 @@ public class CoolCLI implements ViewInterface {
         }
     }
 
+
+
+private void killHourglass(){
+    if (hourbig!= null){
+        hourbig.cancel();
+    }
+    if(hourlat != null) {
+        hourlat.cancel();
+    }
+    if (executor != null) {
+        executor.shutdownNow();
+    }
+    try {
+        TimeUnit.MILLISECONDS.sleep(500);
+    } catch (InterruptedException e) {
+        //e.printStackTrace();
+    }
 }
 
-
-
+}

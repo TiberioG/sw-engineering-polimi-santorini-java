@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.network.client;
 
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.cli.CLI;
+import it.polimi.ingsw.psp40.view.cli.ColorSelector;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 import javafx.application.Application;
@@ -403,5 +405,25 @@ public class Client implements ServerObserver {
 
   public boolean getWaiting(){
     return this.waiting;
+  }
+
+  public Colors getMyColor(){
+    Colors color = null;
+    for (Player player : playerListCache) {
+      if (player.getName().equals(username)) {
+        color = player.getWorkers().get(1).getColor();
+      }
+    }
+    return color;
+  }
+
+  public Card getMyCard(){
+    Card card = null;
+    for (Player player : playerListCache) {
+      if (player.getName().equals(username)) {
+        card = player.getCurrentCard();
+      }
+    }
+    return card;
   }
 }
