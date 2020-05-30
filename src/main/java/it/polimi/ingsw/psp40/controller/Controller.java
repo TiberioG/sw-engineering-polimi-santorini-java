@@ -100,7 +100,7 @@ public class Controller implements Listener<Message> {
         if (checkExistanceOfOldMatch(playersData)) {
             virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.PROPOSE_RESTORE_MATCH));
         } else {
-            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.STARTED_MATCH));
+            virtualView.displayMessage(new Message("ALL", TypeOfMessage.STARTED_MATCH));
             virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
         }
     }
@@ -127,9 +127,9 @@ public class Controller implements Listener<Message> {
 
             initTurnManager();
 
-            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RESTORED_MATCH));
+            virtualView.displayMessage(new Message("ALL", TypeOfMessage.RESTORED_MATCH));
         } else {
-            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.STARTED_MATCH));
+            virtualView.displayMessage(new Message("ALL", TypeOfMessage.STARTED_MATCH));
             virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
         }
     }
