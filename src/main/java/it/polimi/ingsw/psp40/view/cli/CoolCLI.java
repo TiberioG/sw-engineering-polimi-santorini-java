@@ -316,7 +316,12 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayProposeRestoreMatch() {
-
+        List<String> optionList = new ArrayList<>();
+        optionList.add("Yes");
+        optionList.add("No");
+        DefaultSelector defaultSelector = new DefaultSelector(left, "A game was found broken, you want to restore it?\"", optionList);
+        int indexOfSelection = defaultSelector.getSelectionIndex();
+        client.sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, optionList.get(indexOfSelection).equals("Yes")));
     }
 
     /**
@@ -531,8 +536,9 @@ public class CoolCLI implements ViewInterface {
             }
 
         } else {
-            PhaseSelector phaseSelector = new PhaseSelector(phaseList, left);
-            selectedPhase = phaseSelector.selection();
+            DefaultSelector defaultSelector = new DefaultSelector(left, "Select Phase", phaseList.stream().map(phase -> phase.getType().toString()).collect(Collectors.toList()));
+            int indexOfSelection = defaultSelector.getSelectionIndex();
+            selectedPhase = phaseList.get(indexOfSelection);
         }
 
         switch (selectedPhase.getType()) {
