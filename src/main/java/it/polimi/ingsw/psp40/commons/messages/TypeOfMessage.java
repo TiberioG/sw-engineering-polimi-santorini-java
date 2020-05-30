@@ -12,7 +12,9 @@ public enum TypeOfMessage {
     CREATED_MATCH,      //obj_type : null
     PROPOSE_RESTORE_MATCH,
     RESTORE_MATCH("restoreMatch"),
+    RESTORED_MATCH,
     START_MATCH("startMatch"),      //obj_type : null
+    STARTED_MATCH,
     LOGIN,        //obj_type : Tupla(String, Date)
     USER_JOINED,
     HOW_MANY_PLAYERS,

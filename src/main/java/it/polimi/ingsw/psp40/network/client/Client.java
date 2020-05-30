@@ -172,7 +172,7 @@ public class Client implements ServerObserver {
         view.displayProposeRestoreMatch();
         break;
 
-      case START_MATCH:
+      case STARTED_MATCH:
         view.displayStartingMatch();
         break;
 

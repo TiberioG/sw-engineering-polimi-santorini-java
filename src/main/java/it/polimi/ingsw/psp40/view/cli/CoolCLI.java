@@ -636,11 +636,7 @@ public class CoolCLI implements ViewInterface {
             displayBuildBlock();
         } else {
             left.printWrapped("There are no cells available to build at this stage! Select another phase.");
-            try {
-                TimeUnit.MILLISECONDS.sleep(SPEED);
-            } catch (InterruptedException e) {
-                //e.printStackTrace();
-            }
+            Utils.doTimeUnitSleep(SPEED);
             displayChoiceOfAvailablePhases();
         }
     }
@@ -1148,11 +1144,8 @@ private void killHourglass(){
     if (executor != null) {
         executor.shutdownNow();
     }
-    try {
-        TimeUnit.MILLISECONDS.sleep(500);
-    } catch (InterruptedException e) {
-        //e.printStackTrace();
-    }
+
+    Utils.doTimeUnitSleep(500);
 }
 
 }
