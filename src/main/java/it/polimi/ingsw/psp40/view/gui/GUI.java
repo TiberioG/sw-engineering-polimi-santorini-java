@@ -352,6 +352,11 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
+    public void displayRestoredMatch() {
+
+    }
+
+    @Override
     public void displayWinnerMessage() {
         Platform.runLater(() -> {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);

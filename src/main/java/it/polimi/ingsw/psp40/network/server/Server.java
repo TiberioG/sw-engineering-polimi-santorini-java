@@ -200,7 +200,7 @@ public class Server
     Message messageToSend;
 
     if(username.isBlank()) {
-      LOGGER.log(Level.INFO, "Trying to register an empty username");
+      LOGGER.log(Level.INFO, "Trying to register an empty username"); //should never happed because we check it at client side
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this is not a valid username. Please try with a different username:");
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
@@ -310,8 +310,7 @@ public class Server
       String disconnectedUser = UUIDtoUsernameMap.get(UUID);
       removeUser(UUID);
       LOGGER.log(Level.INFO, disconnectedUser + " left the game. Notifying other users...");
-      String details = "I'm sorry, " + disconnectedUser + " left the game.\nWe can't continue this match :(";
-      disconnectAllPlayers(matchID, details);
+      disconnectAllPlayers(matchID, disconnectedUser);
     } else { // user was only connected to the server, but not logged
       connectedClients.remove(client);
     }

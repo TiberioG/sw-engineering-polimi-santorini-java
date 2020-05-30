@@ -410,6 +410,11 @@ public class CLI implements ViewInterface {
     }
 
     @Override
+    public void displayRestoredMatch() {
+
+    }
+
+    @Override
     public void displayWinnerMessage() {
         out.println("Congratulations, you won!");
     }

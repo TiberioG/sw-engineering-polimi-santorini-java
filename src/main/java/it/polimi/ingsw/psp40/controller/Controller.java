@@ -125,9 +125,10 @@ public class Controller implements Listener<Message> {
 
             MatchHistory.restoreLocation(match, oldMatch);
 
-            initTurnManager();
+
 
             virtualView.displayMessage(new Message("ALL", TypeOfMessage.RESTORED_MATCH));
+            initTurnManager();
         } else {
             virtualView.displayMessage(new Message("ALL", TypeOfMessage.STARTED_MATCH));
             virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));

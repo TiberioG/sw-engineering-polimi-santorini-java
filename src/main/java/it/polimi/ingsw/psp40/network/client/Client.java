@@ -42,6 +42,8 @@ public class Client implements ServerObserver {
 
   private Boolean waiting = false;
 
+  private Boolean restored = false;
+
   ServerAdapter serverAdapter;
 
   private static final Logger LOGGER = Logger.getLogger("Client");
@@ -174,6 +176,11 @@ public class Client implements ServerObserver {
 
       case STARTED_MATCH:
         view.displayStartingMatch();
+        break;
+
+      case RESTORED_MATCH:
+        restored = true;
+        view.displayRestoredMatch();
         break;
 
       case DISCONNECTED_SERVER_SIDE:
@@ -405,6 +412,10 @@ public class Client implements ServerObserver {
 
   public boolean getWaiting(){
     return this.waiting;
+  }
+
+  public boolean isRestored(){
+    return restored;
   }
 
   public Colors getMyColor(){

@@ -65,6 +65,8 @@ public class CoolCLI implements ViewInterface {
     private boolean fastboot = false;
     private boolean debug = false;
 
+    private boolean dirtylower = true;
+
     private IslandAdapter myisland;
     private Hourglass hourbig;
     private Hourglass hourlat;
@@ -298,6 +300,21 @@ public class CoolCLI implements ViewInterface {
         executor.execute(hourbig); //starts beautiful hourglass
     }
 
+    @Override
+    public void displayRestoredMatch() {
+        killHourglass();
+        center.clear();
+        lower.clear();
+
+
+        try {
+            lower.center(URLReader(getClass().getResource("/ascii/starting")), DELAY);
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+        Utils.doTimeUnitSleep(SPEED);
+    }
+
     /**
      * Method to show "waiting for other players "
      * @param otherPlayer
@@ -332,7 +349,6 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayStartingMatch() {
         killHourglass();
-
         center.clear();
         lower.clear();
 
@@ -363,7 +379,20 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayDisconnected(String details) {
-        left.printWrapped(details);
+        killHourglass();
+
+        upper.clear();
+        islandFrame.clear();
+        center.clear();
+        left.clear();
+        lower.clear();
+        try {
+            center.centerFixed(URLReader(getClass().getResource("/ascii/disconnect")), 60, DELAY);
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+        lower.center("I'm sorry, " + details + " left the game. The match cannot continue" ,  DELAY);
+        Utils.doTimeUnitSleep(5000);
         client.close();
     }
 
@@ -472,13 +501,13 @@ public class CoolCLI implements ViewInterface {
         List<int[]> occupy = cellAdapter(client.getLocationCache().getAllOccupied()) ;
 
         left.printWrapped("Use arrow keys to select where you want to position your worker, confirm with SPACEBAR");
-        int[] work1 =position(occupy, new int[]{0,0});
+        int[] work1 =position(occupy, new int[]{0,0}, colorWorker);
 
         left.clear();
         left.printWrapped("Use arrow keys to select where you want to position your worker, confirm with SPACEBAR");
 
         occupy.add(work1);
-        int[] work2 = position(occupy, work1);
+        int[] work2 = position(occupy, work1, colorWorker);
         left.clear();
 
         List<CoordinatesMessage> workercord = new ArrayList<>();
@@ -509,8 +538,18 @@ public class CoolCLI implements ViewInterface {
     public void displayChoiceOfAvailablePhases() {
     killHourglass();
 
+
+    if(client.isRestored()){
+        if (dirtylower){ // i use this cause i have to clean the lower only the first time otherwise every time it clears the lower and it gets laggy
+            islandFrame.clear();
+            lower.clear();
+            dirtylower = false;
+        }
+        lower2.center(client.getUsername() + " your card is: " + client.getMyCard().getName(), DELAY);
+    }
+
         List<Phase> phaseList = client.getListOfPhasesCache();
-        left.clear();
+
         try {
             updateIsland();
             myisland.clearMovable();
@@ -523,12 +562,12 @@ public class CoolCLI implements ViewInterface {
         if (phaseList.size() == 1) {
             selectedPhase = phaseList.get(0);
             if (selectedPhase.getType() != PhaseType.SELECT_WORKER) {
-                left.println("There is only available this phase: " + selectedPhase.getType().toString());
+                left.println("The only available phase is: \" " + selectedPhase.getType().getPrettyName() + " \"");
                 Utils.doTimeUnitSleep(SPEED);
             }
 
         } else {
-            DefaultSelector defaultSelector = new DefaultSelector(left, "Select Phase", phaseList.stream().map(phase -> phase.getType().toString()).collect(Collectors.toList()), false);
+            DefaultSelector defaultSelector = new DefaultSelector(left, "Select Phase", phaseList.stream().map(phase -> phase.getType().getPrettyName()).collect(Collectors.toList()), true);
             int indexOfSelection = defaultSelector.getSelectionIndex();
             selectedPhase = phaseList.get(indexOfSelection);
         }
@@ -578,9 +617,6 @@ public class CoolCLI implements ViewInterface {
     public void displayChoiceSelectionOfWorker() {
   killHourglass();
         left.clear();
-        center.clear();
-        lower.clear();
-        lower2.clear();
         left.printWrapped("Choose worker using TAB, confirm with SPACEBAR, after selection press B if you want to go back to the selection of worker");
         Integer[] starting = getMyWorkers().get(currentWorkerId);
 
@@ -766,7 +802,7 @@ public class CoolCLI implements ViewInterface {
      * @param starting coordinates where to start displaying the selector
      * @return the coordinates of the chosen cell
      */
-    private int[] position( List<int[]> occupied, int[] starting ){
+    private int[] position( List<int[]> occupied, int[] starting, Colors color ){
         int curRow = starting[0];
         int curCol = starting[1];
         myisland.setSelected(curRow, curCol);
@@ -784,7 +820,7 @@ public class CoolCLI implements ViewInterface {
                     //GETTING SPACEBAR to positiom
                     if (c == 32) {
                         if (!contains(occupied, curRow, curCol)) {
-                            myisland.setWorker(curRow, curCol, client.getMyColor());
+                            myisland.setWorker(curRow, curCol, color);
                             myisland.clearSelected();
                             myisland.print();
                             break;

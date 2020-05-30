@@ -45,6 +45,7 @@ public interface ViewInterface {
     void displayEndTurn();
 
     void displayLobbyCreated(String playersWaiting);
+    void displayRestoredMatch();
 
 
 }
