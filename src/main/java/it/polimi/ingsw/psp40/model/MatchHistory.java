@@ -8,9 +8,11 @@ import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.JsonAdapter;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
+import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -86,13 +88,15 @@ public class MatchHistory {
         JsonObject jsonObjectOfOldMatch = null;
         try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
             JsonArray jsonArray = new Gson().fromJson(jsonReader, JsonArray.class);
-            Iterator<JsonElement> iterator = jsonArray.iterator();
-            while(iterator.hasNext() && jsonObjectOfOldMatch == null) {
-                JsonElement currentJsonElement = iterator.next();
-                List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("players"), new TypeToken<List<Player>>() {}.getType());
+            if (jsonArray != null) {
+                Iterator<JsonElement> iterator = jsonArray.iterator();
+                while(iterator.hasNext() && jsonObjectOfOldMatch == null) {
+                    JsonElement currentJsonElement = iterator.next();
+                    List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("players"), new TypeToken<List<Player>>() {}.getType());
 
-                //check to compare names
-                if (playerList.stream().filter(player -> names.contains(player.getName())).collect(Collectors.toList()).size() == names.size()) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+                    //check to compare names
+                    if (playerList.stream().filter(player -> names.contains(player.getName())).collect(Collectors.toList()).size() == names.size()) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+                }
             }
         } catch (IOException e) {}
 
@@ -104,7 +108,7 @@ public class MatchHistory {
         return new Match(matchId, virtualView);
     }
 
-    public static List<String> getPlayersFromBrokenMatch(Match match, JsonObject oldMatch) {
+    public static List<String> getPlayersFromBrokenMatch(JsonObject oldMatch) {
         List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
         return playerList.stream().map(Player::getName).collect(Collectors.toList());
     }
@@ -152,6 +156,28 @@ public class MatchHistory {
         MatchProperties newMatchProperties = match.getMatchProperties();
 
         newMatchProperties.setOthersCantLevelUp(oldMatchProperties.isOthersCantLevelUp());
+    }
+
+    public static void restoreLocation(Match match, JsonObject oldMatch) {
+        Location oldLocation = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("location"), new TypeToken<Location>() {}.getType());
+        List<Player> oldPlayerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
+
+        List<Cell> oldOccupiedCellList = oldLocation.getAllOccupied();
+        oldPlayerList.forEach(oldPlayer -> {
+            oldPlayer.getWorkers().forEach(oldWorker -> {
+                //TODO implementing equals on worker
+                Worker newWorker = match.getPlayerByName(oldPlayer.getName()).getWorkers().stream().filter(worker -> worker.getId() == oldWorker.getId()).findFirst().orElse(null);
+                Cell oldCell = oldOccupiedCellList.stream().filter(cell -> oldLocation.getOccupant(cell).getId() == newWorker.getId() && oldLocation.getOccupant(cell).getPlayerName().equals(newWorker.getPlayerName())).findFirst().orElse(null);
+
+                if (newWorker != null && oldCell != null) {
+                    try {
+                        match.getLocation().setLocation(match.getIsland().getCell(oldCell.getCoordX(), oldCell.getCoordY()), newWorker);
+                    } catch (WorkerAlreadyPresentException | CellOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        });
     }
 
 }

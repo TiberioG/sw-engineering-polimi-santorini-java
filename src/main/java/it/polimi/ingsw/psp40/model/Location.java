@@ -58,7 +58,7 @@ public class Location extends Publisher<Message> {
             if (oldCell != null) this.map.remove(oldCell);
             this.map.put(cell, worker);
             modifiedWorkers.add(worker);
-            this.update();  //every time i change the location I send a copy of the complete updated location bravo!
+            this.update();  //every time i change the location I send a copy of the complete updated location
         }
     }
 

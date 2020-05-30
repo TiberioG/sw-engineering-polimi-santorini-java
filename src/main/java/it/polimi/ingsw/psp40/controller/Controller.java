@@ -8,7 +8,6 @@ import it.polimi.ingsw.psp40.commons.Listener;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.*;
-import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
 import java.lang.reflect.InvocationTargetException;
@@ -112,7 +111,7 @@ public class Controller implements Listener<Message> {
             match = MatchHistory.restoreMatch(virtualView, oldMatch);
             virtualView.setMatchID(match.getMatchID());
 
-            List<String> usernames = MatchHistory.getPlayersFromBrokenMatch(match, oldMatch);
+            List<String> usernames = MatchHistory.getPlayersFromBrokenMatch(oldMatch);
             virtualView.restoreMatch(usernames);
 
             MatchHistory.restorePlayers(match, oldMatch);
@@ -123,9 +122,9 @@ public class Controller implements Listener<Message> {
 
             MatchHistory.restoreCurrentPlayer(match, oldMatch);
 
-            //gestire location
+            MatchHistory.restoreLocation(match, oldMatch);
 
-            turnManager = new TurnManager(match, virtualView);
+            initTurnManager();
         } else {
             virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
         }

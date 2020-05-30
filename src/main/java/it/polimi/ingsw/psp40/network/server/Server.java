@@ -289,11 +289,7 @@ public class Server
     howManyPlayers = 0;
     lobby.clear();
 
-    // notify users
     LOGGER.log(Level.INFO, "The desired number of players has been reached. Starting the match with id: " + matchID);
-    Message messageToSend = new Message("ALL", TypeOfMessage.START_MATCH);
-    messageToSend.setMatchID(matchID);
-    sendToClient(messageToSend);
 
     // create new match server side
     Message createMatchMessage = new Message(TypeOfMessage.START_MATCH, matchUsers);
