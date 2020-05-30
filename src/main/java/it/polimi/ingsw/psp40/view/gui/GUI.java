@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp40.commons.FunctionInterface;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
+import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -19,6 +20,7 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -72,6 +74,29 @@ public class GUI extends Application implements ViewInterface {
         client.setView(this);
 
         displaySetup();
+
+/*        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.show();
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            Player player2 = new Player("Paperino", new Date());
+            player2.setCurrentCard(card2);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerList.add(player2);
+            gameScreenController.setPlayersInfo(playerList);
+        });*/
     }
 
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
@@ -129,6 +154,7 @@ public class GUI extends Application implements ViewInterface {
             createMainScene("/FXML/GameScreen.fxml", () -> {
                 gameScreenController = fxmlLoader.getController();
                 gameScreenController.setClient(client);
+                gameScreenController.setPrimaryStage(primaryStage);
                 gameScreenController.updateWholeIsland();
                 gameScreenController.setInitialPosition(playerList);
                 gameScreenController.setPlayersInfo(playerList);

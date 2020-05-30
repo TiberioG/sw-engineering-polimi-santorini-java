@@ -6,6 +6,8 @@ import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
+import javafx.animation.Interpolator;
+import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Dimension2D;
@@ -22,6 +24,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -125,7 +128,7 @@ public class GameScreenController extends ScreenController {
         myPane_sx.getChildren().add(map_sx);
         myPane_sx.setVisible(false);
 
-        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep me in position when switch camerafrom right to left and viceversa
+        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep me in position when switch camera from right to left and viceversa
             rightAnchorPane.getChildren().forEach(node -> {
                 double fixAnchor = (double) newValue > (double) oldValue ? (double) newValue - (double) oldValue : 0;
                 AnchorPane.setRightAnchor(node, 10.0 + fixAnchor);
@@ -334,13 +337,13 @@ public class GameScreenController extends ScreenController {
                 block = new Level3(x, y);
                 break;
             case 4:
-                block = new Dome(x, y, z);
+                block = new Dome(x, y, z+1);
                 break;
         }
 
         if(block != null) { // just to be sure
             CoordinatesMessage buildCoord = new CoordinatesMessage(x, y);
-            sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(componentCode, buildCoord)));
+            sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.getComponent(componentCode), buildCoord)));
             addAndRefresh(block);
         }
     }
@@ -467,6 +470,70 @@ public class GameScreenController extends ScreenController {
     /* METHODS TO SHOW PLAYERS INFO */
 
     protected void setPlayersInfo(List<Player> playerList) {
+        VBox myVbox = new VBox();
+        VBox enemyVbox = new VBox();
+        playerList.forEach(player -> {
+            ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
+            imageView.setPreserveRatio(true);
+            if(player.getName().equals(getClient().getUsername())) {
+                imageView.setScaleX(-1); // reflect image
+                imageView.setFitWidth(leftAnchorPane.getBoundsInLocal().getWidth() * 0.80);
+                //Text myText = getUsernameText(player.getName(), leftAnchorPane, 20.0);
+                //myVbox.getChildren().addAll(myText, imageView);
+                myVbox.getChildren().addAll(imageView);
+            } else {
+                imageView.setFitWidth(rightAnchorPane.getBoundsInLocal().getWidth() * 0.65);
+                ImageView versusImage = new ImageView(new Image(getClass().getResource("/images/versus.png").toString()));
+                versusImage.setPreserveRatio(true);
+                versusImage.setFitHeight(35);
+                //Text enemyText = getUsernameText(player.getName(), rightAnchorPane, 15.0);
+                //enemyVbox.getChildren().addAll(versusImage, enemyText, imageView);
+                enemyVbox.getChildren().addAll(versusImage, imageView);
+            }
+            addHoverHandler(player, imageView);
+        });
+
+        myVbox.setSpacing(15);
+        myVbox.setAlignment(Pos.CENTER);
+        leftAnchorPane.getChildren().add(myVbox);
+        AnchorPane.setBottomAnchor(myVbox, 20.0);
+        AnchorPane.setLeftAnchor(myVbox, 10.0);
+
+        enemyVbox.setSpacing(15);
+        enemyVbox.setAlignment(Pos.CENTER);
+        rightAnchorPane.getChildren().add(enemyVbox);
+        AnchorPane.setBottomAnchor(enemyVbox, 20.0);
+        AnchorPane.setRightAnchor(enemyVbox, 10.0);
+
+    }
+
+    private void addHoverHandler(Player player, ImageView imageView) {
+            boolean isRightImage = !player.getName().equals(getClient().getUsername()); // image is in the right pane of the BorderPane
+            imageView.setUserData(isRightImage);
+            PlayerInfoPopup popup = new PlayerInfoPopup(getPrimaryStage(), player, imageView);
+
+            Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
+            Duration duration = Duration.millis(500);
+            ScaleTransition st = new ScaleTransition(duration, imageView);
+            st.setInterpolator(interpolator);
+            st.setToX(Math.signum(imageView.getScaleX()) * 1.1); // keep the signum
+            st.setToY(1.1);
+
+            imageView.hoverProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    st.play();
+                    popup.show();
+                } else {
+                    st.stop();
+                    imageView.scaleXProperty().setValue(Math.signum(imageView.getScaleX()) * 1);
+                    imageView.scaleYProperty().setValue(1);
+                    popup.hide();
+                }
+            });
+
+    }
+
+    protected void setPlayersInfo_old(List<Player> playerList) {
         listOfPlayerImage = new ArrayList<>();
         playerList.forEach(player -> {
             ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
@@ -475,7 +542,7 @@ public class GameScreenController extends ScreenController {
             listOfPlayerImage.add(imageView);
         });
 
-        Text textFirstPlayer = getUsernameText(playerList.get(0).getName(), rightAnchorPane);
+        Text textFirstPlayer = getUsernameText(playerList.get(0).getName(), rightAnchorPane, 20.0);
         VBox vBoxFirstPlayer = new VBox(textFirstPlayer, listOfPlayerImage.get(0));
         vBoxFirstPlayer.setSpacing(15);
         vBoxFirstPlayer.setAlignment(Pos.CENTER);
@@ -483,7 +550,7 @@ public class GameScreenController extends ScreenController {
         AnchorPane.setBottomAnchor(vBoxFirstPlayer, 10.0);
         AnchorPane.setRightAnchor(vBoxFirstPlayer, 10.0);
 
-        Text textSecondPlayer = getUsernameText(playerList.get(1).getName(), leftAnchorPane);
+        Text textSecondPlayer = getUsernameText(playerList.get(1).getName(), leftAnchorPane, 20.0);
         VBox vBoxSecondPlayer = new VBox(textSecondPlayer, listOfPlayerImage.get(1));
         vBoxSecondPlayer.setSpacing(15);
         vBoxSecondPlayer.setAlignment(Pos.CENTER);
@@ -492,7 +559,7 @@ public class GameScreenController extends ScreenController {
         AnchorPane.setLeftAnchor(vBoxSecondPlayer, 10.0);
 
         if (listOfPlayerImage.size() == 3) {
-            Text textThirdPlayer = getUsernameText(playerList.get(2).getName(), leftAnchorPane);
+            Text textThirdPlayer = getUsernameText(playerList.get(2).getName(), leftAnchorPane, 20.0);
             VBox vBoxThirdPlayer = new VBox(listOfPlayerImage.get(2), textThirdPlayer);
             vBoxThirdPlayer.setSpacing(15);
             vBoxThirdPlayer.setAlignment(Pos.CENTER);
@@ -503,9 +570,9 @@ public class GameScreenController extends ScreenController {
         }
     }
 
-    private Text getUsernameText(String username, AnchorPane pane) {
+    private Text getUsernameText(String username, AnchorPane pane, Double fontSize) {
         Label label = new Label(username);
-        label.setFont(new Font(20));
+        label.setFont(new Font(fontSize));
         Text text = new Text(label.getText());
         text.setFont(label.getFont());
         text.setTextAlignment(TextAlignment.CENTER);

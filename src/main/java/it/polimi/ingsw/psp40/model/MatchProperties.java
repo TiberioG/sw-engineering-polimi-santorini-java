@@ -1,8 +1,6 @@
 package it.polimi.ingsw.psp40.model;
 
 import it.polimi.ingsw.psp40.commons.PhaseType;
-import it.polimi.ingsw.psp40.model.Cell;
-import it.polimi.ingsw.psp40.model.Worker;
 
 import java.util.ArrayList;
 import java.util.HashMap;

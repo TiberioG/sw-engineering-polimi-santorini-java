@@ -660,7 +660,11 @@ public class CoolCLI implements ViewInterface {
             displayBuildBlock();
         } else {
             left.printWrapped("There are no cells available to build at this stage! Select another phase.");
-
+            try {
+                TimeUnit.MILLISECONDS.sleep(SPEED);
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
+            }
             displayChoiceOfAvailablePhases();
         }
     }
@@ -740,9 +744,22 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayLoserMessage(Player winningPlayer) {
+        hourlat.cancel();
+        executor.shutdownNow();
+
+        upper.clear();
+        islandFrame.clear();
+        center.clear();
         left.clear();
-        left.println("I'm sorry, you lose!"); // todoo cool
+        lower.clear();
+        try {
+            center.centerFixed(URLReader(getClass().getResource("/ascii/loser")), 60, DELAY);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        lower.center("You lost the game " ,  DELAY);
     }
+
 
     @Override
     public void displayEndTurn() {

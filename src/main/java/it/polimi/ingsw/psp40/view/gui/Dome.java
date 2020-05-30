@@ -16,7 +16,7 @@ public class Dome extends Block {
         this(row, col, z, GUIProperties.CameraType.RIGHT);
     }
 
-    Dome(int row, int col, int z, GUIProperties.CameraType cameraType) {
+    private Dome(int row, int col, int z, GUIProperties.CameraType cameraType) {
         super(row, col, z);
         this.setPreserveRatio(true);
         this.setFitWidth(GUIProperties.domeWidth);
