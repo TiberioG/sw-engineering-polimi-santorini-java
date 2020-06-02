@@ -50,18 +50,17 @@ public class LobbyScreenController extends ScreenController {
 
     private void onActionRestoreMatchButton(Boolean restoreMatch) {
         getClient().sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, restoreMatch));
-        restoreMatchPopup.hide();
+        GUI.deletePopup();
 
     }
 
     public void showRestoreMatchPopup() {
-        Platform.runLater(() -> {
-            restoreMatchPopup = new ConfirmPopup(getPrimaryStage(), "A game was found broken, you want to restore it?", () -> {
-                onActionRestoreMatchButton(true);
-            }, () -> {
-                onActionRestoreMatchButton(false);
-            });
+        restoreMatchPopup = new ConfirmPopup(getPrimaryStage(), "A game was found broken, you want to restore it?", () -> {
+            onActionRestoreMatchButton(true);
+        }, () -> {
+            onActionRestoreMatchButton(false);
         });
+        GUI.showPopup(restoreMatchPopup);
     }
 
 

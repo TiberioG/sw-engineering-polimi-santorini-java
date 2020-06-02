@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -21,21 +22,23 @@ public class ConfirmPopup extends PopupStage {
 
     private void build() {
         // Create scene
+
         this.vBox.getChildren().add(createText(text));
-        UtilsGUI.addClassToElement(vBox, "");
-        this.vBox.setVisible(true);
-        /*Pane pane = new Pane();
+        UtilsGUI.addClassToElement(vBox, "winner-popup");
+        AnchorPane anchorPane = new AnchorPane();
 
         Button confirmButton = new Button("Yes");
         confirmButton.setOnAction(actionEvent -> this.confirmFunction.executeFunction());
 
 
         Button denyButton = new Button("No");
-        denyButton.setOnAction(actionEvent -> this.confirmFunction.executeFunction());
+        denyButton.setOnAction(actionEvent -> this.denyFunction.executeFunction());
 
-        pane.getChildren().add(confirmButton);
-        pane.getChildren().add(denyButton);
+        anchorPane.getChildren().add(confirmButton);
+        AnchorPane.setLeftAnchor(confirmButton, 10.0);
+        anchorPane.getChildren().add(denyButton);
+        AnchorPane.setRightAnchor(denyButton, 10.0);
 
-        this.vBox.getChildren().add(pane);*/
+        this.vBox.getChildren().add(anchorPane);
     }
 }
