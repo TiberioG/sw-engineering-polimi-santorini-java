@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.cli.Utils;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -79,6 +77,11 @@ public class SetupScreenController extends ScreenController {
                 super.updateItem(item, empty);
                 setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
         }});
+        birthdayDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            boolean isValidDate = Utils.isValidDateBool(newValue);
+            validationMap.put(birthdayDatePicker, isValidDate);
+            validateSendFields();
+        });
 
         numOfPlayerComboBox.getItems().addAll(2,3);
 
@@ -116,6 +119,7 @@ public class SetupScreenController extends ScreenController {
 
     @FXML
     public void handleConnectButton(ActionEvent actionEvent) {
+        validationMap.clear();
         getClient().setServerIP(ipAddressTextField.getText());
         getClient().setServerPort(Integer.parseInt("0" + portTextField.getText().trim()));
         getClient().connectToServer();
@@ -140,7 +144,7 @@ public class SetupScreenController extends ScreenController {
         } else {
             UtilsGUI.addClassToElement(ipAddressTextField, "error-text");
         }
-        validateFields();
+        validateConnectFields();
     }
 
     @FXML
@@ -152,13 +156,33 @@ public class SetupScreenController extends ScreenController {
             UtilsGUI.addClassToElement(portTextField, "error-text");
         }
         validationMap.put(portTextField, hasInsertedValidPort);
-        validateFields();
+        validateConnectFields();
     }
 
     public void displayUserForm() {
         vBoxForServerProps.setVisible(false);
         vBoxForUserProps.setVisible(true);
+        validationMap.put(usernameTextField, false);
+        validationMap.put(birthdayDatePicker, false);
+        validationMap.put(numOfPlayerComboBox, false);
+
     }
+
+    @FXML
+    public void usernameChanged(KeyEvent keyEvent) {
+        boolean hasInsertedValidUsername = Utils.isValidUsername(usernameTextField.getText());
+        validationMap.put(usernameTextField, hasInsertedValidUsername);
+        validateSendFields();
+    }
+
+    @FXML
+    public void numOfPlayerChanged(ActionEvent actionEvent) {
+        boolean validNumOfPlayer = numOfPlayerComboBox.getItems().contains(numOfPlayerComboBox.getValue());
+        validationMap.put(numOfPlayerComboBox, validNumOfPlayer);
+        validateSendFields();
+    }
+
+
 
     @FXML
     public void handleSendInfoButton(ActionEvent actionEvent) {
@@ -177,21 +201,27 @@ public class SetupScreenController extends ScreenController {
     }
 
     public void errorAlert(String text) {
-        Platform.runLater(() -> {
-            TilePane r = new TilePane();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText(text);
-            alert.show();
-            anchorPane.getChildren().add(r);
-            UtilsGUI.addClassToElement(usernameTextField, "error-text");
-        });
+        TilePane r = new TilePane();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(text);
+        alert.show();
+        anchorPane.getChildren().add(r);
+        UtilsGUI.addClassToElement(usernameTextField, "error-text");
     }
 
-    private void validateFields() {
+    private void validateConnectFields() {
         if (validationMap.values().stream().filter(valid -> valid.equals(Boolean.FALSE)).findFirst().orElse(true)) {
             connectButton.setDisable(false);
         } else {
             connectButton.setDisable(true);
+        }
+    }
+
+    private void validateSendFields() {
+        if (validationMap.values().stream().filter(valid -> valid.equals(Boolean.FALSE)).findFirst().orElse(true)) {
+            sendInfoButton.setDisable(false);
+        } else {
+            sendInfoButton.setDisable(true);
         }
     }
 

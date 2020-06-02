@@ -154,7 +154,7 @@ public class Utils {
     }
 
 
-    public Date isValidDate(String input) throws ParseException, YoungUserException, OldUserException {
+    public static Date isValidDate(String input) throws ParseException, YoungUserException, OldUserException {
         DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
         Date date = dateFormat.parse(input);
         Date today = new Date();
@@ -178,10 +178,15 @@ public class Utils {
         return null;
     }
 
-
-
-
-
+    public static boolean isValidDateBool(String input) {
+        try {
+           isValidDate(input);
+           return true;
+        }
+        catch (ParseException | YoungUserException | OldUserException e) {
+            return false;
+        }
+    }
 
     public List<Integer> readNotSameNumbers(int min, int max, int howmany){
         List<Integer> numbers = new ArrayList<Integer>();

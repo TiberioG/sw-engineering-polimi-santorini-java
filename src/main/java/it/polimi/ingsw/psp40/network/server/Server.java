@@ -341,6 +341,8 @@ public class Server
     if(matchID == null) { // lobby
       List<String> tmpLobby = new ArrayList<>(lobby);
       tmpLobby.forEach( username -> playersUUIDToDisconnect.add(usernameToUUIDMap.get(username)));
+      lobby.clear(); // reset lobby
+      howManyPlayers = 0;
     } else { // match
       if(matchToUUIDsMap.containsKey(matchID)) {
         playersUUIDToDisconnect.addAll(matchToUUIDsMap.get(matchID));
