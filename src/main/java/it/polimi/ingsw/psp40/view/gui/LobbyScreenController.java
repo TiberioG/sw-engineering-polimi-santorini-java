@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.messages.Message;
+import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,11 +9,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LobbyScreenController extends ScreenController {
-    ObservableList<String> listOfPlayers = FXCollections.observableArrayList ();
+    private ObservableList<String> listOfPlayers = FXCollections.observableArrayList ();
+    private ConfirmPopup restoreMatchPopup;
 
     @FXML
     private Text titleLobbyText;
@@ -47,5 +47,22 @@ public class LobbyScreenController extends ScreenController {
             if (listOfPlayers.size() == 0) subTitleLobbyText.setVisible(false);
         });
     }
+
+    private void onActionRestoreMatchButton(Boolean restoreMatch) {
+        getClient().sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, restoreMatch));
+        restoreMatchPopup.hide();
+
+    }
+
+    public void showRestoreMatchPopup() {
+        Platform.runLater(() -> {
+            restoreMatchPopup = new ConfirmPopup(getPrimaryStage(), "A game was found broken, you want to restore it?", () -> {
+                onActionRestoreMatchButton(true);
+            }, () -> {
+                onActionRestoreMatchButton(false);
+            });
+        });
+    }
+
 
 }

@@ -9,17 +9,18 @@
 
 <AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" styleClass="setup-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.LobbyScreenController">
    <children>
-      <ImageView fitHeight="131.0" fitWidth="411.0" layoutX="394.0" layoutY="49.0" opacity="0.85" pickOnBounds="true">
+      <ImageView fitHeight="177.0" fitWidth="495.0" layoutX="353.0" layoutY="36.0" opacity="0.85" pickOnBounds="true">
          <image>
             <Image url="@../images/santorini-logo.png" />
-         </image></ImageView>
-      <Text fx:id="titleLobbyText" fill="#346b93" layoutX="449.0" layoutY="236.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="outline" text="In attesa di altri giocatori">
+         </image>
+      </ImageView>
+      <Text fx:id="titleLobbyText" fill="#346b93" layoutX="454.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="outline" text="Waiting for other players...">
          <font>
             <Font size="25.0" />
          </font>
       </Text>
-      <ListView fx:id="listViewPlayers" layoutX="501.0" layoutY="314.0" prefHeight="200.0" prefWidth="200.0" />
-      <Text fx:id="subTitleLobbyText" fill="#346b93" layoutX="497.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="outline" text="Giocatori in attesa:" visible="false">
+      <ListView fx:id="listViewPlayers" layoutX="479.0" layoutY="314.0" prefHeight="200.0" prefWidth="200.0" />
+      <Text fx:id="subTitleLobbyText" fill="#346b93" layoutX="512.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="outline" text="Waiting players:" visible="false">
          <font>
             <Font size="20.0" />
          </font>

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import animatefx.animation.ZoomIn;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
@@ -7,17 +8,13 @@ import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 
-import javax.swing.text.html.ImageView;
-import java.awt.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -61,6 +58,9 @@ public class SetupScreenController extends ScreenController {
     @FXML
     private ComboBox<Integer> numOfPlayerComboBox;
 
+    @FXML
+    private ImageView santoriniLogo;
+
 
     /* Methods */
 
@@ -84,6 +84,11 @@ public class SetupScreenController extends ScreenController {
 
         UtilsGUI.buttonHoverEffect(connectButton);
         UtilsGUI.buttonHoverEffect(sendInfoButton);
+
+        new ZoomIn(santoriniLogo).play();
+        new ZoomIn(vBoxForServerProps).play();
+
+
     }
 
     // just for testing
@@ -131,9 +136,9 @@ public class SetupScreenController extends ScreenController {
         boolean hasInsertedValidIp = Utils.isValidIp(ipAddressTextField.getText());
         validationMap.put(ipAddressTextField, hasInsertedValidIp);
         if (hasInsertedValidIp) {
-            ScreenController.removeClassToElement(ipAddressTextField, "error-text");
+            UtilsGUI.removeClassToElement(ipAddressTextField, "error-text");
         } else {
-            ScreenController.addClassToElement(ipAddressTextField, "error-text");
+            UtilsGUI.addClassToElement(ipAddressTextField, "error-text");
         }
         validateFields();
     }
@@ -142,9 +147,9 @@ public class SetupScreenController extends ScreenController {
      public void portChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidPort = Utils.isValidPort(Integer.parseInt("0" + portTextField.getText().trim()));
         if (hasInsertedValidPort) {
-            ScreenController.removeClassToElement(portTextField, "error-text");
+            UtilsGUI.removeClassToElement(portTextField, "error-text");
         } else {
-            ScreenController.addClassToElement(portTextField, "error-text");
+            UtilsGUI.addClassToElement(portTextField, "error-text");
         }
         validationMap.put(portTextField, hasInsertedValidPort);
         validateFields();
@@ -178,7 +183,7 @@ public class SetupScreenController extends ScreenController {
             alert.setContentText(text);
             alert.show();
             anchorPane.getChildren().add(r);
-            ScreenController.addClassToElement(usernameTextField, "error-text");
+            UtilsGUI.addClassToElement(usernameTextField, "error-text");
         });
     }
 

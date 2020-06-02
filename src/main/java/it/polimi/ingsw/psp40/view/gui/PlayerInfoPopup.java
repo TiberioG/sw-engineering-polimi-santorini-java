@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.model.Player;
+import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -24,7 +25,7 @@ public class PlayerInfoPopup extends Stage {
         this.player = player;
         this.ownerStage = ownerStage;
         this.initOwner(ownerStage);
-        buildStage(node);
+            buildStage(node);
         buildPopup();
     }
 
@@ -57,7 +58,7 @@ public class PlayerInfoPopup extends Stage {
     private void buildPopup() {
         vBox.setAlignment(Pos.CENTER);
         vBox.setPadding(new Insets(20));
-        ScreenController.addClassToElement(vBox, "popup-stage");
+        UtilsGUI.addClassToElement(vBox, "popup-stage");
 
         vBox.getChildren().add(createText("User: " + player.getName()));
         vBox.getChildren().add(createText("God: " + player.getCurrentCard().getName()));

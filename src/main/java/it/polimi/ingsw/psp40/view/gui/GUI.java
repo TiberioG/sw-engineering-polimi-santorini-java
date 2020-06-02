@@ -207,7 +207,9 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayProposeRestoreMatch() {
-
+        Platform.runLater(() -> {
+            lobbyScreenController.showRestoreMatchPopup();
+        });
     }
 
     @Override
@@ -347,6 +349,7 @@ public class GUI extends Application implements ViewInterface {
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
             lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(Integer.parseInt(playersWaiting)));
         });
     }

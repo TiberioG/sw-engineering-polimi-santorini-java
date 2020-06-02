@@ -22,7 +22,7 @@ public class WaitingPopup extends PopupStage {
         // Create scene
         Text text = createText(details);
         this.vBox.getChildren().add(text);
-        ScreenController.addClassToElement(vBox, "waiting-popup");
+        UtilsGUI.addClassToElement(vBox, "waiting-popup");
     }
 
 }

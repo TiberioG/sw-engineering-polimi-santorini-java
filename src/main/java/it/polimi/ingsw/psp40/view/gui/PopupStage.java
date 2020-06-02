@@ -58,7 +58,7 @@ public class PopupStage extends Stage {
     private void buildPopup() {
         vBox.setAlignment(Pos.CENTER);
         vBox.setPadding(new Insets(20));
-        ScreenController.addClassToElement(vBox, "popup-stage");
+        UtilsGUI.addClassToElement(vBox, "popup-stage");
 
         // Set scene
         Scene scene = new Scene(vBox, Color.TRANSPARENT);

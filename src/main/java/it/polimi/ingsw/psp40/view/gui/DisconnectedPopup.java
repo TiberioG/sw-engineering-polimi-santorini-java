@@ -20,7 +20,7 @@ public class DisconnectedPopup extends PopupStage {
         // Create scene
         Text text = createText(details);
         this.vBox.getChildren().add(text);
-        ScreenController.addClassToElement(this.vBox, "disconnected-popup");
+        UtilsGUI.addClassToElement(this.vBox, "disconnected-popup");
 
         Button resume = new Button("Something");
         resume.setOnAction(event -> {
