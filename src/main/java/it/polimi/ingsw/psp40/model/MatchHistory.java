@@ -95,7 +95,8 @@ public class MatchHistory {
                     List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("players"), new TypeToken<List<Player>>() {}.getType());
 
                     //check to compare names
-                    if (playerList.stream().filter(player -> names.contains(player.getName())).collect(Collectors.toList()).size() == names.size()) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+                    if (playerList.stream().filter(player -> names.contains(player.getName())).collect(Collectors.toList()).size() == names.size())
+                        jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
                 }
             }
         } catch (IOException e) {}
@@ -130,12 +131,14 @@ public class MatchHistory {
         for (int x = 0; x <= Island.getMaxX(); x++) {
             for (int y = 0; y <= Island.getMaxX(); y++) {
                 try {
-                    Component oldComponent = island.getCell(x,y).getTower().getTopComponent();
+                    List<Component> oldComponents = island.getCell(x,y).getTower().getComponents();
+                    oldComponents.remove(Component.GROUND); // Ground is already present in the newCell
                     Cell newCell = match.getIsland().getCell(x,y);
 
-                    for (int i = 1;  i <= oldComponent.getComponentCode(); i++) {
-                        match.getIsland().addComponent(Component.getComponent(i), newCell);
+                    for (Component component : oldComponents) {
+                        match.getIsland().addComponent(component, newCell);
                     }
+
                 } catch (CellOutOfBoundsException | BuildLowerComponentException e) {
                     e.printStackTrace();
                 }

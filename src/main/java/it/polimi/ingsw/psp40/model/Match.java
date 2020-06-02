@@ -92,7 +92,7 @@ public class Match extends Publisher<Message> {
      * @return the player founded or null if no exists player with the name of the params
      */
     public Player getPlayerByName(String name) {
-         return listPlayers.stream().filter(player -> player.getName().equals(name)).findFirst().orElse(null);
+        return listPlayers.stream().filter(player -> player.getName().equals(name)).findFirst().orElse(null);
     }
 
     /**
@@ -110,7 +110,6 @@ public class Match extends Publisher<Message> {
         }
     }
 
-
     /**
      * Method to add add player to the list of player of the Match
      * @param name name of the player you wanna add to the Match
@@ -124,7 +123,6 @@ public class Match extends Publisher<Message> {
         return playToAdd;
     }
 
-
     /**
      * Method for select the next current player with the order of listPlayers
      * @return the index of the new currentPlayer
@@ -136,7 +134,6 @@ public class Match extends Publisher<Message> {
         currentPlayer = listPlayers.get(indexOfNextCurrentPlayer);
         return indexOfNextCurrentPlayer;
     }
-
 
     /**
      * Method for order the list of player with a specified compator

@@ -89,11 +89,11 @@ public class Controller implements Listener<Message> {
 
         createNewMatch(message.getMatchID());
         playersData.forEach((username, date) -> {
-        try {
-            addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            try {
+                addPlayerToMatch(username, new SimpleDateFormat(Configuration.formatDate).parse(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         });
         match.setCurrentPlayer(match.getPlayers().get(0));
 
@@ -124,8 +124,6 @@ public class Controller implements Listener<Message> {
             MatchHistory.restoreCurrentPlayer(match, oldMatch);
 
             MatchHistory.restoreLocation(match, oldMatch);
-
-
 
             virtualView.displayMessage(new Message("ALL", TypeOfMessage.RESTORED_MATCH));
             initTurnManager();
@@ -226,7 +224,7 @@ public class Controller implements Listener<Message> {
 
     @SuppressWarnings("unused")
     private void endTurn(Message message) {
-       turnManager.endTurn();
+        turnManager.endTurn();
     }
 
     /*private void initNewMatch(Message message) {

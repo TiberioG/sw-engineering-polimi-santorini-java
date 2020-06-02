@@ -46,17 +46,19 @@ public class Player extends Publisher<Message> {
     public String getName() {
         return name;
     }
+
     public Date getBirthday() {
         return birthday;
     }
+
     public Card getCurrentCard() {
         return currentCard;
     }
+
     public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
         publish(new Message("ALL", TypeOfMessage.PLAYER_UPDATED, this));
     }
-
 
     /**
      * Method that allows the creation and addition of a worker
