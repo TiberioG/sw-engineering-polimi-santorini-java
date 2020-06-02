@@ -164,7 +164,9 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displaySetupFailure() {
-        setupScreenController.errorAlert("The server is not reachable, please enter another address!");
+        Platform.runLater(() -> {
+            setupScreenController.errorAlert("The server is not reachable, please enter another address!");
+        });
     }
 
     @Override
@@ -185,14 +187,18 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLoginFailure(String details) {
-        System.out.println(details);
-        setupScreenController.errorAlert("The name is already used, enter another name!");
+        Platform.runLater(() -> {
+            System.out.println(details);
+            setupScreenController.errorAlert("The name is already used, enter another name!");
+        });
     }
 
     @Override
     public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayers) {
-        lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
-        lobbyScreenController.addPlayerToLobby(nameOfOPlayer);
+        Platform.runLater(() -> {
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
+            lobbyScreenController.addPlayerToLobby(nameOfOPlayer);
+        });
     }
 
     @Override
@@ -200,8 +206,8 @@ public class GUI extends Application implements ViewInterface {
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
-            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
-            otherPlayer.forEach(player -> lobbyScreenController.addPlayerToLobby(player));
+            //lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
+            //otherPlayer.forEach(player -> lobbyScreenController.addPlayerToLobby(player));
         });
     }
 
@@ -342,7 +348,7 @@ public class GUI extends Application implements ViewInterface {
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
-            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(Integer.parseInt(playersWaiting)));
+            //lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(Integer.parseInt(playersWaiting)));
         });
     }
 

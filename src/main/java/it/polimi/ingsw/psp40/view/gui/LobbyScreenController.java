@@ -26,26 +26,20 @@ public class LobbyScreenController extends ScreenController {
     public void initialize() {}
 
     public void updateTitleLabel(String text) {
-        Platform.runLater(() -> {
             titleLobbyText.setText(text);
-        });
     }
 
     public void addPlayerToLobby(String nameOfPlayer) {
-        Platform.runLater(() -> {
             if (!listOfPlayers.contains(nameOfPlayer)) listOfPlayers.add(nameOfPlayer);
             listViewPlayers.setItems(listOfPlayers);
             subTitleLobbyText.setVisible(true);
-        });
     }
 
 
     public void removePlayerToLobby(String nameOfPlayer) {
-        Platform.runLater(() -> {
             listOfPlayers.remove(nameOfPlayer);
             listViewPlayers.setItems(listOfPlayers);
             if (listOfPlayers.size() == 0) subTitleLobbyText.setVisible(false);
-        });
     }
 
 }

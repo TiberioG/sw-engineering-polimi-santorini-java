@@ -197,7 +197,7 @@ public class CoolCLI implements ViewInterface {
                 try{
                     center2.center(utils.formPrefilled("Enter birthdate ", 30, "dd/mm/yyyy"), DELAY); //print form
                     Terminal.moveRelativeCursor(-1, -29); //this is used to force the cursor inside the form
-                    date = utils.isValidDate(in.nextLine());
+                    date = Utils.isValidDate(in.nextLine());
                 }
                 catch (ParseException e) {
                     lower.center("Wrong format of date",0);
