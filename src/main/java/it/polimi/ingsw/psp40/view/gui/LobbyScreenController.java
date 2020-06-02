@@ -50,6 +50,7 @@ public class LobbyScreenController extends ScreenController {
 
     private void onActionRestoreMatchButton(Boolean restoreMatch) {
         getClient().sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, restoreMatch));
+        restoreMatchPopup.hide();
         GUI.deletePopup();
 
     }

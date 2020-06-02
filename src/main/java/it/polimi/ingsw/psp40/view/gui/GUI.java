@@ -314,13 +314,9 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases() {
-        if (gameScreenController != null) {
-            Platform.runLater(()-> {
-                gameScreenController.askDesiredPhase();
-            });
-        } else if (matchIsStarted == false) {
-            displayRestoredMatch();
-        }
+        Platform.runLater(()-> {
+            if (gameScreenController != null)  gameScreenController.askDesiredPhase();
+        });
     }
 
     @Override
@@ -361,16 +357,14 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayRestoredMatch() {
-        if (matchIsStarted == false) {
-            createMainScene("/FXML/GameScreen.fxml", () -> {
-                gameScreenController = fxmlLoader.getController();
-                gameScreenController.setClient(client);
-                gameScreenController.setPrimaryStage(primaryStage);
-                gameScreenController.updateWholeIsland();
-                gameScreenController.setPlayersInfo(client.getPlayerListCache());
-                matchIsStarted = true;
-            });
-        }
+        createMainScene("/FXML/GameScreen.fxml", () -> {
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            gameScreenController.updateWholeIsland();
+            gameScreenController.setPlayersInfo(client.getPlayerListCache());
+            System.out.println(new Date().hashCode() + "creatematch");
+        });
     }
 
     @Override

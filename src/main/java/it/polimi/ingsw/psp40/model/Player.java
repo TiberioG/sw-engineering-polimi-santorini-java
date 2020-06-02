@@ -54,7 +54,7 @@ public class Player extends Publisher<Message> {
     }
     public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
-        publish(new Message(name, TypeOfMessage.PLAYER_UPDATED, this));
+        publish(new Message("ALL", TypeOfMessage.PLAYER_UPDATED, this));
     }
 
 
@@ -68,7 +68,7 @@ public class Player extends Publisher<Message> {
         if (workers.size() > 0) id = workers.get(workers.size() - 1).getId() + 1;
         Worker worker = new Worker(id, color, this);
         workers.add(worker);
-        publish(new Message(name, TypeOfMessage.PLAYER_UPDATED, this));
+        publish(new Message("ALL", TypeOfMessage.PLAYER_UPDATED, this));
         return worker;
     }
 
