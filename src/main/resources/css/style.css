@@ -68,11 +68,11 @@ Label, .label, Text, .text {
 }
 
 
-.outline {
+/*.outline {
     -fx-fill: white;
     -fx-stroke: #346b93;
     -fx-stroke-width: 1px;
-}
+}*/
 
 .error-text {
     -fx-border-color: red;

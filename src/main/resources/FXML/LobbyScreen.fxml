@@ -12,7 +12,7 @@
             <Image url="@../images/santorini-logo.png" />
          </image>
       </ImageView>
-      <Text fx:id="titleLobbyText" fill="#346b93" layoutX="454.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="outline" text="Waiting for other players...">
+      <Text fx:id="titleLobbyText" fill="#346b93" layoutX="454.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Waiting for other players...">
          <font>
             <Font size="25.0" />
          </font>
