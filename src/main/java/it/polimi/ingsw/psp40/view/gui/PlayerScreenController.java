@@ -39,31 +39,102 @@ import java.util.List;
 public class PlayerScreenController extends ScreenController {
 
     @FXML
-    private Button endButton;
+    private ImageView left;
     @FXML
-    private TextArea textDescr;
+    private ImageView center;
+    @FXML
+    private ImageView right;
+
+    @FXML
+    private ImageView card1;
+    @FXML
+    private ImageView card2;
+    @FXML
+    private ImageView card3;
+
+    @FXML
+    private ImageView descrLeft;
+
+    @FXML
+    private ImageView descrRight;
+
+    @FXML
+    private ImageView descrCent;
+
+    @FXML
+    private Button endButton;
+
     @FXML
     private TextArea textTitle;
+
     @FXML
-    private VBox vBox;
+    private TextArea descrL;
+
+    @FXML
+    private TextArea descrR;
+
+    @FXML
+    private TextArea descrC;
+
+
 
     private final StringProperty playerSelected = new SimpleStringProperty(null);
 
     @FXML
     public void initialize() {
-        textDescr.setWrapText(true);
+        center.setVisible(false);
+        descrC.setVisible(false);
+        textTitle.setText("Choose first player");
         BooleanBinding binding = Bindings.isNotNull(playerSelected);
         endButton.visibleProperty().bind(binding);
         UtilsGUI.buttonHoverEffect(endButton);
     }
 
     protected void  displayPlayersForInitialSelection(List<Player> allPlayers) {
-        allPlayers.forEach(this::displayPapiro);
+        if (allPlayers.size() == 2){
+            displayPapiro(allPlayers.get(0), 1);
+            displayPapiro(allPlayers.get(1), 3);
+        }
+        else if (allPlayers.size() == 3){
+            displayPapiro(allPlayers.get(0), 1);
+            displayPapiro(allPlayers.get(1), 2);
+            displayPapiro(allPlayers.get(2), 3);
+        }
     }
 
-    private void displayPapiro(Player player) {
-        ImageView papiro = new ImageView(new Image(getClass().getResource("/images/papiro.png").toString()));
+    private void displayPapiro(Player player, int location) {
+        ImageView papiro ;
+        ImageView card ;
+        ImageView descr ;
+        TextArea textDescr ;
+        switch (location){
+            case 1:
+                papiro = left;
+                card = card1;
+                descr = descrLeft;
+                textDescr = descrL;
+                break;
+            case 2:
+                papiro = center;
+                card = card3;
+                descr = descrCent;
+                textDescr = descrC;
+                break;
+            case 3:
+                papiro = right;
+                card = card2;
+                descr = descrRight;
+                textDescr = descrR;
+                break;
+            default:
+                papiro = left;
+                card = card2;
+                descr = descrLeft;
+                textDescr = descrL;
+                break;
+        }
         String username = player.getName();
+        papiro.setVisible(true);
         papiro.setUserData(username);
         papiro.setFitWidth(400);
         papiro.setPreserveRatio(true);
@@ -71,31 +142,27 @@ public class PlayerScreenController extends ScreenController {
         papiro.setCache(true);
         papiro.setPickOnBounds(false);
         Transition transition = buildTransition(papiro);
+        ImageView finalPapiro = papiro;
         papiro.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                textDescr.setText(player.getCurrentCard().getDescription());
-                textTitle.setText(player.getCurrentCard().getName());
                 transition.play();
             } else {
-                textDescr.setText("");
-                textTitle.setText("");
-
                 transition.stop();
-                papiro.scaleXProperty().setValue(1);
-                papiro.scaleYProperty().setValue(1);
+                finalPapiro.scaleXProperty().setValue(1);
+                finalPapiro.scaleYProperty().setValue(1);
             }
         });
         papiro.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 mouseEvent -> {
                     if (playerSelected.getValue() == null){
-                        playerSelected.setValue((String) papiro.getUserData());
+                        playerSelected.setValue((String) finalPapiro.getUserData());
                         ColorAdjust colorAdjust = new ColorAdjust();
                         colorAdjust.setBrightness(0.3);
-                        papiro.setEffect(colorAdjust);
+                        finalPapiro.setEffect(colorAdjust);
                     }
-                    else if (playerSelected.getValue().equals(papiro.getUserData())) {
+                    else if (playerSelected.getValue().equals(finalPapiro.getUserData())) {
                         playerSelected.setValue(null);
-                        papiro.setEffect(null);
+                        finalPapiro.setEffect(null);
                     }
                 });
 
@@ -126,8 +193,19 @@ public class PlayerScreenController extends ScreenController {
         text.scaleXProperty().bind(papiro.scaleXProperty());
         text.scaleYProperty().bind(papiro.scaleYProperty());
 
-        Group group = new Group(papiro, text);
-        vBox.getChildren().add(group);
+
+        card.setImage(new Image(GUIProperties.class.getResource("/images/cardsFrame/" + player.getCurrentCard().getId() + ".png").toString()) );
+        ImageView finalDescr = descr;
+        card.hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                finalDescr.setVisible(true);
+                textDescr.setText(player.getCurrentCard().getDescription());
+                textDescr.setVisible(true);
+            } else {
+                finalDescr.setVisible(false);
+                textDescr.setVisible(false);
+            }
+        });
     }
 
     private Transition buildTransition(Node node) {
@@ -139,8 +217,7 @@ public class PlayerScreenController extends ScreenController {
         st.setToX(1.1);
         st.setToY(1.1);
 
-        ParallelTransition p = new ParallelTransition(st);
-        return p;
+        return new ParallelTransition(st);
     }
 
     @FXML
