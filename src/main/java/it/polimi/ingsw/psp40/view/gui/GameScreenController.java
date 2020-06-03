@@ -51,11 +51,6 @@ public class GameScreenController extends ScreenController {
     private Button topViewButton;
 
     @FXML
-    public Button placeWorkerButton;
-    @FXML
-    public Button moveButton;
-
-    @FXML
     private Pane myPane_dx;
     @FXML
     private Pane myPane_sx;
@@ -136,6 +131,24 @@ public class GameScreenController extends ScreenController {
         });
 
         disableMap(true); // start with map disabled
+
+        /* SET BACKGROUND */
+
+        double height = 1450;
+
+        //BackgroundSize(double width, double height, boolean widthAsPercentage, boolean heightAsPercentage, boolean contain, boolean cover)
+        BackgroundSize bgSize = new BackgroundSize(height*16/9, height, false, false, false, false);
+
+        //public BackgroundImage(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY, BackgroundPosition position, BackgroundSize size)
+        Image img = new Image(getClass().getResource("/images/island_background_dx.png").toString());
+        BackgroundImage bgImg = new BackgroundImage(img,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                bgSize);
+        Background bg = new Background(bgImg);
+        borderPane.setBackground(bg);
+
     }
 
     /* METHODS TO HANDLE BLOCKS CLICK */

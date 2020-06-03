@@ -2,19 +2,13 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.Player;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,17 +17,12 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PlayerScreenController extends ScreenController {
@@ -75,6 +64,9 @@ public class PlayerScreenController extends ScreenController {
 
     @FXML
     private TextArea descrC;
+
+    @FXML
+    private AnchorPane anchorPane;
 
 
 
@@ -186,13 +178,14 @@ public class PlayerScreenController extends ScreenController {
             text.setText(truncatedUsername);
         }
 
-        double x = papiro.getX() + papiro.getBoundsInLocal().getWidth() * 0.50 - text.getBoundsInLocal().getWidth()/2;
-        double y = papiro.getY() + papiro.getBoundsInLocal().getHeight() * 0.30 + text.getBoundsInLocal().getHeight()/2;
+        double x = finalPapiro.getLayoutX() + papiro.getBoundsInLocal().getWidth() * 0.50 - text.getBoundsInLocal().getWidth()/2;
+        double y = finalPapiro.getLayoutY() + papiro.getBoundsInLocal().getHeight() * 0.30 + text.getBoundsInLocal().getHeight()/2;
         text.setX(x);
         text.setY(y);
         text.scaleXProperty().bind(papiro.scaleXProperty());
         text.scaleYProperty().bind(papiro.scaleYProperty());
 
+        anchorPane.getChildren().add(text);
 
         card.setImage(new Image(GUIProperties.class.getResource("/images/cardsFrame/" + player.getCurrentCard().getId() + ".png").toString()) );
         ImageView finalDescr = descr;

@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp40.commons.FunctionInterface;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
+import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -112,6 +113,7 @@ public class GUI extends Application implements ViewInterface {
                 scene = new Scene(new Label(errorString));
             }
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
             GUI.deletePopup();
             functionInterface.executeFunction();
         });
