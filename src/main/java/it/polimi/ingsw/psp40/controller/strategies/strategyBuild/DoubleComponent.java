@@ -14,16 +14,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This Class is used to to define the EFESTO card
+ * This Class is used for EFESTO card
  * This strategy makes possible to build two Components at the same time, but the second cannot be a {@link Component#DOME}
+ * @author TiberioG
  */
 public class DoubleComponent extends DefaultBuild {
 
+    /**
+     * Constructor
+     * @param match
+     */
     public DoubleComponent(Match match) {
         super(match);
     }
 
 
+    /**
+     * This method overrides the default one returning the standard cells if it's used for the first time in a turn
+     * If it's used for a second time it returns only the cell where the worker built before
+     * @param worker is the {@link Worker} you want to know where it can build
+     * @return a list of {@link Cell}
+     */
     @Override
     public List<Cell> getBuildableCells(Worker worker) {
         Cell whereIam = match.getLocation().getLocation(worker);

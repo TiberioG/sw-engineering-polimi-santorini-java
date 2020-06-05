@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- *
- *
+ * this is the class used to display a basic cli for the game,
+ * this works also on windows but it's ugly, we used this mainly for debugging and testing
+ * @author TiberioG
  */
 public class CLI implements ViewInterface {
-
     /**
      * Constructor
      * @param client where the CLI runs
@@ -44,20 +44,19 @@ public class CLI implements ViewInterface {
     private static final Scanner in = new Scanner(System.in);
 
     private final Utils utils = new Utils(in, out);
-
     private boolean debug = Configuration.DEBUG;
 
 
-    /* METHODS*/
-
     /**
-     * this class now just creates the match
+     * Show title
      */
-
     private void showTitle() {
         out.println("Welcome to Santorini");
     }
 
+    /**
+     * server and port selection
+     */
     @Override
     public void displaySetup() {
         int port;
@@ -79,6 +78,9 @@ public class CLI implements ViewInterface {
         client.connectToServer();
     }
 
+    /**
+     * Can not reach the server
+     */
     @Override
     public void displaySetupFailure() {
         out.println("Can not reach the server, please try again");
@@ -117,11 +119,18 @@ public class CLI implements ViewInterface {
         client.sendToServer(loginMessage);
     }
 
+    /**
+     * login OK
+     */
     @Override
     public void displayLoginSuccessful() {
         out.println("You have been logged in successfully");
     }
 
+    /**
+     * loking KO
+     * @param details
+     */
     @Override
     public void displayLoginFailure(String details) {
         out.println(details);

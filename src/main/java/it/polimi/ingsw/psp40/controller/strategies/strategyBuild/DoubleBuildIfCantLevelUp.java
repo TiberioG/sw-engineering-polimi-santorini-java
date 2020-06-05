@@ -12,15 +12,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This Class is used to to define the PROMETEO card
+ * This Class is used for PROMETEO card
  * This strategy makes possible to build even before move if with move the worker can't level up
+ * @author TiberioG
  */
 public class DoubleBuildIfCantLevelUp extends DefaultBuild {
 
+    /**
+     * Constructor
+     * @param match
+     */
     public DoubleBuildIfCantLevelUp(Match match) {
         super(match);
     }
-
 
     /**
      * This method is used to retrieve a list of cells where is possible for a {@link Worker} to build any kind of possible {@link Component}

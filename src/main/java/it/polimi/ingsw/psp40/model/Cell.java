@@ -6,15 +6,9 @@ package it.polimi.ingsw.psp40.model;
  */
 
 public class Cell {
-
-    /* Attributes */
-
     private Tower tower;
     private int coordX;
     private int coordY;
-    //private Worker currentWorker; no more need with Location
-
-    /* Constructor(s) */
 
     /**
      * Constructor: populates a new cell in the given position
@@ -26,8 +20,6 @@ public class Cell {
         coordY = y;
         tower = new Tower();
     }
-
-    /* Methods */
 
     /**
      * Returns coordinate X of the cell

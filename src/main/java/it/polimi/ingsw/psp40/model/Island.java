@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 /**
  * This is the class for the Island (billboard)
- * @author sup3rgiu & modified by tiberioG
+ * we called island because billboard is longer and less cool
+ * @author sup3rgiu, TiberioG
  */
 public class Island extends Publisher<Message> {
-
     /* Attributes */
 
     private Cell[][] field;
@@ -27,10 +27,8 @@ public class Island extends Publisher<Message> {
     private final static int maxY = numRow - 1;
 
 
-    /* Constructor(s) */
-
     /**
-     * Constructor
+     * Constructor basic
      */
     public Island() {
         this.field = new Cell[numRow][numCol];
@@ -39,12 +37,10 @@ public class Island extends Publisher<Message> {
                 field[i][j] = new Cell(i, j);
             }
         }
-
     }
 
     /**
      * Constructor to setup island as publisher
-     *
      * @param virtualView
      */
     public Island(VirtualView virtualView){
@@ -52,8 +48,6 @@ public class Island extends Publisher<Message> {
         addListener(virtualView);
         publish(new Message("ALL", TypeOfMessage.ISLAND_UPDATED, this.field));
     }
-
-    /* Methods */
 
     /**
      * Get game field
@@ -138,8 +132,6 @@ public class Island extends Publisher<Message> {
         this.update();
         this.updateSpecific(cell);
     }
-
-
 
     /**
      * Sends to the view a copy of all the field

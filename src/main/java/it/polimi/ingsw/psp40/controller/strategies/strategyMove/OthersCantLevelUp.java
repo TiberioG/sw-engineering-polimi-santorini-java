@@ -10,18 +10,30 @@ import it.polimi.ingsw.psp40.model.Worker;
 
 import java.util.List;
 
-// ATENA
-
+/**
+ * this class is used for the card ARTEMIDE
+ * If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.
+ * @author sup3rgiu
+ */
 public class OthersCantLevelUp extends DefaultMove {
 
-    /* Constructor(s) */
-
+    /**
+     * Constructor
+     * @param match
+     */
     public OthersCantLevelUp(Match match) {
         super(match);
     }
 
-    /* Methods */
-
+    /**
+     * This methods activates when a worker has moved up, setting the parameter which prevents the enemy's Workers to level up
+     * @param worker it's the {@link Worker} to move
+     * @param cell it's the new {@link Cell} where is moved
+     * @throws ZeroCellsAvailableMoveException
+     * @throws WrongCellSelectedMoveException
+     * @throws WorkerAlreadyPresentException
+     * @throws CellOutOfBoundsException
+     */
     @Override
     public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException, CellOutOfBoundsException {
         try {
@@ -41,6 +53,11 @@ public class OthersCantLevelUp extends DefaultMove {
         }
     }
 
+    /**
+     * This method is like the default {@link DefaultMove} but disable the flag "Others can't level up"
+     * @param worker it's the {@link Worker} you want to know about
+     * @return the list of available {@link Cell} for move
+     */
     @Override
     public List<Cell> getAvailableCells(Worker worker) {
         match.getMatchProperties().setOthersCantLevelUp(false);

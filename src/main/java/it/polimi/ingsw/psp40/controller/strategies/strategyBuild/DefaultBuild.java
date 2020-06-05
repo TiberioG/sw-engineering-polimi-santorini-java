@@ -17,12 +17,16 @@ import java.util.stream.Collectors;
 /**
  * This is the class that implements the strategy used to build new components on the Island of the Match
  * It is the superclass of all the different strategies
+ * @author TiberioG
  */
 public class DefaultBuild implements StrategyBuild {
     /* Attributes */
     protected Match match;
 
-    /* Constructor(s) */
+    /**
+     * Constructor for Build
+     * @param match
+     */
     public DefaultBuild(Match match) {
         this.match = match;
     }

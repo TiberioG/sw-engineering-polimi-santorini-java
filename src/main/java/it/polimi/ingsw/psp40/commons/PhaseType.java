@@ -7,7 +7,6 @@ public enum PhaseType {
     END_TURN ("End your turn"),
     UNRECOGNIZED_PHASE("Booh");
 
-
     private final String prettyName;
 
     PhaseType(String prettyName) {

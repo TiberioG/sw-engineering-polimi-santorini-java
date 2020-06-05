@@ -23,8 +23,6 @@ public class CardManager {
     private static CardManager instance = null;
     private static HashMap<Integer, Card> cardMap = new HashMap<>(); //
 
-    /* Constructor(s) */
-
     /**
      * Constructor: retrieve information of alla card from a json file and put all card in cardMap
      */

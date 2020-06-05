@@ -46,7 +46,7 @@ public class TurnManager {
     }
 
     /**
-     * Constructor for test
+     * Constructor for testing
      */
     public TurnManager(Match match) {
         this.match = match;
@@ -54,7 +54,6 @@ public class TurnManager {
     }
 
     /* Methods */
-
 
     /**
      * This method create and inizialize a turn for every player in the match
@@ -169,7 +168,7 @@ public class TurnManager {
     private Boolean checkForPermittedPhase(PhaseType type) {
         return currentTurn.getCurrentPhase().getNextPhases().stream().anyMatch(phase -> phase.getType().equals(type));
     }
-    
+
 
     /**
      * This method call the setSelectedWorker method of the current turn and update the virtual view with a message which contains the next phase available

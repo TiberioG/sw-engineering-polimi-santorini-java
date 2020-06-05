@@ -7,13 +7,13 @@ import it.polimi.ingsw.psp40.exceptions.RemoveGroundLevelException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class represents a pile of components
+ * @author sup3rgiu
+ */
  public class Tower  {
 
-    /* Attributes */
-
     private List<Component> components;
-
-    /* Constructor(s) */
 
     /**
      * Constructor
@@ -64,7 +64,6 @@ import java.util.List;
 
      /**
       * Get the latest component of the tower
-      *
       * @return latest {@link Component} of the tower
       */
     public Component getTopComponent (){

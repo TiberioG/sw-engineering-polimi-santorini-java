@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+//todo javadoc
 public class MatchHistory {
 
     public synchronized static void saveMatch(Match match) {

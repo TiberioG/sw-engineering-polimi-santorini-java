@@ -15,9 +15,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
 /**
- * Small library of utilities for the CLI, old version
+ * it used to be a "small" library of utilities for the CLI, now is pretty big
+ * mainly for input verification, display of tables in ascii art
  * @author tiberioG
  */
 public class Utils {
@@ -200,26 +200,6 @@ public class Utils {
         return numbers;
     }
 
-
-    public int[] readPosition_old(int min, int max){
-        int[] coord = new int[2];
-        do {
-            out.println("Insert coordinates in format x,y:");
-            while (!in.hasNext("\\d*,\\d*")) {
-                out.println("\nThat's not the correct pattern!");
-                in.next();
-            }
-            in.nextLine();
-            String correct = in.nextLine();
-            out.println(correct);
-            String[] ints= correct.split(",");
-            coord[0] = Integer.parseInt(ints[0]);
-            coord[1] = Integer.parseInt(ints[0]);
-        } while (coord[0] < min || coord[0] > max || coord[1] < min || coord[1] > max);
-        return coord;
-    }
-
-
     public int[] readPosition(int min, int max){
         int[] coord = new int[2];
         String input;
@@ -235,8 +215,6 @@ public class Utils {
         }while (coord[0] < min || coord[0] > max || coord[1] < min || coord[1] > max);
         return coord;
     }
-
-
 
     public void singleTableCool(String title, String[] inputList, int delay) {
         final  int SPACEADD = 5;
@@ -354,7 +332,6 @@ public class Utils {
 
     }
 
-
     public String form(String title, int width){
         String titleString = centerString(width, title);
 
@@ -427,8 +404,6 @@ public class Utils {
     }
 
 
-
-
     public void printMap(String[][] stringIsland ){
         String lineSplit = "";
         StringJoiner splitJoiner = new StringJoiner("┼", "|", "|");
@@ -457,18 +432,7 @@ public class Utils {
     public static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
-
-
-    public String readNames() {
-        String name = in.nextLine();
-
-        while (name.equals("All") || name.isEmpty() || name.matches("^\\s*$")){
-            out.println("\nThis username is not allowed, sorry! :(\n\n" +
-                    "INSERT ANOTHER ONE:\n");
-            name = in.nextLine();
-        }
-        return name;
-    }
+    
 
     public String readIp() {
         String ip;

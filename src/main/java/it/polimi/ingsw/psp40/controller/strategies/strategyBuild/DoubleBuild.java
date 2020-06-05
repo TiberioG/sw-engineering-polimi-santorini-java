@@ -9,12 +9,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This Class is used to to define the DEMETRA card
- * This strategy makes possible to build a second time, but not in the same Cell
- * AAATTENTION:: The Build method must be called TWICE during the same turn
+ * This Class is used for DEMETRA card
+ * This strategy makes possible to build a second time, but not in the same Cell as the previous build action in the same turn
+ * Attention: the build method must be called twice during the turn
+ * @author TiberioG
  */
 public class DoubleBuild extends DefaultBuild {
 
+    /**
+     * Constructor
+     * @param match
+     */
     public DoubleBuild(Match match) {
         super(match);
     }

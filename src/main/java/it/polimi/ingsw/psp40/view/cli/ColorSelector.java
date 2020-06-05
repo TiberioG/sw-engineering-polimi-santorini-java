@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColorSelector {
-
     private final static int SPACING = 3;
 
     private final static int LEN = 13;
@@ -84,7 +83,6 @@ public class ColorSelector {
 
     private void print(int current)  {
 
-
         for(int i= 0; i < colorsAvailable.size(); i++ ){
             Terminal.moveAbsoluteCursor(frame.getInit()[0], init + i*(LEN + SPACING));
             for (int k = 0; k < HEI ; k ++){
@@ -104,9 +102,6 @@ public class ColorSelector {
             }
         }
      }
-
-
-
 
 
 }

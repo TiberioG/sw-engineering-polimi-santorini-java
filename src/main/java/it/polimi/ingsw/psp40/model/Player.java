@@ -25,10 +25,12 @@ public class Player extends Publisher<Message> {
     private List<Worker> workers = new ArrayList<>();
     //private String UUID;
 
-    /* Constructor(s) */
 
     /**
      * Constructor
+     * @param name
+     * @param birthday
+     * @param virtualView
      */
     public Player(String name, Date birthday, VirtualView virtualView) {
         addListener(virtualView);
@@ -36,25 +38,45 @@ public class Player extends Publisher<Message> {
         this.birthday = birthday;
     }
 
-    // Constructor for testing
+    /**
+     * Stupid constructor for testing
+     * @param name
+     * @param birthday
+     */
     public Player(String name, Date birthday) {
         this(name, birthday, null);
     }
 
     /* Methods */
 
+    /**
+     * Getter of name of Player
+     * @return string name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter of birthday of player
+     * @return
+     */
     public Date getBirthday() {
         return birthday;
     }
 
+    /**
+     * Getter of the {@link Card} associated now with the player
+     * @return
+     */
     public Card getCurrentCard() {
         return currentCard;
     }
 
+    /**
+     * setter to associate a {@link Card} to the player
+     * @param currentCard
+     */
     public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
         publish(new Message("ALL", TypeOfMessage.PLAYER_UPDATED, this));
@@ -75,6 +97,7 @@ public class Player extends Publisher<Message> {
     }
 
     /**
+     * getter of all the Workers of the player
      * @return an ArrayList of the workers belonging to the player
      */
     public List<Worker> getWorkers() {

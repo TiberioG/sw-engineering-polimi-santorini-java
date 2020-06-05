@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class is used to show the list of the names of the cards and the description
+ * @author TiberioG
+ */
 public class CardSelector {
     private final static int  SPACING = 3;
     private int width = 20;
@@ -21,11 +25,16 @@ public class CardSelector {
     private Frame fLeft;
     private Frame fRight;
 
+    /**
+     * Constructor using an hasmap
+     * @param hashMapCards a map of id and {@link Card}
+     * @param toSelect
+     * @param container
+     */
     public CardSelector(HashMap<Integer, Card> hashMapCards, int toSelect, Frame container){
         for (int i = 0; i< hashMapCards.size(); i++){
             this.cards.add(hashMapCards.get(i));
         }
-
         fLeft = new Frame(new int[]{10, (container.getColSpan() - (width + SPACING + extended) ) /2}, container.getAbsEnd(), container.getIn(), container.getOut());
         fRight = new Frame(new int[]{10,((container.getColSpan() - (width + SPACING + extended) ) /2) + width + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
 
@@ -43,8 +52,13 @@ public class CardSelector {
         }
     }
 
+    /**
+     * Constructor if using only a list of  {@link Card}
+     * @param availableCards a list of {@link Card}
+     * @param toSelect
+     * @param container
+     */
     public CardSelector(List<Card> availableCards, int toSelect, Frame container){
-
         this.cards = availableCards;
         this.fLeft = new Frame(new int[]{10, (container.getColSpan() - (width + SPACING + extended) ) /2}, container.getAbsEnd(), container.getIn(), container.getOut());
         this.fRight = new Frame(new int[]{10,((container.getColSpan() - 2 * (width + SPACING) ) /2) +width + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
@@ -64,6 +78,10 @@ public class CardSelector {
 
     }
 
+    /**
+     * method that allows to select multiple cards, as much as defined as parameter in the constructor
+     * @return an array of the ids of the selected cards
+     */
     int[] selectionMultiple (){
         try {
             Terminal.noBuffer();
@@ -129,7 +147,10 @@ public class CardSelector {
 
     }
 
-
+    /**
+     * method that allows to select only one card
+     * @return the ID of the card
+     */
     int selectionSingol (){
         try {
             Terminal.noBuffer();
@@ -179,6 +200,11 @@ public class CardSelector {
 
     }
 
+    /**
+     * prints in terminal the cardSelector
+     * @param current
+     * @param selected
+     */
     private void print (int current, List<Integer> selected) {
         int height = cards.size();
         int innerwidth = width - 4;
@@ -255,6 +281,11 @@ public class CardSelector {
         System.out.print("╝");
     }
 
+
+    /**
+     * method to print the description of the card
+     * @param cardId
+     */
     private void showText(int cardId){
         fRight.clearRight(); //ued to odelete previous box
         String titleString = Utils.centerString(width, "Card description"); //title

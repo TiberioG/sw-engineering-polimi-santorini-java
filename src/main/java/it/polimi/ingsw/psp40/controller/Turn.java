@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to define a turn
+ * @author Vito96
+ */
 public class Turn {
     private Player player;
-
     private Phase currentPhase;
-
     private Worker selectedWorker;
 
     private StrategyMove strategyMove;
@@ -28,7 +30,7 @@ public class Turn {
     private StrategyLose strategyLose;
 
     /**
-     * Constructor to  init turn instance
+     * Constructor to init turn instance
      * @param player the player of the turn
      */
     public Turn(Player player) {
@@ -37,13 +39,12 @@ public class Turn {
     }
 
     /**
-     * Method for initialize the turn
+     * Method to initialize the turn
      */
     public void initializeTurn() {
         currentPhase = player.getCurrentCard().getInitialPhase();
         selectedWorker = null;
     }
-
 
     /**
      * Method to set the strategyBuild in the turn
@@ -146,7 +147,7 @@ public class Turn {
 
     /**
      * This method call the checkLoseForMove of the strategyLose
-     * @return a {@link boolean} which indicate if the player has lose
+     * @return a {@link boolean} which indicate if the player has lost
      */
     public boolean checkLoseForMove() {
         return strategyLose.checkLoseForMove(strategyMove);
@@ -154,7 +155,7 @@ public class Turn {
 
     /**
      * This method call the checkLoseForBuild of the strategyLose
-     * @return a {@link boolean} which indicate if the player has lose
+     * @return a {@link boolean} which indicate if the player has lost
      */
     public boolean checkLoseForBuild() {
         return strategyLose.checkLoseForBuild(strategyBuild, selectedWorker);

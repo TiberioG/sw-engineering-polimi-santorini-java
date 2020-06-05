@@ -29,6 +29,10 @@ public enum Component {
         return Component.values()[componentCode].toString();
     }
 
+    /**
+     * this method is useful to get all the names of the levels
+     * @return an array of names of all the levels
+     */
     public static String[] allNames(){
         String [] list = new String[Component.values().length];
         for (int i = 0; i < Component.values().length; i++){

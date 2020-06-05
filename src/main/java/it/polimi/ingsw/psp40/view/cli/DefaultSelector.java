@@ -4,43 +4,52 @@ import it.polimi.ingsw.psp40.commons.Colors;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * this class is used to display in terminal a selector of strings, usually phases
+ * @author TiberioG Vito96
+ */
 public class DefaultSelector {
     private String title;
-
     private List<String> listForSelector;
-
     private int width;
-
     private int[] init;
 
-
+    /**
+     * Constructor
+     * @param mainContainer
+     * @param title
+     * @param listForSelector
+     * @param centered
+     */
     public DefaultSelector(Frame mainContainer, String title, List<String> listForSelector, boolean centered) {
         this.title = title;
         this.listForSelector = listForSelector;
-
         this.width = Math.max(listForSelector.stream().mapToInt(String::length).max().orElse(title.length()), title.length()) + 5;
 
         if (!centered){
             init = mainContainer.getInit();
         }
-
         else {
             int col = (mainContainer.getColSpan() - width ) / 2;
             init = new int[] {mainContainer.getInit()[0], col};
-
         }
-
     }
 
-
+    /**
+     * helper method to disable buffer in terminal
+     */
     private void callTerminalNoBuffer() {
         try {
             Terminal.noBuffer();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
+    /**
+     * method to get the index of selection
+     * @return int as the index
+     */
     public int getSelectionIndex() {
         callTerminalNoBuffer();
         int selection = 0;
@@ -84,11 +93,20 @@ public class DefaultSelector {
         return selection;
     }
 
+    /**
+     * method to get the content of the selection
+     * @return a String selected
+     */
     public String getSelection() {
         int selection = getSelectionIndex();
         return listForSelector.get(selection);
     }
 
+
+    /**
+     * prints the list
+     * @param currentSelection
+     */
     public void printListOfSelection(int currentSelection) {
         printTopLine();
         printOpenTitleLine();
@@ -98,6 +116,9 @@ public class DefaultSelector {
     }
 
 
+    /**
+     * prints top line of table
+     */
     public void printTopLine() {
         //top line
         Terminal.moveAbsoluteCursor(init[0], init[1]);
@@ -110,6 +131,9 @@ public class DefaultSelector {
         Terminal.moveAbsoluteCursor(init[0] + 1, init[1]); // goo down one line
     }
 
+    /**
+     * prints title line
+     */
     public void printOpenTitleLine() {
         String titleString = Utils.centerString(width, title);
         StringBuilder title = new StringBuilder();
@@ -119,6 +143,9 @@ public class DefaultSelector {
         Terminal.moveAbsoluteCursor(init[0] + 2, init[1]); // goo down one line
     }
 
+    /**
+     * prints closure of titleline
+     */
     public void printCloseTitleLine() {
         //close tile line
         System.out.print("╠");
@@ -129,6 +156,10 @@ public class DefaultSelector {
         Terminal.moveAbsoluteCursor(init[0] + 3, init[1]); // goo down one line
     }
 
+    /**
+     * prints items
+     * @param currentSelection
+     */
     public void printMiddleItemLines(int currentSelection) {
         int innerwidth = width - 4;
         for (int i = 0; i < listForSelector.size(); i++) {
@@ -144,6 +175,9 @@ public class DefaultSelector {
         };
     };
 
+    /**
+     * prints last line
+     */
     public void printCloseLine() {
         //closeline
         System.out.print("╚");

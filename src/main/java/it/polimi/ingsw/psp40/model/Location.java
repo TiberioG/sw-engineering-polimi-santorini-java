@@ -17,20 +17,16 @@ import java.util.List;
 /**
  * This class represents the location
  * we want to represent here the 1:1 relationship between Worker and Cell
+ * @author TiberioG
  */
 
 public class Location extends Publisher<Message> {
 
-    /* Attributes */
-
     private HashMap<Cell, Worker> map = new HashMap<>();
     private List<Worker> modifiedWorkers = new ArrayList<>();
 
-
-    /* Constructor(s) */
-
     /**
-     * Constructor
+     * Constructor which adds the {@link VirtualView} as {@link it.polimi.ingsw.psp40.commons.Listener}
      * @param virtualView
      */
     public Location(VirtualView virtualView) {
@@ -38,10 +34,10 @@ public class Location extends Publisher<Message> {
         update();
     }
 
-    // Constructor for testing
+    /**
+     * Stupid default constructor for testing
+     */
     public Location() {}
-
-    /* Methods */
 
     /**
      * Adds a pair cell-worker in the map
@@ -138,15 +134,26 @@ public class Location extends Publisher<Message> {
         map.put(cell, null);
     }
 
+    /**
+     * this returns the workers who have been moved in a turn
+     * @return a list of {@link Worker} who have been moved in a turn
+     */
     public List<Worker> getModifiedWorkers() {
         return modifiedWorkers;
     }
 
+    /**
+     * this method makes a copy to this class
+     * @return a Location copy serialized as JSON
+     */
     public Location copy() {
         String locationString = JsonAdapter.toJsonClass(this);
         return JsonAdapter.getGsonBuilder().fromJson(locationString, Location.class);
     }
 
+    /**
+     * Updates the listeners that location has changed
+     */
     private void update () {
         publish(new Message("ALL", TypeOfMessage.LOCATION_UPDATED, this));
         modifiedWorkers.clear();

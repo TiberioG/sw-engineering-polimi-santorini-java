@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This Class is used to to define the ATLANTE card
+ * This Class is used for ATLANTE card
  * This strategy makes possible to build a {@link Component#DOME} in every level of the Island
+ * @author TiberioG
  */
 public class DomeAnywhere extends DefaultBuild {
 
+    /**
+     * Constructor
+     * @param match
+     */
     public DomeAnywhere(Match match) {
         super(match);
     }

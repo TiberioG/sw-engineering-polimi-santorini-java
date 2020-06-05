@@ -18,6 +18,10 @@ import java.util.*;
 
 import java.util.stream.Collectors;
 
+/**
+ * This is the controller
+ * @author Vito96 //todo javadocc
+ */
 public class Controller implements Listener<Message> {
     private Match match;
     private CardManager cardManager;
@@ -26,8 +30,8 @@ public class Controller implements Listener<Message> {
     private JsonObject oldMatch;
 
     /**
-     *
-     * @param virtualView npn
+     * Constructor
+     * @param virtualView
      */
     public Controller(VirtualView virtualView) {
         this.virtualView = virtualView;
@@ -219,8 +223,6 @@ public class Controller implements Listener<Message> {
             e.printStackTrace();
         }
     }
-
-
 
     @SuppressWarnings("unused")
     private void endTurn(Message message) {

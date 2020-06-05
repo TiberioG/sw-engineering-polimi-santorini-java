@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp40.commons;
 
+/**
+ * this class is used to define some static parameters of the game
+ */
 public class Configuration {
     public static final String formatDate = "dd/MM/yyyy";
     public static final String minDate = "01/01/1900";

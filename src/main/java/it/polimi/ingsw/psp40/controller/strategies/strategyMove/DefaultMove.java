@@ -12,20 +12,30 @@ import it.polimi.ingsw.psp40.model.Worker;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to define the default rules to move a {@link Worker}
+ * @author sup3rgiu
+ */
 public class DefaultMove implements StrategyMove {
-
-    /* Attributes */
-
     protected Match match;
 
-    /* Constructor(s) */
-
+    /**
+     * Constructor
+     * @param match
+     */
     public DefaultMove(Match match) {
         this.match = match;
     }
 
-    /* Methods */
-
+    /**
+     * this method is used to change the model, changing the location {@link Cell} of a {@link Worker}
+     * @param worker it's the {@link Worker} to move
+     * @param cell it's the new {@link Cell} where is moved
+     * @throws ZeroCellsAvailableMoveException
+     * @throws WrongCellSelectedMoveException
+     * @throws WorkerAlreadyPresentException
+     * @throws CellOutOfBoundsException
+     */
     @Override
     public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException, CellOutOfBoundsException {
         List<Cell> availableCells = getAvailableCells(worker);
@@ -36,6 +46,11 @@ public class DefaultMove implements StrategyMove {
         }
     }
 
+    /**
+     * This method is used to get from the Model a list of {@link Cell} where a worker can move according to the default rules
+     * @param worker it's the {@link Worker} you want to know about
+     * @return a list of {@link Cell} where the  {@link Worker} can move according to the default rules
+     */
     @Override
     public List<Cell> getAvailableCells(Worker worker) {
         Cell workerCell = match.getLocation().getLocation(worker);
@@ -47,6 +62,12 @@ public class DefaultMove implements StrategyMove {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This method is used to get the adjacent cells of a specified cell, removing the ones where there is a slope > +1 block
+     * This is used if the strategy {@link OthersCantLevelUp} is enabled
+     * @param cell where you want to check the movable cells, excluding going up a level
+     * @return a list of {@link Cell} which are adjacent to the input parameter, excluding the possibility to go up a level
+     */
     @Override
     public List<Cell> getAdjCells(Cell cell) {
         boolean cantLevelUp = match.getMatchProperties().isOthersCantLevelUp();
@@ -60,6 +81,5 @@ public class DefaultMove implements StrategyMove {
 
         return adjCells;
     }
-
 
 }

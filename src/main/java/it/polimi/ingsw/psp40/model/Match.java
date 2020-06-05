@@ -28,6 +28,8 @@ public class Match extends Publisher<Message> {
 
     /**
      * Constructor
+     * @param matchID
+     * @param virtualView
      */
     public Match(int matchID, VirtualView virtualView) {
         addListener(virtualView);
@@ -39,7 +41,10 @@ public class Match extends Publisher<Message> {
         publish(new Message("ALL", TypeOfMessage.CREATED_MATCH));
     }
 
-    // Constructor for testing
+    /**
+     * Stupid constructor used for testing
+     * @param matchID
+     */
     public Match(int matchID) {
         this.matchID = matchID ;
         this.island = new Island();
@@ -47,33 +52,72 @@ public class Match extends Publisher<Message> {
         this.matchProperties = new MatchProperties();
     }
 
-
     /* Methods */
 
+    /**
+     * getter of Match ID
+     * @return of Match ID
+     */
     public int getMatchID() {
         return matchID;
     }
+
+    /**
+     * Getter of the list of all {@link Player} of the match
+     * @return the list of all {@link Player} of the match
+     */
     public List<Player> getPlayers() {
         return Collections.unmodifiableList(new ArrayList<>(listPlayers));
     }
+
+    /**
+     * getter of the {@link Island} of the match
+     * @return the {@link Island} of the match
+     */
     public Island getIsland() {
         return island;
     }
+
+    /**
+     * Getter of the current {@link Player}
+     * @return the current {@link Player}
+     */
     public Player getCurrentPlayer(){
         return currentPlayer;
     }
+
+    /**
+     * getter of all the  {@link Card} in the match
+     * @return a list of {@link Card} in the match
+     */
     public List<Card> getCards() {
         return listCardsInGame;
     }
+
+    /**
+     * adds a {@link Card} to the match
+     * @param card
+     */
     public void addCard(Card card){
         this.listCardsInGame.add(card);
     }
+
+    /**
+     * getter of {@link Location}
+     * @return {@link Location}
+     */
     public Location getLocation() {
         return location;
     }
+
+    /**
+     * getter of {@link MatchProperties}
+     * @return {@link MatchProperties} of the match
+     */
     public MatchProperties getMatchProperties() {
         return matchProperties;
     }
+
 
     /**
      * Method to set the current player of the match, if it exists in  the array of players of the match.
@@ -180,7 +224,7 @@ public class Match extends Publisher<Message> {
 
     /**
      * Method to set the winningplayer of the match and for notify the winning player to the virtualView
-     * @param name name of the winning player
+     * @param name string of the winning player
      */
     public void setWinningPlayer(String name) {
         Player player = getPlayerByName(name);
@@ -191,7 +235,9 @@ public class Match extends Publisher<Message> {
         }
     }
 
-
+    /**
+     * method used for persistence
+     */
     public void saveMatch() {
         MatchHistory.saveMatch(this);
     }

@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class is used to set temporary flags and save some state of a turn
+ * @author Vito96, TiberioG, sup3rgiu
+ */
 public class MatchProperties {
     private int currentTurnId = -1;
     private HashMap<Worker, Cell> initialPositionMap = new HashMap<>();
@@ -15,6 +19,9 @@ public class MatchProperties {
     private boolean othersCantLevelUp = false;
 
 
+    /**
+     * this resets all the parameters
+     */
     public void resetParameterForTurn() {
         currentTurnId = -1;
         initialPositionMap = new HashMap<>();
@@ -23,18 +30,35 @@ public class MatchProperties {
         performedPhases = new ArrayList<>();
     }
 
+    /**
+     * getter of a HashMap of initial {@link Cell} position of workers at beginning of turn
+     * @return
+     */
     public HashMap<Worker, Cell> getInitialPositionMap() {
         return initialPositionMap;
     }
 
+    /**
+     * getter of a HashMap of initial level of workers at beginning of turn
+     * @return
+     */
     public HashMap<Worker, Integer> getInitialLevels() {
         return initialLevels;
     }
 
+    /**
+     * Getter of {@link PhaseType} happened in the turn
+     * @return
+     */
     public List<PhaseType> getPerformedPhases() {
         return performedPhases;
     }
 
+    /**
+     * Getter of current turnid
+     * @return
+     * @deprecated
+     */
     public int getCurrentTurnId() {
         return currentTurnId;
     }
@@ -57,10 +81,17 @@ public class MatchProperties {
         return builtInThisTurn.get(worker);
     }
 
+    /**
+     * getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+     * @return the flag
+     */
     public boolean isOthersCantLevelUp() {
         return othersCantLevelUp;
     }
 
+    /**
+     * setter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+     */
     public void setOthersCantLevelUp(boolean othersCantLevelUp) {
         this.othersCantLevelUp = othersCantLevelUp;
     }

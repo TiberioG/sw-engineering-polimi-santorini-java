@@ -5,6 +5,10 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * this class defines standard colors for workers
+ * @author TiberioG
+ */
 public enum Colors {
     WHITE ("\u001B[97m", Color.WHITE),
     BLACK ("\u001B[30m", Color.BLACK),
@@ -36,10 +40,18 @@ public enum Colors {
         return ansiCode;
     }
 
+    /**
+     * Getter of {@link Color} as used in Javafx
+     * @return
+     */
     public Color getPaintColor() {
         return color;
     }
 
+    /**
+     * Getter of all names of the {@link Colors}
+     * @return
+     */
     public static String[] allNames(){
         String [] list = new String[Colors.values().length];
         for (int i = 0; i < Colors.values().length; i++){
@@ -61,13 +73,16 @@ public enum Colors {
     }
 
     /**
-     *
      * @return the resetcolor ANSI code
      */
     public static String reset(){
         return  "\u001B[0m";
     }
 
+    /**
+     * this returns a random color
+     * @return
+     */
     public static String randomColor(){
         ArrayList<String> list = new ArrayList<>();
 
@@ -76,14 +91,7 @@ public enum Colors {
         }
         Random rand = new Random();
         return list.get(rand.nextInt(list.size()));
-
     }
-
-
-
-
-
-
 
 }
 

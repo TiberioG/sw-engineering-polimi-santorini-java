@@ -4,20 +4,27 @@ import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.model.Match;
 import it.polimi.ingsw.psp40.model.Worker;
 
+/**
+ * This class describes the default rules for winning a match: if a worker reaches the third level
+ * @author Vito96
+ */
 public class DefaultWin implements StrategyWin {
-
-    /* Attributes */
 
     private Match match;
 
-    /* Constructor(s) */
-
+    /**
+     * Constructor
+     * @param match
+     */
     public DefaultWin(Match match) {
         this.match = match;
     }
 
-    /* Methods */
-
+    /**
+     * This returns true if a worker has moved till the third level
+     * check if the worker comes from the third level and check if the worker has moved
+     * @return true if and only if a worker has moved till the third level
+     */
     @Override
     public boolean checkWin() {
         boolean hasWin = false;
