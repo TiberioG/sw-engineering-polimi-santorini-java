@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 import it.polimi.ingsw.psp40.model.*;
+import javafx.application.Platform;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -222,15 +223,16 @@ public class TurnManager {
      * This method performs all the operations to remove a player who has lost
      */
     private void removePlayerForLost() {
-        String nameOfTheLosePlayer = match.getCurrentPlayer().getName();
+        Player losePlayer = match.getCurrentPlayer();
         match.selectNextCurrentPlayer();
-        turnsMap.remove(nameOfTheLosePlayer);
-        match.removePlayer(nameOfTheLosePlayer);
+        turnsMap.remove(losePlayer.getName());
+        match.removePlayer(losePlayer.getName());
 
         currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
         if (turnsMap.size() == 1) {
             match.setWinningPlayer(currentTurn.getPlayer().getName());
         } else {
+            updateVirtualView(new Message("ALL", TypeOfMessage.PLAYER_HAS_LOST, losePlayer));
             inizializedCurrentTurn();
         }
     }

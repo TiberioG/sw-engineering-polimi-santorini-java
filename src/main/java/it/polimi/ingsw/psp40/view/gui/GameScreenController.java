@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
@@ -90,7 +91,7 @@ public class GameScreenController extends ScreenController {
 
     private Worker selectedWorker = null;
     private boolean waiting = false;
-    private PhaseType currentPhase = null;
+    private List<PhaseType> selectedPhases = new ArrayList<>();
     private boolean shouldPositionWorkers = false;
     private Colors chosenColor = null;
 
@@ -98,6 +99,8 @@ public class GameScreenController extends ScreenController {
     private boolean isMapDisabled = false;
 
     private List<ImageView> listOfPlayerImage = new ArrayList<>();
+
+    private ConfirmPopup confirmPopup = null;
 
     /* Methods */
 
@@ -156,11 +159,11 @@ public class GameScreenController extends ScreenController {
     public void blockClicked(int x, int y, int z) {
         System.out.println("Clicked: "+ x + ", " + y + ", " + z);
         if(!waiting) {
-            if (currentPhase == PhaseType.MOVE_WORKER) {
+            if (checkLastSelectedPhase(PhaseType.MOVE_WORKER)) {
                 moveWorker(x, y, z);
-            } else if (currentPhase == PhaseType.BUILD_COMPONENT) {
+            } else if (checkLastSelectedPhase(PhaseType.BUILD_COMPONENT)) {
                 build(x, y, z);
-            } else if (shouldPositionWorkers && currentPhase == null && !hasEnoughWorkers()) {
+            } else if (shouldPositionWorkers && selectedPhases.size() == 0 && !hasEnoughWorkers()) {
                 placeWorker(x, y, z);
             }
         }
@@ -169,14 +172,14 @@ public class GameScreenController extends ScreenController {
 
     public void workerClicked(Worker worker) {
         System.out.println("Worker clicked! " + worker.row + ", " + worker.col + ", " + worker.z);
-        if(currentPhase == PhaseType.SELECT_WORKER &&  !waiting) {
+        if(checkLastSelectedPhase(PhaseType.SELECT_WORKER) &&  !waiting) {
             if(worker.ownerUsername.equals(getClient().getUsername())) {
                 highlightAvailableWorkersForSelection(false);
                 selectedWorker = worker.copy();
                 sendToServer(new Message(TypeOfMessage.SELECT_WORKER, selectedWorker.id));
             }
         }
-        else if(currentPhase == PhaseType.MOVE_WORKER &&  !waiting) { // handle click on worker if I'm in MOVE_WORKER phase. Useful when workers can be swapped
+        else if(checkLastSelectedPhase(PhaseType.MOVE_WORKER) &&  !waiting) { // handle click on worker if I'm in MOVE_WORKER phase. Useful when workers can be swapped
             moveWorker(worker.row, worker.col, worker.z - 1);
         }
     }
@@ -233,7 +236,7 @@ public class GameScreenController extends ScreenController {
         availableCells.removeIf( cell -> occupiedCells.stream().anyMatch( occupiedCell -> cell.getCoordX() == occupiedCell.getCoordX() && cell.getCoordY() == occupiedCell.getCoordY()));
         highlightAvailableCells(availableCells);
         waiting = false;
-        currentPhase = null; // just to be sure
+        selectedPhases = new ArrayList<>(); // just to be sure
         shouldPositionWorkers = true;
     }
 
@@ -363,9 +366,18 @@ public class GameScreenController extends ScreenController {
 
     protected void highlightAvailableCellsForBuild() {
         List<Cell> availableCells = new ArrayList<>(getClient().getAvailableBuildCells().keySet());
-        highlightAvailableCells(availableCells);
-        currentPhase = PhaseType.BUILD_COMPONENT;
-        waiting = false;
+        if (availableCells.size() > 0) {
+            highlightAvailableCells(availableCells);
+            waiting = false;
+        } else {
+            confirmPopup = new ConfirmPopup(getPrimaryStage(), "There are no cells available to build at this stage! Select another phase.\n", () -> {
+                confirmPopup.hide();
+                GUI.deletePopup();
+                selectedPhases.remove(selectedPhases.size() - 1);
+                askDesiredPhase();
+            });
+            GUI.showPopup(confirmPopup);
+        }
     }
 
     /* METHODS TO HANDLE MOVE PHASE */
@@ -407,65 +419,83 @@ public class GameScreenController extends ScreenController {
 
     protected void highlightAvailableCellsForMove() {
         List<Cell> availableCells = getClient().getAvailableMoveCells();
-        highlightAvailableCells(availableCells);
-        currentPhase = PhaseType.MOVE_WORKER;
-        waiting = false;
+        if (availableCells.size() > 0) {
+            highlightAvailableCells(availableCells);
+            waiting = false;
+        } else {
+            boolean moveAfterSelectWorker = selectedPhases.size() == 2;
+            String text = "There are no cells available to move at this stage! Select another"  + (moveAfterSelectWorker ? "  worker." : " phase");
+            confirmPopup = new ConfirmPopup(getPrimaryStage(), text, () -> {
+                confirmPopup.hide();
+                GUI.deletePopup();
+                if (moveAfterSelectWorker) {
+                    selectedPhases = new ArrayList<>();
+                    phaseButtonClicked(PhaseType.SELECT_WORKER);
+                } else {
+                    selectedPhases.remove(selectedPhases.size() - 1);
+                    askDesiredPhase();
+                }
+            });
+            GUI.showPopup(confirmPopup);
+        }
+
     }
 
     /* METHODS TO HANDLE PHASE SELECTION */
 
     protected void askDesiredPhase() {
         List<Phase> phaseList = getClient().getListOfPhasesCache();
+        if (phaseList.size() > 1) {
+            VBox vbButtons = new VBox();
+            vbButtons.setSpacing(10);
+            //vbButtons.setPadding(new Insets(10, 20, 10, 20));
+            vbButtons.setPrefWidth(150);
+            vbButtons.setAlignment(Pos.CENTER);
 
-        VBox vbButtons = new VBox();
-        vbButtons.setSpacing(10);
-        //vbButtons.setPadding(new Insets(10, 20, 10, 20));
-        vbButtons.setPrefWidth(150);
-        vbButtons.setAlignment(Pos.CENTER);
-
-        phaseList.forEach( phase -> {
-            Button button = new Button(phase.getType().toString());
-            button.setOnAction(actionEvent ->  {
-                //stackPane.getChildren().remove(vbButtons);
-                rightAnchorPane.getChildren().remove(vbButtons);
-                disableMap(false);
-                phaseButtonClicked(phase.getType());
+            phaseList.forEach( phase -> {
+                Button button = new Button(phase.getType().toString());
+                button.setOnAction(actionEvent ->  {
+                    //stackPane.getChildren().remove(vbButtons);
+                    rightAnchorPane.getChildren().remove(vbButtons);
+                    disableMap(false);
+                    phaseButtonClicked(phase.getType());
+                });
+                button.setPrefWidth(vbButtons.getPrefWidth());
+                vbButtons.getChildren().add(button);
             });
-            button.setPrefWidth(vbButtons.getPrefWidth());
-            vbButtons.getChildren().add(button);
-        });
 
-        vbButtons.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+            vbButtons.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
-        disableMap(true);
-        //vbButtons.setAlignment(Pos.TOP_CENTER);
-        //stackPane.getChildren().add(vbButtons);
+            disableMap(true);
+            //vbButtons.setAlignment(Pos.TOP_CENTER);
+            //stackPane.getChildren().add(vbButtons);
 
-        rightAnchorPane.getChildren().add(vbButtons);
-        AnchorPane.setTopAnchor(vbButtons, 10.0);
-        AnchorPane.setRightAnchor(vbButtons, 10.0);
+            rightAnchorPane.getChildren().add(vbButtons);
+            AnchorPane.setTopAnchor(vbButtons, 10.0);
+            AnchorPane.setRightAnchor(vbButtons, 10.0);
+        } else phaseButtonClicked(phaseList.get(0).getType());
     }
 
     private void phaseButtonClicked(PhaseType selectedPhase) {
         switch (selectedPhase) {
             case SELECT_WORKER:
                 waiting = false;
-                currentPhase = PhaseType.SELECT_WORKER;
+                selectedPhases.add(PhaseType.SELECT_WORKER);
                 highlightAvailableWorkersForSelection(true);
                 instructionsTextArea.setText("Seleziona su un tuo worker");
                 break;
             case MOVE_WORKER:
-                currentPhase = PhaseType.MOVE_WORKER;
+                selectedPhases.add(PhaseType.MOVE_WORKER);
                 instructionsTextArea.setText("Muovi il worker in una delle celle disponibili");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
                 break;
             case BUILD_COMPONENT:
-                currentPhase = PhaseType.BUILD_COMPONENT;
+                selectedPhases.add(PhaseType.BUILD_COMPONENT);
                 instructionsTextArea.setText("Costruisci in una delle celle disponibili");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
                 break;
             case END_TURN:
-                currentPhase = PhaseType.END_TURN;
+                selectedPhases.add(PhaseType.END_TURN);
                 instructionsTextArea.setText("");
                 sendToServer(new Message(TypeOfMessage.REQUEST_END_TURN));
                 break;
@@ -476,7 +506,9 @@ public class GameScreenController extends ScreenController {
 
     protected void endTurn() {
         selectedWorker = null;
+        selectedPhases = new ArrayList<>();
         instructionsTextArea.setText("Aspetta il tuo turno...");
+
         //disableMap(true); // todo farlo o no?
     }
 
@@ -790,6 +822,11 @@ public class GameScreenController extends ScreenController {
     private void addAndRefresh(Block block) {
         addBlock(block);
         refresh();
+    }
+
+    private boolean checkLastSelectedPhase(PhaseType phaseType) {
+        if (selectedPhases.size() == 0) return false;
+        else return selectedPhases.get(selectedPhases.size() - 1).equals(phaseType);
     }
 
     private void refresh() {

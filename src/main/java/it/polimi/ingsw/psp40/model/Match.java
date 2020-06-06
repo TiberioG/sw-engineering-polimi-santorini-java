@@ -214,7 +214,6 @@ public class Match extends Publisher<Message> {
         if (player != null) {
             player.getWorkers().forEach(worker -> location.removeLocation(worker));
             listPlayers.remove(player);
-            publish(new Message("ALL", TypeOfMessage.PLAYER_HAS_LOST, player));
         }
 
         publish(new Message("ALL", TypeOfMessage.LIST_PLAYER_UPDATED, getPlayers()));
