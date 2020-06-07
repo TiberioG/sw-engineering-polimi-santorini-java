@@ -31,8 +31,8 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mockingConnection = true;
-    private boolean mockingCard = true;
+    private boolean mockingConnection = false;
+    private boolean mockingCard = false;
 
     private Stage primaryStage;
 
@@ -101,13 +101,6 @@ public class GUI extends Application implements ViewInterface {
             playerList.add(player1);
             playerList.add(player2);
             gameScreenController.setPlayersInfo(playerList);
-
-            *//*Phase move = new Phase(PhaseType.MOVE_WORKER, null, false);
-            Phase build = new Phase(PhaseType.BUILD_COMPONENT, null, false);
-            Phase select = new Phase(PhaseType.SELECT_WORKER, null, false);
-            Phase end = new Phase(PhaseType.END_TURN, null, false);
-            List<Phase> phasesList = new ArrayList<>(List.of(move, build, select, end));
-            gameScreenController.askDesiredPhase(phasesList);*//*
         });*/
     }
 

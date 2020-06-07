@@ -72,7 +72,7 @@ public abstract class Block extends ImageView {
                     break;
 
                 case TOP:
-                    // todo
+                    display(row, col);
                     break;
             }
             //System.out.println("x: " + this.getX() + ", y:" + this.getY());

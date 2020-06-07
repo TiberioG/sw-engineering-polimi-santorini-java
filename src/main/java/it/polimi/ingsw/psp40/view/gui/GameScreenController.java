@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
-import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
@@ -16,8 +15,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -44,6 +41,8 @@ public class GameScreenController extends ScreenController {
     public ImageView island_sx;
     @FXML
     public ImageView island_dx;
+    @FXML
+    public ImageView island_top;
 
     @FXML
     private Button rightViewButton;
@@ -56,6 +55,8 @@ public class GameScreenController extends ScreenController {
     private Pane myPane_dx;
     @FXML
     private Pane myPane_sx;
+    @FXML
+    private Pane myPane_top;
 
     @FXML
     private BorderPane borderPane;
@@ -83,17 +84,17 @@ public class GameScreenController extends ScreenController {
 
     /* Attributes */
 
-    //private  final java.util.Map<Integer, List<Block>> levelsMap_dx = new HashMap<>();
-    //private  final java.util.Map<Integer, List<Block>> levelsMap_sx = new HashMap<>();
-
     private final List<Block> levels_dx = new ArrayList<>();
     private final List<Block> levels_sx = new ArrayList<>();
+    private final List<Block> levels_top = new ArrayList<>();
 
     private final List<Worker> workers_dx = new ArrayList<>();
     private final List<Worker> workers_sx = new ArrayList<>();
+    private final List<Worker> workers_top = new ArrayList<>();
 
     private Map map_dx;
     private Map map_sx;
+    private Map map_top;
 
     private Worker selectedWorker = null;
     private boolean waiting = false;
@@ -101,37 +102,31 @@ public class GameScreenController extends ScreenController {
     private boolean shouldPositionWorkers = false;
     private Colors chosenColor = null;
 
-    private ColorAdjust grayscale = new ColorAdjust(0, -1, 0, 0); // grayscale.setSaturation(-1);
+    private final ColorAdjust grayscale = new ColorAdjust(0, -1, 0, 0); // equivalent to grayscale.setSaturation(-1);
     private boolean isMapDisabled = false;
-
-    private List<ImageView> listOfPlayerImage = new ArrayList<>();
 
     private ConfirmPopup confirmPopup = null;
     
     private Transition instructionsLabelTransition = null;
 
+    private Background background_dx = null;
+    private Background background_sx = null;
+    private Background background_top = null;
+
     /* Methods */
 
     @FXML
     public void initialize() {
-/*        levelsMap_dx.put(0, new ArrayList<>());
-        levelsMap_dx.put(1, new ArrayList<>());
-        levelsMap_dx.put(2, new ArrayList<>());
-        levelsMap_dx.put(3, new ArrayList<>());
-        levelsMap_dx.put(4, new ArrayList<>());
-
-        levelsMap_sx.put(0, new ArrayList<>());
-        levelsMap_sx.put(1, new ArrayList<>());
-        levelsMap_sx.put(2, new ArrayList<>());
-        levelsMap_sx.put(3, new ArrayList<>());
-        levelsMap_sx.put(4, new ArrayList<>());*/
 
         map_dx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.RIGHT);
         map_sx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.LEFT);
+        map_top = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.TOP);
 
         myPane_dx.getChildren().add(map_dx);
         myPane_sx.getChildren().add(map_sx);
+        myPane_top.getChildren().add(map_top);
         myPane_sx.setVisible(false);
+        myPane_top.setVisible(false);
 
         UtilsGUI.buttonHoverEffect(leftViewButton);
         UtilsGUI.buttonHoverEffect(rightViewButton);
@@ -139,33 +134,15 @@ public class GameScreenController extends ScreenController {
         
         buildInstructionsLabelTransition();
 
-/*
-        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep rightAnchorPane's elements in position when switch camera from right to left and viceversa
+/*        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep rightAnchorPane's elements in position when switch camera from right to left and viceversa
             rightAnchorPane.getChildren().forEach(node -> {
                 double fixAnchor = (double) newValue > (double) oldValue ? (double) newValue - (double) oldValue : 0;
                 AnchorPane.setRightAnchor(node, 10.0 + fixAnchor);
             });
-        });
-*/
+        });*/
 
         disableMap(true); // start with map disabled
-
-        /* SET BACKGROUND */
-
-        double height = 1450;
-
-        //BackgroundSize(double width, double height, boolean widthAsPercentage, boolean heightAsPercentage, boolean contain, boolean cover)
-        BackgroundSize bgSize = new BackgroundSize(height*16/9, height, false, false, false, false);
-
-        //public BackgroundImage(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY, BackgroundPosition position, BackgroundSize size)
-        Image img = new Image(getClass().getResource("/images/island_background_dx.png").toString());
-        BackgroundImage bgImg = new BackgroundImage(img,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                bgSize);
-        Background bg = new Background(bgImg);
-        borderPane.setBackground(bg);
+        buildBackgrounds();
 
     }
 
@@ -202,6 +179,7 @@ public class GameScreenController extends ScreenController {
     private void highlightAvailableWorkersForSelection(boolean highlight) {
         highlightAvailableWorkersForSelectionInView(workers_dx, highlight);
         highlightAvailableWorkersForSelectionInView(workers_sx, highlight);
+        highlightAvailableWorkersForSelectionInView(workers_top, highlight);
     }
 
     private void highlightAvailableWorkersForSelectionInView(List<Worker> workers_view, boolean highlight) {
@@ -409,6 +387,7 @@ public class GameScreenController extends ScreenController {
             boolean isAvailableCell = availableCells.stream().anyMatch( cell -> cell.getCoordX() == x && cell.getCoordY() == y);
             if(isAvailableCell) {
                 moveSelectedWorkerInView(x, y, z, workers_dx);
+                moveSelectedWorkerInView(x, y, z, workers_top);
                 Worker worker = moveSelectedWorkerInView(x, y, z, workers_sx);
                 if(worker != null) {
                     worker.moveAnimation.setOnFinished(e -> {
@@ -544,6 +523,7 @@ public class GameScreenController extends ScreenController {
         versusImage.setPreserveRatio(true);
         versusImage.setFitHeight(45);
         enemyVbox.getChildren().add(versusImage);
+
         HBox enemyHbox = new HBox();
 
         playerList.forEach(player -> {
@@ -632,6 +612,8 @@ public class GameScreenController extends ScreenController {
         highlightAvailableCellsInView(availableCells, map_dx.getTiles());
         highlightAvailableCellsInView(availableCells, levels_sx);
         highlightAvailableCellsInView(availableCells, map_sx.getTiles());
+        highlightAvailableCellsInView(availableCells, levels_top);
+        highlightAvailableCellsInView(availableCells, map_top.getTiles());
     }
 
     private void highlightAvailableCellsInView(List<Cell> availableCells, List<Block> view) {
@@ -649,6 +631,8 @@ public class GameScreenController extends ScreenController {
         restoreHighlightInView(map_dx.getTiles());
         restoreHighlightInView(levels_sx);
         restoreHighlightInView(map_sx.getTiles());
+        restoreHighlightInView(levels_top);
+        restoreHighlightInView(map_top.getTiles());
     }
 
     private void restoreHighlightInView(List<Block> view) {
@@ -661,6 +645,7 @@ public class GameScreenController extends ScreenController {
         //tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
         updateWorkersInView(workers_dx);
         updateWorkersInView(workers_sx);
+        updateWorkersInView(workers_top);
         getClient().clearModifiedWorkersCache();
         refresh();
     }
@@ -785,23 +770,26 @@ public class GameScreenController extends ScreenController {
     }
 
     private void addBlock(Block block) {
-        //levelsMap_dx.get(block.z).add(block);
         levels_dx.add(block);
 
         Block block_sx = block.copyAndSetCamera(GUIProperties.CameraType.LEFT);
-        //levelsMap_sx.get(block.z).add(block_sx);
         levels_sx.add(block_sx);
+
+        Block block_top = block.copyAndSetCamera(GUIProperties.CameraType.TOP);
+        levels_top.add(block_top);
     }
 
     private void addWorker(Worker worker) {
-        //levelsMap_dx.get(block.z).add(block);
         levels_dx.add(worker);
         workers_dx.add(worker);
 
         Worker worker_sx = worker.copyAndSetCamera(GUIProperties.CameraType.LEFT);
-        //levelsMap_sx.get(block.z).add(block_sx);
         levels_sx.add(worker_sx);
         workers_sx.add(worker_sx);
+
+        Worker worker_top= worker.copyAndSetCamera(GUIProperties.CameraType.TOP);
+        levels_top.add(worker_top);
+        workers_top.add(worker_top);
     }
 
     private void addWorkerAndRefresh(Worker worker) {
@@ -822,12 +810,16 @@ public class GameScreenController extends ScreenController {
     private void refresh() {
         reorderLevels(levels_dx);
         reorderLevels(levels_sx);
+        reorderLevels(levels_top);
 
         map_dx.getChildren().removeAll(levels_dx);
         map_dx.getChildren().addAll(levels_dx);
 
         map_sx.getChildren().removeAll(levels_sx);
         map_sx.getChildren().addAll(levels_sx);
+
+        map_top.getChildren().removeAll(levels_top);
+        map_top.getChildren().addAll(levels_top);
     }
 
     private void reorderLevels(List<Block> levels) {
@@ -843,8 +835,9 @@ public class GameScreenController extends ScreenController {
                 else if(b1.currentCamera == GUIProperties.CameraType.LEFT) {
                     b1_sum = GUIProperties.getCorrespondingLeftRow(b1.row, b1.col) + GUIProperties.getCorrespondingLeftCol(b1.row, b1.col) + b1.z;
                     b2_sum = GUIProperties.getCorrespondingLeftRow(b2.row, b2.col) + GUIProperties.getCorrespondingLeftCol(b2.row, b2.col) + b2.z;
-                } else if(b1.currentCamera == GUIProperties.CameraType.TOP){
-                    // todo
+                } else if(b1.currentCamera == GUIProperties.CameraType.TOP) {
+                    b1_sum = b1 instanceof Worker ? 99 : b1.z; // keep Workers always on front in top camera view
+                    b2_sum = b2 instanceof Worker ? 99 : b2.z;
                 }
 
                 if(b1_sum > b2_sum) {
@@ -893,6 +886,42 @@ public class GameScreenController extends ScreenController {
         instructionsLabelTransition = new SequentialTransition(sequentialTransition, new PauseTransition(Duration.millis(5000)));
         instructionsLabelTransition.setCycleCount(Animation.INDEFINITE);
     }
+
+    private void buildBackgrounds() {
+        double height = 1450;
+
+        //BackgroundSize(double width, double height, boolean widthAsPercentage, boolean heightAsPercentage, boolean contain, boolean cover)
+        BackgroundSize bgSize = new BackgroundSize(height*16/9, height, false, false, false, false);
+
+        /* BUILD BACKGROUND FOR RIGHT CAMERA (and set it as default) */
+        //public BackgroundImage(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY, BackgroundPosition position, BackgroundSize size)
+        Image imgDx = new Image(getClass().getResource("/images/island_background_dx.png").toString());
+        BackgroundImage bgImgDx = new BackgroundImage(imgDx,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                bgSize);
+        background_dx = new Background(bgImgDx);
+        borderPane.setBackground(background_dx);
+
+        /* BUILD BACKGROUND FOR LEFT CAMERA */
+        Image imgSX = new Image(getClass().getResource("/images/island_background_sx.png").toString());
+        BackgroundImage bgImgSX = new BackgroundImage(imgSX,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                bgSize);
+        background_sx = new Background(bgImgSX);
+
+        /* BUILD BACKGROUND FOR TOP CAMERA */
+        Image imgTop = new Image(getClass().getResource("/images/island_background_top.png").toString());
+        BackgroundImage bgImgTop = new BackgroundImage(imgTop,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                bgSize);
+        background_top = new Background(bgImgTop);
+    }
     
     private void sendToServer(Message message) {
         getClient().sendToServer(message);
@@ -908,28 +937,43 @@ public class GameScreenController extends ScreenController {
     private void clearBoard() {
         map_dx.getChildren().removeAll(levels_dx);
         map_sx.getChildren().removeAll(levels_sx);
+        map_top.getChildren().removeAll(levels_top);
         levels_dx.clear();
         levels_sx.clear();
+        levels_top.clear();
     }
 
     @FXML
     public void rightViewButtonClicked(ActionEvent actionEvent) {
         myPane_sx.setVisible(false);
         island_sx.setVisible(false);
+        myPane_top.setVisible(false);
+        island_top.setVisible(false);
         island_dx.setVisible(true);
         myPane_dx.setVisible(true);
+        borderPane.setBackground(background_dx);
     }
 
     @FXML
     public void leftViewButtonClicked(ActionEvent actionEvent) {
         myPane_dx.setVisible(false);
         island_dx.setVisible(false);
+        myPane_top.setVisible(false);
+        island_top.setVisible(false);
         island_sx.setVisible(true);
         myPane_sx.setVisible(true);
+        borderPane.setBackground(background_sx);
     }
 
     @FXML
     public void topViewButtonClicked(ActionEvent actionEvent) {
-        // todo
+        myPane_dx.setVisible(false);
+        island_dx.setVisible(false);
+        myPane_sx.setVisible(false);
+        island_sx.setVisible(false);
+        myPane_top.setVisible(true);
+        island_top.setVisible(true);
+        borderPane.setBackground(background_top);
     }
+
 }

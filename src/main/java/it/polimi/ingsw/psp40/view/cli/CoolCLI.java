@@ -375,10 +375,10 @@ public class CoolCLI implements ViewInterface {
 
     /**
      * Method used to show disconnection of user
-     * @param details it's the string received from Server
+     * @param disconnectedUsername is the username of the disconnected player
      */
     @Override
-    public void displayDisconnected(String details) {
+    public void displayDisconnected(String disconnectedUsername) {
         killHourglass();
 
         upper.clear();
@@ -391,7 +391,7 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        lower.center("I'm sorry, " + details + " left the game. The match cannot continue" ,  DELAY);
+        lower.center("I'm sorry, " + disconnectedUsername + " left the game. The match cannot continue" ,  DELAY);
         Utils.doTimeUnitSleep(5000);
         client.close();
     }

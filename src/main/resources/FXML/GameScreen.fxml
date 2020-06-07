@@ -16,14 +16,53 @@
                      <children>
                         <ImageView fx:id="island_dx" fitHeight="706.0" fitWidth="1053.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/island_dx.png" />
+                              <Image url="@../images/blocks/dx/island_dx.png" />
                            </image>
                         </ImageView>
                         <ImageView fx:id="island_sx" fitHeight="706.0" fitWidth="1053.0" pickOnBounds="true" preserveRatio="true" rotate="-1.0" visible="false">
                            <image>
-                              <Image url="@../images/island_sx.png" />
+                              <Image url="@../images/blocks/sx/island_sx.png" />
                            </image>
                         </ImageView>
+                        <ImageView fx:id="island_top" fitHeight="706.0" fitWidth="1053.0" layoutX="181.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                           <image>
+                              <Image url="@../images/blocks/top/island_top.png" />
+                           </image>
+                        </ImageView>
+                        <Pane fx:id="myPane_top" layoutX="259.0" layoutY="101.0" prefHeight="138.0" prefWidth="123.0">
+                           <children>
+                              <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" visible="false">
+                                 <image>
+                                    <Image url="@../images/blocks/top/tile_top.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="102.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@../images/blocks/top/level1_top.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="102.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@../images/blocks/top/level2_top.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="102.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@../images/blocks/top/level3_top.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="102.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@../images/blocks/top/dome_top.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="102.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@../images/blocks/top/worker_top.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
                         <Pane fx:id="myPane_sx" layoutX="450.0" layoutY="69.0" prefHeight="200.0" prefWidth="186.0" rotate="-1.0">
                            <opaqueInsets>
                               <Insets />
@@ -31,77 +70,77 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="-50.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="-101.5">
                                  <image>
-                                    <Image url="@../images/level2_sx.png" />
+                                    <Image url="@../images/blocks/sx/level2_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="-117.5">
                                  <image>
-                                    <Image url="@../images/level3_sx.png" />
+                                    <Image url="@../images/blocks/sx/level3_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="106.5">
                                  <image>
-                                    <Image url="@../images/level2_sx.png" />
+                                    <Image url="@../images/blocks/sx/level2_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/level3_sx.png" />
+                                    <Image url="@../images/blocks/sx/level3_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="332.0" y="158.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="347.0" y="106.5">
                                  <image>
-                                    <Image url="@../images/level2_sx.png" />
+                                    <Image url="@../images/blocks/sx/level2_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="347.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/level3_sx.png" />
+                                    <Image url="@../images/blocks/sx/level3_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="366.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="314.5">
                                  <image>
-                                    <Image url="@../images/level2_sx.png" />
+                                    <Image url="@../images/blocks/sx/level2_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="298.5">
                                  <image>
-                                    <Image url="@../images/level3_sx.png" />
+                                    <Image url="@../images/blocks/sx/level3_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="-11.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true" visible="false" x="352.0" y="160.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="-3.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" visible="false" y="370.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="4.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" visible="false" x="-352.0" y="160.0">
                                  <image>
-                                    <Image url="@../images/level1_sx.png" />
+                                    <Image url="@../images/blocks/sx/level1_sx.png" />
                                  </image>
                               </ImageView>
                            </children>
@@ -113,72 +152,72 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
                                  <image>
-                                    <Image url="@../images/level1_dx.png" />
+                                    <Image url="@../images/blocks/dx/level1_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="14.5" y="94.0">
                                  <image>
-                                    <Image url="@../images/level2_dx.png" />
+                                    <Image url="@../images/blocks/dx/level2_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true" visible="false" x="17.0" y="75.0">
                                  <image>
-                                    <Image url="@../images/level3_dx.png" />
+                                    <Image url="@../images/blocks/dx/level3_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
                                  <image>
-                                    <Image url="@../images/level1_dx.png" />
+                                    <Image url="@../images/blocks/dx/level1_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="135.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="106.5">
                                  <image>
-                                    <Image url="@../images/level2_dx.png" />
+                                    <Image url="@../images/blocks/dx/level2_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="132.5" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/level3_dx.png" />
+                                    <Image url="@../images/blocks/dx/level3_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" layoutX="26.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/dome_dx.png" />
+                                    <Image url="@../images/blocks/dx/dome_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" layoutX="43.0" layoutY="-50.0" pickOnBounds="true" preserveRatio="true" visible="false" y="158.0">
                                  <image>
-                                    <Image url="@../images/worker_cut_dx.png" />
+                                    <Image url="@../images/blocks/dx/worker_cut_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" layoutX="43.0" pickOnBounds="true" preserveRatio="true" visible="false" y="57.0">
                                  <image>
-                                    <Image url="@../images/worker_cut_dx.png" />
+                                    <Image url="@../images/blocks/dx/worker_cut_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" visible="false" x="39.0" y="165.0">
                                  <image>
-                                    <Image url="@../images/worker_dx.png" />
+                                    <Image url="@../images/blocks/dx/worker_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="76.0" layoutX="43.0" pickOnBounds="true" preserveRatio="true" visible="false" y="34.0">
                                  <image>
-                                    <Image url="@../images/worker_cut_lvl3_dx.png" />
+                                    <Image url="@../images/blocks/dx/worker_cut_lvl3_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" layoutX="26.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/dome_dx.png" />
+                                    <Image url="@../images/blocks/dx/dome_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" layoutX="26.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/dome_dx.png" />
+                                    <Image url="@../images/blocks/dx/dome_dx.png" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="80.0" layoutX="26.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" visible="false" x="15.0" y="90.5">
                                  <image>
-                                    <Image url="@../images/dome_dx.png" />
+                                    <Image url="@../images/blocks/dx/dome_dx.png" />
                                  </image>
                               </ImageView>
                            </children>

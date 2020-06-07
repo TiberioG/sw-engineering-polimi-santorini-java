@@ -69,6 +69,8 @@ public class Worker extends Block {
                 break;
 
             case TOP:
+                this.setFitWidth(GUIProperties.workerTopWidth);
+                this.setImage(GUIProperties.image_worker_top);
                 break;
         }
     }
@@ -84,6 +86,8 @@ public class Worker extends Block {
                 break;
 
             case TOP:
+                this.setFitWidth(GUIProperties.workerTopWidth);
+                this.setImage(GUIProperties.image_worker_top);
                 break;
         }
     }
@@ -111,7 +115,7 @@ public class Worker extends Block {
                 break;
 
             case TOP:
-                // todo
+                display(row, col, withAnimation);
                 break;
         }
     }
@@ -124,25 +128,34 @@ public class Worker extends Block {
     void display(int row, int col, boolean withAnimation) {
         double endX = 0;
         double endY = 0;
-        switch(this.z) {
-            case 1:
-                endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 39);
-                endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf + 5);
+        switch (currentCamera) {
+            case TOP:
+                endX = this.getFixedXPosition(col * (GUIProperties.tileTopWidth + GUIProperties.tileTopXSpacing));
+                endY = this.getFixedYPosition(row * (GUIProperties.tileTopHeight + GUIProperties.tileTopYSpacing));
                 break;
 
-            case 2:
-                endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
-                endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - 50);
-                break;
+            default: // right and left
+                switch(this.z) {
+                    case 1:
+                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 39);
+                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf + 5);
+                        break;
 
-            case 3:
-                endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
-                endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level2YFix - 49.5);
-                break;
+                    case 2:
+                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
+                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - 50);
+                        break;
 
-            case 4:
-                endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
-                endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix - 56.5); // 56.5
+                    case 3:
+                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
+                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level2YFix - 49.5);
+                        break;
+
+                    case 4:
+                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
+                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix - 56.5); // 56.5
+                        break;
+                }
                 break;
         }
 
