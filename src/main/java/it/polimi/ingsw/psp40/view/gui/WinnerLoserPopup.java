@@ -62,6 +62,7 @@ public class WinnerLoserPopup extends PopupStage {
                 // todo: back to home or close?
             }
         });
+        UtilsGUI.buttonHoverEffect(button);
         return button;
     }
 

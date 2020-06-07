@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.util.Duration;
 
@@ -24,13 +25,17 @@ public class UtilsGUI {
     }
 
     protected static void buttonHoverEffect(Button button) {
-        button.hoverProperty().addListener((observable, oldValue, newValue) -> {
+        nodeHoverEffect(button);
+    }
+
+    protected static void nodeHoverEffect(Node node) {
+        node.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 ColorAdjust colorAdjust = new ColorAdjust();
                 colorAdjust.setBrightness(0.3);
-                button.setEffect(colorAdjust);
+                node.setEffect(colorAdjust);
             } else {
-                button.setEffect(null);
+                node.setEffect(null);
             }
         });
     }

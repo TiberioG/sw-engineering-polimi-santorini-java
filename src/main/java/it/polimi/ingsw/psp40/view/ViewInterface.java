@@ -24,7 +24,7 @@ public interface ViewInterface {
     void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer);
     void displayProposeRestoreMatch();
     void displayStartingMatch();
-    void displayDisconnected(String details);
+    void displayDisconnected(String disconnectedUsername);
     void displayGenericMessage(String message);
     void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers);
     void displayChoicePersonalCard(List<Card> availableCards) ;

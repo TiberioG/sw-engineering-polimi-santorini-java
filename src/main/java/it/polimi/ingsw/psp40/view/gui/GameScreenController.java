@@ -7,8 +7,7 @@ import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
-import javafx.animation.Interpolator;
-import javafx.animation.ScaleTransition;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Dimension2D;
@@ -18,9 +17,11 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -58,11 +59,18 @@ public class GameScreenController extends ScreenController {
 
     @FXML
     private BorderPane borderPane;
-
     @FXML
     private AnchorPane rightAnchorPane;
     @FXML
     private AnchorPane leftAnchorPane;
+
+    /* BORDER PANE: RIGHT */
+    @FXML
+    private HBox hboxPhases;
+    @FXML
+    private Label instructionsLabel;
+    @FXML
+    private ImageView helpBoardImageView;
 
 
     /* BORDER PANE: CENTER */
@@ -72,8 +80,6 @@ public class GameScreenController extends ScreenController {
     private StackPane stackPane;
     @FXML
     private Group islandsGroup;
-    @FXML
-    private TextArea instructionsTextArea;
 
     /* Attributes */
 
@@ -101,6 +107,8 @@ public class GameScreenController extends ScreenController {
     private List<ImageView> listOfPlayerImage = new ArrayList<>();
 
     private ConfirmPopup confirmPopup = null;
+    
+    private Transition instructionsLabelTransition = null;
 
     /* Methods */
 
@@ -118,7 +126,6 @@ public class GameScreenController extends ScreenController {
         levelsMap_sx.put(3, new ArrayList<>());
         levelsMap_sx.put(4, new ArrayList<>());*/
 
-
         map_dx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.RIGHT);
         map_sx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.LEFT);
 
@@ -126,12 +133,20 @@ public class GameScreenController extends ScreenController {
         myPane_sx.getChildren().add(map_sx);
         myPane_sx.setVisible(false);
 
-        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep me in position when switch camera from right to left and viceversa
+        UtilsGUI.buttonHoverEffect(leftViewButton);
+        UtilsGUI.buttonHoverEffect(rightViewButton);
+        UtilsGUI.buttonHoverEffect(topViewButton);
+        
+        buildInstructionsLabelTransition();
+
+/*
+        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep rightAnchorPane's elements in position when switch camera from right to left and viceversa
             rightAnchorPane.getChildren().forEach(node -> {
                 double fixAnchor = (double) newValue > (double) oldValue ? (double) newValue - (double) oldValue : 0;
                 AnchorPane.setRightAnchor(node, 10.0 + fixAnchor);
             });
         });
+*/
 
         disableMap(true); // start with map disabled
 
@@ -208,9 +223,10 @@ public class GameScreenController extends ScreenController {
         List<String> colorsAvailable = Arrays.stream(Colors.allNames()).filter(colorAvailable -> !colorAlreadyUsed.contains(colorAvailable)).collect(Collectors.toList());
 
         VBox vbButtons = new VBox();
-        vbButtons.setSpacing(10);
+        vbButtons.setSpacing(5);
         vbButtons.setPadding(new Insets(10, 20, 10, 20));
         vbButtons.setPrefWidth(150);
+        vbButtons.setTranslateY(50);
 
         colorsAvailable.forEach( color -> {
             Button button = new Button(color);
@@ -218,9 +234,10 @@ public class GameScreenController extends ScreenController {
                 stackPane.getChildren().remove(vbButtons);
                 disableMap(false);
                 chosenColor = Colors.valueOf(color);
-                instructionsTextArea.setText("Posiziona i tuoi due worker in delle celle libere");
+                setInstructionsLabelText("Posiziona i tuoi due worker in delle celle libere");
                 highlightAvailableCellsInitialPosition();
             });
+            UtilsGUI.buttonHoverEffect(button);
             button.setPrefWidth(vbButtons.getPrefWidth());
             vbButtons.getChildren().add(button);
         });
@@ -228,6 +245,8 @@ public class GameScreenController extends ScreenController {
         disableMap(true);
         vbButtons.setAlignment(Pos.TOP_CENTER);
         stackPane.getChildren().add(vbButtons);
+
+        setInstructionsLabelText("Seleziona il colore dei tuoi worker");
     }
 
     private void highlightAvailableCellsInitialPosition() {
@@ -257,7 +276,9 @@ public class GameScreenController extends ScreenController {
                                 workersCoord.add(myWorker.id, new CoordinatesMessage(myWorker.row, myWorker.col));
                             });
 
-                    sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(chosenColor, workersCoord)) );
+                    sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(chosenColor, workersCoord)));
+
+                    setInstructionsLabelText("Aspetta il tuo turno...");
                 }
             } else {
                 // todo: u can't place a worker here
@@ -446,33 +467,34 @@ public class GameScreenController extends ScreenController {
     protected void askDesiredPhase() {
         List<Phase> phaseList = getClient().getListOfPhasesCache();
         if (phaseList.size() > 1) {
-            VBox vbButtons = new VBox();
-            vbButtons.setSpacing(10);
-            //vbButtons.setPadding(new Insets(10, 20, 10, 20));
-            vbButtons.setPrefWidth(150);
-            vbButtons.setAlignment(Pos.CENTER);
+            double phaseViewWidth = 150;
+
+            hboxPhases.getChildren().clear();
+            hboxPhases.setSpacing(10);
+            hboxPhases.setPadding(new Insets(10, 10, 10, 10));
+            hboxPhases.setPrefWidth(phaseList.size() * phaseViewWidth + hboxPhases.getInsets().getLeft() + hboxPhases.getInsets().getRight() + hboxPhases.getSpacing() * (phaseList.size()-1));
+            hboxPhases.setAlignment(Pos.CENTER);
 
             phaseList.forEach( phase -> {
-                Button button = new Button(phase.getType().toString());
-                button.setOnAction(actionEvent ->  {
-                    //stackPane.getChildren().remove(vbButtons);
-                    rightAnchorPane.getChildren().remove(vbButtons);
+                ImageView phaseView = new ImageView(GUIProperties.getImageForPhase(phase));
+                phaseView.setPreserveRatio(true);
+                phaseView.setFitWidth(phaseViewWidth);
+                phaseView.setSmooth(true);
+                phaseView.setCache(true);
+                UtilsGUI.nodeHoverEffect(phaseView);
+                phaseView.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -> {
+                    hboxPhases.setVisible(false);
                     disableMap(false);
                     phaseButtonClicked(phase.getType());
                 });
-                button.setPrefWidth(vbButtons.getPrefWidth());
-                vbButtons.getChildren().add(button);
+                hboxPhases.getChildren().add(phaseView);
             });
 
-            vbButtons.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
-
             disableMap(true);
-            //vbButtons.setAlignment(Pos.TOP_CENTER);
-            //stackPane.getChildren().add(vbButtons);
+            hboxPhases.setVisible(true);
 
-            rightAnchorPane.getChildren().add(vbButtons);
-            AnchorPane.setTopAnchor(vbButtons, 10.0);
-            AnchorPane.setRightAnchor(vbButtons, 10.0);
+            setInstructionsLabelText("Seleziona l'azione desiderata");
+
         } else phaseButtonClicked(phaseList.get(0).getType());
     }
 
@@ -482,21 +504,21 @@ public class GameScreenController extends ScreenController {
                 waiting = false;
                 selectedPhases.add(PhaseType.SELECT_WORKER);
                 highlightAvailableWorkersForSelection(true);
-                instructionsTextArea.setText("Seleziona su un tuo worker");
+                setInstructionsLabelText("Seleziona un worker");
                 break;
             case MOVE_WORKER:
                 selectedPhases.add(PhaseType.MOVE_WORKER);
-                instructionsTextArea.setText("Muovi il worker in una delle celle disponibili");
+                setInstructionsLabelText("Muovi il worker in una delle celle disponibili");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
                 break;
             case BUILD_COMPONENT:
                 selectedPhases.add(PhaseType.BUILD_COMPONENT);
-                instructionsTextArea.setText("Costruisci in una delle celle disponibili");
+                setInstructionsLabelText("Costruisci in una delle celle disponibili");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
                 break;
             case END_TURN:
                 selectedPhases.add(PhaseType.END_TURN);
-                instructionsTextArea.setText("");
+                setInstructionsLabelText("");
                 sendToServer(new Message(TypeOfMessage.REQUEST_END_TURN));
                 break;
         }
@@ -507,7 +529,7 @@ public class GameScreenController extends ScreenController {
     protected void endTurn() {
         selectedWorker = null;
         selectedPhases = new ArrayList<>();
-        instructionsTextArea.setText("Aspetta il tuo turno...");
+        setInstructionsLabelText("Aspetta il tuo turno...");
 
         //disableMap(true); // todo farlo o no?
     }
@@ -516,24 +538,24 @@ public class GameScreenController extends ScreenController {
 
     protected void setPlayersInfo(List<Player> playerList) {
         VBox myVbox = new VBox();
+
         VBox enemyVbox = new VBox();
+        ImageView versusImage = new ImageView(new Image(getClass().getResource("/images/versus.png").toString()));
+        versusImage.setPreserveRatio(true);
+        versusImage.setFitHeight(45);
+        enemyVbox.getChildren().add(versusImage);
+        HBox enemyHbox = new HBox();
+
         playerList.forEach(player -> {
             ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
             imageView.setPreserveRatio(true);
             if(player.getName().equals(getClient().getUsername())) {
                 imageView.setScaleX(-1); // reflect image
-                imageView.setFitWidth(leftAnchorPane.getBoundsInLocal().getWidth() * 0.80);
-                //Text myText = getUsernameText(player.getName(), leftAnchorPane, 20.0);
-                //myVbox.getChildren().addAll(myText, imageView);
+                imageView.setFitWidth(leftAnchorPane.getLayoutBounds().getWidth() * 0.80);
                 myVbox.getChildren().addAll(imageView);
             } else {
-                imageView.setFitWidth(rightAnchorPane.getBoundsInLocal().getWidth() * 0.65);
-                ImageView versusImage = new ImageView(new Image(getClass().getResource("/images/versus.png").toString()));
-                versusImage.setPreserveRatio(true);
-                versusImage.setFitHeight(35);
-                //Text enemyText = getUsernameText(player.getName(), rightAnchorPane, 15.0);
-                //enemyVbox.getChildren().addAll(versusImage, enemyText, imageView);
-                enemyVbox.getChildren().addAll(versusImage, imageView);
+                imageView.setFitWidth(rightAnchorPane.getLayoutBounds().getWidth() * 0.65);
+                enemyHbox.getChildren().addAll(imageView);
             }
             addHoverHandler(player, imageView);
         });
@@ -544,12 +566,17 @@ public class GameScreenController extends ScreenController {
         AnchorPane.setBottomAnchor(myVbox, 20.0);
         AnchorPane.setLeftAnchor(myVbox, 10.0);
 
+        enemyHbox.setSpacing(10);
+        enemyHbox.setAlignment(Pos.BOTTOM_CENTER);
         enemyVbox.setSpacing(15);
         enemyVbox.setAlignment(Pos.CENTER);
+        enemyVbox.getChildren().add(enemyHbox);
         rightAnchorPane.getChildren().add(enemyVbox);
         AnchorPane.setBottomAnchor(enemyVbox, 20.0);
-        AnchorPane.setRightAnchor(enemyVbox, 10.0);
-
+        //AnchorPane.setRightAnchor(enemyVbox, 10.0);
+        double hboxWidth = enemyHbox.getChildrenUnmodifiable().stream().map(node -> node.boundsInLocalProperty().getValue().getWidth()).reduce(0.0, Double::sum); // sum the width of all children elements
+        hboxWidth += enemyHbox.getSpacing() * (enemyHbox.getChildrenUnmodifiable().size() - 1) + 10;  // add the spacing value to the width + extra spacing
+        enemyVbox.setTranslateX(rightAnchorPane.getWidth() - hboxWidth);
     }
 
     private void addHoverHandler(Player player, ImageView imageView) {
@@ -576,43 +603,6 @@ public class GameScreenController extends ScreenController {
                 }
             });
 
-    }
-
-    protected void setPlayersInfo_old(List<Player> playerList) {
-        listOfPlayerImage = new ArrayList<>();
-        playerList.forEach(player -> {
-            ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
-            imageView.setFitHeight(150);
-            imageView.setPreserveRatio(true);
-            listOfPlayerImage.add(imageView);
-        });
-
-        Text textFirstPlayer = getUsernameText(playerList.get(0).getName(), rightAnchorPane, 20.0);
-        VBox vBoxFirstPlayer = new VBox(textFirstPlayer, listOfPlayerImage.get(0));
-        vBoxFirstPlayer.setSpacing(15);
-        vBoxFirstPlayer.setAlignment(Pos.CENTER);
-        rightAnchorPane.getChildren().add(vBoxFirstPlayer);
-        AnchorPane.setBottomAnchor(vBoxFirstPlayer, 10.0);
-        AnchorPane.setRightAnchor(vBoxFirstPlayer, 10.0);
-
-        Text textSecondPlayer = getUsernameText(playerList.get(1).getName(), leftAnchorPane, 20.0);
-        VBox vBoxSecondPlayer = new VBox(textSecondPlayer, listOfPlayerImage.get(1));
-        vBoxSecondPlayer.setSpacing(15);
-        vBoxSecondPlayer.setAlignment(Pos.CENTER);
-        leftAnchorPane.getChildren().add(vBoxSecondPlayer);
-        AnchorPane.setBottomAnchor(vBoxSecondPlayer, 10.0);
-        AnchorPane.setLeftAnchor(vBoxSecondPlayer, 10.0);
-
-        if (listOfPlayerImage.size() == 3) {
-            Text textThirdPlayer = getUsernameText(playerList.get(2).getName(), leftAnchorPane, 20.0);
-            VBox vBoxThirdPlayer = new VBox(listOfPlayerImage.get(2), textThirdPlayer);
-            vBoxThirdPlayer.setSpacing(15);
-            vBoxThirdPlayer.setAlignment(Pos.CENTER);
-            vBoxThirdPlayer.setPadding(new Insets(0, 0, 0, 10));
-            leftAnchorPane.getChildren().add(vBoxThirdPlayer);
-            AnchorPane.setTopAnchor(vBoxThirdPlayer, 10.0);
-            AnchorPane.setRightAnchor(vBoxFirstPlayer, 10.0);
-        }
     }
 
     private Text getUsernameText(String username, AnchorPane pane, Double fontSize) {
@@ -777,11 +767,11 @@ public class GameScreenController extends ScreenController {
         if(isMapDisabled != disable) {
             isMapDisabled = disable;
             islandsGroup.setDisable(disable);
-            if (disable) {
+/*            if (disable) {
                 islandsGroup.setEffect(grayscale);
             } else {
                 islandsGroup.setEffect(null);
-            }
+            }*/
         }
     }
 
@@ -871,7 +861,39 @@ public class GameScreenController extends ScreenController {
             return 0;
         });
     }
+    
+    private void setInstructionsLabelText(String text) {
+        instructionsLabel.setText(text);
+        instructionsLabelTransition.stop();
+        instructionsLabelTransition.play();
+    }
+    
+    private void buildInstructionsLabelTransition() {
+        Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
+        Duration duration = Duration.millis(800);
 
+        ScaleTransition restoreTransiton = new ScaleTransition(Duration.millis(0), instructionsLabel);
+        restoreTransiton.setInterpolator(interpolator);
+        restoreTransiton.setToX(1);
+        restoreTransiton.setToY(1);
+
+        ScaleTransition st1 = new ScaleTransition(duration, instructionsLabel);
+        st1.setInterpolator(interpolator);
+        st1.setToX(1.15);
+        st1.setToY(1.15);
+        
+        ScaleTransition st2 = new ScaleTransition(duration, instructionsLabel);
+        st2.setInterpolator(interpolator);
+        st2.setToX(1);
+        st2.setToY(1);
+
+        SequentialTransition sequentialTransition = new SequentialTransition(restoreTransiton, st1, st2);
+        sequentialTransition.setCycleCount(2);
+        
+        instructionsLabelTransition = new SequentialTransition(sequentialTransition, new PauseTransition(Duration.millis(5000)));
+        instructionsLabelTransition.setCycleCount(Animation.INDEFINITE);
+    }
+    
     private void sendToServer(Message message) {
         getClient().sendToServer(message);
         waiting = true;

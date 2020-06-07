@@ -67,6 +67,10 @@ Label, .label, Text, .text {
     -fx-text-fill: #346b93;
 }
 
+.hbox-phases {
+    -fx-background-color: rgba(124, 134, 134, 0.7);
+    -fx-background-radius: 10;
+}
 
 /*.outline {
     -fx-fill: white;
@@ -92,6 +96,14 @@ Label, .label, Text, .text {
     -fx-text-alignment: center;
     -fx-font-size: 30;
     -fx-background-color: transparent;
+}
+
+.instructionsLabel {
+    -fx-font-size: 18;
+}
+
+.instructionsLabel .text {
+    -fx-line-spacing: -12px;
 }
 
 

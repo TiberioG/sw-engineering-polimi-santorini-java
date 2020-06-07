@@ -1,8 +1,10 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
+import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
@@ -29,8 +31,8 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mockingConnection = false;
-    private boolean mockingCard = false;
+    private boolean mockingConnection = true;
+    private boolean mockingCard = true;
 
     private Stage primaryStage;
 
@@ -78,6 +80,7 @@ public class GUI extends Application implements ViewInterface {
         displaySetup();
 
 /*        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
             primaryStage.show();
             gameScreenController = fxmlLoader.getController();
             gameScreenController.setClient(client);
@@ -98,6 +101,13 @@ public class GUI extends Application implements ViewInterface {
             playerList.add(player1);
             playerList.add(player2);
             gameScreenController.setPlayersInfo(playerList);
+
+            *//*Phase move = new Phase(PhaseType.MOVE_WORKER, null, false);
+            Phase build = new Phase(PhaseType.BUILD_COMPONENT, null, false);
+            Phase select = new Phase(PhaseType.SELECT_WORKER, null, false);
+            Phase end = new Phase(PhaseType.END_TURN, null, false);
+            List<Phase> phasesList = new ArrayList<>(List.of(move, build, select, end));
+            gameScreenController.askDesiredPhase(phasesList);*//*
         });*/
     }
 
@@ -154,6 +164,7 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
         createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
             gameScreenController = fxmlLoader.getController();
             gameScreenController.setClient(client);
             gameScreenController.setPrimaryStage(primaryStage);
@@ -226,10 +237,10 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void displayDisconnected(String details) {
+    public void displayDisconnected(String username) {
         Platform.runLater(() -> {
             // Init Popup
-            PopupStage popupStage = new DisconnectedPopup(primaryStage, details);
+            PopupStage popupStage = new DisconnectedPopup(primaryStage, username);
             // Show Popup
             popupStage.show();
         });
@@ -365,6 +376,7 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayRestoredMatch() {
         createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
             gameScreenController = fxmlLoader.getController();
             gameScreenController.setClient(client);
             gameScreenController.setPrimaryStage(primaryStage);

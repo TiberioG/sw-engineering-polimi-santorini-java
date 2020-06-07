@@ -185,7 +185,7 @@
                         </Pane>
                      </children>
                   </Group>
-                  <TextArea fx:id="instructionsTextArea" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="109.0" prefWidth="157.0" translateX="30.0" translateY="-35.0" wrapText="true" StackPane.alignment="BOTTOM_LEFT" />
+                  <HBox fx:id="hboxPhases" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="92.0" prefWidth="203.0" styleClass="hbox-phases" translateY="50.0" visible="false" StackPane.alignment="TOP_CENTER" />
                </children></StackPane>
 
          </children>
@@ -205,6 +205,14 @@
       </AnchorPane>
    </left>
    <right>
-      <AnchorPane fx:id="rightAnchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <AnchorPane fx:id="rightAnchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="helpBoardImageView" fitHeight="167.0" fitWidth="397.0" layoutX="-198.0" layoutY="-22.0" opacity="0.95" pickOnBounds="true" preserveRatio="true" translateX="20.0">
+               <image>
+                  <Image url="@../images/help_panel.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="instructionsLabel" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="-115.0" layoutY="14.0" prefHeight="73.0" prefWidth="273.0" styleClass="instructionsLabel" textAlignment="CENTER" wrapText="true" />
+         </children></AnchorPane>
    </right>
 </BorderPane>

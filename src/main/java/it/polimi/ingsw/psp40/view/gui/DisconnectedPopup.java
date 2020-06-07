@@ -18,7 +18,7 @@ public class DisconnectedPopup extends PopupStage {
 
     private void build() {
         // Create scene
-        Text text = createText(details);
+        Text text = createText(details + " has left the game.\nWe can't continue this match :(");
         this.vBox.getChildren().add(text);
         UtilsGUI.addClassToElement(this.vBox, "disconnected-popup");
 
@@ -29,6 +29,7 @@ public class DisconnectedPopup extends PopupStage {
             this.hide();
             // todo back to home or close?
         });
+        UtilsGUI.buttonHoverEffect(resume);
 
         this.vBox.getChildren().add(resume);
     }

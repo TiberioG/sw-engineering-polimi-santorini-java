@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.controller.Phase;
 import javafx.scene.image.Image;
 
 /**
@@ -68,8 +69,36 @@ public class GUIProperties {
     protected static Image image_worker_cut_sx = new Image(GUIProperties.class.getResource("/images/worker_cut_sx.png").toString());
     protected static Image image_worker_cut_lvl3_sx = new Image(GUIProperties.class.getResource("/images/worker_cut_lvl3_sx.png").toString());
 
+    protected static Image image_move_phase = new Image(GUIProperties.class.getResource("/images/move_phase.png").toString());
+    protected static Image image_build_phase = new Image(GUIProperties.class.getResource("/images/build_phase.png").toString());
+    protected static Image image_select_worker_phase = new Image(GUIProperties.class.getResource("/images/select_worker_phase.png").toString());
+    protected static Image image_end_turn_phase = new Image(GUIProperties.class.getResource("/images/end_turn_phase.png").toString());
 
-      protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
+    protected static Image getImageForPhase(Phase phase) {
+        Image image = null;
+        switch (phase.getType()) {
+            case MOVE_WORKER:
+                image = image_move_phase;
+                break;
+
+            case BUILD_COMPONENT:
+                image = image_build_phase;
+                break;
+
+            case SELECT_WORKER:
+                image = image_select_worker_phase;
+                break;
+
+            case END_TURN:
+                image = image_end_turn_phase;
+                break;
+        }
+
+        return image;
+    }
+
+
+    protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
         if(cameraType == CameraType.LEFT) {
             col = getCorrespondingLeftCol(row, col);
             row = getCorrespondingLeftRow(row, col);

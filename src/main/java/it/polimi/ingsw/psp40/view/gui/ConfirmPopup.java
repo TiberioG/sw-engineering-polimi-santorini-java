@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
+import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -48,6 +49,7 @@ public class ConfirmPopup extends PopupStage {
             removeEffect();
             this.confirmFunction.executeFunction();
         });
+        UtilsGUI.buttonHoverEffect(confirmButton);
         this.vBox.getChildren().add(confirmButton);
     }
 
@@ -58,12 +60,14 @@ public class ConfirmPopup extends PopupStage {
             removeEffect();
             this.confirmFunction.executeFunction();
         });
+        UtilsGUI.buttonHoverEffect(confirmButton);
 
         Button denyButton = new Button("No");
         denyButton.setOnAction(actionEvent -> {
             removeEffect();
             this.denyFunction.executeFunction();
         });
+        UtilsGUI.buttonHoverEffect(denyButton);
 
         anchorPane.getChildren().add(confirmButton);
         AnchorPane.setLeftAnchor(confirmButton, 10.0);
