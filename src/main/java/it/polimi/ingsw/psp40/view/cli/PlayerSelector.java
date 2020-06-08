@@ -7,9 +7,13 @@ import org.davidmoten.text.utils.WordWrap;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Tis class is used to show the selection of players
+ * @author TiberioG
+ */
 public class PlayerSelector {
     private final static int  SPACING = 3;
-    private String title ="select first player";
+    private String title ="Select first player"; // this will be upperCASED automatically
     private int widthLeft;
     private int widthRight;
 
@@ -19,23 +23,32 @@ public class PlayerSelector {
     private Frame f1;
     private Frame f2;
 
+    /**
+     * constructor
+     * @param allPlayers a list of player to select
+     * @param container {@link Frame} where you want to show the selector
+     */
     public PlayerSelector(List<Player> allPlayers, Frame container){
         this.allPlayers = allPlayers;
         names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
         widthLeft = Math.max(Utils.longestArray(names), title.length()) + 5;
         widthRight = widthLeft + 5;
+
         //this is used to create a 2frame centered layout inseide the container
         f1 = new Frame(new int[]{10, (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 }, container.getAbsEnd(), container.getIn(), container.getOut());
         f2 = new Frame(new int[]{10, ( (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 ) + widthLeft + SPACING }, container.getAbsEnd(), container.getIn(), container.getOut());
-
     }
 
 
+    /**
+     * returns the selected string
+     * @return
+     */
     public String selection (){
         try {
             Terminal.noBuffer();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         int selection = 0;
 

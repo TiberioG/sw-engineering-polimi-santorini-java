@@ -16,7 +16,7 @@ public class ColorSelector {
     private final static int LEN = 13;
     private final static int HEI = 7;
 
-    int init;
+    private int init;
 
     private Frame frame;
     List<String> colorsAvailable;
@@ -25,6 +25,7 @@ public class ColorSelector {
         this.frame = frame;
         this.colorsAvailable = colorsAvailable;
 
+        //used to center
         init  = frame.getInit()[1] + ( frame.getColSpan() - (LEN*colorsAvailable.size() + SPACING*(colorsAvailable.size() -1) )  )/2;
 
     }
@@ -82,7 +83,6 @@ public class ColorSelector {
 
 
     private void print(int current)  {
-
         for(int i= 0; i < colorsAvailable.size(); i++ ){
             Terminal.moveAbsoluteCursor(frame.getInit()[0], init + i*(LEN + SPACING));
             for (int k = 0; k < HEI ; k ++){
@@ -102,8 +102,6 @@ public class ColorSelector {
             }
         }
      }
-
-
 }
 
 

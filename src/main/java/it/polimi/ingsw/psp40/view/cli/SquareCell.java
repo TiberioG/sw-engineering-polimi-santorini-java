@@ -2,12 +2,9 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
 
-import java.io.IOException;
-
-
-
 /**
  * This class represents a cell in the CLI
+ * @author TiberioG
  */
 
 public class SquareCell {
@@ -18,8 +15,7 @@ public class SquareCell {
     private boolean tempWork;
 
     private Colors color;
-
-    private int level;
+    private boolean[] levels;
 
     private int startRow;
     private int startCol;
@@ -27,25 +23,41 @@ public class SquareCell {
     private boolean movable;
     private boolean buildable;
 
+
     /**
-     *
-     * @param worker boolean if the cell contains a worker
-     * @param color the {@link Colors} of the worker, if not present must be null
-     * @param level the level (int) of the tower at that cell
+     * Constructor
+     * @param levels an array of booleans that represent if a component exists or not
      */
-    public SquareCell(boolean worker, Colors color, int level){
-        this.color = color;
-        this.worker = worker;
-        this.level = level;
+    public SquareCell(boolean[] levels){
+        this.color = null;
+        this.worker = false;
+        this.levels = levels;
         this.buildable = false;
         this.selected = false;
         this.movable = false;
     }
 
+    /**
+     * Sets a worker in this cell
+     * @param color of the worker
+     */
+    public void setWorker(Colors color){
+        this.color = color;
+        this.worker = true;
+    }
+
+    /**
+     * Sets temporary color to show the cell is buildable if
+     * @param buildable true or false
+     */
     public void setBuildable(boolean buildable) {
         this.buildable = buildable;
     }
 
+    /**
+     * Sets temporary color to show you can move in this cell
+     * @param movable true or false
+     */
     public void setMovable(boolean movable) {
         this.movable = movable;
     }
@@ -60,64 +72,21 @@ public class SquareCell {
     }
 
     public void setTempLevel(int level){
-        this.level = level;
+        this.levels[level] = true;
     }
 
     public void print(int startRow, int startCol) {
         this.startRow = startRow;
         this.startCol = startCol;
-        //Terminal.noBuffer();
-        if (worker  || tempWork ) {
-            if (level == 0) {
-                this.noWorkerL0();
-                this.yesWorker();
-            } else if (level == 1) {       //white
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.yesWorker();
-            } else if (level == 2) {       //light grey
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.noWorkerL2();
-                this.yesWorker();
-            } else if (level == 3) {      //dark grey
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.noWorkerL2();
-                this.noWorkerL3();
-                this.yesWorker();
-            } else if (level == 4) {      //blue
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.noWorkerL2();
-                this.noWorkerL3();
-                this.noWorkerL4();
-                this.yesWorker();
-            }
 
-        }
-        else{
-            if (level == 0) {
-                this.noWorkerL0();
-            } else if (level == 1) {       //white
-                this.noWorkerL0();
-                this.noWorkerL1();
-            } else if (level == 2) {       //light grey
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.noWorkerL2();
-            } else if (level == 3) {      //dark grey
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.noWorkerL2();
-                this.noWorkerL3();
-            } else if (level == 4) {      //blue
-                this.noWorkerL0();
-                this.noWorkerL1();
-                this.noWorkerL2();
-                this.noWorkerL3();
-                this.noWorkerL4();
+        for (int i = 0; i<= 4; i++){
+            if (levels[i]){
+                level(i);
             }
+        }
+
+        if (worker  || tempWork ) {
+            this.yesWorker();
         }
 
         if(buildable){
@@ -132,63 +101,35 @@ public class SquareCell {
 
     }
 
-    public void debug(int startRow, int startCol, int row, int col) throws IOException, InterruptedException {
+    public void debug(int startRow, int startCol, int row, int col)  {
         this.startRow = startRow;
         this.startCol = startCol;
        this.coordinates(row, col);
     }
 
-
-    private void noWorkerL0 ()  {
-        for (int i = 0; i < hei ; i ++){
-            Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
-            for (int j = 0; j < len; j++){
-                System.out.print("\u001b[48;5;22m" + " "); //verdino
+    /**
+     * This prints all a level of a cell
+     * @param lev int the number of the level
+     */
+    private void level(int lev){
+        int shift = lev;
+        if (lev ==  4){
+            shift = 3;
+        }
+        for (int i = 0; i < hei - shift*2  ; i ++){
+            Terminal.moveAbsoluteCursor(startRow + i + shift, startCol + shift );
+            for (int j = 0; j < len - shift*2 ; j++){
+                System.out.print(style(lev, " "));
             }
         }
     }
 
-
-    private void noWorkerL1 ()  {
-        for (int i = 0; i < hei - 2  ; i ++){ // till penultima riga
-            Terminal.moveAbsoluteCursor(startRow + i + 1, startCol + 1 ); // scendo di una riga ogni volta con offset 1
-            for (int j = 0; j < len - 2 ; j++){
-                System.out.print("\u001b[48;5;240m" + " ");
-            }
-        }
-    }
-
-    private void noWorkerL2 ()  {
-        for (int i = 0; i < hei - 4  ; i ++){ // till penultima riga
-            Terminal.moveAbsoluteCursor(startRow + i + 2, startCol + 2 ); // scendo di una riga ogni volta  n offset 2
-            for (int j = 0; j < len - 4 ; j++){
-                System.out.print("\u001b[48;5;244m" + " ");
-            }
-        }
-    }
-
-    private void noWorkerL3 () {
-        for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
-            Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
-            for (int j = 0; j < len - 6 ; j++){
-                System.out.print("\u001b[48;5;254m" + " ");
-            }
-        }
-    }
-
-    private void noWorkerL4 () {
-        for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
-            Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
-            for (int j = 0; j < len - 6 ; j++){
-                System.out.print("\u001b[48;5;69m" + " ");
-            }
-        }
-    }
-
-
+    /**
+     * prints a worker
+     */
     private void yesWorker ()  {
-        for (int i = 0; i < hei - 6  ; i ++){ // till penultima riga
-            Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 ); // scendo di una riga ogni volta offset 3
+        for (int i = 0; i < hei - 6  ; i ++){
+            Terminal.moveAbsoluteCursor(startRow + i + 3, startCol + 3 );
             for (int j = 0; j < len - 6 ; j++){
                 if (i == j) {
                     System.out.print(color.getAnsiCode() + "   ▙");
@@ -197,7 +138,11 @@ public class SquareCell {
         }
     }
 
-
+    /**
+     * shows coordinates on the map
+     * @param row
+     * @param col
+     */
     private void coordinates (int row, int col) {
         System.out.print(Colors.reset());
         Terminal.moveAbsoluteCursor(startRow + hei - 1  , startCol); // scendo di una riga ogni volta
@@ -205,15 +150,10 @@ public class SquareCell {
 
     }
 
-    private void special2 (int colorbit)  {
-        for (int i = 0; i < hei ; i ++){
-            Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
-            for (int j = 0; j < len; j++){
-                System.out.print("\u001b[48;5;"+ colorbit + "m" + " ");
-            }
-        }
-    }
-
+    /**
+     * colors a cell
+     * @param colorbit ansi code
+     */
     private void special (int colorbit)  {
         for (int i = 0; i < hei ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i, startCol); // scendo di una riga ogni volta
@@ -234,6 +174,28 @@ public class SquareCell {
 
     }
 
+    /**
+     * sets static style for each level
+     * @param level
+     * @param mono the char used to fill the cell, please use only one
+     * @return ansi code
+     */
+    private String style(int level, String mono){
+        switch (level){
+            case 0:
+                return "\u001b[48;5;22m" + mono;  //verdino
+            case 1:
+                return "\u001b[48;5;240m" + mono; //grigio1
+            case 2:
+                return "\u001b[48;5;244m" + mono; //grigio2
+            case 3:
+                return "\u001b[48;5;254m" + mono; //grigio3
+            case 4:
+                return "\u001b[48;5;69m" + mono;  //blue
+            default:
+                return "\u001b[48;5;22m" + "x";
+        }
+    }
 
     public static int getLen(){
         return len;

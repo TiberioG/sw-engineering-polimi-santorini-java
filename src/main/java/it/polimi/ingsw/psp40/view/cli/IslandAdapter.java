@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
+import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Location;
 
@@ -15,11 +16,6 @@ import java.util.List;
  */
 public class IslandAdapter {
 
-    //make singleton??
-
-    /**
-     *
-     */
     private SquareCell[][] matrix ;
     private int len;
     private int hei;
@@ -29,11 +25,6 @@ public class IslandAdapter {
     final int SPACING_V = 1;
 
 
-    /**
-     * The constructor
-     * @param field from the model, a matrix of {@link Cell}
-     * @param location from the model {@link Location}
-     */
     public IslandAdapter(Cell[][] field, Location location, Frame frame){
         this.frame = frame;
         this.matrix = new SquareCell[field.length][field.length];
@@ -42,22 +33,16 @@ public class IslandAdapter {
 
         for (int row = 0; row < field.length ; row++) {
             for (int col = 0; col < field.length ; col++) {
+                matrix[row][col] = new SquareCell(levelify(field[row][col].getTower().getComponents()));
                 if (location.getOccupant(row, col) != null) {
                     //case cell is with worker
-                    matrix[row][col] = new SquareCell(true, location.getOccupant(row, col).getColor(), field[row][col].getTower().getTopComponent().getComponentCode());
-                } else {
-                    //case cell WITHOUT worker
-                    matrix[row][col] = new SquareCell(false, null, field[row][col].getTower().getTopComponent().getComponentCode());
+                    matrix[row][col].setWorker(location.getOccupant(row, col).getColor());
                 }
             }
         }
     }
 
-    /**
-     * This method is used to print the island as an
-     * @throws IOException
-     * @throws InterruptedException
-     */
+
     void print() throws IOException, InterruptedException {
         Terminal.noBuffer();
         Terminal.hideCursor();
@@ -72,10 +57,9 @@ public class IslandAdapter {
         System.out.print(Colors.reset());
     }
 
-    void debug() throws IOException, InterruptedException {
+    void debug() {
         int initRow = frame.getInit()[0];
         int initCol = frame.getInit()[1];
-
         for (int row = 0; row < matrix.length; row ++) {
             for (int col = 0; col < matrix.length; col++) {
                 matrix[row][col].debug(initRow + row*(hei + SPACING_H), initCol + col*(len + SPACING_V), row, col);
@@ -83,7 +67,6 @@ public class IslandAdapter {
         }
         System.out.print(Colors.reset());
     }
-
 
     void setSelected(int r, int c) {
       clearSelected();
@@ -128,5 +111,14 @@ public class IslandAdapter {
     public SquareCell[][] getMatrix(){
         return this.matrix;
     }
+
+    private boolean[] levelify(List<Component> components){
+        boolean[] levels = new boolean[5];
+        for (Component component : components) {
+            levels[component.getComponentCode()] = true;
+        }
+        return levels;
+    }
+
 
 }

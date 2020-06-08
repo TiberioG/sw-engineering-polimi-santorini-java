@@ -1,9 +1,6 @@
 package it.polimi.ingsw.psp40.view.cli;
 
-import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
-import it.polimi.ingsw.psp40.commons.Configuration;
-import it.polimi.ingsw.psp40.commons.PhaseType;
+import it.polimi.ingsw.psp40.commons.*;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.exceptions.OldUserException;
@@ -48,7 +45,7 @@ public class CoolCLI implements ViewInterface {
     private static final int MAX_PORT = Client.MAX_PORT;
     private static final int ROWS = 50;  //number of rows of terminal window
     private static final int COLS = 160; //number of columns of terminal window
-    private static final int SPEED = 1000; //seconds to keep showing message before going on
+    private static final int SPEED = 1500; //seconds to keep showing message before going on
 
     private final Utils utils = new Utils(in, out);
 
@@ -306,13 +303,12 @@ public class CoolCLI implements ViewInterface {
         center.clear();
         lower.clear();
 
-
         try {
-            lower.center(URLReader(getClass().getResource("/ascii/starting")), DELAY);
+            lower.center(URLReader(getClass().getResource("/ascii/starting")), 3*DELAY);
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        Utils.doTimeUnitSleep(SPEED);
+        Utils.doTimeUnitSleep(2*SPEED);
     }
 
     /**
@@ -538,6 +534,7 @@ public class CoolCLI implements ViewInterface {
     public void displayChoiceOfAvailablePhases() {
     killHourglass();
 
+    left.clear();
 
     if(client.isRestored()){
         if (dirtylower){ // i use this cause i have to clean the lower only the first time otherwise every time it clears the lower and it gets laggy
@@ -705,19 +702,20 @@ public class CoolCLI implements ViewInterface {
             myisland.setTempLevel(position[0], position[1], Component.valueOf(nameOfAvailableComponents[0]).getComponentCode());
             try {
                 myisland.print();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (IOException | InterruptedException e) {
             }
             client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.valueOf(nameOfAvailableComponents[0]), buildCoord)));
 
         }
         else {
-            left.printWrapped("Choose one of the following blocks to build using TAB \n press SPACEBAR when ready:");
-            left.append(utils.tableString("Blocks available", nameOfAvailableComponents));
-
-            int blockSelected = chooseblock(listOfAvailableComponents, position);
+            left.clear();
+            int blockSelected = chooseblock(nameOfAvailableComponents, position);
+            myisland.setTempLevel(position[0], position[1], listOfAvailableComponents.get(blockSelected));
+            myisland.clearSelected();
+            try {
+                myisland.print();
+            } catch (IOException | InterruptedException e) {
+            }
 
             client.sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.valueOf(nameOfAvailableComponents[blockSelected]), buildCoord)));
         }
@@ -972,11 +970,12 @@ public class CoolCLI implements ViewInterface {
     /**
      * Method used when a payer can position two or more different kind of blocks in a  cell.
      * This allows to choose using the keyboard and displays a preview of the block to build
-     * @param listOfAvailableComponents list ok the levels availabel to build (as inteer)
+     * @param nameBlks the names of available blocks
      * @param position coordinates on map where to show the block
-     * @return the level to build as integer
+     * @return the level to build as index
      */
-    private int chooseblock(List<Integer> listOfAvailableComponents, int[] position){
+    private int chooseblock(String[] nameBlks, int[] position){
+        List<String> names = new ArrayList<>(Arrays.asList(nameBlks));
         int curRow = position[0];
         int curCol = position[1];
 
@@ -985,54 +984,13 @@ public class CoolCLI implements ViewInterface {
         try {
             myisland.print();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
-        while (true) {
-            try {
-                if (System.in.available() != 0) {
-                    int c = System.in.read();  //read one char at a time in ascii code
+       DefaultSelector selector = new DefaultSelector(left, "Choose block", names, true );
 
-                    //GETTING SPACEBAR to confirm block
-                    if (c == 32) {
-                        myisland.clearSelected();
-                        myisland.print();
-                        break;
-                    }
-
-                    //GETTING tab to change build block
-                    if (c == 9){
-                        if (curBlk < listOfAvailableComponents.size() -1){
-                            curBlk ++;
-                        }
-                        else if (curBlk == listOfAvailableComponents.size() -1 ){
-                            curBlk = 0;
-                        }
-                        myisland.setTempLevel(position[0], position[1], listOfAvailableComponents.get(curBlk));
-                        myisland.print();
-                    }
-
-                    // gettind D for debug option
-                    else if (c == 100) {
-                        debug = !debug;
-                        if (!debug) {
-                            myisland.print();
-                        }
-                    }
-
-                    if (debug) {
-                        myisland.debug();
-                    }
-
-                } //end system in available
-            } catch (IOException | InterruptedException ignored) {
-
-            }
-        }// end while true
-
-        return curBlk;
+        return selector.getSelectionIndex();
     }
-
 
     /**
      * Private helper method used to choose between workers using TAB
@@ -1169,19 +1127,21 @@ public class CoolCLI implements ViewInterface {
     }
 
 
+    /**
+     * this kills every hourglass
+     */
+    private void killHourglass(){
+        if (hourbig!= null){
+            hourbig.cancel();
+        }
+        if(hourlat != null) {
+            hourlat.cancel();
+        }
+        if (executor != null) {
+            executor.shutdownNow();
+        }
 
-private void killHourglass(){
-    if (hourbig!= null){
-        hourbig.cancel();
+        Utils.doTimeUnitSleep(500); //sennò sfarfalla, bisogna dargli tempo
     }
-    if(hourlat != null) {
-        hourlat.cancel();
-    }
-    if (executor != null) {
-        executor.shutdownNow();
-    }
-
-    Utils.doTimeUnitSleep(500);
-}
 
 }

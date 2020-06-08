@@ -14,7 +14,7 @@ public class Terminal {
     private static String ttyConfig;
 
     /**
-     *
+     * Disable buffer in terminal calling stty
      * @throws IOException
      * @throws InterruptedException
      */
@@ -32,6 +32,11 @@ public class Terminal {
 
     }
 
+    /**
+     * enables again buffer if needed, calling again stty
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void yesBuffer() throws IOException, InterruptedException {
 
         //restore previous config
@@ -65,16 +70,25 @@ public class Terminal {
         System.out.print("\u001b[J"); //clear
     }
 
+    /**
+     * clear entire screen and delete all lines saved in the scrollback buffer
+     */
     public static void clearAll(){
-        System.out.print("\u001b[3J"); //clear entire screen and delete all lines saved in the scrollback buffer
+        System.out.print("\u001b[3J");
      }
 
+    /**
+     * clear entire screen (and moves cursor to upper left
+     */
     public static void clearScreen(){
-        System.out.print("\u001b[2J"); // clear entire screen (and moves cursor to upper left
+        System.out.print("\u001b[2J");
     }
 
+    /**
+     * clear entire line
+     */
     public static void clearLine(){
-        System.out.print("\u001b[2K"); // clear entire line
+        System.out.print("\u001b[2K");
     }
 
     /**
@@ -91,19 +105,11 @@ public class Terminal {
         System.out.print("\u001b[?25l");
     }
 
-    public static void downCursor(int i){
-        System.out.print("\u001b[" + i + "B");
-    }
-    public static void forwCursor(int i){
-        System.out.print("\u001b[" + i + "C");
-    }
-    public static void backwCursor(int i){
-        System.out.print("\u001b[" + i + "D");
-    }
-    public static void upCursor(int i){
-        System.out.print("\u001b[" + i + "A");
-    }
-
+    /**
+     * moves cursor relatively to actual position
+     * @param sugiu
+     * @param dxsx
+     */
     public static void moveRelativeCursor(int sugiu, int dxsx){
         if (sugiu < 0 ){
             int abs = Math.abs(sugiu);
@@ -125,7 +131,12 @@ public class Terminal {
         System.out.print("\u001b["+row+";"+col+"H");
     }
 
-
+    /**
+     * This is able to get the coordinates of the current position of cursor
+     * I don't delete this cause it took one afternoon to get it working and can be useful in future
+     * @return the coordinates of the current position of cursor
+     * @throws IOException
+     */
     public static int[] getAbsoluteCursor() throws IOException {
         ArrayList<Integer> row = new ArrayList<Integer>();
         ArrayList<Integer> col = new ArrayList<Integer>();
@@ -198,6 +209,5 @@ public class Terminal {
         p.waitFor();
         return  new String(bout.toByteArray());
     }
-
 
 }
