@@ -1,10 +1,9 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -14,6 +13,7 @@ import javafx.stage.StageStyle;
 
 public class PopupStage extends Stage {
 
+    protected final Pane pane = new Pane();
     protected final Stage ownerStage;
     protected final VBox vBox = new VBox(5);
 
@@ -53,17 +53,23 @@ public class PopupStage extends Stage {
         ownerStage.yProperty().addListener((obs, oldVal, newVal) -> {
             this.setY(this.getY() + (newVal.intValue() - oldVal.intValue()));
         });
+
     }
 
     private void buildPopup() {
+        UtilsGUI.addClassToElement(pane, "popup-stage");
         vBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(20));
-        UtilsGUI.addClassToElement(vBox, "popup-stage");
+        vBox.setLayoutX(225);
+        vBox.setLayoutY(252);
+        vBox.prefHeight(171);
+        vBox.prefWidth(141);
+        pane.getChildren().add(vBox);
 
         // Set scene
-        Scene scene = new Scene(vBox, Color.TRANSPARENT);
+        Scene scene = new Scene(pane, Color.TRANSPARENT);
         scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
         this.setScene(scene);
+
     }
 
     protected Text createText(String string) {

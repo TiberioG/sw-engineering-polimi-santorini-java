@@ -58,7 +58,7 @@ public class PlayerInfoPopup extends Stage {
     private void buildPopup() {
         vBox.setAlignment(Pos.CENTER);
         vBox.setPadding(new Insets(20));
-        UtilsGUI.addClassToElement(vBox, "popup-stage");
+        UtilsGUI.addClassToElement(vBox, "player-info-popup");
 
         vBox.getChildren().add(createText("User: " + player.getName()));
         vBox.getChildren().add(createText("God: " + player.getCurrentCard().getName()));

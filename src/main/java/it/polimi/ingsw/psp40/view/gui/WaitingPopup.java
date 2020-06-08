@@ -13,6 +13,7 @@ public class WaitingPopup extends PopupStage {
 
     WaitingPopup(Stage ownerStage, String details) {
         super(ownerStage);
+        UtilsGUI.addClassToElement(vBox, "vbox-popup-stage"); //default class
         this.details = details;
         build();
     }

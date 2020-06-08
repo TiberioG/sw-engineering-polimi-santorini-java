@@ -25,7 +25,7 @@ public class ConfirmPopup extends PopupStage {
         super(ownerStage);
         this.confirmFunction = confirmFunction;
         this.text  = text;
-        UtilsGUI.addClassToElement(vBox, "winner-popup"); //default class
+        UtilsGUI.addClassToElement(vBox, "vbox-popup-stage"); //default class
         createText();
         createButton();
     }

@@ -56,8 +56,6 @@ public class GUI extends Application implements ViewInterface {
 
     private FXMLLoader fxmlLoader;
 
-    private boolean matchIsStarted = false;
-
     /* Methods */
 
     @Override
@@ -226,7 +224,6 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayStartingMatch() {
-        matchIsStarted = true;
     }
 
     @Override
