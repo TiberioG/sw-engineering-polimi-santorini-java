@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" styleClass="setup-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.LobbyScreenController">
+<StackPane fx:id="stackPane" prefHeight="800.0" prefWidth="1200.0" styleClass="setup-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.LobbyScreenController">
    <children>
-      <ImageView fitHeight="177.0" fitWidth="495.0" layoutX="353.0" layoutY="36.0" opacity="0.85" pickOnBounds="true">
+      <ImageView fitHeight="177.0" fitWidth="495.0" layoutX="353.0" layoutY="36.0" opacity="0.85" pickOnBounds="true" translateY="20.0" StackPane.alignment="TOP_CENTER">
          <image>
             <Image url="@../images/santorini-logo.png" />
          </image>
       </ImageView>
-      <Text fx:id="titleLobbyText" fill="#346b93" layoutX="454.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Waiting for other players...">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Text>
-      <ListView fx:id="listViewPlayers" layoutX="479.0" layoutY="314.0" prefHeight="200.0" prefWidth="200.0" />
-      <Text fx:id="subTitleLobbyText" fill="#346b93" layoutX="512.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Waiting players:" visible="false">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
+      <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="455.0" layoutY="213.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" translateY="200.0" StackPane.alignment="TOP_CENTER">
+         <children>
+            <Text fx:id="titleLobbyText" fill="#346b93" text="Waiting for other players...">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Text>
+            <Text fx:id="subTitleLobbyText" fill="#346b93" text="Waiting players:" textAlignment="CENTER" visible="false">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Text>
+            <ListView fx:id="listViewPlayers" prefHeight="125.0" prefWidth="239.0" styleClass="players-waiting-list" />
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</StackPane>

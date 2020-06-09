@@ -233,13 +233,16 @@
    <left>
       <AnchorPane fx:id="leftAnchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Group layoutX="20.0" layoutY="200.0">
+            <VBox prefHeight="222.0" prefWidth="200.0" spacing="2.0">
                <children>
-                  <Button fx:id="topViewButton" layoutX="44.0" layoutY="-165.0" mnemonicParsing="false" onAction="#topViewButtonClicked" text="Top" />
-                  <Button fx:id="leftViewButton" layoutY="-165.0" mnemonicParsing="false" onAction="#leftViewButtonClicked" text="Left" />
-                  <Button fx:id="rightViewButton" layoutX="89.0" layoutY="-165.0" mnemonicParsing="false" onAction="#rightViewButtonClicked" text="Right" />
+                  <Button fx:id="leftViewButton" mnemonicParsing="false" onAction="#leftViewButtonClicked" prefHeight="40.0" prefWidth="135.0" styleClass="camera-view-button" text="LEFT CAMERA" textAlignment="CENTER" />
+                  <Button fx:id="topViewButton" mnemonicParsing="false" onAction="#topViewButtonClicked" prefHeight="40.0" prefWidth="135.0" styleClass="camera-view-button" text="TOP CAMERA" textAlignment="CENTER" />
+                  <Button fx:id="rightViewButton" mnemonicParsing="false" onAction="#rightViewButtonClicked" prefHeight="40.0" prefWidth="135.0" styleClass="camera-view-button" text="RIGHT CAMERA" textAlignment="CENTER" />
                </children>
-            </Group>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </VBox>
          </children>
       </AnchorPane>
    </left>

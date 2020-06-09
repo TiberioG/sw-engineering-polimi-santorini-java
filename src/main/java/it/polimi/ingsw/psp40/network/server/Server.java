@@ -229,7 +229,7 @@ public class Server
       messageToSend.setUUID(uuid);
       sendToClient(messageToSend);
       UUIDtoClientMap.remove(uuid);
-    } else if(usernameAlreadyExists) {
+    } else if(usernameAlreadyExists || username.equalsIgnoreCase("ALL")) {
       LOGGER.log(Level.INFO, "Username " + username + " already exists");
       messageToSend = new Message(TypeOfMessage.LOGIN_FAILURE, "I'm sorry, this username is already taken. Please try with a different username:");
       messageToSend.setUUID(uuid);

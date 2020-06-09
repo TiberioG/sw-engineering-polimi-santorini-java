@@ -445,7 +445,7 @@ public class Utils {
     }
 
     public static boolean isValidUsername(String input){
-        return !(input.equals("All") || input.isEmpty() || input.matches("^\\s*$") || input.equals("Hitler"));
+        return !(input.equalsIgnoreCase("ALL2") || input.isEmpty() || input.matches("^\\s*$") || input.equalsIgnoreCase("Hitler"));
     }
 
     public static boolean isValidIp(String input) {

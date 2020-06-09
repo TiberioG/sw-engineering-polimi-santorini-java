@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import animatefx.animation.ZoomIn;
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.Message;
@@ -100,6 +101,26 @@ public class GUI extends Application implements ViewInterface {
             playerList.add(player2);
             gameScreenController.setPlayersInfo(playerList);
         });*/
+
+/*        createMainScene("/FXML/LobbyScreen.fxml", () -> {
+            primaryStage.show();
+            lobbyScreenController = fxmlLoader.getController();
+            lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
+            lobbyScreenController.addPlayerToLobby("ciaoen");
+            lobbyScreenController.addPlayerToLobby(" asa aswa as");
+        });*/
+
+/*        createMainScene("/FXML/CardScreen.fxml", () -> {
+            primaryStage.show();
+            cardScreenController = fxmlLoader.getController();
+            cardScreenController.setClient(client);
+            cardScreenController.setPrimaryStage(primaryStage);
+            //cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
+        });*/
+
+
     }
 
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
@@ -168,7 +189,7 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displaySetupFailure() {
         Platform.runLater(() -> {
-            setupScreenController.errorAlert("The server is not reachable, please enter another address!");
+            setupScreenController.errorAlertSetup("The server is not reachable, please enter another address!");
         });
     }
 
@@ -191,8 +212,8 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayLoginFailure(String details) {
         Platform.runLater(() -> {
-            System.out.println(details);
-            setupScreenController.errorAlert("The name is already used, enter another name!");
+            //System.out.println(details);
+            setupScreenController.errorAlertLogin("I'm sorry, this username is already taken.\nPlease try with a different username");
         });
     }
 
@@ -380,7 +401,7 @@ public class GUI extends Application implements ViewInterface {
     public void displayWinnerMessage() {
         Platform.runLater(() -> {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);
-            popup.show();
+            popup.showWithAnimation();
         });
     }
 
@@ -389,7 +410,7 @@ public class GUI extends Application implements ViewInterface {
         Platform.runLater(()-> {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
             popup.setWinner(winningPlayer);
-            popup.show();
+            popup.showWithAnimation();
         });
     }
 
@@ -398,7 +419,7 @@ public class GUI extends Application implements ViewInterface {
         Platform.runLater(()-> {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
             popup.setLoser(player);
-            popup.show();
+            popup.showWithAnimation();
         });
     }
 

@@ -91,7 +91,7 @@ public class SetupScreenController extends ScreenController {
         new ZoomIn(santoriniLogo).play();
         new ZoomIn(vBoxForServerProps).play();
 
-
+        vBoxForServerProps.requestFocus(); // remove initial focus from first TextField
     }
 
     // just for testing
@@ -162,15 +162,20 @@ public class SetupScreenController extends ScreenController {
     public void displayUserForm() {
         vBoxForServerProps.setVisible(false);
         vBoxForUserProps.setVisible(true);
+        vBoxForUserProps.requestFocus(); // remove initial focus from first TextField
         validationMap.put(usernameTextField, false);
         validationMap.put(birthdayDatePicker, false);
         validationMap.put(numOfPlayerComboBox, false);
-
     }
 
     @FXML
     public void usernameChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidUsername = Utils.isValidUsername(usernameTextField.getText());
+        if(hasInsertedValidUsername) {
+            UtilsGUI.removeClassToElement(usernameTextField, "error-text");
+        } else {
+            UtilsGUI.addClassToElement(usernameTextField, "error-text");
+        }
         validationMap.put(usernameTextField, hasInsertedValidUsername);
         validateSendFields();
     }
@@ -181,7 +186,6 @@ public class SetupScreenController extends ScreenController {
         validationMap.put(numOfPlayerComboBox, validNumOfPlayer);
         validateSendFields();
     }
-
 
 
     @FXML
@@ -200,13 +204,22 @@ public class SetupScreenController extends ScreenController {
         getClient().sendToServer(loginMessage);
     }
 
-    public void errorAlert(String text) {
+    private void errorAlert(String text) {
         TilePane r = new TilePane();
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText(text);
         alert.show();
         anchorPane.getChildren().add(r);
+    }
+
+    public void errorAlertSetup(String text) {
+        connectButton.setDisable(true);
+        errorAlert(text);
+    }
+
+    public void errorAlertLogin(String text) {
         UtilsGUI.addClassToElement(usernameTextField, "error-text");
+        errorAlert(text);
     }
 
     private void validateConnectFields() {

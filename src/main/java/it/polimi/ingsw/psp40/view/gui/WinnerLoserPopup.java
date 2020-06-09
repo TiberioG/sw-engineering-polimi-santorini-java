@@ -1,15 +1,12 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.model.Player;;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.Priority;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class WinnerLoserPopup extends PopupStage {
@@ -18,24 +15,18 @@ public class WinnerLoserPopup extends PopupStage {
     private Player winner;
     private Player loser;
     private boolean shouldContinue;
-    private String details;
+    private String details = null;
 
-    protected Image image_popup_winner = new Image(getClass().getResource("/images/endgame_victorywin.png").toString());
-    protected Image image_popup_loser = new Image(getClass().getResource("/images/endgame_windowdefeat.png").toString());
-    protected Image image_popup_trumpets_left = new Image(getClass().getResource("/images/endgame_victorytrumpets_rotate.png").toString());
-    protected Image image_popup_trumpets_right = new Image(getClass().getResource("/images/endgame_victorytrumpets.png").toString());
-    protected Image image_popup_loser_trumpets_left = new Image(getClass().getResource("/images/endgame_defeattrumpetleft.png").toString());
-    protected Image image_popup_loser_trumpets_right = new Image(getClass().getResource("/images/endgame_defeattrumpetright.png").toString());
-
+    protected Image image_popup_winner = new Image(getClass().getResource("/images/winner_popup.png").toString());
+    protected Image image_popup_loser = new Image(getClass().getResource("/images/loser_popup.png").toString());
 
     WinnerLoserPopup(Stage ownerStage, boolean isWinner) {
-        super(ownerStage);
-        this.isWinner = isWinner;
-        build();
+        this(ownerStage, isWinner, null);
     }
 
     WinnerLoserPopup(Stage ownerStage, boolean isWinner, String details) {
-        this(ownerStage, isWinner);
+        super(ownerStage);
+        this.isWinner = isWinner;
         this.details = details;
         build();
     }
@@ -50,8 +41,6 @@ public class WinnerLoserPopup extends PopupStage {
     }
 
     private void build() {
-        vBox.setLayoutX(225);
-        vBox.setLayoutY(252);
         vBox.prefHeight(171);
         vBox.prefWidth(141);
 
@@ -60,42 +49,16 @@ public class WinnerLoserPopup extends PopupStage {
         if (isWinner) backgroundImageView = new ImageView(image_popup_winner);
         else backgroundImageView = new ImageView(image_popup_loser);
 
-        backgroundImageView.setFitHeight(422);
-        backgroundImageView.setFitWidth(418);
-        backgroundImageView.setLayoutX(92);
-        backgroundImageView.setLayoutY(65);
-        backgroundImageView.setPickOnBounds(true);
+        backgroundImageView.setFitHeight(400);
         backgroundImageView.setPreserveRatio(true);
         pane.getChildren().add(0, backgroundImageView);
 
-        ImageView imageTrumpetsLeft;
-        ImageView imageTrumpetsRight;
-        if (isWinner) {
-            imageTrumpetsLeft = new ImageView(image_popup_trumpets_left);
-            imageTrumpetsRight = new ImageView(image_popup_trumpets_right);
-        } else {
-            imageTrumpetsLeft = new ImageView(image_popup_loser_trumpets_left);
-            imageTrumpetsRight = new ImageView(image_popup_loser_trumpets_right);
-        }
-
-        imageTrumpetsLeft.setFitHeight(150);
-        imageTrumpetsLeft.setFitWidth(153);
-        imageTrumpetsLeft.setLayoutX(29);
-        imageTrumpetsLeft.setLayoutY(156);
-        imageTrumpetsLeft.setPickOnBounds(true);
-        imageTrumpetsLeft.setPreserveRatio(true);
-        pane.getChildren().add(0, imageTrumpetsLeft);
-        imageTrumpetsRight.setFitHeight(293);
-        imageTrumpetsRight.setFitWidth(135);
-        imageTrumpetsRight.setLayoutX(406);
-        imageTrumpetsRight.setLayoutY(156);
-        imageTrumpetsRight.setPickOnBounds(true);
-        imageTrumpetsRight.setPreserveRatio(true);
-        pane.getChildren().add(0, imageTrumpetsRight);
-
         // Create scene
         Text text = createText(getDetails());
+        text.setFont(new Font(24));
+        text.setWrappingWidth(280);
         this.vBox.getChildren().add(text);
+        this.vBox.setPadding(new Insets(100, 20, 20 , 20));  // override default padding
         UtilsGUI.addClassToElement(vBox, isWinner ? "winner-popup" : "loser-popup");
 
         Button button = buildButton();
@@ -107,6 +70,9 @@ public class WinnerLoserPopup extends PopupStage {
         String label = shouldContinue ? "Continue" : "Something";
 
         Button button = new Button(label);
+        button.setPrefHeight(50);
+        button.setPrefWidth(150);
+        button.setStyle("-fx-font-size:18");
         button.setOnAction(event -> {
             if(shouldContinue) {
                 this.ownerStage.getScene().getRoot().setEffect(null);
@@ -122,6 +88,9 @@ public class WinnerLoserPopup extends PopupStage {
 
 
     private String getDetails() {
+        if(details != null) {
+            return details;
+        }
         String details;
         if(isWinner) {
             details = "Congratulations!\nYou Won!";
