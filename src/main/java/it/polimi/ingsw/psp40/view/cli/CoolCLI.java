@@ -592,22 +592,31 @@ public class CoolCLI implements ViewInterface {
         left.clear();
         List<Cell> availableCells = client.getAvailableMoveCells();
 
-        try {
-            updateIsland();
-            myisland.clearMovable();
-            myisland.setMovable(availableCells);
-            myisland.print();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        if(availableCells.size() == 0){
+            left.printWrapped("This worker cannot move, please select another one");
+            utils.doTimeUnitSleep(DELAY);
+            displayChoiceSelectionOfWorker();
         }
 
-        List<int[]> availableCellsCoord = cellAdapter(availableCells) ;
-        left.printWrapped("These are the cells available for move, go back to selection of worker pressing B ");
-        if(debug) {
-            availableCellsCoord.forEach(cell -> left.append(cell[0] + "," + cell[1]));
-        }
+        else {
 
-        displayMoveWorker();
+            try {
+                updateIsland();
+                myisland.clearMovable();
+                myisland.setMovable(availableCells);
+                myisland.print();
+            } catch (IOException | InterruptedException e) {
+                //e.printStackTrace();
+            }
+
+            List<int[]> availableCellsCoord = cellAdapter(availableCells);
+            left.printWrapped("These are the cells available for move, go back to selection of worker pressing B ");
+            if (debug) {
+                availableCellsCoord.forEach(cell -> left.append(cell[0] + "," + cell[1]));
+            }
+
+            displayMoveWorker();
+        }
     }
 
     @Override
@@ -621,7 +630,7 @@ public class CoolCLI implements ViewInterface {
             this.updateIsland();
             myisland.print();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         currentWorkerId = swapWorker();

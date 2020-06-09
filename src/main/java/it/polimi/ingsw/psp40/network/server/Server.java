@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -41,6 +43,7 @@ public class Server
 
   private static Logger LOGGER = Logger.getLogger("server");
 
+
   public Server() {
     startHeartbeat();
   }
@@ -48,20 +51,41 @@ public class Server
 
   public static void main(String[] args)
   {
+    FileHandler fh;
     int SOCKET_PORT;
-    Scanner stdin = new Scanner(System.in);
+    String logPath = "./";
 
-    if (Configuration.DEBUG){
-      System.out.println("Starting DEBUG server port 1234");
-      SOCKET_PORT = 1234;
+    // i wanna add port as 1st argument, path for logger as second
+    if (args.length > 1) {
+      SOCKET_PORT = Integer.parseInt(args[0]);
+      logPath = args[1];
     }else {
-      System.out.println("Port number?");
-      SOCKET_PORT = validateIntInput(stdin, MIN_PORT, MAX_PORT);
+      Scanner stdin = new Scanner(System.in);
+      if (Configuration.DEBUG) {
+        System.out.println("Starting DEBUG server port 1234");
+        SOCKET_PORT = 1234;
+      } else {
+        System.out.println("Port number?");
+        SOCKET_PORT = validateIntInput(stdin, MIN_PORT, MAX_PORT);
+      }
+    }
+
+    try {
+      // add file to logger
+      fh = new FileHandler(logPath +"MyLogFile.log");
+      LOGGER.addHandler(fh);
+      SimpleFormatter formatter = new SimpleFormatter();
+      fh.setFormatter(formatter);
+      LOGGER.info("Welcome to the log");
+
+    } catch (SecurityException | IOException e) {
+      e.printStackTrace();
     }
     ServerSocket socket;
     try {
       socket = new ServerSocket(SOCKET_PORT);
       System.out.println("Waiting for connections...");
+      LOGGER.info("Socket started at port: " + SOCKET_PORT);
     } catch (IOException e) {
       System.out.println("Cannot open server socket");
       System.exit(1);
