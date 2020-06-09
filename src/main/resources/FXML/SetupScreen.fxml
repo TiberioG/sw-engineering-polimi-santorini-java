@@ -13,33 +13,39 @@
             <Image url="@../images/santorini-logo.png" />
          </image>
       </ImageView>
-      <VBox fx:id="vBoxForServerProps" alignment="CENTER" layoutX="464.0" layoutY="191.0" prefHeight="286.0" prefWidth="281.0" spacing="50.0">
+      <VBox fx:id="vBoxForServerProps" focusTraversable="true" alignment="CENTER" layoutX="464.0" layoutY="207.0" prefHeight="286.0" prefWidth="281.0" spacing="50.0">
          <children>
-            <TextField fx:id="ipAddressTextField" alignment="CENTER" focusTraversable="false" onAction="#onEnterIpAddress" onKeyTyped="#ipAddressChanged" prefWidth="125.0" promptText="IP Address" visible="true" VBox.vgrow="NEVER" />
-            <TextField fx:id="portTextField" alignment="CENTER" focusTraversable="false" onAction="#onEnterPortText" onKeyTyped="#portChanged" prefWidth="125.0" promptText="Port" VBox.vgrow="NEVER" />
-            <Button fx:id="connectButton" alignment="TOP_CENTER" contentDisplay="CENTER" disable="true" graphicTextGap="10.0" mnemonicParsing="false" onAction="#handleConnectButton" prefWidth="125.0" styleClass="connect-button" text="Connect" textAlignment="CENTER" textOverrun="CLIP">
+            <TextField fx:id="ipAddressTextField" alignment="CENTER" onAction="#onEnterIpAddress" onKeyTyped="#ipAddressChanged" prefWidth="125.0" promptText="IP Address" visible="true" VBox.vgrow="NEVER" />
+            <TextField fx:id="portTextField" alignment="CENTER"  onAction="#onEnterPortText" onKeyTyped="#portChanged" prefWidth="125.0" promptText="Port" VBox.vgrow="NEVER" />
+            <Button fx:id="connectButton" alignment="TOP_CENTER" contentDisplay="CENTER" disable="true" graphicTextGap="10.0" mnemonicParsing="false" onAction="#handleConnectButton" prefHeight="40.0" prefWidth="125.0" styleClass="connect-button" text="Connect" textAlignment="CENTER" textOverrun="CLIP">
                <font>
-                  <Font size="15.0" />
+                  <Font size="14.0" />
                </font>
+               <VBox.margin>
+                  <Insets top="-20.0" />
+               </VBox.margin>
             </Button>
          </children>
       </VBox>
-      <VBox fx:id="vBoxForUserProps" alignment="CENTER" layoutX="460.0" layoutY="191.0" prefHeight="364.0" prefWidth="290.0" visible="false">
+      <VBox fx:id="vBoxForUserProps" focusTraversable="true" alignment="CENTER" layoutX="460.0" layoutY="163.0" prefHeight="364.0" prefWidth="290.0" spacing="20.0" visible="false">
          <children>
-            <TextField fx:id="usernameTextField" alignment="CENTER" focusTraversable="false" onKeyTyped="#usernameChanged" prefHeight="30.0" promptText="Name">
+            <TextField fx:id="usernameTextField" alignment="CENTER" onKeyTyped="#usernameChanged" prefHeight="30.0" promptText="Name">
                <VBox.margin>
-                  <Insets bottom="30.0" />
+                  <Insets />
                </VBox.margin></TextField>
             <DatePicker fx:id="birthdayDatePicker" promptText="Birthday dd/MM/yyyy" showWeekNumbers="false">
                <VBox.margin>
-                  <Insets bottom="30.0" />
+                  <Insets />
                </VBox.margin></DatePicker>
-            <Label text="Number of Players:" textFill="#346b93" />
+            <Label text="Number of Players:" textFill="#346b93">
+               <VBox.margin>
+                  <Insets bottom="-20.0" />
+               </VBox.margin></Label>
             <ComboBox fx:id="numOfPlayerComboBox" onAction="#numOfPlayerChanged" prefWidth="150.0">
                <VBox.margin>
-                  <Insets bottom="30.0" />
+                  <Insets />
                </VBox.margin></ComboBox>
-            <Button fx:id="sendInfoButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleSendInfoButton" prefWidth="124.0" styleClass="connect-button" text="Continue" textAlignment="CENTER">
+            <Button fx:id="sendInfoButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleSendInfoButton" prefHeight="40.0" prefWidth="125.0" styleClass="connect-button" text="Continue" textAlignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>

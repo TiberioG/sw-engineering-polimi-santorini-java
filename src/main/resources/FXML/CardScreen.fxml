@@ -13,7 +13,7 @@
             </image>
         </ImageView>
         <TextArea fx:id="textTitle" editable="false" layoutX="846.0" layoutY="109.0" prefHeight="128.0" prefWidth="302.0" styleClass="card-title" wrapText="true" />
-        <Button fx:id="endButton" layoutX="930.0" layoutY="660.0" mnemonicParsing="false" onAction="#end" prefHeight="35.0" prefWidth="134.0" text="End" />
+        <Button fx:id="endButton" layoutX="922.0" layoutY="636.0" mnemonicParsing="false" onAction="#end" prefHeight="60.0" prefWidth="150.0" style="-fx-font-size: 20;" text="End" />
         <TextArea fx:id="textDescr" editable="false" layoutX="848.0" layoutY="257.0" prefHeight="259.0" prefWidth="298.0" style="-fx-background-color: transparent;" styleClass="card-description" wrapText="true" />
         <TextArea fx:id="selected" editable="false" layoutX="858.0" layoutY="541.0" prefHeight="67.0" prefWidth="277.0" styleClass="card-title" wrapText="true" />
         <GridPane fx:id="grid" alignment="CENTER" layoutX="14.0" layoutY="47.0" prefHeight="706.0" prefWidth="768.0" vgap="10.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="418.0" AnchorPane.topAnchor="47.0">

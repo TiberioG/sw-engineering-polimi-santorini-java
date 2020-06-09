@@ -4,14 +4,19 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
 import javafx.util.Duration;
 
 public class UtilsGUI {
+
+    static BooleanProperty trueBool = new SimpleBooleanProperty(true);
 
     protected static void addClassToElement(Node node, String nameOfClass) {
         ObservableList<String> listOfClasses = node.getStyleClass();
@@ -28,6 +33,39 @@ public class UtilsGUI {
         nodeHoverEffect(button);
     }
 
+    protected static void buttonHoverEffectWithPersistence(Button button, BooleanProperty persistence) {
+        nodeHoverEffectWithPersistence(button, persistence);
+    }
+
+    // if persistence is true, keep the effect applied even when not hover
+    protected static void nodeHoverEffectWithPersistence(Node node, BooleanProperty persistence) {
+
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.3);
+
+        applyEffectBinding(node, colorAdjust, persistence);
+
+        node.hoverProperty().addListener((observable, oldValue, newValue) -> {
+            if (!persistence.getValue()) {
+                if (newValue) {
+                    node.effectProperty().unbind();
+                    node.setEffect(colorAdjust);
+                } else {
+                    applyEffectBinding(node, colorAdjust, persistence);
+                }
+            } else {
+                applyEffectBinding(node, colorAdjust, persistence);
+            }
+        });
+    }
+
+    private static void applyEffectBinding(Node node, Effect effect, BooleanProperty property) {
+        node.effectProperty().bind(Bindings.when(
+                property.isEqualTo(trueBool))
+                .then(effect)
+                .otherwise((Effect) null));
+    }
+
     protected static void nodeHoverEffect(Node node) {
         node.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -42,12 +80,12 @@ public class UtilsGUI {
 
     protected static void slideInDownAnimation(Node node) {
         new Timeline(
-
-                new KeyFrame(Duration.millis(0),
-                        new KeyValue(node.translateYProperty(), -100, Interpolator.SPLINE(0.215, 0.610, 0.355, 1.000))
-                ),
-                new KeyFrame(Duration.millis(200),
-                        new KeyValue(node.translateYProperty(), 0, Interpolator.SPLINE(0.215, 0.610, 0.355, 1.000))
-                )).play();
+            new KeyFrame(Duration.millis(0),
+                    new KeyValue(node.translateYProperty(), -100, Interpolator.SPLINE(0.215, 0.610, 0.355, 1.000))
+            ),
+            new KeyFrame(Duration.millis(200),
+                    new KeyValue(node.translateYProperty(), 0, Interpolator.SPLINE(0.215, 0.610, 0.355, 1.000))
+            )
+        ).play();
     }
 }

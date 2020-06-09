@@ -7,6 +7,8 @@ import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.*;
 import javafx.animation.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Dimension2D;
@@ -113,6 +115,11 @@ public class GameScreenController extends ScreenController {
     private Background background_sx = null;
     private Background background_top = null;
 
+    private GUIProperties.CameraType currentCamera = GUIProperties.CameraType.RIGHT;  // default camera
+    private final BooleanProperty isRightCamera = new SimpleBooleanProperty(true); // default camera
+    private final BooleanProperty isLeftCamera = new SimpleBooleanProperty(false);
+    private final BooleanProperty isTopCamera = new SimpleBooleanProperty(false);
+
     /* Methods */
 
     @FXML
@@ -128,10 +135,10 @@ public class GameScreenController extends ScreenController {
         myPane_sx.setVisible(false);
         myPane_top.setVisible(false);
 
-        UtilsGUI.buttonHoverEffect(leftViewButton);
-        UtilsGUI.buttonHoverEffect(rightViewButton);
-        UtilsGUI.buttonHoverEffect(topViewButton);
-        
+        UtilsGUI.buttonHoverEffectWithPersistence(leftViewButton, isLeftCamera);
+        UtilsGUI.buttonHoverEffectWithPersistence(rightViewButton, isRightCamera);
+        UtilsGUI.buttonHoverEffectWithPersistence(topViewButton, isTopCamera);
+
         buildInstructionsLabelTransition();
 
 /*        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -> { // keep rightAnchorPane's elements in position when switch camera from right to left and viceversa
@@ -945,6 +952,8 @@ public class GameScreenController extends ScreenController {
 
     @FXML
     public void rightViewButtonClicked(ActionEvent actionEvent) {
+        currentCamera = GUIProperties.CameraType.RIGHT;
+        switchCamera();
         myPane_sx.setVisible(false);
         island_sx.setVisible(false);
         myPane_top.setVisible(false);
@@ -956,6 +965,8 @@ public class GameScreenController extends ScreenController {
 
     @FXML
     public void leftViewButtonClicked(ActionEvent actionEvent) {
+        currentCamera =  GUIProperties.CameraType.LEFT;
+        switchCamera();
         myPane_dx.setVisible(false);
         island_dx.setVisible(false);
         myPane_top.setVisible(false);
@@ -967,6 +978,8 @@ public class GameScreenController extends ScreenController {
 
     @FXML
     public void topViewButtonClicked(ActionEvent actionEvent) {
+        currentCamera = GUIProperties.CameraType.TOP;
+        switchCamera();
         myPane_dx.setVisible(false);
         island_dx.setVisible(false);
         myPane_sx.setVisible(false);
@@ -974,6 +987,28 @@ public class GameScreenController extends ScreenController {
         myPane_top.setVisible(true);
         island_top.setVisible(true);
         borderPane.setBackground(background_top);
+    }
+
+    private void switchCamera() {
+        switch (currentCamera) {
+            case TOP:
+                isRightCamera.setValue(false);
+                isLeftCamera.setValue(false);
+                isTopCamera.setValue(true);
+                break;
+
+            case LEFT:
+                isRightCamera.setValue(false);
+                isLeftCamera.setValue(true);
+                isTopCamera.setValue(false);
+                break;
+
+            case RIGHT:
+                isRightCamera.setValue(true);
+                isLeftCamera.setValue(false);
+                isTopCamera.setValue(false);
+                break;
+        }
     }
 
 }
