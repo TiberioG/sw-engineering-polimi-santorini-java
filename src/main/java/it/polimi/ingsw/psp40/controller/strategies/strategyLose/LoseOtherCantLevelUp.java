@@ -1,12 +1,13 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyLose;
 
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
+import it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.model.Match;
 import it.polimi.ingsw.psp40.model.Worker;
 
 /**
- * This Class is used when a player can lose because the strategy {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+ * This Class is used when a player can lose because the strategy {@link OthersCantLevelUp}
  * is applied which means in this turn the workers cannot level up
  * @author Vito96
  */

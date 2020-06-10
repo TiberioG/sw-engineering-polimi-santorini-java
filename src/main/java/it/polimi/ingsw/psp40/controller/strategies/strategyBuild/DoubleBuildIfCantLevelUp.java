@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This Class is used for PROMETEO card
  * This strategy makes possible to build even before move if with move the worker can't level up
  * @author TiberioG
  */

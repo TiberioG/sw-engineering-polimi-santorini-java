@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * This class is used for MINOTAURO card
- * Your Worker may move into an opponent Worker’s space, if their Worker can be
+ * This strategy check if your Worker may move into an opponent Worker’s space, their Worker can be
  * forced one space straight backwards to an unoccupied space at any level.
  * @author sup3rgiu
  */

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This Class is used for ATLANTE card
  * This strategy makes possible to build a {@link Component#DOME} in every level of the Island
  * @author TiberioG
  */

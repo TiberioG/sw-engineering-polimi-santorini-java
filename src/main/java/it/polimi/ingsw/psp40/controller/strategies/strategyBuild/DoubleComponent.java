@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This Class is used for EFESTO card
  * This strategy makes possible to build two Components at the same time, but the second cannot be a {@link Component#DOME}
  * @author TiberioG
  */

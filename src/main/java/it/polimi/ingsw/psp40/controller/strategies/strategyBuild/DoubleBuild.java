@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This Class is used for DEMETRA card
  * This strategy makes possible to build a second time, but not in the same Cell as the previous build action in the same turn
  * Attention: the build method must be called twice during the turn
  * @author TiberioG

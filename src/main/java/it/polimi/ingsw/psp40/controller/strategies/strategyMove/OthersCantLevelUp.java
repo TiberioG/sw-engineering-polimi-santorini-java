@@ -11,8 +11,7 @@ import it.polimi.ingsw.psp40.model.Worker;
 import java.util.List;
 
 /**
- * this class is used for the card ARTEMIDE
- * If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.
+ * This strategy check f one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.
  * @author sup3rgiu
  */
 public class OthersCantLevelUp extends DefaultMove {

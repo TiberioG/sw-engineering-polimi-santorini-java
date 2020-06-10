@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * this class is used for the card APOLLO
- * this strategy allows a {@link Worker}  move into an opponent Worker’s space by forcing their Worker to the space yours just vacated
+ * This strategy allows a {@link Worker}  move into an opponent Worker’s space by forcing their Worker to the space yours just vacated
  * @author sup3rgiu
  */
 public class SwapWorker extends DefaultMove {

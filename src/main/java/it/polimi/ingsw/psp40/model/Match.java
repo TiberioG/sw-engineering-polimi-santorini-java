@@ -42,7 +42,7 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * Stupid constructor used for testing
+     * Constructor used for testing
      * @param matchID
      */
     public Match(int matchID) {
@@ -235,7 +235,7 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * method used for persistence
+     * Method used to save the match and allow its persistence
      */
     public void saveMatch() {
         MatchHistory.saveMatch(this);

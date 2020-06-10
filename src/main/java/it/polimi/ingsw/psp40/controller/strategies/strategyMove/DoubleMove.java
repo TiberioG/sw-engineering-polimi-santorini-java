@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * this class is used for the card ARTEMIDE
- * this strategy allows a worker to move one additional time, but not back to its initial space
+ * This strategy allows a worker to move one additional time, but not back to its initial space
  * @author sup3rgiu
  */
 public class DoubleMove extends DefaultMove {

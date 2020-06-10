@@ -219,7 +219,7 @@ public class GameScreenController extends ScreenController {
                 stackPane.getChildren().remove(vbButtons);
                 disableMap(false);
                 chosenColor = Colors.valueOf(color);
-                setInstructionsLabelText("Posiziona i tuoi due worker in delle celle libere");
+                setInstructionsLabelText("Place your two workers in free cells");
                 highlightAvailableCellsInitialPosition();
             });
             UtilsGUI.buttonHoverEffect(button);
@@ -231,7 +231,7 @@ public class GameScreenController extends ScreenController {
         vbButtons.setAlignment(Pos.TOP_CENTER);
         stackPane.getChildren().add(vbButtons);
 
-        setInstructionsLabelText("Seleziona il colore dei tuoi worker");
+        setInstructionsLabelText("Select the color of your workers");
     }
 
     private void highlightAvailableCellsInitialPosition() {
@@ -479,7 +479,7 @@ public class GameScreenController extends ScreenController {
             disableMap(true);
             hboxPhases.setVisible(true);
 
-            setInstructionsLabelText("Seleziona l'azione desiderata");
+            setInstructionsLabelText("Select the desired action");
 
         } else phaseButtonClicked(phaseList.get(0).getType());
     }
@@ -490,16 +490,16 @@ public class GameScreenController extends ScreenController {
                 waiting = false;
                 selectedPhases.add(PhaseType.SELECT_WORKER);
                 highlightAvailableWorkersForSelection(true);
-                setInstructionsLabelText("Seleziona un worker");
+                setInstructionsLabelText("Select a worker");
                 break;
             case MOVE_WORKER:
                 selectedPhases.add(PhaseType.MOVE_WORKER);
-                setInstructionsLabelText("Muovi il worker in una delle celle disponibili");
+                setInstructionsLabelText("Move the worker to one of the available cells");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
                 break;
             case BUILD_COMPONENT:
                 selectedPhases.add(PhaseType.BUILD_COMPONENT);
-                setInstructionsLabelText("Costruisci in una delle celle disponibili");
+                setInstructionsLabelText("Build in one of the available cells");
                 sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
                 break;
             case END_TURN:
@@ -515,7 +515,7 @@ public class GameScreenController extends ScreenController {
     protected void endTurn() {
         selectedWorker = null;
         selectedPhases = new ArrayList<>();
-        setInstructionsLabelText("Aspetta il tuo turno...");
+        setInstructionsLabelText("Wait your turn...");
 
         //disableMap(true); // todo farlo o no?
     }
