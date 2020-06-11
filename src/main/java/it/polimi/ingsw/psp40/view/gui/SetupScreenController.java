@@ -160,6 +160,7 @@ public class SetupScreenController extends ScreenController {
     }
 
     public void displayUserForm() {
+        validationMap.clear();
         vBoxForServerProps.setVisible(false);
         vBoxForUserProps.setVisible(true);
         vBoxForUserProps.requestFocus(); // remove initial focus from first TextField

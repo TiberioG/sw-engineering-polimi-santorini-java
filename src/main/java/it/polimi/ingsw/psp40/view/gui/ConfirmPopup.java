@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 public class ConfirmPopup extends PopupStage {
     private FunctionInterface confirmFunction;
     private FunctionInterface denyFunction;
+    private String copyConfirmButton;
+    private String copyDenyButton;
     private String text;
 
     public ConfirmPopup(Stage ownerStage, String text, FunctionInterface confirmFunction, FunctionInterface denyFunction) {
@@ -36,6 +38,14 @@ public class ConfirmPopup extends PopupStage {
         UtilsGUI.addClassToElement(vBox, nameClass);
     }
 
+    public void setCopyConfirmButton(String copy) {
+        copyConfirmButton = copy;
+    }
+
+    public void setCopyDenyButton(String copy) {
+        copyDenyButton = copy;
+    }
+
     private void createText() {
         this.vBox.getChildren().add(createText(text));
     }
@@ -57,12 +67,16 @@ public class ConfirmPopup extends PopupStage {
     private void createTwoButtons() {
 
         Button confirmButton = createButton("YES");
+        confirmButton.setPrefHeight(35);
+        confirmButton.setPrefWidth(80);
         confirmButton.setOnAction(actionEvent -> {
             removeEffect();
             this.confirmFunction.executeFunction();
         });
 
         Button denyButton = createButton("NO");
+        denyButton.setPrefHeight(35);
+        denyButton.setPrefWidth(80);
         denyButton.setOnAction(actionEvent -> {
             removeEffect();
             this.denyFunction.executeFunction();

@@ -193,6 +193,7 @@ public class TurnManager {
 
         if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
             match.setWinningPlayer(getCurrentPlayer().getName());
+            disconnectUser(getCurrentPlayer().getName());
             return;
         }
 
@@ -227,10 +228,12 @@ public class TurnManager {
         match.selectNextCurrentPlayer();
         turnsMap.remove(losePlayer.getName());
         match.removePlayer(losePlayer.getName());
+        disconnectUser(losePlayer.getName());
 
         currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
         if (turnsMap.size() == 1) {
             match.setWinningPlayer(currentTurn.getPlayer().getName());
+            disconnectUser(currentTurn.getPlayer().getName());
         } else {
             updateVirtualView(new Message("ALL", TypeOfMessage.PLAYER_HAS_LOST, losePlayer));
             inizializedCurrentTurn();
@@ -239,7 +242,7 @@ public class TurnManager {
 
 
     /**
-     * this method initializes the current round by resetting the match properties related to the rounds and checking a player's loss, also notifies the virtual view of the start of the turn
+     * This method initializes the current round by resetting the match properties related to the rounds and checking a player's loss, also notifies the virtual view of the start of the turn
      */
     private void inizializedCurrentTurn() {
         match.saveMatch();
@@ -259,7 +262,7 @@ public class TurnManager {
     }
 
     /**
-     * this method return the player of the current turn
+     * This method return the player of the current turn
      * @return the player of the current turn
      */
     public Player getCurrentPlayer() {
@@ -267,11 +270,19 @@ public class TurnManager {
     }
 
     /**
-     * this method call the displayMessage of the virtualView
+     * This method call the displayMessage of the virtualView
      * @param message the message to sent
      */
     private void updateVirtualView(Message message) {
         if (virtualView != null) virtualView.displayMessage(message);
+    }
+
+    /**
+     * This method call the disconnectUser method of the virtualView
+     * @param username the username of the player to disconnect
+     */
+    private void disconnectUser(String username) {
+        if (virtualView != null) virtualView.disconnectUser(username);
     }
 
 }

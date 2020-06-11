@@ -57,5 +57,9 @@ public class VirtualView extends Publisher<Message> implements Listener<Message>
     public void restoreMatch(List<String> usernames) {
         server.restoreMatch(matchID, this, usernames);
     }
+
+    public void disconnectUser(String username) {
+        server.removeUserSilently(username);
+    }
 }
 

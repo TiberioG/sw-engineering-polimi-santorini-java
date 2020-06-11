@@ -418,21 +418,33 @@ public class Server
     return false;
   }
 
+  public synchronized void removeUserSilently(String name) {
+    String UUID = this.usernameToUUIDMap.get(name);
+    if (UUID != null) this.removeUser(UUID, false);
+  }
+
   private synchronized void removeUser(String UUID) {
+    this.removeUser(UUID, true);
+  }
+
+  private synchronized void removeUser(String UUID, Boolean clean) {
     String username = UUIDtoUsernameMap.get(UUID);
     usernameToUUIDMap.remove(username);
     birthdateMap.remove(username);
     UUIDtoUsernameMap.remove(UUID);
+    Integer matchID;
 
     UUIDtoClientMap.remove(UUID);
     if(UUIDtoMatchMap.containsKey(UUID)) {
-      Integer matchID = UUIDtoMatchMap.get(UUID);
+      //set matchID for clean match
+      matchID = UUIDtoMatchMap.get(UUID);
       matchToUUIDsMap.get(matchID).remove(UUID);
       UUIDtoMatchMap.remove(UUID);
-      cleanMatch(matchID); // clean match
     } else {
-      cleanMatch(0); // clean lobby
+      //set matchID for clean lobby
+      matchID = 0;
     }
+    if (clean) cleanMatch(matchID);
   }
 
   private synchronized void addUser(String UUID, String username, Date birthdate) {

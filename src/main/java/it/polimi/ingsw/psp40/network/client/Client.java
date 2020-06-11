@@ -184,11 +184,11 @@ public class Client implements ServerObserver {
         break;
 
       case DISCONNECTED_SERVER_SIDE:
-        view.displayDisconnected((String)message.getPayload(String.class));
+        view.displayDisconnectedUser((String)message.getPayload(String.class));
         break;
 
       case SERVER_LOST:
-        view.displayDisconnected("Connection lost"); // will close the socket and terminate the execution
+        view.displayDisconnected(); // will close the socket and terminate the execution
         break;
 
       case HEARTBEAT: // I won't receive this here anymore. Check ServerAdapter.java

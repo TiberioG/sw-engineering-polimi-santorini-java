@@ -182,8 +182,18 @@ public class CLI implements ViewInterface {
      * @param disconnectedUsername is the username of the disconnected player
      */
     @Override
-    public void displayDisconnected(String disconnectedUsername) {
+    public void displayDisconnectedUser(String disconnectedUsername) {
         out.println("I'm sorry, " + disconnectedUsername + " left the game. The match cannot continue");
+        client.close();
+    }
+
+
+    /**
+     * Method used to show disconnection from server
+     */
+    @Override
+    public void displayDisconnected() {
+        out.println("I'm sorry, the connection to the server was lost");
         client.close();
     }
 

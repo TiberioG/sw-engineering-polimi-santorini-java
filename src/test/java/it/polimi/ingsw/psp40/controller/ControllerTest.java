@@ -1,11 +1,11 @@
 package it.polimi.ingsw.psp40.controller;
 
 import it.polimi.ingsw.psp40.commons.Colors;
+import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
-import it.polimi.ingsw.psp40.commons.messages.CoordinatesMessage;
-import it.polimi.ingsw.psp40.commons.messages.Message;
-import it.polimi.ingsw.psp40.commons.messages.SelectWorkersMessage;
-import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.psp40.commons.messages.*;
+import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
+import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
@@ -71,6 +71,10 @@ public class ControllerTest {
         return hashMapOfDisplayMessage.get(typeOfMessage) != null;
     }
 
+    private void cleanDisplayMessageCall() {
+        hashMapOfNewPlayers = new HashMap<>();
+    }
+
     @Test
     public void startNewMatchTest() {
         controller.update(new Message("ALL", TypeOfMessage.START_MATCH, hashMapOfNewPlayers));
@@ -128,7 +132,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void setPositionOfWorker_testInitTurn() {
+    public void setPositionOfWorker_testInitializedMatch() {
         Match match = Mockito.spy(new Match(0));
         match.createPlayer("player1", new Date());
         match.getPlayerByName("player1").setCurrentCard(cardManager.getCardById(0));
@@ -143,10 +147,73 @@ public class ControllerTest {
         List<CoordinatesMessage> coordinatesMessageList = new ArrayList<>();
         coordinatesMessageList.add(new CoordinatesMessage(1,1));
         coordinatesMessageList.add(new CoordinatesMessage(2,1));
-        controller.update(new Message("ALL", TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.BLUE,  coordinatesMessageList)));
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.BLUE,  coordinatesMessageList)));
         coordinatesMessageList = new ArrayList<>();
         coordinatesMessageList.add(new CoordinatesMessage(3,1));
         coordinatesMessageList.add(new CoordinatesMessage(2,2));
-        controller.update(new Message("ALL", TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.RED,  coordinatesMessageList)));
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.RED,  coordinatesMessageList)));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.INIT_TURN));
-    }}
+    }
+
+    @Test
+    public void simulateTurn_testTurn() {
+        Match match = Mockito.spy(new Match(0));
+        match.createPlayer("player1", new Date());
+        match.getPlayerByName("player1").setCurrentCard(cardManager.getCardById(0));
+        match.createPlayer("player2", new Date());
+        match.getPlayerByName("player2").setCurrentCard(cardManager.getCardById(1));
+        match.setCurrentPlayer("player1");
+
+        Player player1 = match.getPlayerByName("player1");
+        player1.setCurrentCard(cardManager.getCardById(0));
+        player1.addWorker(Colors.BLUE);
+        player1.addWorker(Colors.BLUE);
+
+        Player player2 = match.getPlayerByName("player2");
+        player2.setCurrentCard(cardManager.getCardById(1));
+        player2.addWorker(Colors.RED);
+        player2.addWorker(Colors.RED);
+
+        match.setCurrentPlayer("player1");
+
+        try {
+            match.getLocation().setLocation(match.getIsland().getCell(0,0), player1.getWorkers().get(0));
+            match.getLocation().setLocation(match.getIsland().getCell(1,0), player1.getWorkers().get(1));
+            match.getLocation().setLocation(match.getIsland().getCell(1,1), player2.getWorkers().get(0));
+            match.getLocation().setLocation(match.getIsland().getCell(3,1), player2.getWorkers().get(1));
+        } catch (WorkerAlreadyPresentException e) {
+            e.printStackTrace();
+        } catch (CellOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("turnManager"), new TurnManager(match, virtualView));
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.SELECT_WORKER, 0));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.NEXT_PHASE_AVAILABLE));
+
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.AVAILABLE_CELL_FOR_MOVE));
+
+        cleanDisplayMessageCall();
+        CoordinatesMessage moveCoord = new CoordinatesMessage(0, 1);
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.MOVE_WORKER, moveCoord));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.NEXT_PHASE_AVAILABLE));
+
+        cleanDisplayMessageCall();
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.AVAILABLE_CELL_FOR_BUILD));
+
+        CoordinatesMessage buildCoord = new CoordinatesMessage(0,0);
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.BUILD_CELL, new TuplaGenerics<>(Component.FIRST_LEVEL, buildCoord)));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.END_TURN));
+
+    }
+
+}

@@ -19,9 +19,17 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-//todo javadoc
+/**
+ * This class is used for save match or restore an old match
+ *
+ * @author Vito96
+ */
 public class MatchHistory {
 
+    /**
+     * Method for create a backup of @{link Match}, if there is already a backup of the match it replaces it otherwise it creates it
+     * @param match the match to save
+     */
     public synchronized static void saveMatch(Match match) {
         JsonArray jsonArray = null;
         try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
@@ -58,6 +66,11 @@ public class MatchHistory {
         }
     }
 
+
+    /**
+     * Method for delete the backup a match with a specific matchId
+     * @param matchId the matchId of the match to delete
+     */
     public synchronized static void deleteMatch(Integer matchId) {
         JsonArray jsonArray = null;
         try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
@@ -85,6 +98,10 @@ public class MatchHistory {
         }
     }
 
+    /**
+     * Method to retrieve the most recent match saved where the players of the match have specified names
+     * @param names a list of names to find in match
+     */
     public synchronized static JsonObject retrieveMatchFromNames(List<String> names) {
         JsonObject jsonObjectOfOldMatch = null;
         try (JsonReader jsonReader =  new JsonReader(new FileReader("backupOfMatches.json"))) {
@@ -105,16 +122,31 @@ public class MatchHistory {
         return jsonObjectOfOldMatch;
     }
 
+    /**
+     * Method to create a new match from a JsonObject that contain an old match
+     * @param virtualView the {@link VirtualView} necessary for costructor of restored match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static Match restoreMatch(VirtualView virtualView, JsonObject oldMatch) {
         int matchId = JsonAdapter.getIntFromJsonObject(oldMatch, "matchId");
         return new Match(matchId, virtualView);
     }
 
+    /**
+     * Method to retrieve the names of players from a {@link JsonObject} that contains the old match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static List<String> getPlayersFromBrokenMatch(JsonObject oldMatch) {
         List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
         return playerList.stream().map(Player::getName).collect(Collectors.toList());
     }
 
+
+    /**
+     * Method to retrieve the players from a {@link JsonObject} that contains the old match and for restore it in a existing match
+     * @param match the match where to recreate the players recovered from the old match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static void restorePlayers(Match match, JsonObject oldMatch) {
         List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
         playerList.forEach(oldPlayer -> {
@@ -127,6 +159,11 @@ public class MatchHistory {
         });
     }
 
+    /**
+     * Method to retrieve the {@link Island} from a {@link JsonObject} that contains the old match and for restore it in a existing match
+     * @param match the match where to recreate the {@link Island} recovered from the old match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static void restoreIsland(Match match, JsonObject oldMatch) {
         Island island = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("island"), new TypeToken<Island>() {}.getType());
         for (int x = 0; x <= Island.getMaxX(); x++) {
@@ -148,13 +185,21 @@ public class MatchHistory {
         }
     }
 
-
+    /**
+     * Method to retrieve the current {@link Player} from a {@link JsonObject} that contains the old match and for restore it in a existing match
+     * @param match the match where to recreate current {@link Player} recovered from the old match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static void restoreCurrentPlayer(Match match, JsonObject oldMatch) {
         Player oldCurrentPlayer = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("currentPlayer"), new TypeToken<Player>() {}.getType());
         match.setCurrentPlayer(oldCurrentPlayer.getName());
     }
 
-
+    /**
+     * Method to retrieve the {@link MatchProperties} from a {@link JsonObject} that contains the old match and for restore it in a existing match
+     * @param match the match where to recreate {@link MatchProperties} recovered from the old match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static void restoreMatchProperties(Match match, JsonObject oldMatch) {
         MatchProperties oldMatchProperties = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("matchProperties"), new TypeToken<MatchProperties>() {}.getType());
         MatchProperties newMatchProperties = match.getMatchProperties();
@@ -162,6 +207,11 @@ public class MatchHistory {
         newMatchProperties.setOthersCantLevelUp(oldMatchProperties.isOthersCantLevelUp());
     }
 
+    /**
+     * Method to retrieve the {@link Location} from a {@link JsonObject} that contains the old match and for restore it in a existing match
+     * @param match the match where to recreate {@link Location} recovered from the old match
+     * @param oldMatch the {@link JsonObject} that contains the information of old match
+     */
     public static void restoreLocation(Match match, JsonObject oldMatch) {
         Location oldLocation = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("location"), new TypeToken<Location>() {}.getType());
         List<Player> oldPlayerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());

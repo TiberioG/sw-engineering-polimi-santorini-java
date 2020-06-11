@@ -57,6 +57,10 @@ public class GUI extends Application implements ViewInterface {
 
     private FXMLLoader fxmlLoader;
 
+    private boolean isLogged = false;
+
+    private ConfirmPopup confirmPopup;
+
     /* Methods */
 
     @Override
@@ -170,6 +174,8 @@ public class GUI extends Application implements ViewInterface {
             if (mockingConnection) {
                 setupScreenController.mockSendConnect();
             }
+
+            if (isLogged) setupScreenController.displayUserForm();
         });
     }
 
@@ -207,6 +213,7 @@ public class GUI extends Application implements ViewInterface {
     public void displayLoginSuccessful() {
         //create lobby
         System.out.println("You have been logged in successfully");
+        isLogged = true;
     }
 
     @Override
@@ -248,12 +255,30 @@ public class GUI extends Application implements ViewInterface {
     }
 
     @Override
-    public void displayDisconnected(String username) {
+    public void displayDisconnectedUser(String description) {
         Platform.runLater(() -> {
-            // Init Popup
-            PopupStage popupStage = new DisconnectedPopup(primaryStage, username);
+            confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to continue creating a new match?", () -> {
+                Platform.exit();
+                System.exit(0);
+            });
+            confirmPopup.setCopyConfirmButton("Exit");
+            confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            popupStage.show();
+            confirmPopup.show();
+        });
+    }
+
+    @Override
+    public void displayDisconnected() {
+        Platform.runLater(() -> {
+            confirmPopup = new ConfirmPopup(primaryStage, "I'm sorry, the connection to the server was lost :(", () -> {
+                Platform.exit();
+                System.exit(0);
+            });
+            confirmPopup.setCopyConfirmButton("Exit");
+            confirmPopup.setClass("disconnected-popup");
+            // Show Popup
+            confirmPopup.show();
         });
     }
 

@@ -23,7 +23,7 @@ public class LoseOtherCantLevelUp extends DefaultLose{
 
 
     /**
-     * This method returns TRUE and resets the flag  if and oly if all the workers of a player cannot move
+     * This method returns TRUE and resets the flag  if and only if all the workers of a player cannot move
      * @param strategyMove it's the strategy linked to the card of the player
      * @return TRUE if and only if all the workers of a player cannot move according to his card
      */
