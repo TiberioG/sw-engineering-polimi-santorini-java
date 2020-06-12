@@ -261,7 +261,7 @@ public class GUI extends Application implements ViewInterface {
                 Platform.exit();
                 System.exit(0);
             });
-            confirmPopup.setCopyConfirmButton("Exit");
+            confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
             confirmPopup.show();
@@ -275,7 +275,7 @@ public class GUI extends Application implements ViewInterface {
                 Platform.exit();
                 System.exit(0);
             });
-            confirmPopup.setCopyConfirmButton("Exit");
+            confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
             confirmPopup.show();

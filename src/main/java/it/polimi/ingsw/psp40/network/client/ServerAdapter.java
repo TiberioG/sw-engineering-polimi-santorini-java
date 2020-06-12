@@ -62,15 +62,11 @@ public class ServerAdapter implements Runnable
       handleServerConnection();
     } catch (IOException | ClassNotFoundException e) {
       //e.printStackTrace();
-      if (e instanceof SocketTimeoutException) {
-        notifyServerLost();
-      } else {
-        System.out.println("Server has died or protocol violation");
-        try {
-          server.close();
-        } catch (IOException ex) {
-        }
-      }
+      notifyServerLost();
+      //System.out.println("Server has died or protocol violation");
+      try {
+        server.close();
+      } catch (IOException ex) {}
     }
   }
 
