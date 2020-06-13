@@ -53,7 +53,7 @@ public class Server
   {
     FileHandler fh;
     int SOCKET_PORT;
-    String logPath = "./";
+    String logPath = "./logfile.log";
 
     // i wanna add port as 1st argument, path for logger as second
     if (args.length > 1) {
@@ -72,7 +72,7 @@ public class Server
 
     try {
       // add file to logger
-      fh = new FileHandler(logPath +"MyLogFile.log");
+      fh = new FileHandler(logPath);
       LOGGER.addHandler(fh);
       SimpleFormatter formatter = new SimpleFormatter();
       fh.setFormatter(formatter);
