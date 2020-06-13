@@ -19,29 +19,35 @@
 -->
 
 ## Building with Maven
-To build the project with Maven we offer the following profiles:
-* server : run maven deploy to build server.jar
-* client : run maven deploy to build client.jar
+To build the project with Maven we offer the following profiles
+* server : ` mvn package -Pserver `
+* client : ` mvn package -Pclient `
 
+For a faster build you can skip the unit tests activating also the profile `-Pnotest `
+
+The output directory for the jars is set to [/deliveries/final/jar](/deliveries/final/jar)
 
 ## Using provided jars
 
 If you want you can use the jars we already built for you, you can find them here:
 [here](/deliveries/final/jar)
-##Running
-here are the instructions to run the game
 
-### Server
+
+##Running
+Here are the instructions to run the game
+
+### Use our server
+We created for you a server you can use to play [santorini40.xyz](http://santorini40.xyz)
+Please use port 1234.
+
+### Run your server
 If you want to run the server on your machine you can use the following command
 ```bash
 java -jar server.jar
 ```
-You can also play on our server reachable at:
-santorini40.xyz:1234
-
 
 ## Client 
-default loads the gui, if you wanna use our CoolCli please add cli
+Default loads the gui, if you wanna use our CoolCli please add cli
 ```bash
 java -jar client.jar [cli] 
 ```
