@@ -82,7 +82,7 @@ public class MatchHistory {
                 while(iterator.hasNext() && jsonObjectOfOldMatch == null) {
                     JsonElement currentJsonElement = iterator.next();
                     Integer oldMatchId = JsonAdapter.getGsonBuilder().fromJson(currentJsonElement.getAsJsonObject().get("matchId"), new TypeToken<Integer>() {}.getType());
-                    if (oldMatchId == matchId) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
+                    if (oldMatchId.equals(matchId)) jsonObjectOfOldMatch = currentJsonElement.getAsJsonObject();
                 }
                 if (jsonObjectOfOldMatch != null) jsonArray.remove(jsonObjectOfOldMatch);
             }

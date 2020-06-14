@@ -1,13 +1,10 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import animatefx.animation.ZoomIn;
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
-import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -258,18 +255,20 @@ public class GUI extends Application implements ViewInterface {
     public void displayDisconnectedUser(String description) {
         Platform.runLater(() -> {
             confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to continue creating a new match?", () -> {
+                displaySetup();
+            },() -> {
                 Platform.exit();
                 System.exit(0);
             });
-            confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            confirmPopup.show();
+            confirmPopup.showWithAnimation();
         });
     }
 
     @Override
     public void displayDisconnected() {
+        isLogged = false;
         Platform.runLater(() -> {
             confirmPopup = new ConfirmPopup(primaryStage, "I'm sorry, the connection to the server was lost :(", () -> {
                 Platform.exit();
@@ -278,7 +277,7 @@ public class GUI extends Application implements ViewInterface {
             confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            confirmPopup.show();
+            confirmPopup.showWithAnimation();
         });
     }
 
@@ -425,7 +424,9 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayWinnerMessage() {
         Platform.runLater(() -> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true, () -> {
+                displaySetup();
+            });
             popup.showWithAnimation();
         });
     }
@@ -433,8 +434,10 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayLoserMessage(Player winningPlayer) {
         Platform.runLater(()-> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
-            popup.setWinner(winningPlayer);
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false, () -> {
+                displaySetup();
+            });
+            popup.setWinningPlayer(winningPlayer);
             popup.showWithAnimation();
         });
     }
@@ -442,9 +445,13 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayLoserPlayer(Player player) {
         Platform.runLater(()-> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
-            popup.setLoser(player);
-            popup.showWithAnimation();
+            confirmPopup = new ConfirmPopup(primaryStage, player.getName() + " has lost!", () -> {
+               confirmPopup.hide();
+            });
+            confirmPopup.setLabelConfirmButton("Okay");
+            confirmPopup.setClass("loser-popup");
+            // Show Popup
+            confirmPopup.showWithAnimation();
         });
     }
 

@@ -11,9 +11,9 @@ import javafx.stage.Stage;
 public class ConfirmPopup extends PopupStage {
     private FunctionInterface confirmFunction;
     private FunctionInterface denyFunction;
-    private String labelConfirmButton = "YES";
-    private String labelDenyButton = "NO";
     private String text;
+    private Button confirmButton;
+    private Button denyButton;
 
     public ConfirmPopup(Stage ownerStage, String text, FunctionInterface confirmFunction, FunctionInterface denyFunction) {
         super(ownerStage);
@@ -38,12 +38,12 @@ public class ConfirmPopup extends PopupStage {
         UtilsGUI.addClassToElement(vBox, nameClass);
     }
 
-    public void setLabelConfirmButton(String copy) {
-        labelConfirmButton = copy.toUpperCase();
+    public void setLabelConfirmButton(String label) {
+        confirmButton.setText(label.toUpperCase());
     }
 
     public void setLabelDenyButton(String label) {
-        labelDenyButton = label.toUpperCase();
+        denyButton.setText(label.toUpperCase());
     }
 
     private void createText() {
@@ -56,7 +56,7 @@ public class ConfirmPopup extends PopupStage {
     }
 
     private void createOneButton() {
-        Button confirmButton = createButton(labelConfirmButton);
+        confirmButton = createButton("YES");
         confirmButton.setOnAction(actionEvent -> {
             removeEffect();
             this.confirmFunction.executeFunction();
@@ -65,8 +65,7 @@ public class ConfirmPopup extends PopupStage {
     }
 
     private void createTwoButtons() {
-
-        Button confirmButton = createButton(labelConfirmButton);
+        confirmButton = createButton("YES");
         confirmButton.setPrefHeight(35);
         confirmButton.setPrefWidth(80);
         confirmButton.setOnAction(actionEvent -> {
@@ -74,7 +73,7 @@ public class ConfirmPopup extends PopupStage {
             this.confirmFunction.executeFunction();
         });
 
-        Button denyButton = createButton(labelDenyButton);
+        denyButton = createButton("NO");
         denyButton.setPrefHeight(35);
         denyButton.setPrefWidth(80);
         denyButton.setOnAction(actionEvent -> {

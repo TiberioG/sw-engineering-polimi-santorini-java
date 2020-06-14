@@ -192,8 +192,7 @@ public class TurnManager {
 
 
         if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
-            match.setWinningPlayer(getCurrentPlayer().getName());
-            disconnectUser(getCurrentPlayer().getName());
+            setWinningPlayer(getCurrentPlayer().getName());
             return;
         }
 
@@ -232,8 +231,7 @@ public class TurnManager {
 
         currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
         if (turnsMap.size() == 1) {
-            match.setWinningPlayer(currentTurn.getPlayer().getName());
-            disconnectUser(currentTurn.getPlayer().getName());
+            setWinningPlayer(currentTurn.getPlayer().getName());
         } else {
             updateVirtualView(new Message("ALL", TypeOfMessage.PLAYER_HAS_LOST, losePlayer));
             inizializedCurrentTurn();
@@ -275,6 +273,15 @@ public class TurnManager {
      */
     private void updateVirtualView(Message message) {
         if (virtualView != null) virtualView.displayMessage(message);
+    }
+
+    /**
+     * this method call the setWinningPlayer method of the {} and provides for the disconnection of users
+     * @param name the username of the winning player
+     */
+    private void setWinningPlayer(String name) {
+        match.setWinningPlayer(name);
+        match.getPlayers().forEach(player -> disconnectUser(player.getName()));
     }
 
     /**
