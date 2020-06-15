@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
+import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -77,51 +78,9 @@ public class GUI extends Application implements ViewInterface {
         client = new Client();
         client.setView(this);
 
+        // showSceneForTest();
+
         displaySetup();
-
-/*        createMainScene("/FXML/GameScreen.fxml", () -> {
-            primaryStage.setResizable(true);
-            primaryStage.show();
-            gameScreenController = fxmlLoader.getController();
-            gameScreenController.setClient(client);
-            gameScreenController.setPrimaryStage(primaryStage);
-            client.setUsername("Andrea");
-
-            Card card0 = CardManager.initCardManager().getCardById(0);
-            Card card1 = CardManager.initCardManager().getCardById(1);
-            Card card2 = CardManager.initCardManager().getCardById(2);
-            Player player0 = new Player("Andrea", new Date());
-            player0.setCurrentCard(card0);
-            Player player1 = new Player("Pippo", new Date());
-            player1.setCurrentCard(card1);
-            Player player2 = new Player("Paperino", new Date());
-            player2.setCurrentCard(card2);
-            List<Player> playerList = new ArrayList<>();
-            playerList.add(player0);
-            playerList.add(player1);
-            playerList.add(player2);
-            gameScreenController.setPlayersInfo(playerList);
-        });*/
-
-/*        createMainScene("/FXML/LobbyScreen.fxml", () -> {
-            primaryStage.show();
-            lobbyScreenController = fxmlLoader.getController();
-            lobbyScreenController.setClient(client);
-            lobbyScreenController.setPrimaryStage(primaryStage);
-            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
-            lobbyScreenController.addPlayerToLobby("ciaoen");
-            lobbyScreenController.addPlayerToLobby(" asa aswa as");
-        });*/
-
-/*        createMainScene("/FXML/CardScreen.fxml", () -> {
-            primaryStage.show();
-            cardScreenController = fxmlLoader.getController();
-            cardScreenController.setClient(client);
-            cardScreenController.setPrimaryStage(primaryStage);
-            //cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
-        });*/
-
-
     }
 
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
@@ -254,7 +213,8 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayDisconnectedUser(String description) {
         Platform.runLater(() -> {
-            confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to continue creating a new match?", () -> {
+            confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to create a new match?", () -> {
+                this.isLogged = false;
                 displaySetup();
             },() -> {
                 Platform.exit();
@@ -262,7 +222,7 @@ public class GUI extends Application implements ViewInterface {
             });
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            confirmPopup.showWithAnimation();
+            GUI.showPopup(confirmPopup, 2);
         });
     }
 
@@ -277,7 +237,7 @@ public class GUI extends Application implements ViewInterface {
             confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            confirmPopup.showWithAnimation();
+            GUI.showPopup(confirmPopup, 2);
         });
     }
 
@@ -427,7 +387,7 @@ public class GUI extends Application implements ViewInterface {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true, () -> {
                 displaySetup();
             });
-            popup.showWithAnimation();
+            GUI.showPopup(popup);
         });
     }
 
@@ -438,7 +398,7 @@ public class GUI extends Application implements ViewInterface {
                 displaySetup();
             });
             popup.setWinningPlayer(winningPlayer);
-            popup.showWithAnimation();
+            GUI.showPopup(popup);
         });
     }
 
@@ -451,13 +411,18 @@ public class GUI extends Application implements ViewInterface {
             confirmPopup.setLabelConfirmButton("Okay");
             confirmPopup.setClass("loser-popup");
             // Show Popup
-            confirmPopup.showWithAnimation();
+            GUI.showPopup(confirmPopup, 1.5);
         });
     }
 
     public static void showPopup(PopupStage popupArg) {
+        showPopup(popupArg, 1);
+    }
+
+    public static void showPopup(PopupStage popupArg, double speedFactor) {
+        deletePopup();
         popup = popupArg;
-        popup.show();
+        popup.showWithAnimation(speedFactor);
     }
 
     public static void deletePopup() {
@@ -466,4 +431,71 @@ public class GUI extends Application implements ViewInterface {
             popup = null;
         }
     }
+
+    // method to show a specific scene at startup --> only for testing
+    private void showSceneForTest() {
+        /*        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            primaryStage.show();
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            Player player2 = new Player("Paperino", new Date());
+            player2.setCurrentCard(card2);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerList.add(player2);
+            gameScreenController.setPlayersInfo(playerList);
+        });*/
+
+/*        createMainScene("/FXML/LobbyScreen.fxml", () -> {
+            primaryStage.show();
+            lobbyScreenController = fxmlLoader.getController();
+            lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
+            lobbyScreenController.addPlayerToLobby("ciaoen");
+            lobbyScreenController.addPlayerToLobby(" asa aswa as");
+        });*/
+
+/*        createMainScene("/FXML/CardScreen.fxml", () -> {
+            primaryStage.show();
+            cardScreenController = fxmlLoader.getController();
+            cardScreenController.setClient(client);
+            cardScreenController.setPrimaryStage(primaryStage);
+            //cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
+        });*/
+
+/*        createMainScene("/FXML/PlayerScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            primaryStage.show();
+            playerScreenController = fxmlLoader.getController();
+            playerScreenController.setClient(client);
+            playerScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerScreenController.displayPlayersForInitialSelection(playerList);
+        });*/
+    }
+
 }

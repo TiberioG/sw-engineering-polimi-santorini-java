@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import animatefx.animation.AnimationFX;
 import animatefx.animation.ZoomIn;
+import javafx.animation.Animation;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -88,7 +90,13 @@ public class PopupStage extends Stage {
     }
 
     protected void showWithAnimation() {
+        showWithAnimation(1);
+    }
+
+    protected void showWithAnimation(double speedFactor) {
         this.show();
-        new ZoomIn(pane).play();
+        AnimationFX animation = new ZoomIn(pane);
+        animation.setSpeed(speedFactor);
+        animation.play();
     }
 }

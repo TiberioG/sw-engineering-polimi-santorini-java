@@ -190,7 +190,6 @@ public class TurnManager {
         currentTurn.updateCurrentPhaseFromType(type);
         match.getMatchProperties().getPerformedPhases().add(type);
 
-
         if (currentTurn.getCurrentPhase().getNeedCheckForVictory() && currentTurn.checkWin()) {
             setWinningPlayer(getCurrentPlayer().getName());
             return;

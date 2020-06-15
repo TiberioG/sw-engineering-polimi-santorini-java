@@ -36,7 +36,7 @@ public class LobbyScreenController extends ScreenController {
     }
 
 
-    public void removePlayerToLobby(String nameOfPlayer) {
+    public void removePlayerFromLobby(String nameOfPlayer) {
             listOfPlayers.remove(nameOfPlayer);
             listViewPlayers.setItems(listOfPlayers);
             if (listOfPlayers.size() == 0) subTitleLobbyText.setVisible(false);
@@ -46,16 +46,15 @@ public class LobbyScreenController extends ScreenController {
         getClient().sendToServer(new Message(TypeOfMessage.RESTORE_MATCH, restoreMatch));
         restoreMatchPopup.hide();
         GUI.deletePopup();
-
     }
 
     public void showRestoreMatchPopup() {
-        restoreMatchPopup = new ConfirmPopup(getPrimaryStage(), "A game was found broken, you want to restore it?", () -> {
+        restoreMatchPopup = new ConfirmPopup(getPrimaryStage(), "A game was found broken, do you want to restore it?", () -> {
             onActionRestoreMatchButton(true);
         }, () -> {
             onActionRestoreMatchButton(false);
         });
-        GUI.showPopup(restoreMatchPopup);
+        GUI.showPopup(restoreMatchPopup, 2);
     }
 
 

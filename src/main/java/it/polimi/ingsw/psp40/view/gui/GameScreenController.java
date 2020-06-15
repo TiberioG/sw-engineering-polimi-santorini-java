@@ -263,7 +263,7 @@ public class GameScreenController extends ScreenController {
 
                     sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(chosenColor, workersCoord)));
 
-                    setInstructionsLabelText("Aspetta il tuo turno...");
+                    setInstructionsLabelText("Wait for your turn...");
                 }
             } else {
                 // todo: u can't place a worker here
@@ -382,7 +382,7 @@ public class GameScreenController extends ScreenController {
                 selectedPhases.remove(selectedPhases.size() - 1);
                 askDesiredPhase();
             });
-            GUI.showPopup(confirmPopup);
+            GUI.showPopup(confirmPopup, 2);
         }
     }
 
@@ -443,7 +443,7 @@ public class GameScreenController extends ScreenController {
                     askDesiredPhase();
                 }
             });
-            GUI.showPopup(confirmPopup);
+            GUI.showPopup(confirmPopup, 2);
         }
 
     }

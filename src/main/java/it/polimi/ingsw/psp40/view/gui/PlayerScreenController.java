@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -165,6 +166,7 @@ public class PlayerScreenController extends ScreenController {
         label.setFont(new Font(fontSize));
         Text text = new Text(label.getText());
         text.setFont(label.getFont());
+        text.setFill(Color.WHITESMOKE);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setMouseTransparent(true); // text is transparent to mouse events
 
@@ -217,6 +219,9 @@ public class PlayerScreenController extends ScreenController {
     void end() {
         if (playerSelected.getValue() != null) {
             getClient().sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected.getValue()));
+
+            WaitingPopup popup = new WaitingPopup(getPrimaryStage(), "Waiting for the other players");
+            GUI.showPopup(popup, 2);
         }
 
     }

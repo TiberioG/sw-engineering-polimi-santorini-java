@@ -177,8 +177,8 @@ public class CardScreenController extends ScreenController {
 
             getClient().sendToServer(message);
 
-            WaitingPopup popup = new WaitingPopup(getPrimaryStage(), "Waiting other players");
-            GUI.showPopup(popup);
+            WaitingPopup popup = new WaitingPopup(getPrimaryStage(), "Waiting for the other players");
+            GUI.showPopup(popup, 2);
         }
 
     }

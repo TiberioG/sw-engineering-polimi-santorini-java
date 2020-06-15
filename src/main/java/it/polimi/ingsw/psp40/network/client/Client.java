@@ -319,6 +319,7 @@ public class Client implements ServerObserver {
   public void sendToServer(Message message) {
     message.setUsername(this.username); // add the username to each message
     message.setUUID(this.UUID); // add the UUID to each message. Used to validate the user server side
+    if(message.getTypeOfMessage() == TypeOfMessage.LOGIN) message.setUUID(null);
     serverAdapter.send(message);
   }
 

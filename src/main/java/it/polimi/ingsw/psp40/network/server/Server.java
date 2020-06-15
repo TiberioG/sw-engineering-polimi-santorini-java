@@ -115,6 +115,9 @@ public class Server
    * @param message message received
    */
   public void receivedMessage(Message message) {
+    if (message.getTypeOfMessage() == null)
+      return;
+
     switch (message.getTypeOfMessage()) {
       case LOGIN:
         handleLogin((LoginMessage)message);
@@ -439,6 +442,10 @@ public class Server
       //set matchID for clean match
       matchID = UUIDtoMatchMap.get(UUID);
       matchToUUIDsMap.get(matchID).remove(UUID);
+      if(matchToUUIDsMap.get(matchID).size() == 0) {
+        matchToUUIDsMap.remove(matchID);
+        matchToVirtualViewMap.remove(matchID);
+      }
       UUIDtoMatchMap.remove(UUID);
     } else {
       //set matchID for clean lobby
