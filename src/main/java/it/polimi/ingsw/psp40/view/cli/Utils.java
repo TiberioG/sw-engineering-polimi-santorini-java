@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * it used to be a "small" library of utilities for the CLI, now is pretty big
@@ -445,11 +446,18 @@ public class Utils {
     }
 
     public static boolean isValidUsername(String input){
-        return !(input.equalsIgnoreCase("ALL2") || input.isEmpty() || input.matches("^\\s*$") || input.equalsIgnoreCase("Hitler"));
+        return !(input.equalsIgnoreCase("ALL") || input.isEmpty() || input.matches("^\\s*$") || input.equalsIgnoreCase("Hitler"));
     }
 
     public static boolean isValidIp(String input) {
-        return input.matches("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$") || input.equals("localhost") || input.equals("tiberio.xyz") || input.equalsIgnoreCase("santorini40.xyz");
+        Pattern p = Pattern.compile("^"
+                + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
+                + "|"
+                + "localhost" // localhost
+                + "|"
+                + "((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?))$"); // Ip
+
+        return p.matcher(input).matches();
     }
 
     public static boolean isValidPort(Integer input) {

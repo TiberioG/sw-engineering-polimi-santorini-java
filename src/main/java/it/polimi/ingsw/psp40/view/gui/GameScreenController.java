@@ -28,6 +28,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.spi.AbstractResourceBundleProvider;
 import java.util.stream.Collectors;
 
 /**
@@ -149,6 +150,7 @@ public class GameScreenController extends ScreenController {
         });*/
 
         disableMap(true); // start with map disabled
+        setInstructionsLabelText("Wait for your turn...");
         buildBackgrounds();
 
     }
@@ -481,7 +483,10 @@ public class GameScreenController extends ScreenController {
 
             setInstructionsLabelText("Select the desired action");
 
-        } else phaseButtonClicked(phaseList.get(0).getType());
+        } else {
+            disableMap(false);
+            phaseButtonClicked(phaseList.get(0).getType());
+        }
     }
 
     private void phaseButtonClicked(PhaseType selectedPhase) {
@@ -592,26 +597,6 @@ public class GameScreenController extends ScreenController {
 
     }
 
-    private Text getUsernameText(String username, AnchorPane pane, Double fontSize) {
-        Label label = new Label(username);
-        label.setFont(new Font(fontSize));
-        Text text = new Text(label.getText());
-        text.setFont(label.getFont());
-        text.setTextAlignment(TextAlignment.CENTER);
-
-        double textWidth = text.getBoundsInLocal().getWidth();
-        double maxTextWidth = pane.getBoundsInLocal().getWidth() * 0.90;
-        if(textWidth > maxTextWidth) { // if username is too long, truncate it
-            double estimatedWidthForChar = textWidth / text.getText().length();
-            int charsToRemove = (int) ((textWidth - maxTextWidth) / estimatedWidthForChar);
-            String truncatedUsername = username.substring(0, username.length() - charsToRemove - 1);
-            truncatedUsername += "...";
-            text.setText(truncatedUsername);
-        }
-
-        return text;
-    }
-
     /* HELPER METHODS */
 
     private void highlightAvailableCells(List<Cell> availableCells) {
@@ -691,7 +676,14 @@ public class GameScreenController extends ScreenController {
     protected void updateCell(Cell cell) {
         int x = cell.getCoordX();
         int y = cell.getCoordY();
+
+        boolean cellAlreadyUpdated = levels_dx.stream().anyMatch( _block -> _block.row == x && _block.col == y && _block.component.getComponentCode() == cell.getTower().getTopComponent().getComponentCode()); // if the updateCell(cell) is called for the component that I've just built, skip the update because the view is already updated
+        if(cellAlreadyUpdated) {
+            return;
+        }
+
         Block block = null;
+
         switch (cell.getTower().getTopComponent().getComponentCode()) {
             case 1:
                 block = new Level1(x, y);
@@ -759,7 +751,7 @@ public class GameScreenController extends ScreenController {
         if(isMapDisabled != disable) {
             isMapDisabled = disable;
             islandsGroup.setDisable(disable);
-/*            if (disable) {
+            /*if (disable) {
                 islandsGroup.setEffect(grayscale);
             } else {
                 islandsGroup.setEffect(null);

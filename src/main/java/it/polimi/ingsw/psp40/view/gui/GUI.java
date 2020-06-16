@@ -119,6 +119,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displaySetup() {
+        resetControllers();
         createMainScene("/FXML/SetupScreen.fxml", () -> {
             primaryStage.setTitle("Santorini");
             primaryStage.setResizable(false);
@@ -430,6 +431,14 @@ public class GUI extends Application implements ViewInterface {
             popup.close();
             popup = null;
         }
+    }
+
+    private void resetControllers() {
+        setupScreenController = null;
+        lobbyScreenController = null;
+        gameScreenController = null;
+        cardScreenController = null;
+        playerScreenController = null;
     }
 
     // method to show a specific scene at startup --> only for testing
