@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.Component;
 import javafx.scene.image.Image;
 
 /**
@@ -14,6 +15,7 @@ public class Level3 extends Block {
 
     private Level3(int row, int col, GUIProperties.CameraType cameraType) {
         super(row, col, 3);
+        this.component = Component.THIRD_LEVEL;
         this.setPreserveRatio(true);
         this.setFitWidth(GUIProperties.level3Width);
         this.setFitHeight(GUIProperties.level3Height);

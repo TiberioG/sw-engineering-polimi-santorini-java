@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.Component;
 import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -12,6 +13,7 @@ public abstract class Block extends ImageView {
     protected int row;
     protected int col;
     protected int z;
+    protected Component component;
 
     GUIProperties.CameraType currentCamera = null;
 

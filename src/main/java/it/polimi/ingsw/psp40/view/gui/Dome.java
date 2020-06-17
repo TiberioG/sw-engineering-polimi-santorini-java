@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.Component;
 import javafx.scene.image.Image;
 
 /**
@@ -18,6 +19,7 @@ public class Dome extends Block {
 
     private Dome(int row, int col, int z, GUIProperties.CameraType cameraType) {
         super(row, col, z);
+        this.component = Component.DOME;
         this.setPreserveRatio(true);
         this.setFitWidth(GUIProperties.domeWidth);
         this.setFitHeight(GUIProperties.domeHeight);

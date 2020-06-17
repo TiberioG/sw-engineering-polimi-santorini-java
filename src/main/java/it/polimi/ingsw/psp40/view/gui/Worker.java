@@ -171,31 +171,47 @@ public class Worker extends Block {
     }
 
     private void startTransition(double endX, double endY) {
-        Timeline move1 = new Timeline();
-        move1.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(0.5),
-                new KeyValue(this.yProperty(), this.getY()-100)
-        ));
-
-        Timeline move2 = new Timeline();
-        move2.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(1.0),
-                new KeyValue(this.xProperty(), endX),
-                new KeyValue(this.yProperty(), endY-100)
-        ));
-
-        Timeline move3 = new Timeline();
-        move3.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(0.5),
-                new KeyValue(this.yProperty(), endY)
-        ));
-        move3.setOnFinished(e -> {
-            loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it's overridden in GameScreenController
-            this.setDisable(false);
-        });
-
         this.setDisable(true);
-        moveAnimation = new SequentialTransition(move1, move2, move3);
+
+        if (currentCamera.equals(GUIProperties.CameraType.TOP)) {
+            Timeline move1 = new Timeline();
+            move1.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(0.5),
+                    new KeyValue(this.xProperty(), endX),
+                    new KeyValue(this.yProperty(), endY)
+            ));
+            move1.setOnFinished(e -> {
+                loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it's overridden in GameScreenController
+                this.setDisable(false);
+            });
+            moveAnimation = new SequentialTransition(move1);
+        } else {
+            Timeline move1 = new Timeline();
+            move1.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(0.5),
+                    new KeyValue(this.yProperty(), this.getY()-100)
+            ));
+
+            Timeline move2 = new Timeline();
+            move2.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(1.0),
+                    new KeyValue(this.xProperty(), endX),
+                    new KeyValue(this.yProperty(), endY-100)
+            ));
+
+            Timeline move3 = new Timeline();
+            move3.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(0.5),
+                    new KeyValue(this.yProperty(), endY)
+            ));
+
+            move3.setOnFinished(e -> {
+                loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it's overridden in GameScreenController
+                this.setDisable(false);
+            });
+            moveAnimation = new SequentialTransition(move1, move2, move3);
+        }
+
         moveAnimation.play();
     }
 

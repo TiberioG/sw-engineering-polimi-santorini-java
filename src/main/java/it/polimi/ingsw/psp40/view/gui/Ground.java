@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import it.polimi.ingsw.psp40.commons.Component;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 
@@ -15,6 +16,7 @@ public class Ground extends Block {
 
     private Ground(int row, int col, GUIProperties.CameraType cameraType) {
         super(row, col, 0);
+        this.component = Component.GROUND;
         this.setOpacity(0);
         this.setFitWidth(GUIProperties.tileWidth);
         this.setFitHeight(GUIProperties.tileHeight);
