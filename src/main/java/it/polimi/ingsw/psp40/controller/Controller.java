@@ -133,6 +133,7 @@ public class Controller implements Listener<Message> {
                 e.printStackTrace();
             }
         });
+        match.buildOrderedList(Comparator.comparing(Player::getBirthday).reversed());
         match.setCurrentPlayer(match.getPlayers().get(0));
 
         if (checkExistanceOfOldMatch(playersData)) {
@@ -215,7 +216,6 @@ public class Controller implements Listener<Message> {
     @SuppressWarnings("unused")
     private void setFirstPlayer(Message message) {
         String nameOfFirstPlayer = (String)message.getPayload(String.class);
-        match.buildOrderedList(Comparator.comparing(Player::getBirthday)); //fa lista ordinata prima
         match.setCurrentPlayer(nameOfFirstPlayer); //mette il primo player selezionato dalla view
         match.rescaleListFromCurrentPlayer();
         virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getPlayers())); //getting first player is the fist who position workers
@@ -304,22 +304,6 @@ public class Controller implements Listener<Message> {
     private void endTurn(Message message) {
         turnManager.endTurn();
     }
-
-    /*private void initNewMatch(Message message) {
-        if (match.isMatchedEnded() == true) {
-            String nameOfWinningPlayer = match.getCurrentPlayer().getName();
-            List<Player> playerList = match.getPlayers();
-            createNewMatch();
-
-            playerList.forEach(player -> {
-                addPlayerToMatch(player.getName(), player.getBirthday());
-            });
-
-            match.setCurrentPlayer(match.getPlayerByName(nameOfWinningPlayer));
-            match.rescaleListFromCurrentPlayer();
-            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
-        };
-    }*/
 
     /**
      * Method that allows to call methods through reflections according to the type of the {@link Message} received

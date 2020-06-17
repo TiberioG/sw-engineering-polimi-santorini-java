@@ -226,13 +226,13 @@ public class TurnManager {
         match.selectNextCurrentPlayer();
         turnsMap.remove(losePlayer.getName());
         match.removePlayer(losePlayer.getName());
-        disconnectUser(losePlayer.getName());
 
         currentTurn = turnsMap.get(match.getCurrentPlayer().getName());
         if (turnsMap.size() == 1) {
             setWinningPlayer(currentTurn.getPlayer().getName());
         } else {
             updateVirtualView(new Message("ALL", TypeOfMessage.PLAYER_HAS_LOST, losePlayer));
+            disconnectUser(losePlayer.getName());
             inizializedCurrentTurn();
         }
     }
