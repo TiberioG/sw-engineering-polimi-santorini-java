@@ -53,7 +53,7 @@ public class Server
   {
     FileHandler fh;
     int SOCKET_PORT;
-    String logPath = "./";
+    String logPath = "./logfile.log";
 
     // i wanna add port as 1st argument, path for logger as second
     if (args.length > 1) {
@@ -72,7 +72,7 @@ public class Server
 
     try {
       // add file to logger
-      fh = new FileHandler(logPath +"MyLogFile.log");
+      fh = new FileHandler(logPath);
       LOGGER.addHandler(fh);
       SimpleFormatter formatter = new SimpleFormatter();
       fh.setFormatter(formatter);
@@ -87,6 +87,7 @@ public class Server
       System.out.println("Waiting for connections...");
       LOGGER.info("Socket started at port: " + SOCKET_PORT);
     } catch (IOException e) {
+      LOGGER.severe("Cannot open server socket");
       System.out.println("Cannot open server socket");
       System.exit(1);
       return;
@@ -105,6 +106,8 @@ public class Server
       } catch (IOException e) {
         System.out.println(e.getClass().getCanonicalName());
         System.out.println("Connection dropped");
+        LOGGER.info(e.getClass().getCanonicalName());
+        LOGGER.info("Connection dropped: " );
       }
     }
   }

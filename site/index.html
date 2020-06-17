@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Santorini Server logger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+</head>
+
+<style>
+    div {
+        white-space: pre-line;
+    }
+
+</style>
+<body>
+<script src="https://code.jquery.com/jquery.js"></script>
+<div class="page-header">
+    <h1>Santorini server <small>status</small></h1>
+</div>
+<div id="statusDiv" role="alert">
+</div>
+
+<div id="containerDiv" >
+</div>
+<script>
+    function getLog() {
+        $.ajaxSetup({
+            cache: false
+        });
+        $.ajax({
+            url: './log/logfile.log',
+            dataType: 'text',
+            success: function(text) {
+                $("#containerDiv").addClass("card card-body bg-light").text(text);
+                $("#statusDiv").removeClass("alert alert-danger").addClass("alert alert-success").text("Server running");
+                setTimeout(getLog, 100); // refresh every sec
+            },
+            error: function () {
+                $("#statusDiv").removeClass("alert alert-success").addClass("alert alert-danger").text("Server not running");
+                $("#containerDiv").text("");
+                setTimeout(getLog, 100); // refresh every sec
+            }
+        })
+    }
+    getLog();
+</script>
+
+
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

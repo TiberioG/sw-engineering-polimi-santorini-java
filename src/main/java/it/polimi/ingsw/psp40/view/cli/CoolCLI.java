@@ -66,6 +66,7 @@ public class CoolCLI implements ViewInterface {
 
     private IslandAdapter myisland;
     private Hourglass hourbig;
+    private Hourglass hourcent;
     private Hourglass hourlat;
     private ExecutorService executor;
 
@@ -364,8 +365,8 @@ public class CoolCLI implements ViewInterface {
      */
     @Override
     public void displayGenericMessage(String message) {
-        left.clear();
-        lower.center(message,DELAY);
+        //left.clear();
+        //lower.center(message,DELAY);
         Utils.doTimeUnitSleep(SPEED);
     }
 
@@ -427,7 +428,8 @@ public class CoolCLI implements ViewInterface {
 
         /* sending to server */
         client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-
+        Utils.doTimeUnitSleep(500);
+        waiting();
     }
 
     @Override
@@ -445,6 +447,7 @@ public class CoolCLI implements ViewInterface {
         client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
 
         center.clear();
+        killHourglass();
         try {
             center.center(URLReader(getClass().getResource("/ascii/cards/" + personalIdCard)), DELAY);
         } catch (IOException e) {
@@ -467,6 +470,7 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayForcedCard(Card card) {
+        killHourglass();
         thiscard = card;
         center.clear();
         try {
@@ -544,6 +548,7 @@ public class CoolCLI implements ViewInterface {
 
         String playerSelected = playerSelector.selection();
         client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected));
+        waiting();
     }
 
     @Override
@@ -781,7 +786,7 @@ public class CoolCLI implements ViewInterface {
         left.clear();
         lower.clear();
         try {
-            center.centerFixed(URLReader(getClass().getResource("/ascii/loser")), 60, DELAY);
+            center.centerFixed(URLReader(getClass().getResource("/ascii/sadface")), 60, DELAY);
         } catch (IOException e) {
             //e.printStackTrace();
         }
@@ -1151,11 +1156,22 @@ public class CoolCLI implements ViewInterface {
         }
     }
 
+    private void waiting() {
+        left.clear();
+        center.clear();
+        hourcent = new Hourglass(center, lower, true);
+        executor = Executors.newFixedThreadPool(1);
+        executor.execute(hourcent);
+    }
+
 
     /**
      * this kills every hourglass
      */
     private void killHourglass(){
+        if (hourcent!= null){
+            hourcent.cancel();
+        }
         if (hourbig!= null){
             hourbig.cancel();
         }

@@ -26,6 +26,15 @@ import java.util.stream.IntStream;
  * this works also on windows but it's ugly, we used this mainly for debugging and testing
  * @author TiberioG
  */
+
+// fine gioco cipiare gui
+    //disconnessione rimettere ip
+//todo clessidra sempre
+//todo togliere cacca
+
+    //todo descrizione carta
+
+
 public class CLI implements ViewInterface {
     /**
      * Constructor

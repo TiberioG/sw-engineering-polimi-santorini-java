@@ -38,7 +38,8 @@ public class CardScreenController extends ScreenController {
     private TextArea textDescr;
     @FXML
     private TextArea textTitle;
-
+    @FXML
+    private TextArea selex;
     @FXML
     private HBox hbox;
 
@@ -59,6 +60,7 @@ public class CardScreenController extends ScreenController {
 
     protected void displayCardsForInitialSelection(List<Card> cards, int toSelect) {
         this.toSelect = toSelect;
+        selex.setText("Choose " + toSelect + " cards");
         this.toSelectProperty.setValue(this.toSelect);
         typeOfMessageToSend = TypeOfMessage.SET_CARDS_TO_GAME;
         buildCards(cards); // build images
@@ -75,6 +77,7 @@ public class CardScreenController extends ScreenController {
     }
 
     protected void displayCardsForPersonalSelection(List<Card> availableCards) {
+        selex.setText("Choose your card ");
         this.toSelect = 1;
         this.toSelectProperty.setValue(this.toSelect);
         typeOfMessageToSend = TypeOfMessage.SET_CARD_TO_PLAYER;

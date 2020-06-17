@@ -17,3 +17,13 @@ resources/manifest
 #built jars
 classes/artifacts
 
+#bootstrap
+site/css
+site/img
+site/js
+
+#reveal.js for presentation
+site/slides/css
+site/slides/js
+site/slides/lib
+site/slides/plugin
