@@ -25,16 +25,20 @@ public class SquareCell {
 
 
     /**
-     * Constructor
-     * @param levels an array of booleans that represent if a component exists or not
+     * Constructor of a cell
+     * @param levels an array of boolean, true if exists the level corresponding to the array index is
+     * @param startRow the row position in terminal
+     * @param startCol the column position in terminal
      */
-    public SquareCell(boolean[] levels){
+    public SquareCell(boolean[] levels, int startRow, int startCol){
         this.color = null;
         this.worker = false;
         this.levels = levels;
         this.buildable = false;
         this.selected = false;
         this.movable = false;
+        this.startRow = startRow;
+        this.startCol = startCol;
     }
 
     /**
@@ -47,7 +51,7 @@ public class SquareCell {
     }
 
     /**
-     * Sets temporary color to show the cell is buildable if
+     * Sets  color to show the cell is buildable
      * @param buildable true or false
      */
     public void setBuildable(boolean buildable) {
@@ -55,68 +59,76 @@ public class SquareCell {
     }
 
     /**
-     * Sets temporary color to show you can move in this cell
+     * Sets  color to show you can move in this cell
      * @param movable true or false
      */
     public void setMovable(boolean movable) {
         this.movable = movable;
     }
 
+    /**
+     * Sets the cell as selected or not
+     * @param selected boolean
+     */
     public void setSelected(boolean selected){
         this.selected = selected;
     }
 
+    /**
+     * Sets the color of the worker but marks it temporary
+     * used when displaying a move before the server sends back the updated location
+     * @param color of worker
+     */
     public void setTempWorker(Colors color){
         this.color = color;
         this.tempWork = true;
     }
 
+    /**
+     * adds a level
+     * used when displaying a move before the server sends back the updated location
+     * @param level to be added to the array of levels
+     */
     public void setTempLevel(int level){
         this.levels[level] = true;
     }
 
-    public void print(int startRow, int startCol) {
-        this.startRow = startRow;
-        this.startCol = startCol;
-
+    /**
+     * prints the cell in terminal
+     */
+    public void print() {
+        //prints  level if they exists
         for (int i = 0; i<= 4; i++){
-            if (levels[i]){
+            if (levels[i]){ // true means the level is present
                 level(i);
             }
         }
-
         if (worker  || tempWork ) {
-            this.yesWorker();
+            this.yesWorker();    //prints worker
         }
-
         if(buildable){
-            this.special(27);
+            this.special(27); //blue
         }
         if(movable){
-            this.special(27);
+            this.special(27); //blue
         }
         if(selected){
-            this.special(202);
+            this.special(202); //orange
         }
 
-    }
-
-    public void debug(int startRow, int startCol, int row, int col)  {
-        this.startRow = startRow;
-        this.startCol = startCol;
-       this.coordinates(row, col);
     }
 
     /**
-     * This prints all a level of a cell
+     * This prints a level of a cell
      * @param lev int the number of the level
      */
     private void level(int lev){
         int shift = lev;
-        if (lev ==  4){
+        if (lev ==  4){ //if level is for, the size is the same as a level 3
             shift = 3;
         }
-        for (int i = 0; i < hei - shift*2  ; i ++){
+        // this for gradually builds smaller rectangles depending on the level
+        for (int i = 0; i < hei - shift * 2  ; i ++){
             Terminal.moveAbsoluteCursor(startRow + i + shift, startCol + shift );
             for (int j = 0; j < len - shift*2 ; j++){
                 System.out.print(style(lev, " "));
@@ -143,7 +155,7 @@ public class SquareCell {
      * @param row
      * @param col
      */
-    private void coordinates (int row, int col) {
+    public void coordinates (int row, int col) {
         System.out.print(Colors.reset());
         Terminal.moveAbsoluteCursor(startRow + hei - 1  , startCol); // scendo di una riga ogni volta
         System.out.print(row + "," + col);
@@ -197,10 +209,18 @@ public class SquareCell {
         }
     }
 
+    /**
+     * gets len of cell
+     * @return
+     */
     public static int getLen(){
         return len;
     }
 
+    /**
+     * gets height of cell
+     * @return
+     */
     public static int getHei(){
         return hei;
     }

@@ -19,21 +19,26 @@ import java.util.regex.Pattern;
 /**
  * it used to be a "small" library of utilities for the CLI, now is pretty big
  * mainly for input verification, display of tables in ascii art
- * @author tiberioG
+ * @author TiberioG
  */
 public class Utils {
 
     private PrintWriter out ;
     private Scanner in ;
 
+    /**
+     * constructor for utils
+     * @param in Scanner
+     * @param out Printwriter
+     */
     public Utils(Scanner in, PrintWriter out) {
         this.in  = in;
         this.out = out;
     }
 
     /**
-     * just an utiliyt to et longest string in a matrix of strings
-     * @param matrix
+     * just an utility to get longest string in a matrix of strings
+     * @param matrix a matrix of strings
      * @return int of chars of longest string
      */
     public static int longestMatrix(String[][] matrix) {
@@ -51,6 +56,11 @@ public class Utils {
     }
 
 
+    /**
+     * utiliyy to get the maximum length of an array of strings
+     * @param array
+     * @return the maximum length
+     */
     public static int longestArray(String[] array) {
         int maxLength = 0;
         String longestString = "";
@@ -93,7 +103,6 @@ public class Utils {
      * @param maxValue       is the maximum acceptable value of the input
      * @return the value of the input
      */
-
     public int validateIntInput( int minValue, int maxValue) {
         int output;
         try {
@@ -115,7 +124,11 @@ public class Utils {
         return output;
     }
 
-
+    /**
+     * method to read a date and parse it
+     * @param kind string used when asking for which kind of date: example birthday
+     * @return a {@link Date}
+     */
     public Date readDate(String kind){
         DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
         Date date = new Date();
@@ -155,6 +168,14 @@ public class Utils {
     }
 
 
+    /**
+     * Method to parse a date from a string which throws exception if the date is not accepted
+     * @param input the string containing the date
+     * @return an object {@link Date}
+     * @throws ParseException if the format is wrong or is not a date
+     * @throws YoungUserException user too young means the birthdate inserted is after today
+     * @throws OldUserException if the date is before the one defined in {@link Configuration}
+     */
     public static Date isValidDate(String input) throws ParseException, YoungUserException, OldUserException {
         DateFormat dateFormat = new SimpleDateFormat(Configuration.formatDate);
         Date date = dateFormat.parse(input);
@@ -163,9 +184,8 @@ public class Utils {
         try {
             oldest = dateFormat.parse(Configuration.minDate);
         } catch (ParseException e) {
-            //it's impossible to trow excep here ehe
+            //it's impossible to trow excep here
         }
-
         if (date.before(today) && date.after(oldest)){
             return date;
         }else{
@@ -179,6 +199,11 @@ public class Utils {
         return null;
     }
 
+    /**
+     * method to know if a string contains a valid date
+     * @param input the string containing a date
+     * @return true if it's a valid date, false otherwise
+     */
     public static boolean isValidDateBool(String input) {
         try {
            isValidDate(input);
@@ -189,6 +214,13 @@ public class Utils {
         }
     }
 
+    /**
+     * method used to ask a player to insert some numbers, defined as input, and those cannot be repeated
+     * @param min value of accepted input
+     * @param max value of accepted input
+     * @param howmany numbers you want to read
+     * @return a list of the number selected by user
+     */
     public List<Integer> readNotSameNumbers(int min, int max, int howmany){
         List<Integer> numbers = new ArrayList<Integer>();
 
@@ -201,6 +233,12 @@ public class Utils {
         return numbers;
     }
 
+    /**
+     * method used to read coordinates in the format xx,yy
+     * @param min value of each coordinate
+     * @param max value of each coordinate
+     * @return an array of int[2]  containing the coordinates
+     */
     public int[] readPosition(int min, int max){
         int[] coord = new int[2];
         String input;
@@ -217,6 +255,12 @@ public class Utils {
         return coord;
     }
 
+    /**
+     * Method used to print in asciiArt a single column table
+     * @param title of the table, will be made UPPERCASE
+     * @param inputList an array of strings, which are the rows
+     * @param delay millisecond between showing a line and the following
+     */
     public void singleTableCool(String title, String[] inputList, int delay) {
         final  int SPACEADD = 5;
         int height = inputList.length;
@@ -278,6 +322,13 @@ public class Utils {
     }
 
 
+    /**
+     * Method used to get as a string a single column table in asciiart
+     * this method doesn't print!
+     * @param title of the table, will be made UPPERCASE
+     * @param inputList an array of strings, which are the rows
+     * @return a string containing the table in asciiart
+     */
     public String tableString(String title, String[] inputList)  {
         final  int SPACEADD = 5;
         int height = inputList.length;
@@ -333,6 +384,13 @@ public class Utils {
 
     }
 
+    /**
+     * This method returns a box with a title and an empty space
+     * used to create forms
+     * @param title of the form, will be displayed up
+     * @param width of the box
+     * @return the string containing the form in asciiart
+     */
     public String form(String title, int width){
         String titleString = centerString(width, title);
 
@@ -368,7 +426,14 @@ public class Utils {
         return  table.toString();
     }
 
-
+    /**
+     * This method returns a box with a title and a prefill
+     * used to create the form with inside the regexp for the date
+     * @param title of the form, will be displayed up
+     * @param width of the box
+     * @param prefill which is put inside the form
+     * @return the string containing the form in asciiart
+     */
     public String formPrefilled(String title, int width, String prefill){
         String titleString = centerString(width, title);
 
@@ -404,7 +469,10 @@ public class Utils {
         return  table.toString();
     }
 
-
+    /**
+     * Method used in {@link CLI} to print a map as a table
+     * @param stringIsland a matrix containing the strings to be displayed
+     */
     public void printMap(String[][] stringIsland ){
         String lineSplit = "";
         StringJoiner splitJoiner = new StringJoiner("┼", "|", "|");
@@ -433,8 +501,12 @@ public class Utils {
     public static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
-    
 
+
+    /**
+     * method used to validate an ip
+     * @return a string containing a valid ip
+     */
     public String readIp() {
         String ip;
         ip = in.nextLine();
@@ -445,10 +517,20 @@ public class Utils {
         return ip;
     }
 
+    /**
+     * method used to know if the string is a valid uername
+     * @param input the string
+     * @return true if is valid, false otherwise
+     */
     public static boolean isValidUsername(String input){
         return !(input.equalsIgnoreCase("ALL") || input.isEmpty() || input.matches("^\\s*$") || input.equalsIgnoreCase("Hitler"));
     }
 
+    /**
+     * used to know if the input string is a valid ip, or a url
+     * @param input string
+     * @return true if is valid ip or url
+     */
     public static boolean isValidIp(String input) {
         Pattern p = Pattern.compile("^"
                 + "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
@@ -460,6 +542,11 @@ public class Utils {
         return p.matcher(input).matches();
     }
 
+    /**
+     * used to validate the input port
+     * @param input string
+     * @return true if the number is in the range specified in {@link Configuration}
+     */
     public static boolean isValidPort(Integer input) {
         return (input >= Client.MIN_PORT && input <= Client.MAX_PORT);
     }

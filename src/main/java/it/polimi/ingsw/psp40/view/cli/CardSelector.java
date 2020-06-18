@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This class is used to show the list of the names of the cards and the description
+ * This class is used to show the list of the names of the cards and the description in CLI
  * @author TiberioG
  */
 public class CardSelector {
@@ -26,7 +26,7 @@ public class CardSelector {
     private Frame fRight;
 
     /**
-     * Constructor using an hasmap
+     * Constructor using an hashmap
      * @param hashMapCards a map of id and {@link Card}
      * @param toSelect
      * @param container

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * Class used to manage the appearence of Terminal using mainly ansi codes and stty command
- * @author tiberioG
+ * @author TiberioG
  */
 public class Terminal {
     private static String ttyConfig;

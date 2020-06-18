@@ -804,11 +804,24 @@ public class CoolCLI implements ViewInterface {
 
     @Override
     public void displayLoserPlayer(Player player) {
+        killHourglass();
+        left.clear();
+
+        try {
+            this.updateIsland();
+            myisland.print();
+        } catch (IOException | InterruptedException e) {
+            //e.printStackTrace();
+        }
+
+        left.printWrapped("Player " + player.getName() + "has lost");
+
 
     }
 
     @Override
     public void displayCellUpdated(Cell cell) {
+
     }
 
     @Override
@@ -1156,6 +1169,9 @@ public class CoolCLI implements ViewInterface {
         }
     }
 
+    /**
+     * adds another hourglass in the middle of the screen
+     */
     private void waiting() {
         left.clear();
         center.clear();

@@ -29,11 +29,9 @@ import java.util.stream.IntStream;
 
 // fine gioco cipiare gui
     //disconnessione rimettere ip
-//todo clessidra sempre
-//todo togliere cacca
+
 
     //todo descrizione carta
-
 
 public class CLI implements ViewInterface {
     /**
