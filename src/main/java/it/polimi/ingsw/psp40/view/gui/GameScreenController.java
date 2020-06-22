@@ -22,13 +22,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.spi.AbstractResourceBundleProvider;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -115,6 +112,10 @@ public class GameScreenController extends ScreenController {
     private Background background_dx = null;
     private Background background_sx = null;
     private Background background_top = null;
+
+    private VBox myVbox = null;
+    private VBox enemyVbox = null;
+    private HBox enemyHbox = null;
 
     private GUIProperties.CameraType currentCamera = GUIProperties.CameraType.RIGHT;  // default camera
     private final BooleanProperty isRightCamera = new SimpleBooleanProperty(true); // default camera
@@ -527,30 +528,46 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO SHOW PLAYERS INFO */
 
-    protected void setPlayersInfo(List<Player> playerList) {
-        VBox myVbox = new VBox();
+    private double initialWidth_rightAnchorPane = 0;
+    private double initialWidth_leftAnchorPane = 0;
 
-        VBox enemyVbox = new VBox();
+    protected void setPlayersInfo(List<Player> playerList) {
+        if(enemyHbox != null) { // check if we are updating playersInfo. In that case, update it and return
+            boolean playerHasBeenRemoved = computeDifferencesAndRemovePlayersInfoIfNeeded(playerList);
+            if(playerHasBeenRemoved)
+                return;
+        }
+
+        myVbox = new VBox();
+        enemyVbox = new VBox();
+        enemyHbox = new HBox();
+
         ImageView versusImage = new ImageView(new Image(getClass().getResource("/images/versus.png").toString()));
         versusImage.setPreserveRatio(true);
         versusImage.setFitHeight(45);
         enemyVbox.getChildren().add(versusImage);
 
-        HBox enemyHbox = new HBox();
+        if(initialWidth_leftAnchorPane == 0)
+            initialWidth_leftAnchorPane = leftAnchorPane.getWidth();
+        if(initialWidth_rightAnchorPane == 0)
+            initialWidth_rightAnchorPane = rightAnchorPane.getWidth();
 
         playerList.forEach(player -> {
             ImageView imageView = new ImageView(new Image(getClass().getResource("/images/characterImage/image-card-" + player.getCurrentCard().getId() + ".png").toString()));
             imageView.setPreserveRatio(true);
             if(player.getName().equals(getClient().getUsername())) {
                 imageView.setScaleX(-1); // reflect image
-                imageView.setFitWidth(leftAnchorPane.getLayoutBounds().getWidth() * 0.80);
+                imageView.setFitWidth(initialWidth_leftAnchorPane * 0.80);
+                imageView.setUserData(player.getName());
                 myVbox.getChildren().addAll(imageView);
             } else {
-                imageView.setFitWidth(rightAnchorPane.getLayoutBounds().getWidth() * 0.65);
+                imageView.setFitWidth(initialWidth_rightAnchorPane * 0.65);
+                imageView.setUserData(player.getName());
                 enemyHbox.getChildren().addAll(imageView);
             }
             addHoverHandler(player, imageView);
         });
+
 
         myVbox.setSpacing(15);
         myVbox.setAlignment(Pos.CENTER);
@@ -568,7 +585,28 @@ public class GameScreenController extends ScreenController {
         //AnchorPane.setRightAnchor(enemyVbox, 10.0);
         double hboxWidth = enemyHbox.getChildrenUnmodifiable().stream().map(node -> node.boundsInLocalProperty().getValue().getWidth()).reduce(0.0, Double::sum); // sum the width of all children elements
         hboxWidth += enemyHbox.getSpacing() * (enemyHbox.getChildrenUnmodifiable().size() - 1) + 10;  // add the spacing value to the width + extra spacing
-        enemyVbox.setTranslateX(rightAnchorPane.getWidth() - hboxWidth);
+        enemyVbox.setTranslateX(initialWidth_rightAnchorPane - hboxWidth);
+    }
+
+    private boolean computeDifferencesAndRemovePlayersInfoIfNeeded(List<Player> playerList) {
+        AtomicBoolean playerHasBeenRemoved = new AtomicBoolean(false);
+
+        List<String> playersNames = playerList.stream().map(Player::getName).collect(Collectors.toList());
+        enemyHbox.getChildrenUnmodifiable().forEach( node -> {
+            if(!playersNames.contains(node.getUserData())) {
+                enemyHbox.getChildren().remove(node);
+                playerHasBeenRemoved.set(true);
+            }
+        });
+
+        // update vbox position
+        if(playerHasBeenRemoved.get()) {
+            double hboxWidth = enemyHbox.getChildrenUnmodifiable().stream().map(node -> node.boundsInLocalProperty().getValue().getWidth()).reduce(0.0, Double::sum); // sum the width of all children elements
+            hboxWidth += enemyHbox.getSpacing() * (enemyHbox.getChildrenUnmodifiable().size() - 1) + 10;  // add the spacing value to the width + extra spacing
+            enemyVbox.setTranslateX(initialWidth_rightAnchorPane - hboxWidth);
+        }
+
+        return playerHasBeenRemoved.get();
     }
 
     private void addHoverHandler(Player player, ImageView imageView) {
@@ -635,28 +673,41 @@ public class GameScreenController extends ScreenController {
 
     protected void updateWorkersPosition() {
         //tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
-        updateWorkersInView(workers_dx);
-        updateWorkersInView(workers_sx);
-        updateWorkersInView(workers_top);
+        cleanMaps(); // needed when a worker has been removed
+        updateWorkersInView(workers_dx, levels_dx);
+        updateWorkersInView(workers_sx, levels_sx);
+        updateWorkersInView(workers_top, levels_top);
         getClient().clearModifiedWorkersCache();
         refresh();
     }
 
-    private void updateWorkersInView(List<Worker> workers_view) {
+    private void updateWorkersInView(List<Worker> workers_view, List<Block> levels_view) {
         //Location location = getClient().getLocationCache();
 
-        new ArrayList<>(getClient().getModifiedWorkersCache()).forEach( worker -> {
-            Cell newCell = cellOfModifiedWorker(worker);
-            Worker worker_view = modifiedWorkerInView(worker, workers_view);
-            if(newCell != null) {
-                if (worker_view != null) {
-                    worker_view.move(newCell.getCoordX(), newCell.getCoordY(), newCell.getTower().getTopComponent().getComponentCode(), false);
-                } else { // this happens when the game starts and different players are positioning their workers
-                    Worker newWorker = new Worker(newCell.getCoordX(), newCell.getCoordY(), worker.getPlayerName(), worker.getId(), worker.getColor());
-                    addWorker(newWorker);
+        List<it.polimi.ingsw.psp40.model.Worker> workersCache = new ArrayList<>(getClient().getLocationCache().getAllOccupants());
+
+        new ArrayList<>(getClient().getModifiedWorkersCache()).forEach(worker -> {
+            if(workerExistsInCache(workersCache, worker)) { // one or more workers have been moved
+                Cell newCell = cellOfModifiedWorker(worker);
+                Worker worker_view = modifiedWorkerInView(worker, workers_view);
+                if (newCell != null) {
+                    if (worker_view != null) {
+                        worker_view.move(newCell.getCoordX(), newCell.getCoordY(), newCell.getTower().getTopComponent().getComponentCode(), false);
+                    } else { // this happens when the game starts and different players are positioning their workers
+                        Worker newWorker = new Worker(newCell.getCoordX(), newCell.getCoordY(), worker.getPlayerName(), worker.getId(), worker.getColor());
+                        addWorker(newWorker);
+                    }
                 }
+            } else { // one or more workers have been removed
+                Worker workerToRemove = modifiedWorkerInView(worker, workers_view);
+                levels_view.remove(workerToRemove);
+                workers_view.remove(workerToRemove);
             }
         });
+    }
+
+    private boolean workerExistsInCache(List<it.polimi.ingsw.psp40.model.Worker> workersCache, it.polimi.ingsw.psp40.model.Worker worker) {
+        return workersCache.stream().anyMatch( _worker -> _worker.getId() == worker.getId() && _worker.getPlayerName().equals(worker.getPlayerName()));
     }
 
     private Cell cellOfModifiedWorker(it.polimi.ingsw.psp40.model.Worker worker) {
@@ -811,14 +862,18 @@ public class GameScreenController extends ScreenController {
         reorderLevels(levels_sx);
         reorderLevels(levels_top);
 
-        map_dx.getChildren().removeAll(levels_dx);
+        cleanMaps();
+
         map_dx.getChildren().addAll(levels_dx);
-
-        map_sx.getChildren().removeAll(levels_sx);
         map_sx.getChildren().addAll(levels_sx);
-
-        map_top.getChildren().removeAll(levels_top);
         map_top.getChildren().addAll(levels_top);
+    }
+
+    // clean all Maps keeping only the Ground Levels
+    private void cleanMaps() {
+        map_dx.getChildren().removeAll(levels_dx);
+        map_sx.getChildren().removeAll(levels_sx);
+        map_top.getChildren().removeAll(levels_top);
     }
 
     private void reorderLevels(List<Block> levels) {

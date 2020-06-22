@@ -124,6 +124,14 @@ public class Location extends Publisher<Message> {
         return new ArrayList<>(this.map.keySet());
     }
 
+    /**
+     * Method to get a list of all the occupants
+     * @return list of all occupants
+     */
+    public List<Worker> getAllOccupants() {
+        return new ArrayList<>(this.map.values());
+    }
+
 
     /**
      * Method to remove a worker from his cell
@@ -131,7 +139,9 @@ public class Location extends Publisher<Message> {
      */
     public void removeLocation(Worker worker){
         Cell cell = getLocation(worker);
-        map.put(cell, null);
+        map.remove(cell);
+        modifiedWorkers.add(worker);
+        update();
     }
 
     /**

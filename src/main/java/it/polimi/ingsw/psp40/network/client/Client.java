@@ -9,7 +9,6 @@ import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.view.ViewInterface;
 import it.polimi.ingsw.psp40.view.cli.CLI;
-import it.polimi.ingsw.psp40.view.cli.ColorSelector;
 import it.polimi.ingsw.psp40.view.gui.GUI;
 import it.polimi.ingsw.psp40.view.cli.CoolCLI;
 import javafx.application.Application;
@@ -228,6 +227,7 @@ public class Client implements ServerObserver {
 
       case LIST_PLAYER_UPDATED:
         playerListCache = (List<Player>) message.getPayload(new TypeToken<List<Player>>() {}.getType());
+        view.displayPlayersUpdated();
         break;
 
       case PLAYER_UPDATED:

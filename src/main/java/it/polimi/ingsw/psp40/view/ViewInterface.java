@@ -40,6 +40,7 @@ public interface ViewInterface {
     void displayChoiceOfAvailableCellForBuild();
     void displayLocationUpdated();
     void displayCellUpdated(Cell cell);
+    void displayPlayersUpdated();
     void displayWinnerMessage();
     void displayLoserMessage(Player winningPlayer);
     void displayLoserPlayer(Player player);

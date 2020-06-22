@@ -13,7 +13,7 @@
             <Image url="@../images/santorini-logo.png" />
          </image>
       </ImageView>
-      <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="455.0" layoutY="213.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" translateY="200.0" StackPane.alignment="TOP_CENTER">
+      <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="455.0" layoutY="213.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="532.0" translateY="200.0" StackPane.alignment="TOP_CENTER">
          <children>
             <Text fx:id="titleLobbyText" fill="#346b93" text="Waiting for other players...">
                <font>
@@ -28,7 +28,7 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </Text>
-            <ListView fx:id="listViewPlayers" prefHeight="125.0" prefWidth="239.0" styleClass="players-waiting-list" />
+            <ListView fx:id="listViewPlayers" prefHeight="125.0" prefWidth="540.0" styleClass="players-waiting-list" />
          </children>
       </VBox>
    </children>

@@ -20,18 +20,17 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mockingConnection = false;
-    private boolean mockingCard = false;
+    private boolean mockingConnection = true;
+    private boolean mockingCard = true;
+    private int mockNumOfPlayers = 2; // 2 or 3
 
     private Stage primaryStage;
 
@@ -162,7 +161,7 @@ public class GUI extends Application implements ViewInterface {
 
         // just for testing
         if (mockingConnection) {
-            setupScreenController.mockSendLogin();
+            setupScreenController.mockSendLogin(mockNumOfPlayers);
         }
     }
 
@@ -265,14 +264,26 @@ public class GUI extends Application implements ViewInterface {
         }
     }
 
+
+    @Override
+    public void displayPlayersUpdated() {
+        if(gameScreenController != null) {
+            Platform.runLater(()-> {
+                gameScreenController.setPlayersInfo(client.getPlayerListCache());
+            });
+        }
+    }
+
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
         System.out.println("Card selection");
 
         // just for testing
         if (mockingCard) {
-           int[] selection = {0, 1};
-           client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
+            List<Integer> ids = new ArrayList<>(cards.keySet());
+            Collections.shuffle(ids); // random order
+            int[] selection = ids.stream().limit(numPlayers).mapToInt(i->i).toArray();
+            client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
         }
         else {
             createMainScene("/FXML/CardScreen.fxml", () -> {

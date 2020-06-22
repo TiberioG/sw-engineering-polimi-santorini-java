@@ -464,6 +464,10 @@ public class CLI implements ViewInterface {
     }
 
     @Override
+    public void displayPlayersUpdated() {
+    }
+
+    @Override
     public void displayEndTurn() {
         out.println("Your turn is over");
     }

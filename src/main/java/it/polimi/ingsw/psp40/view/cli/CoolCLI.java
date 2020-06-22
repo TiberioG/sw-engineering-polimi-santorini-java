@@ -825,6 +825,11 @@ public class CoolCLI implements ViewInterface {
     }
 
     @Override
+    public void displayPlayersUpdated() {
+
+    }
+
+    @Override
     public void displayLocationUpdated() {
     }
 

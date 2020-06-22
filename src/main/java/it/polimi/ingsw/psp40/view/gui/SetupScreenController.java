@@ -95,17 +95,16 @@ public class SetupScreenController extends ScreenController {
     }
 
     // just for testing
-    protected void mockSendConnect () {
+    protected void mockSendConnect() {
         getClient().setServerIP("localhost");
         getClient().setServerPort(Integer.parseInt("1234"));
         getClient().connectToServer();
     }
 
     // just for testing
-    protected void mockSendLogin () {
+    protected void mockSendLogin(int numOfPlayers) {
         String username = (new Date()).toString();
         Date birthday = new Date();
-        int numOfPlayers = 2;
         getClient().setUsername(username);
         LoginMessage loginMessage = new LoginMessage(username, birthday, numOfPlayers, TypeOfMessage.LOGIN);
         try {
