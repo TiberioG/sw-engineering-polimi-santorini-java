@@ -92,10 +92,24 @@ public class Worker extends Block {
         }
     }
 
+    /**
+     * Moves the worker from its position to the new one, without movement animation
+     * @param row row where to move
+     * @param col col where to move
+     * @param z z (level) where to move
+     */
     protected void move(int row, int col, int z) {
         this.move(row, col, z, true);
     }
 
+    /**
+     *
+     * Moves the worker from its position to the new one, with movement animation if specified
+     * @param row row where to move
+     * @param col col where to move
+     * @param z z (level) where to move
+     * @param withAnimation
+     */
     protected void move (int row, int col, int z, boolean withAnimation) {
         this.z = z + 1;
         this.row = row;
@@ -254,6 +268,9 @@ public class Worker extends Block {
         }
     }
 
+    /**
+     * Starts animation for the selection phase
+     */
     protected void startSelectionAnimation() {
         selectionAnimation = new Tada(this);
 
@@ -266,6 +283,9 @@ public class Worker extends Block {
         selectionAnimation.play();
     }
 
+    /**
+     * Stops animation for the selection phase
+     */
     protected void stopSelectionAnimation() {
         if(selectionAnimation != null) {
             selectionAnimation.stop();

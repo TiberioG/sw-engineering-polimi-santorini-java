@@ -82,6 +82,11 @@ public class GUI extends Application implements ViewInterface {
         displaySetup();
     }
 
+    /**
+     * Helper method to create a scene from a FXML file
+     * @param pathOfFxmlFile path of the FXML file
+     * @param functionInterface FunctionInterface to run after scene creation
+     */
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
         Platform.runLater(() -> {
             fxmlLoader = new FXMLLoader();
@@ -428,16 +433,28 @@ public class GUI extends Application implements ViewInterface {
         });
     }
 
+    /**
+     * Shows a popup, deleting the previous one if present
+     * @param popupArg popup to be shown
+     */
     public static void showPopup(PopupStage popupArg) {
         showPopup(popupArg, 1);
     }
 
+    /**
+     * Shows a popup, deleting the previous one if present
+     * @param popupArg popup to be shown
+     * @param speedFactor speed factor to increment/reduce animation speed
+     */
     public static void showPopup(PopupStage popupArg, double speedFactor) {
         deletePopup();
         popup = popupArg;
         popup.showWithAnimation(speedFactor);
     }
 
+    /**
+     * Deletes the current popup, if present
+     */
     public static void deletePopup() {
         if(popup != null) {
             popup.close();

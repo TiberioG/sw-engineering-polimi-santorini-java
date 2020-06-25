@@ -158,6 +158,12 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO HANDLE BLOCKS CLICK */
 
+    /**
+     * Method called when a {@link Block} is clicked. Handles the action to be performed depending on the current phase
+     * @param x Coordinate X of the block
+     * @param y Coordinate Y of the block
+     * @param z Coordinate Z of the block
+     */
     public void blockClicked(int x, int y, int z) {
         System.out.println("Clicked: "+ x + ", " + y + ", " + z);
         if(!waiting) {
@@ -172,6 +178,10 @@ public class GameScreenController extends ScreenController {
 
     }
 
+    /**
+     * Method called when a {@link Worker} is clicked. Handles the action to be performed depending on the current phase
+     * @param worker worker clicked
+     */
     public void workerClicked(Worker worker) {
         System.out.println("Worker clicked! " + worker.row + ", " + worker.col + ", " + worker.z);
         if(checkLastSelectedPhase(PhaseType.SELECT_WORKER) &&  !waiting) {
@@ -186,6 +196,10 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Highlights available {@link Worker}s for selection phase
+     * @param highlight true to highlight, false to remove highlight
+     */
     private void highlightAvailableWorkersForSelection(boolean highlight) {
         highlightAvailableWorkersForSelectionInView(workers_dx, highlight);
         highlightAvailableWorkersForSelectionInView(workers_sx, highlight);
@@ -206,6 +220,10 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO HANDLE INITIAL POSITIONING OF MY WORKERS */
 
+    /**
+     * Asks to the player the color of its workers and where place them at the start of the game
+     * @param playerList list of the Players in the match
+     */
     protected void setInitialPosition(List<Player> playerList) {
         List<String> colorAlreadyUsed = playerList.stream().flatMap(player -> player.getWorkers().stream()).map(worker -> worker.getColor().toString()).distinct().collect(Collectors.toList());
         List<String> colorsAvailable = Arrays.stream(Colors.allNames()).filter(colorAvailable -> !colorAlreadyUsed.contains(colorAvailable)).collect(Collectors.toList());
@@ -237,6 +255,9 @@ public class GameScreenController extends ScreenController {
         setInstructionsLabelText("Select the color of your workers");
     }
 
+    /**
+     * Highlights available cells where to place workers at the start of the game
+     */
     private void highlightAvailableCellsInitialPosition() {
         List<Cell> availableCells = Arrays.stream(getClient().getFieldCache()).flatMap(Arrays::stream).collect(Collectors.toList()); // 2-dimensional array to List
         List<Cell> occupiedCells = new ArrayList<>(getClient().getLocationCache().getAllOccupied());
@@ -247,7 +268,12 @@ public class GameScreenController extends ScreenController {
         shouldPositionWorkers = true;
     }
 
-
+    /**
+     * Adds a {@link Worker} to the map in the given position
+     * @param x Coordinate X where to place the worker
+     * @param y Coordinate Y where to place the worker
+     * @param z Coordinate Z where to place the worker
+     */
     private void placeWorker(int x, int y, int z) {
         if(z == 0) { // just to be sure, but z != 0 could not happen
             boolean isCellOccupied = getClient().getLocationCache().getAllOccupied().stream().anyMatch( cell -> (cell.getCoordX() == x && cell.getCoordY() == y));
@@ -274,6 +300,10 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Method used to check if the player has placed enough workers
+     * @return true if player has placed enough workers
+     */
     private boolean hasEnoughWorkers() {
         return 2 == workers_dx.stream()
                 .filter(worker -> worker.ownerUsername.equals(getClient().getUsername()))
@@ -282,6 +312,12 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO HANDLE BUILD PHASE */
 
+    /**
+     * Tries to build a {@link Block} in the given position. If position is not allowed, does nothing. If more than one component is available, asks which build
+     * @param x Coordinate X where to build
+     * @param y Coordinate Y where to build
+     * @param z Coordinate Z where to build
+     */
     private void build(int x, int y, int z) {
 
         Cell desiredCell = getClient().getAvailableBuildCells().keySet().stream().filter( cell -> cell.getCoordX() == x && cell.getCoordY() == y).findFirst().orElse(null);
@@ -319,6 +355,13 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Asks to the player which component build in the given position
+     * @param listOfAvailableComponents list of available components
+     * @param x Coordinate X where to build
+     * @param y Coordinate Y where to build
+     * @param z Coordinate Z where to build
+     */
     private void askWhichComponentBuild(List<Integer> listOfAvailableComponents, int x, int y , int z) {
         VBox vbButtons = new VBox();
         vbButtons.setSpacing(10);
@@ -349,6 +392,13 @@ public class GameScreenController extends ScreenController {
         stackPane.getChildren().add(vbButtons);
     }
 
+    /**
+     * Builds the given component in the given position
+     * @param x Coordinate X where to build
+     * @param y Coordinate Y where to build
+     * @param z Coordinate Z where to build
+     * @param componentCode code of the {@link Component} to build
+     */
     private void buildComponent(int x, int y, int z, int componentCode) {
         Block block = null;
         switch (componentCode) {
@@ -373,6 +423,9 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Highlights available cells where to build a block
+     */
     protected void highlightAvailableCellsForBuild() {
         List<Cell> availableCells = new ArrayList<>(getClient().getAvailableBuildCells().keySet());
         if (availableCells.size() > 0) {
@@ -391,6 +444,12 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO HANDLE MOVE PHASE */
 
+    /**
+     * Moves the selected worker in the given position
+     * @param x Coordinate X where to move the worker
+     * @param y Coordinate Y where to move the worker
+     * @param z Coordinate Z where to move the worker
+     */
     private void moveWorker(int x, int y, int z) {
         if(selectedWorker != null) {
             List<Cell> availableCells = getClient().getAvailableMoveCells();
@@ -417,6 +476,7 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+
     private Worker moveSelectedWorkerInView(int x, int y, int z, List<Worker> workers_view) {
         for (Worker worker : workers_view) {
             if (worker.row == selectedWorker.row && worker.col == selectedWorker.col && worker.z == selectedWorker.z) {
@@ -427,6 +487,9 @@ public class GameScreenController extends ScreenController {
         return null;
     }
 
+    /**
+     * Highlights available cells where to move the selected worker
+     */
     protected void highlightAvailableCellsForMove() {
         List<Cell> availableCells = getClient().getAvailableMoveCells();
         if (availableCells.size() > 0) {
@@ -453,6 +516,9 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO HANDLE PHASE SELECTION */
 
+    /**
+     * Asks to the player which phase choose
+     */
     protected void askDesiredPhase() {
         List<Phase> phaseList = getClient().getListOfPhasesCache();
         if (phaseList.size() > 1) {
@@ -490,6 +556,10 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Handles the selection of a phase
+     * @param selectedPhase phase chosen by the player
+     */
     private void phaseButtonClicked(PhaseType selectedPhase) {
         switch (selectedPhase) {
             case SELECT_WORKER:
@@ -518,6 +588,9 @@ public class GameScreenController extends ScreenController {
 
     /* METHODS TO HANDLE END TURN */
 
+    /**
+     * Put the status of the game as "turn ended"
+     */
     protected void endTurn() {
         selectedWorker = null;
         selectedPhases = new ArrayList<>();
@@ -531,6 +604,10 @@ public class GameScreenController extends ScreenController {
     private double initialWidth_rightAnchorPane = 0;
     private double initialWidth_leftAnchorPane = 0;
 
+    /**
+     * Adds to the view all the info about the players in the match
+     * @param playerList list of players in the match
+     */
     protected void setPlayersInfo(List<Player> playerList) {
         if(enemyHbox != null) { // check if we are updating playersInfo. In that case, update it and return
             boolean playerHasBeenRemoved = computeDifferencesAndRemovePlayersInfoIfNeeded(playerList);
@@ -671,6 +748,9 @@ public class GameScreenController extends ScreenController {
 
     //private Location tmpLocation = null;
 
+    /**
+     * Updates the position of the workers using the cache updated by the server
+     */
     protected void updateWorkersPosition() {
         //tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
         cleanMaps(); // needed when a worker has been removed
@@ -722,6 +802,10 @@ public class GameScreenController extends ScreenController {
         return workers_view.stream().filter( worker -> modifiedWorker.getPlayerName().equals(worker.ownerUsername) && modifiedWorker.getId() == worker.id).findFirst().orElse(null);
     }
 
+    /**
+     * Updates the components built on the given cell
+     * @param cell
+     */
     // chiamato quando si riceve un'aggiornamento dell'isola
     // todo teoricamente vuol dire che è stato modificato il top component. Controllo più approfondito?
     protected void updateCell(Cell cell) {
@@ -758,6 +842,9 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Rebuilds from scratch the whole island
+     */
     protected void updateWholeIsland() {
         clearBoard();
 
@@ -819,6 +906,10 @@ public class GameScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Adds the given block to all the views (left, right, top)
+     * @param block
+     */
     private void addBlock(Block block) {
         levels_dx.add(block);
 
@@ -829,6 +920,10 @@ public class GameScreenController extends ScreenController {
         levels_top.add(block_top);
     }
 
+    /**
+     * Adds the given worker to all the views (left, right, top)
+     * @param worker
+     */
     private void addWorker(Worker worker) {
         levels_dx.add(worker);
         workers_dx.add(worker);
@@ -842,11 +937,19 @@ public class GameScreenController extends ScreenController {
         workers_top.add(worker_top);
     }
 
+    /**
+     * Adds the given worker to the island and refresh the view to show it
+     * @param worker
+     */
     private void addWorkerAndRefresh(Worker worker) {
         addWorker(worker);
         refresh();
     }
 
+    /**
+     * Adds the given block to the island and refresh the view to show it
+     * @param block
+     */
     private void addAndRefresh(Block block) {
         addBlock(block);
         refresh();
@@ -857,6 +960,9 @@ public class GameScreenController extends ScreenController {
         else return selectedPhases.get(selectedPhases.size() - 1).equals(phaseType);
     }
 
+    /**
+     * Refresh the views
+     */
     private void refresh() {
         reorderLevels(levels_dx);
         reorderLevels(levels_sx);
@@ -876,6 +982,10 @@ public class GameScreenController extends ScreenController {
         map_top.getChildren().removeAll(levels_top);
     }
 
+    /**
+     * Reorders blocks in the given view in order to keep blocks in the correct layer
+     * @param levels
+     */
     private void reorderLevels(List<Block> levels) {
         levels.sort((b1, b2) -> {
             if(b1.currentCamera == b2.currentCamera) { // just to be sure, but "levels" list should contains only elements with the same CameraType
@@ -976,7 +1086,11 @@ public class GameScreenController extends ScreenController {
                 bgSize);
         background_top = new Background(bgImgTop);
     }
-    
+
+    /**
+     * Sends a message to the server
+     * @param message message to be sent
+     */
     private void sendToServer(Message message) {
         getClient().sendToServer(message);
         waiting = true;
@@ -997,6 +1111,10 @@ public class GameScreenController extends ScreenController {
         levels_top.clear();
     }
 
+    /**
+     * Handles "Right Camera" selection
+     * @param actionEvent
+     */
     @FXML
     public void rightViewButtonClicked(ActionEvent actionEvent) {
         currentCamera = GUIProperties.CameraType.RIGHT;
@@ -1010,6 +1128,10 @@ public class GameScreenController extends ScreenController {
         borderPane.setBackground(background_dx);
     }
 
+    /**
+     * Handles "Left Camera" selection
+     * @param actionEvent
+     */
     @FXML
     public void leftViewButtonClicked(ActionEvent actionEvent) {
         currentCamera =  GUIProperties.CameraType.LEFT;
@@ -1023,6 +1145,10 @@ public class GameScreenController extends ScreenController {
         borderPane.setBackground(background_sx);
     }
 
+    /**
+     * Handles "Top Camera" selection
+     * @param actionEvent
+     */
     @FXML
     public void topViewButtonClicked(ActionEvent actionEvent) {
         currentCamera = GUIProperties.CameraType.TOP;

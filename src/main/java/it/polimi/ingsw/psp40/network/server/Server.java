@@ -424,6 +424,10 @@ public class Server
     return false;
   }
 
+  /**
+   * Removes a user without disconnecting other users
+   * @param name username of the user to remove
+   */
   public synchronized void removeUserSilently(String name) {
     String UUID = this.usernameToUUIDMap.get(name);
     if (UUID != null) this.removeUser(UUID, false);
@@ -442,8 +446,7 @@ public class Server
 
     UUIDtoClientMap.remove(UUID);
     if(UUIDtoMatchMap.containsKey(UUID)) {
-      //set matchID for clean match
-      matchID = UUIDtoMatchMap.get(UUID);
+      matchID = UUIDtoMatchMap.get(UUID); // set matchID to clean match
       matchToUUIDsMap.get(matchID).remove(UUID);
       if(matchToUUIDsMap.get(matchID).size() == 0) {
         matchToUUIDsMap.remove(matchID);
@@ -451,8 +454,7 @@ public class Server
       }
       UUIDtoMatchMap.remove(UUID);
     } else {
-      //set matchID for clean lobby
-      matchID = 0;
+      matchID = 0; //set matchID to clean lobby
     }
     if (clean) cleanMatch(matchID);
   }
@@ -463,6 +465,12 @@ public class Server
     birthdateMap.put(username, birthdate);
   }
 
+  /**
+   * Restores a broken match
+   * @param matchID ID of the broken match
+   * @param virtualView VirtualView corresponding to this match
+   * @param usernames list of usernames of the players in the match
+   */
   protected void restoreMatch(int matchID, VirtualView virtualView, List<String> usernames) {
     if(virtualView != null) {
       if(!usernameToUUIDMap.keySet().containsAll(usernames)) {

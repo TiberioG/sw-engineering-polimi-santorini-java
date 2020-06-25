@@ -127,7 +127,7 @@ public class GUIProperties {
         if(cameraType == CameraType.LEFT) {
             row = getCorrespondingLeftRow(row, col);
         } else if (cameraType == CameraType.TOP) {
-            // todo
+            // no special treatment required
         }
         return (row * 2.5) - 6;
     }
