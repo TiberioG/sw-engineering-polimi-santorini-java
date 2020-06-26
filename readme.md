@@ -1,8 +1,27 @@
+
+
 # Prova Finale Ingegneria del Software 2020
 
 ![SANTORINI LOGO](https://raw.githubusercontent.com/Vito96/ing-sw-2020-Monaco-Lampis-Galbiati/master/src/main/resources/images/santorini-logo.png)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  
 
+- [Building](#building)
+  - [Building with Maven](#building-with-maven)
+  - [Using provided jars](#using-provided-jars)
+- [Server](#server)
+  - [Use our server](#use-our-server)
+  - [Run your server](#run-your-server)
+- [Client](#client)
+  - [Comparibility notes for cli](#comparibility-notes-for-cli)
+- [Documentation](#documentation)
+- [Game screenshots](#game-screenshots)
+- [External libraries used](#external-libraries-used)
+- [Authors (alphabetical order)](#authors-alphabetical-order)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 | Functionality | State |
 |:--------------------------------------|:------------------------------------:|
 | Basic rules                           | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
@@ -18,7 +37,8 @@
 [![GREEN](https://placehold.it/15/44bb44/44bb44)](#)
 -->
 
-## Building with Maven
+## Building
+### Building with Maven
 To build the project with Maven we offer the following profiles
 * server : ` mvn package -Pserver `
 * client : ` mvn package -Pclient `
@@ -27,18 +47,19 @@ For a faster build you can skip the unit tests activating also the profile `-Pno
 
 The output directory for the jars is set to [/deliveries/final/jar](/deliveries/final/jar)
 
-## Using provided jars
+### Using provided jars
 
 If you want you can use the jars we already built for you, you can find them here:
 [here](/deliveries/final/jar)
 
 
-##Running
-Here are the instructions to run the game
+## Server
 
 ### Use our server
 We created for you a server you can use to play [santorini40.xyz](http://santorini40.xyz)
-Please use port 1234.
+Our default port is 1234
+
+You can check the [logger](http://santorini40.xyz) to see the server status any time
 
 ### Run your server
 If you want to run the server on your machine you can use the following command
@@ -51,31 +72,35 @@ Default loads the gui, if you wanna use our CoolCli please add cli
 ```bash
 java -jar client.jar [cli] 
 ```
+### Comparibility notes for cli
 
+Our cli version of the game automatically resizes the terminal window for a better game experience.
+Most terminals allow this by default, in case you have XTerm or iTerm:  
+  * XTerm:  set the following resource to true: allowWindowOps
+  * iTerm2: deselect the following: Preferences > Profiles > [profile] > Terminal > Disable session-initiated window resizing
+ 
+ Otherwise please note that the minimum required size of the terminal to play the game is 160x50
 ## Documentation
 
 Javadoc is available at this link: http://santorini40.xyz/javadoc
 
-## Screenshots
-
-### Gameplay 
+## Game screenshots
 
 [![asciicast](https://asciinema.org/a/328942.svg)](
   https://asciinema.org/a/328942?autoplay=1)
 
 
-### External libraries used
+## External libraries used
 
-| Library | Link | Use |
-| ----------| --------------------------------------- | ------ |
-| GSON      | https://github.com/google/gson          |        |
-| AnimateFX | https://github.com/Typhon0/AnimateFX    |        |
+| Library | Link 
+| ----------| --------------------------------------- |
+| GSON      | https://github.com/google/gson          |       
+| AnimateFX | https://github.com/Typhon0/AnimateFX    |        
 | word-wrap | https://github.com/davidmoten/word-wrap | 
 | Mockito   | https://site.mockito.org                | 
 
-## Authors
-* [ Vito Monaco](https://github.com/)
-* [ Andrea Lampis ](https://github.com/)
+## Authors (alphabetical order)
 * [ Tiberio Galbiati](https://github.com/)
+* [ Andrea Lampis ](https://github.com/)
+* [ Vito Monaco](https://github.com/)
 
-## License

@@ -22,6 +22,7 @@ public class PlayerSelector {
 
     private Frame f1;
     private Frame f2;
+    private Frame container;
 
     /**
      * constructor
@@ -30,6 +31,7 @@ public class PlayerSelector {
      */
     public PlayerSelector(List<Player> allPlayers, Frame container){
         this.allPlayers = allPlayers;
+        this.container = container;
         names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
         widthLeft = Math.max(Utils.longestArray(names), title.length()) + 5;
         widthRight = widthLeft + 5;
@@ -95,6 +97,10 @@ public class PlayerSelector {
     }
 
 
+    /**
+     * prints the player selector
+     * @param current highlited row
+     */
     private void print (int current) {
         int height = allPlayers.size();
         int innerwidth = widthLeft - 4;
@@ -154,10 +160,16 @@ public class PlayerSelector {
             System.out.print("═");
         }
         System.out.print("╝");
+
+        //System.out.print(Utils.centerString(container.getColSpan(), "Use arrows to navigate, confirm your selection with SPACEBAR"));
     }
 
 
-
+    /**
+     * method to show the name and the description of the card of a player
+     * @param cardname name of the card
+     * @param description of the card
+     */
     private void showText(String cardname,  String description){
         f2.clearRight(); //ued to odelete previous box
         String titleString = Utils.centerString(widthLeft, "Card " + cardname); //title
