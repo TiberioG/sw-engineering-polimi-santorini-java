@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
 import it.polimi.ingsw.psp40.model.CardManager;
+import it.polimi.ingsw.psp40.model.Worker;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -28,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CardScreenController extends ScreenController {
-    private boolean waiting = false;
 
     @FXML
     private GridPane grid;
@@ -49,6 +49,9 @@ public class CardScreenController extends ScreenController {
     private final HashMap<Card, ImageView> cardsMap = new HashMap<>();
     private TypeOfMessage typeOfMessageToSend;
 
+    /**
+     * Method for initialized the cardScreenController object
+     */
     @FXML
     public void initialize() {
         //ScreenController.addClassToElement(textTitle, "card-title");
@@ -58,6 +61,11 @@ public class CardScreenController extends ScreenController {
         UtilsGUI.buttonHoverEffect(endButton);
     }
 
+    /**
+     * Method to manage the visualization of the available match cards in the game
+     * @param cards the available cards for selection
+     * @param toSelect the number of cards to select
+     */
     protected void displayCardsForInitialSelection(List<Card> cards, int toSelect) {
         this.toSelect = toSelect;
         selex.setText("Choose " + toSelect + " cards");
@@ -76,6 +84,10 @@ public class CardScreenController extends ScreenController {
         }
     }
 
+    /**
+     * Method to manage the display of the selected available cards
+     * @param availableCards the available cards for the personal card selection
+     */
     protected void displayCardsForPersonalSelection(List<Card> availableCards) {
         selex.setText("Choose your card ");
         this.toSelect = 1;
@@ -91,7 +103,7 @@ public class CardScreenController extends ScreenController {
         hbox.setVisible(true);
     }
 
-
+    //TODO make javadoc
     private void buildCards(List<Card> cards) {
         cardsMap.clear();
         cards.forEach(card -> {
@@ -126,6 +138,12 @@ public class CardScreenController extends ScreenController {
         addHandlerToCards();
     }
 
+
+    /**
+     * Method build the transition animation of a specified node
+     * @param node the node to apply the animation
+     * @return the builded transition
+     */
     private Transition buildTransition(Node node) {
         Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
         Duration duration = Duration.millis(500);
@@ -143,6 +161,9 @@ public class CardScreenController extends ScreenController {
         return p;
     }
 
+    /**
+     * Method to add an mouse event handler for each card contained in the map
+     */
     private void addHandlerToCards() {
         cardsMap.keySet().forEach(card -> {
             ImageView cardView = cardsMap.get(card);
@@ -167,6 +188,8 @@ public class CardScreenController extends ScreenController {
         });
     }
 
+
+    //TODO make javadoc
     @FXML
     void end() {
         List<Integer> selectedListTmp = new ArrayList<>(selectedList);

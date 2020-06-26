@@ -804,7 +804,7 @@ public class GameScreenController extends ScreenController {
 
     /**
      * Updates the components built on the given cell
-     * @param cell
+     * @param cell the cell to update
      */
     // chiamato quando si riceve un'aggiornamento dell'isola
     // todo teoricamente vuol dire che è stato modificato il top component. Controllo più approfondito?

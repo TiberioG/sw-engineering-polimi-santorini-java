@@ -105,6 +105,11 @@ public class GUI extends Application implements ViewInterface {
         });
     }
 
+    /**
+     * Helper method to get the correct text depending on the remaining players needed to start the match
+     * @param remainingPlayers the remaining players for start the match
+     * @return the builded text
+     */
     private String getTextForRemainingPlayers(Integer remainingPlayers) {
         String text;
         switch (remainingPlayers) {
@@ -321,10 +326,6 @@ public class GUI extends Application implements ViewInterface {
         }
     }
 
-    @Override
-    public void displayCardInGame(List<Card> cardInGame) {
-
-    }
 
     @Override
     public void displayForcedCard(Card card) {
@@ -462,6 +463,9 @@ public class GUI extends Application implements ViewInterface {
         }
     }
 
+    /**
+     * Reset all controller
+     */
     private void resetControllers() {
         setupScreenController = null;
         lobbyScreenController = null;

@@ -20,6 +20,13 @@ public class WinnerLoserPopup extends PopupStage {
     protected Image image_popup_winner = new Image(getClass().getResource("/images/winner_popup.png").toString());
     protected Image image_popup_loser = new Image(getClass().getResource("/images/loser_popup.png").toString());
 
+
+    /**
+     * Constructor
+     * @param ownerStage
+     * @param isWinner
+     * @param continueFunction
+     */
     WinnerLoserPopup(Stage ownerStage, boolean isWinner, FunctionInterface continueFunction) {
         super(ownerStage);
         this.isWinner = isWinner;
@@ -27,6 +34,10 @@ public class WinnerLoserPopup extends PopupStage {
         build();
     }
 
+    /**
+     * Method that permit to a set a winningPlayer information in the popup
+     * @param winningPlayer the player who has won
+     */
     protected void setWinningPlayer(Player winningPlayer) {
         this.winningPlayer = winningPlayer;
     }

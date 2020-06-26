@@ -115,7 +115,10 @@ public class SetupScreenController extends ScreenController {
         getClient().sendToServer(loginMessage);
     }
 
-
+    /**
+     * Method that handle the click of connectButton
+     * @param actionEvent
+     */
     @FXML
     public void handleConnectButton(ActionEvent actionEvent) {
         validationMap.clear();
@@ -124,16 +127,28 @@ public class SetupScreenController extends ScreenController {
         getClient().connectToServer();
     }
 
+    /**
+     * Method that handle the onEnter of ipAddressTextField
+     * @param actionEvent
+     */
     @FXML
     public void onEnterIpAddress(ActionEvent actionEvent) {
         portTextField.requestFocus();
     }
 
+    /**
+     * Method that handle the onEnter of ipAddressTextField
+     * @param actionEvent
+     */
     @FXML
     public void onEnterPortText(ActionEvent actionEvent) {
         connectButton.fire();
     }
 
+    /**
+     * Method that handle the changes of ipAddressTextField
+     * @param keyEvent
+     */
     @FXML
     public void ipAddressChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidIp = Utils.isValidIp(ipAddressTextField.getText());
@@ -146,6 +161,10 @@ public class SetupScreenController extends ScreenController {
         validateConnectFields();
     }
 
+    /**
+     * Method that handle the changes of portTextField
+     * @param keyEvent
+     */
     @FXML
      public void portChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidPort = Utils.isValidPort(Integer.parseInt("0" + portTextField.getText().trim()));
@@ -158,6 +177,10 @@ public class SetupScreenController extends ScreenController {
         validateConnectFields();
     }
 
+
+    /**
+     * Method that displays the form needed to enter user data
+     */
     public void displayUserForm() {
         validationMap.clear();
         vBoxForServerProps.setVisible(false);
@@ -168,6 +191,10 @@ public class SetupScreenController extends ScreenController {
         validationMap.put(numOfPlayerComboBox, false);
     }
 
+    /**
+     * Method that handle the changes of usernameTextField
+     * @param keyEvent
+     */
     @FXML
     public void usernameChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidUsername = Utils.isValidUsername(usernameTextField.getText());
@@ -180,6 +207,10 @@ public class SetupScreenController extends ScreenController {
         validateSendFields();
     }
 
+    /**
+     * Method that handle the changes of numOfPlayerComboBox
+     * @param actionEvent
+     */
     @FXML
     public void numOfPlayerChanged(ActionEvent actionEvent) {
         boolean validNumOfPlayer = numOfPlayerComboBox.getItems().contains(numOfPlayerComboBox.getValue());
@@ -187,8 +218,10 @@ public class SetupScreenController extends ScreenController {
         validateSendFields();
     }
 
-
-    @FXML
+    /**
+     * Method that handle the click of sendInfoButton and  information of the user to the server
+     * @param actionEvent
+     */
     public void handleSendInfoButton(ActionEvent actionEvent) {
         String username = usernameTextField.getText();
 
@@ -212,11 +245,20 @@ public class SetupScreenController extends ScreenController {
         anchorPane.getChildren().add(r);
     }
 
+    /**
+     * Method that allows you to display an error alert with custom text
+     * @param text the text of the error alert
+     */
     public void errorAlertSetup(String text) {
         connectButton.setDisable(true);
         errorAlert(text);
     }
 
+
+    /**
+     * Method that allows you to display an error alert for a login error
+     * @param text the text of the error alert
+     */
     public void errorAlertLogin(String text) {
         UtilsGUI.addClassToElement(usernameTextField, "error-text");
         errorAlert(text);

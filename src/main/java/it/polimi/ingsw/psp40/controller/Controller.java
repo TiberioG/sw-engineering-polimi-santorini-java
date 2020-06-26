@@ -262,6 +262,10 @@ public class Controller implements Listener<Message> {
         turnManager.getAvailableCellForMove();
     }
 
+    /**
+     * Method that allows you the {@link Worker} selected on the turn
+     * @param message message present for use through reflection
+     */
     @SuppressWarnings("unused")
     private void moveWorker(Message message) {
         CoordinatesMessage coordinatesMessage = (CoordinatesMessage) message.getPayload(CoordinatesMessage.class);

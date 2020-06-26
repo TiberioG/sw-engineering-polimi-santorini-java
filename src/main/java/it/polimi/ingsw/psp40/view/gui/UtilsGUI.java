@@ -18,6 +18,12 @@ public class UtilsGUI {
 
     static BooleanProperty trueBool = new SimpleBooleanProperty(true);
 
+
+    /**
+     * Method that allows you to add a class to a {@link Node}
+     * @param node the node to which you want to add the class
+     * @param nameOfClass the name of the class you want to add to the node
+     */
     protected static void addClassToElement(Node node, String nameOfClass) {
         ObservableList<String> listOfClasses = node.getStyleClass();
         if (listOfClasses.indexOf(nameOfClass) == -1) {
@@ -25,19 +31,37 @@ public class UtilsGUI {
         }
     }
 
+    /**
+     * Method that allows you to remove a class to a {@link Node}
+     * @param node the node to which you want to remove the class
+     * @param nameOfClass the name of the class you want to remove from the node
+     */
     protected static void removeClassToElement(Node node, String nameOfClass) {
         node.getStyleClass().remove(nameOfClass);
     }
 
+    /**
+     * Method that allows you to make a hover effect to a specified button
+     * @param button the button you want to apply the effect to
+     */
     protected static void buttonHoverEffect(Button button) {
         nodeHoverEffect(button);
     }
 
+
+    /**
+     * Method that allows you to make a hover with a persistence effect to a specified button
+     * @param button the button you want to apply the effect to
+     */
     protected static void buttonHoverEffectWithPersistence(Button button, BooleanProperty persistence) {
         nodeHoverEffectWithPersistence(button, persistence);
     }
 
-    // if persistence is true, keep the effect applied even when not hover
+    /**
+     * Method that allows you to make a hover with a persistence effect to a specified node
+     * @param node the node you want to apply the effect to
+     * @param persistence if persistence is true, keep the effect applied even when not hover
+     */
     protected static void nodeHoverEffectWithPersistence(Node node, BooleanProperty persistence) {
 
         ColorAdjust colorAdjust = new ColorAdjust();
@@ -59,6 +83,7 @@ public class UtilsGUI {
         });
     }
 
+    //TODO make javadoc
     private static void applyEffectBinding(Node node, Effect effect, BooleanProperty property) {
         node.effectProperty().bind(Bindings.when(
                 property.isEqualTo(trueBool))
@@ -66,6 +91,7 @@ public class UtilsGUI {
                 .otherwise((Effect) null));
     }
 
+    //TODO make javadoc
     protected static void nodeHoverEffect(Node node) {
         node.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -78,6 +104,10 @@ public class UtilsGUI {
         });
     }
 
+    /**
+     * Method that allows you to make slideInDown animation to a specified node
+     * @param node the node you want to apply the slide in down animation
+     */
     protected static void slideInDownAnimation(Node node) {
         new Timeline(
             new KeyFrame(Duration.millis(0),

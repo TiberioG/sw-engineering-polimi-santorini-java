@@ -87,6 +87,11 @@ public class GUIProperties {
     protected static Image image_select_worker_phase = new Image(GUIProperties.class.getResource("/images/phases/select_worker_phase.png").toString());
     protected static Image image_end_turn_phase = new Image(GUIProperties.class.getResource("/images/phases/end_turn_phase.png").toString());
 
+    /**
+     * Method to get the image for a specified type of phase
+     * @param phase the phase you want to have the image of
+     * @return the image associated to the phase type
+     */
     protected static Image getImageForPhase(Phase phase) {
         Image image = null;
         switch (phase.getType()) {
@@ -110,7 +115,7 @@ public class GUIProperties {
         return image;
     }
 
-
+    //TODO make javadoc
     protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
         double incrementalFix = 0;
         if(cameraType == CameraType.LEFT) {
@@ -123,6 +128,7 @@ public class GUIProperties {
         return incrementalFix;
     }
 
+    //TODO make javadoc
     protected static double getIncrementalFix_y(int row, int col, CameraType cameraType) {
         if(cameraType == CameraType.LEFT) {
             row = getCorrespondingLeftRow(row, col);

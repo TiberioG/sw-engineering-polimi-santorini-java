@@ -461,14 +461,6 @@ public class CoolCLI implements ViewInterface {
     }
 
     @Override
-    public void displayCardInGame(List<Card> cardInGame) {
-        left.clear();
-        CardSelector cardSelector = new CardSelector(cardInGame, 0,  center);
-        //non printa nulla
-        left.clear();
-    }
-
-    @Override
     public void displayForcedCard(Card card) {
         killHourglass();
         thiscard = card;

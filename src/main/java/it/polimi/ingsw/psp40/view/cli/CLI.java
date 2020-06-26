@@ -252,14 +252,6 @@ public class CLI implements ViewInterface {
     }
 
     @Override
-    public void displayCardInGame(List<Card> cardInGame) {
-        String[] names = cardInGame.stream().map(Card::getName).toArray(String[]::new);
-
-        utils.singleTableCool("Card selected", names, 100);
-
-    }
-
-    @Override
     public void displayForcedCard(Card card) {
         out.println("You have been assigned the following card:" + card.getName());
 
