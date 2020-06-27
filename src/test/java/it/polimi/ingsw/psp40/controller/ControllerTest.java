@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp40.controller;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.psp40.commons.Colors;
 import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
@@ -9,15 +10,12 @@ import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.model.*;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.FieldSetter;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,8 +32,8 @@ public class ControllerTest {
     private VirtualView virtualView;
     private HashMap<String, Date> hashMapOfNewPlayers;
     private HashMap<TypeOfMessage, Message> hashMapOfDisplayMessage = new HashMap<>();
-    private String nameOfFirstPlayer = "one";
-    private String nameOfSecondPlayer = "one";
+    private String nameOfFirstPlayer = "player1";
+    private String nameOfSecondPlayer = "player2";
 
 
     public class VirtualViewForTest extends VirtualView {
@@ -47,7 +45,39 @@ public class ControllerTest {
         public void displayMessage(Message message) {
             hashMapOfDisplayMessage.put(message.getTypeOfMessage(), message);
         }
+    }
 
+    private Match createFakeMatch() {
+        Match match = Mockito.spy(new Match(0));
+        match.createPlayer(nameOfFirstPlayer, new Date());
+        match.getPlayerByName(nameOfFirstPlayer).setCurrentCard(cardManager.getCardById(0));
+        match.createPlayer(nameOfSecondPlayer, new Date());
+        match.getPlayerByName(nameOfSecondPlayer).setCurrentCard(cardManager.getCardById(1));
+        match.setCurrentPlayer(nameOfFirstPlayer);
+
+        Player player1 = match.getPlayerByName(nameOfFirstPlayer);
+        player1.setCurrentCard(cardManager.getCardById(0));
+        player1.addWorker(Colors.BLUE);
+        player1.addWorker(Colors.BLUE);
+
+        Player player2 = match.getPlayerByName(nameOfSecondPlayer);
+        player2.setCurrentCard(cardManager.getCardById(1));
+        player2.addWorker(Colors.RED);
+        player2.addWorker(Colors.RED);
+
+        match.setCurrentPlayer(nameOfFirstPlayer);
+
+        try {
+            match.getLocation().setLocation(match.getIsland().getCell(0, 0), player1.getWorkers().get(0));
+            match.getLocation().setLocation(match.getIsland().getCell(1, 0), player1.getWorkers().get(1));
+            match.getLocation().setLocation(match.getIsland().getCell(1, 1), player2.getWorkers().get(0));
+            match.getLocation().setLocation(match.getIsland().getCell(3, 1), player2.getWorkers().get(1));
+        } catch (WorkerAlreadyPresentException e) {
+            e.printStackTrace();
+        } catch (CellOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return match;
     }
 
     @Before
@@ -65,6 +95,11 @@ public class ControllerTest {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @After
+    public void tearDown() {
+        MatchHistory.deleteMatch(0);
     }
 
     private boolean verifyDisplayMessageCall(TypeOfMessage typeOfMessage) {
@@ -116,9 +151,9 @@ public class ControllerTest {
     @Test
     public void setPositionOfWorker_testChoosePositionOfWorkersMessage() {
         Match match = Mockito.spy(new Match(0));
-        match.createPlayer("player1", new Date());
-        match.createPlayer("player2", new Date());
-        match.setCurrentPlayer("player1");
+        match.createPlayer(nameOfFirstPlayer, new Date());
+        match.createPlayer(nameOfSecondPlayer, new Date());
+        match.setCurrentPlayer(nameOfFirstPlayer);
         try {
             FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
         } catch (NoSuchFieldException e) {
@@ -134,11 +169,11 @@ public class ControllerTest {
     @Test
     public void setPositionOfWorker_testInitializedMatch() {
         Match match = Mockito.spy(new Match(0));
-        match.createPlayer("player1", new Date());
-        match.getPlayerByName("player1").setCurrentCard(cardManager.getCardById(0));
-        match.createPlayer("player2", new Date());
-        match.getPlayerByName("player2").setCurrentCard(cardManager.getCardById(1));
-        match.setCurrentPlayer("player1");
+        match.createPlayer(nameOfFirstPlayer, new Date());
+        match.getPlayerByName(nameOfFirstPlayer).setCurrentCard(cardManager.getCardById(0));
+        match.createPlayer(nameOfSecondPlayer, new Date());
+        match.getPlayerByName(nameOfSecondPlayer).setCurrentCard(cardManager.getCardById(1));
+        match.setCurrentPlayer(nameOfFirstPlayer);
         try {
             FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
         } catch (NoSuchFieldException e) {
@@ -157,35 +192,7 @@ public class ControllerTest {
 
     @Test
     public void simulateTurn_testTurn() {
-        Match match = Mockito.spy(new Match(0));
-        match.createPlayer("player1", new Date());
-        match.getPlayerByName("player1").setCurrentCard(cardManager.getCardById(0));
-        match.createPlayer("player2", new Date());
-        match.getPlayerByName("player2").setCurrentCard(cardManager.getCardById(1));
-        match.setCurrentPlayer("player1");
-
-        Player player1 = match.getPlayerByName("player1");
-        player1.setCurrentCard(cardManager.getCardById(0));
-        player1.addWorker(Colors.BLUE);
-        player1.addWorker(Colors.BLUE);
-
-        Player player2 = match.getPlayerByName("player2");
-        player2.setCurrentCard(cardManager.getCardById(1));
-        player2.addWorker(Colors.RED);
-        player2.addWorker(Colors.RED);
-
-        match.setCurrentPlayer("player1");
-
-        try {
-            match.getLocation().setLocation(match.getIsland().getCell(0,0), player1.getWorkers().get(0));
-            match.getLocation().setLocation(match.getIsland().getCell(1,0), player1.getWorkers().get(1));
-            match.getLocation().setLocation(match.getIsland().getCell(1,1), player2.getWorkers().get(0));
-            match.getLocation().setLocation(match.getIsland().getCell(3,1), player2.getWorkers().get(1));
-        } catch (WorkerAlreadyPresentException e) {
-            e.printStackTrace();
-        } catch (CellOutOfBoundsException e) {
-            e.printStackTrace();
-        }
+        Match match = createFakeMatch();
 
         try {
             FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
@@ -216,4 +223,37 @@ public class ControllerTest {
 
     }
 
+    @Test
+    public void restoreMatch_restoreOldMatch() {
+        Match match = createFakeMatch();
+
+        MatchHistory.saveMatch(match);
+
+        List<String> namesOfPlayers = new ArrayList<>();
+        namesOfPlayers.add(nameOfFirstPlayer);
+        namesOfPlayers.add(nameOfSecondPlayer);
+        JsonObject jsonMatch = MatchHistory.retrieveMatchFromNames(namesOfPlayers);
+
+        try {
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("oldMatch"), jsonMatch);
+        } catch (NoSuchFieldException e) {}
+
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RESTORE_MATCH, true));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.RESTORED_MATCH));
+        MatchHistory.deleteMatch(0);
+    }
+
+    @Test
+    public void restoreMatch_createNewMatch() {
+        Match match = createFakeMatch();
+        try {
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RESTORE_MATCH, false));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.STARTED_MATCH));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_GAME_CARDS));
+    }
 }

@@ -7,12 +7,12 @@ import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.network.server.Server;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,6 +76,11 @@ public class MatchHistoryTest {
         oldNames.add("player2");
 
         jsonMatch = MatchHistory.retrieveMatchFromNames(oldNames);
+    }
+
+    @After
+    public void tearDown() {
+        MatchHistory.deleteMatch(0);
     }
 
     @Test
