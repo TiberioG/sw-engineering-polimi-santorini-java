@@ -103,7 +103,10 @@ public class CardScreenController extends ScreenController {
         hbox.setVisible(true);
     }
 
-    //TODO make javadoc
+    /**
+     * creates visualization of cards
+     * @param cards
+     */
     private void buildCards(List<Card> cards) {
         cardsMap.clear();
         cards.forEach(card -> {
@@ -189,7 +192,9 @@ public class CardScreenController extends ScreenController {
     }
 
 
-    //TODO make javadoc
+    /**
+     * sends selection
+     */
     @FXML
     void end() {
         List<Integer> selectedListTmp = new ArrayList<>(selectedList);

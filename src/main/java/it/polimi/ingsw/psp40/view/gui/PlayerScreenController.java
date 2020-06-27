@@ -26,6 +26,11 @@ import javafx.util.Duration;
 
 import java.util.List;
 
+
+/**
+ * class to show Player to select the first
+ * @author TiberioG
+ */
 public class PlayerScreenController extends ScreenController {
 
     @FXML
@@ -73,6 +78,9 @@ public class PlayerScreenController extends ScreenController {
 
     private final StringProperty playerSelected = new SimpleStringProperty(null);
 
+    /**
+     *fill scene
+     */
     @FXML
     public void initialize() {
         center.setVisible(false);
@@ -83,6 +91,10 @@ public class PlayerScreenController extends ScreenController {
         UtilsGUI.buttonHoverEffect(endButton);
     }
 
+    /**
+     * set visulaization for 2 or 3 players
+     * @param allPlayers
+     */
     protected void  displayPlayersForInitialSelection(List<Player> allPlayers) {
         if (allPlayers.size() == 2){
             displayPapiro(allPlayers.get(0), 1);
@@ -95,6 +107,11 @@ public class PlayerScreenController extends ScreenController {
         }
     }
 
+    /**
+     * shows player name
+     * @param player {@link Player}
+     * @param location is the position in screen
+     */
     private void displayPapiro(Player player, int location) {
         ImageView papiro ;
         ImageView card ;
@@ -203,6 +220,11 @@ public class PlayerScreenController extends ScreenController {
         });
     }
 
+    /**
+     * add effects
+     * @param node
+     * @return
+     */
     private Transition buildTransition(Node node) {
         Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
         Duration duration = Duration.millis(500);
@@ -215,6 +237,9 @@ public class PlayerScreenController extends ScreenController {
         return new ParallelTransition(st);
     }
 
+    /**
+     * sends selection
+     */
     @FXML
     void end() {
         if (playerSelected.getValue() != null) {
