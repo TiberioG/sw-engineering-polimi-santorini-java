@@ -97,14 +97,14 @@ public class LoseOtherCantLevelUpTest {
     public void checkLoseForMove_true_LoseOtherCantLevelUp() {
         match.setCurrentPlayer(player2);
         match.getMatchProperties().setOthersCantLevelUp(true);
-        assertTrue(strategyLose.checkLoseForMove(strategyMove) && match.getMatchProperties().isOthersCantLevelUp() == false);
+        assertTrue(strategyLose.checkLoseForMove(strategyMove) && match.getMatchProperties().getOthersCantLevelUp() == false);
     }
 
     @Test
     public void checkLoseForBuild_true_LoseOtherCantLevelUp() {
         match.setCurrentPlayer(player2);
         match.getMatchProperties().setOthersCantLevelUp(true);
-        assertTrue(strategyLose.checkLoseForBuild(strategyBuild, worker2_1) && match.getMatchProperties().isOthersCantLevelUp() == false);
+        assertTrue(strategyLose.checkLoseForBuild(strategyBuild, worker2_1) && match.getMatchProperties().getOthersCantLevelUp() == false);
     }
 
 }
