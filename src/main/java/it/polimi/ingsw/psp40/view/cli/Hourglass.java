@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Class used to display a cool hourlass in ASCII while user is waiting
+ * Class used to display a cool hourglass in ASCII while user is waiting
  * "Tempus fugit"
  * @author TiberioG
  */
@@ -19,6 +19,12 @@ public class Hourglass implements Runnable{
     private volatile boolean cancelled;
     private boolean lateral = false;
 
+    /**
+     * constructor
+     * @param upper  frame where the hourglass will be printed
+     * @param lower frame where to add additional messages
+     * @param lateral specifies if it's a lateral hourglass
+     */
     public Hourglass(Frame upper, Frame lower, boolean lateral) {
         this.upper = upper;
         this.lower = lower;
@@ -27,11 +33,12 @@ public class Hourglass implements Runnable{
 
     @Override
     public void run() {
+        // this is for the hourglass in the center
         if(!lateral) {
             try {
                 Terminal.noBuffer();
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+               // e.printStackTrace();
             }
             upper.clear();
             Terminal.hideCursor();
@@ -41,7 +48,7 @@ public class Hourglass implements Runnable{
                 } catch (IOException e) {
                     //
                 }
-                for (int i = 1; i <= 39; i++) {
+                for (int i = 1; i <= 39; i++) { // 39 is the number of hourglass frames in ascii
                     if (cancelled) {
                         break;
                     }
@@ -54,10 +61,11 @@ public class Hourglass implements Runnable{
                 Utils.doTimeUnitSleep(500);
             }
         }
+        //this is for a lateral hourglass
         else {
             Terminal.hideCursor();
             while (!cancelled) {
-                for (int i = 1; i <= 39; i++) {
+                for (int i = 1; i <= 39; i++) { // 39 is the number of hourglass frames in ascii
                     if (cancelled) {
                         break;
                     }
@@ -73,12 +81,20 @@ public class Hourglass implements Runnable{
 
     }
 
+    /**
+     * stops the animation
+     */
     public void cancel()
     {
         cancelled = true;
     }
 
-
+    /**
+     * small utility to convert paths to string
+     * @param url where there is a resource
+     * @return the path string
+     * @throws IOException
+     */
     public static String URLReader(URL url) throws IOException {
         try (InputStream in = url.openStream()) {
             byte[] bytes = in.readAllBytes();

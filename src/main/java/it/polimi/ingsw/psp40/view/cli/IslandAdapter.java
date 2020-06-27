@@ -25,6 +25,12 @@ public class IslandAdapter {
     final int SPACING_V = 1;
 
 
+    /**
+     * costructor for a new island adapter
+     * @param field a matrix of {@link Cell} coming from model
+     * @param location the {@link Location} from model
+     * @param frame the {@link Frame} where to print the island
+     */
     public IslandAdapter(Cell[][] field, Location location, Frame frame){
         this.frame = frame;
         this.matrix = new SquareCell[field.length][field.length];
@@ -44,19 +50,26 @@ public class IslandAdapter {
         }
     }
 
-
+    /**
+     * method to print all the island
+     * @throws IOException
+     * @throws InterruptedException
+     */
     void print() throws IOException, InterruptedException {
         Terminal.noBuffer();
         Terminal.hideCursor();
 
-        for (int row = 0; row < matrix.length; row ++) {
+        for (SquareCell[] squareCells : matrix) {
             for (int col = 0; col < matrix.length; col++) {
-                matrix[row][col].print();
+                squareCells[col].print();
             }
         }
         System.out.print(Colors.reset());
     }
 
+    /**
+     * method to add the visualization of the coordinates in the cells of the map
+     */
     void debug() {
         for (int row = 0; row < matrix.length; row ++) {
             for (int col = 0; col < matrix.length; col++) {
@@ -66,11 +79,19 @@ public class IslandAdapter {
         System.out.print(Colors.reset());
     }
 
+    /**
+     * used to set a {@link SquareCell} selected
+     * @param r row
+     * @param c col
+     */
     void setSelected(int r, int c) {
       clearSelected();
       matrix[r][c].setSelected(true);
     }
 
+    /**
+     * makes all {@link SquareCell}  NOT selected
+     */
     void clearSelected() {
         for (SquareCell[] squareCells : matrix) {
             for (int col = 0; col < matrix.length; col++) {
@@ -79,13 +100,30 @@ public class IslandAdapter {
         }
     }
 
+    /**
+     * adds a worker in a {@link SquareCell}
+     * @param r row
+     * @param c col
+     * @param color {@link Colors} of the worker
+     */
     void setWorker(int r, int c, Colors color) {
         matrix[r][c].setTempWorker(color);
     }
+
+    /**
+     * adds a level in a {@link SquareCell}
+     * @param r row
+     * @param c col
+     * @param templevel int level to add
+     */
     void setTempLevel(int r, int c, int templevel) {
         matrix[r][c].setTempLevel(templevel);
     }
 
+    /**
+     * makes a list of {@link SquareCell} as available
+     * @param availableCells a list of {@link Cell}
+     */
     public void setMovable (List<Cell> availableCells ) {
         for (Cell cell : availableCells) {
             for (int row = 0; row < matrix.length; row ++) {
@@ -98,6 +136,9 @@ public class IslandAdapter {
         }
     }
 
+    /**
+     * makes all the cells NOT movable
+     */
     void clearMovable() {
         for (SquareCell[] squareCells : matrix) {
             for (int col = 0; col < matrix.length; col++) {
@@ -106,10 +147,19 @@ public class IslandAdapter {
         }
     }
 
+    /**
+     * getter of the matrix of {@link SquareCell}
+     * @return the matrix of {@link SquareCell}
+     */
     public SquareCell[][] getMatrix(){
         return this.matrix;
     }
 
+    /**
+     * utility to make a list of Components as an array of booleans
+     * @param components
+     * @return
+     */
     private boolean[] levelify(List<Component> components){
         boolean[] levels = new boolean[5];
         for (Component component : components) {
@@ -117,6 +167,5 @@ public class IslandAdapter {
         }
         return levels;
     }
-
 
 }
