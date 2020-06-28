@@ -399,14 +399,10 @@ public class Client implements ServerObserver {
     return listOfPhasesCache;
   }
 
-  public List<Worker> getMyWorkerCached(){
-    List<Worker> myWorkers = playerListCache.stream().filter(player -> player.getName().equals(username)).flatMap(player -> player.getWorkers().stream()).collect(Collectors.toList());
-    return myWorkers;
-  }
-
   public List<Cell> getAvailableMoveCells() {
     return availableMoveCells;
   }
+
   public HashMap<Cell, List<Integer>> getAvailableBuildCells() {
     return availableBuildCells;
   }

@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.psp40.commons.Component;
-import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.JsonAdapter;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
@@ -12,11 +11,9 @@ import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -126,6 +123,7 @@ public class MatchHistory {
      * Method to create a new match from a JsonObject that contain an old match
      * @param virtualView the {@link VirtualView} necessary for costructor of restored match
      * @param oldMatch the {@link JsonObject} that contains the information of old match
+     * @return the oldMatch restored
      */
     public static Match restoreMatch(VirtualView virtualView, JsonObject oldMatch) {
         int matchId = JsonAdapter.getIntFromJsonObject(oldMatch, "matchId");
@@ -135,6 +133,7 @@ public class MatchHistory {
     /**
      * Method to retrieve the names of players from a {@link JsonObject} that contains the old match
      * @param oldMatch the {@link JsonObject} that contains the information of old match
+     * @return a list of players name of old match
      */
     public static List<String> getPlayersFromBrokenMatch(JsonObject oldMatch) {
         List<Player> playerList = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("players"), new TypeToken<List<Player>>() {}.getType());
@@ -204,7 +203,7 @@ public class MatchHistory {
         MatchProperties oldMatchProperties = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("matchProperties"), new TypeToken<MatchProperties>() {}.getType());
         MatchProperties newMatchProperties = match.getMatchProperties();
 
-        newMatchProperties.setOthersCantLevelUp(oldMatchProperties.isOthersCantLevelUp());
+        newMatchProperties.setOthersCantLevelUp(oldMatchProperties.getOthersCantLevelUp());
     }
 
     /**

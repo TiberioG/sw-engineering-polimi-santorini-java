@@ -50,6 +50,11 @@ public class Dome extends Block {
         }
     }
 
+    /**
+     * shows image of dome
+     * @param row row (coordinate X) of the island where to place the block
+     * @param col column (coordinate Y) of the island where to place the block
+     */
     @Override
     void display(int row, int col) {
         switch (currentCamera) {

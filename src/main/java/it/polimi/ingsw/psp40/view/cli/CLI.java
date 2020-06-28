@@ -27,12 +27,7 @@ import java.util.stream.IntStream;
  * @author TiberioG
  */
 
-// fine gioco cipiare gui
-    //disconnessione rimettere ip
-
-
-    //todo descrizione carta
-
+@Deprecated
 public class CLI implements ViewInterface {
     /**
      * Constructor

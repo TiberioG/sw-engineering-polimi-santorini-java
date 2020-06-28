@@ -28,8 +28,8 @@ public class GUI extends Application implements ViewInterface {
 
     /* Attributes */
 
-    private boolean mockingConnection = true;
-    private boolean mockingCard = true;
+    private boolean mockingConnection = false;
+    private boolean mockingCard = false;
     private int mockNumOfPlayers = 2; // 2 or 3
 
     private Stage primaryStage;

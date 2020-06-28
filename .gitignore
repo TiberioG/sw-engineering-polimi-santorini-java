@@ -27,3 +27,7 @@ site/slides/css
 site/slides/js
 site/slides/lib
 site/slides/plugin
+
+#various files
+backupOfMatches.json
+logfile.log.lck

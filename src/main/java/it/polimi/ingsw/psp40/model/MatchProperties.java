@@ -11,7 +11,6 @@ import java.util.List;
  * @author Vito96, TiberioG, sup3rgiu
  */
 public class MatchProperties {
-    private int currentTurnId = -1;
     private HashMap<Worker, Cell> initialPositionMap = new HashMap<>();
     private HashMap<Worker, Integer> initialLevels = new HashMap<>();
     private HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
@@ -23,7 +22,6 @@ public class MatchProperties {
      * this resets all the parameters
      */
     public void resetParameterForTurn() {
-        currentTurnId = -1;
         initialPositionMap = new HashMap<>();
         initialLevels = new HashMap<>();
         builtInThisTurn = new HashMap<>();
@@ -55,15 +53,6 @@ public class MatchProperties {
     }
 
     /**
-     * Getter of current turnid
-     * @return
-     * @deprecated
-     */
-    public int getCurrentTurnId() {
-        return currentTurnId;
-    }
-
-    /**
      * This method is used to update the table of the builds done during a turn
      * @param worker is the {@link Worker} that has built
      * @param cell is the {@link Cell} where the worker has built
@@ -83,14 +72,14 @@ public class MatchProperties {
 
     /**
      * getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
-     * @return the flag
+     * @return the saved othersCantLevelUp
      */
-    public boolean isOthersCantLevelUp() {
+    public boolean getOthersCantLevelUp() {
         return othersCantLevelUp;
     }
 
     /**
-     * setter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+     * Setter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
      */
     public void setOthersCantLevelUp(boolean othersCantLevelUp) {
         this.othersCantLevelUp = othersCantLevelUp;

@@ -70,7 +70,7 @@ public class DefaultMove implements StrategyMove {
      */
     @Override
     public List<Cell> getAdjCells(Cell cell) {
-        boolean cantLevelUp = match.getMatchProperties().isOthersCantLevelUp();
+        boolean cantLevelUp = match.getMatchProperties().getOthersCantLevelUp();
         List<Cell> adjCells = match.getIsland().getAdjCells(cell);
 
         if(cantLevelUp) {

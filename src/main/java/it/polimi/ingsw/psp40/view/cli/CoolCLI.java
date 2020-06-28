@@ -783,6 +783,7 @@ public class CoolCLI implements ViewInterface {
             //e.printStackTrace();
         }
         lower.center("You lost the game " ,  DELAY);
+
     }
 
 
