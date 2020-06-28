@@ -57,6 +57,7 @@ public class CoolCLI implements ViewInterface {
     private static Frame lower = new Frame (new int[]{ROWS - 6 ,0}, new int[]{ROWS, COLS}, in, out);
     private static Frame lower2 = new Frame (new int[]{ROWS - 2 ,0}, new int[]{ROWS, COLS}, in, out);
     private static Frame left = new Frame(new int[]{10,0}, new int[]{ROWS -3, 58}, in, out);
+    private static Frame lowerLeft = new Frame(new int[]{16,0}, new int[]{ROWS -5, 58}, in, out);
     private static Frame islandFrame = new Frame(new int[]{8,80}, new int[]{ROWS -3, 58}, in, out);
 
     private boolean fastboot = false;
@@ -422,7 +423,8 @@ public class CoolCLI implements ViewInterface {
         lower.clear();
         left.clear(); // must be last clear
 
-        CardSelector cardSelector = new CardSelector(cards, numPlayers, center);
+        center.center("Choose with keyboard arrows the " + numPlayers  + " cards  to use in game, confirm with SPACEBAR", DELAY);
+        CardSelector cardSelector = new CardSelector(cards, numPlayers, center2);
 
         int[] selection = cardSelector.selectionMultiple();
 
@@ -442,7 +444,8 @@ public class CoolCLI implements ViewInterface {
         left.clear(); // must be last clear
         Utils.doTimeUnitSleep(DELAY);
 
-        CardSelector cardSelector = new CardSelector(availableCards, 1,  center);
+        center.center("Choose with keyboard arrows your personal card, confirm with SPACEBAR", DELAY);
+        CardSelector cardSelector = new CardSelector(availableCards, 1,  center2);
         int personalIdCard = cardSelector.selectionSingol();
         client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
 
@@ -536,7 +539,8 @@ public class CoolCLI implements ViewInterface {
         killHourglass();
         left.clear();
         center.clear();
-        PlayerSelector playerSelector = new PlayerSelector(allPlayers, center);
+        center.center("Choose the first player using keyboard arrows, confirm with SPACEBAR", DELAY);
+        PlayerSelector playerSelector = new PlayerSelector(allPlayers, center2);
 
         String playerSelected = playerSelector.selection();
         client.sendToServer(new Message(TypeOfMessage.SET_FIRST_PLAYER, playerSelected));
@@ -636,7 +640,7 @@ public class CoolCLI implements ViewInterface {
     public void displayChoiceSelectionOfWorker() {
   killHourglass();
         left.clear();
-        left.printWrapped("Choose worker using TAB, confirm with SPACEBAR, after selection press B if you want to go back to the selection of worker");
+        left.printWrapped("Choose worker using TAB, confirm with SPACEBAR, after selection press B if you want to go back to the selection of worker. \n Press C to show your card description");
         Integer[] starting = getMyWorkers().get(currentWorkerId);
 
         try {
@@ -1066,6 +1070,10 @@ public class CoolCLI implements ViewInterface {
                        myisland.print();
                    }
 
+                   // gettind C for card info
+                   else if (c == 99){
+                       cardinfo();
+                   }
                     // gettind D for debug option
                     else if (c == 100) {
                         debug = !debug;
@@ -1199,4 +1207,8 @@ public class CoolCLI implements ViewInterface {
         Utils.doTimeUnitSleep(500); //sennò sfarfalla, bisogna dargli tempo
     }
 
+
+    private void cardinfo(){
+       lowerLeft.printWrapped("CARD DESCRIPTION: \n" + client.getMyCard().getDescription());
+    }
 }

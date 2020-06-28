@@ -37,8 +37,8 @@ public class PlayerSelector {
         widthRight = widthLeft + 5;
 
         //this is used to create a 2frame centered layout inseide the container
-        f1 = new Frame(new int[]{10, (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 }, container.getAbsEnd(), container.getIn(), container.getOut());
-        f2 = new Frame(new int[]{10, ( (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 ) + widthLeft + SPACING }, container.getAbsEnd(), container.getIn(), container.getOut());
+        f1 = new Frame(new int[]{container.getInit()[0], (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 }, container.getAbsEnd(), container.getIn(), container.getOut());
+        f2 = new Frame(new int[]{container.getInit()[0], ( (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 ) + widthLeft + SPACING }, container.getAbsEnd(), container.getIn(), container.getOut());
     }
 
 

@@ -26,17 +26,13 @@ public class CardSelector {
     private Frame fRight;
 
     /**
-     * Constructor using an hashmap
-     * @param hashMapCards a map of id and {@link Card}
-     * @param toSelect
-     * @param container
+     * Constructo private used by the two public ones
+     * @param toSelect number of card to select
+     * @param container {@link Frame}
      */
-    public CardSelector(HashMap<Integer, Card> hashMapCards, int toSelect, Frame container){
-        for (int i = 0; i< hashMapCards.size(); i++){
-            this.cards.add(hashMapCards.get(i));
-        }
-        fLeft = new Frame(new int[]{10, (container.getColSpan() - (width + SPACING + extended) ) /2}, container.getAbsEnd(), container.getIn(), container.getOut());
-        fRight = new Frame(new int[]{10,((container.getColSpan() - (width + SPACING + extended) ) /2) + width + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
+    private CardSelector(int toSelect, Frame container){
+        fLeft = new Frame(new int[]{container.getInit()[0], (container.getColSpan() - (width + SPACING + extended) ) /2}, container.getAbsEnd(), container.getIn(), container.getOut());
+        fRight = new Frame(new int[]{container.getInit()[0], ((container.getColSpan() - (width + SPACING + extended) ) /2) + width + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
 
         this.toSelect = toSelect;
         switch (toSelect){
@@ -52,6 +48,21 @@ public class CardSelector {
         }
     }
 
+
+    /**
+     * Constructor using an hashmap
+     * @param hashMapCards a map of id and {@link Card}
+     * @param toSelect
+     * @param container
+     */
+    public CardSelector(HashMap<Integer, Card> hashMapCards, int toSelect, Frame container){
+        this(toSelect, container);
+        for (int i = 0; i< hashMapCards.size(); i++){
+            this.cards.add(hashMapCards.get(i));
+        }
+
+    }
+
     /**
      * Constructor if using only a list of  {@link Card}
      * @param availableCards a list of {@link Card}
@@ -59,22 +70,8 @@ public class CardSelector {
      * @param container
      */
     public CardSelector(List<Card> availableCards, int toSelect, Frame container){
+        this(toSelect, container);
         this.cards = availableCards;
-        this.fLeft = new Frame(new int[]{10, (container.getColSpan() - (width + SPACING + extended) ) /2}, container.getAbsEnd(), container.getIn(), container.getOut());
-        this.fRight = new Frame(new int[]{10,((container.getColSpan() - 2 * (width + SPACING) ) /2) +width + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
-        this.toSelect = toSelect;
-
-        switch (toSelect){
-            case 0:
-                title = "Available cards";
-                break;
-            case 1:
-                title = "Select " + toSelect + " card";
-                break;
-            default:
-                title = "Select " + toSelect + " cards";
-                break;
-        }
 
     }
 
