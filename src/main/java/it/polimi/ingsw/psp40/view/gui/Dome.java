@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Component;
-import javafx.scene.image.Image;
 
 /**
  * @author sup3rgiu
@@ -52,6 +51,7 @@ public class Dome extends Block {
 
     /**
      * shows image of dome
+     *
      * @param row row (coordinate X) of the island where to place the block
      * @param col column (coordinate Y) of the island where to place the block
      */
@@ -66,19 +66,19 @@ public class Dome extends Block {
             default: // right and left
                 switch (this.z) {
                     case 1:
-                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 145);
+                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 145);
                         break;
 
                     case 2:
-                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 83);
+                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 83);
                         break;
 
                     case 3:
-                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 32);
+                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix + GUIProperties.domeYFix + 32);
                         break;
 
                     case 4:
-                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix + GUIProperties.domeYFix);
+                        this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix + GUIProperties.domeYFix);
                         break;
                 }
 

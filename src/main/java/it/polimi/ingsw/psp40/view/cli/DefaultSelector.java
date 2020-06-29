@@ -1,11 +1,13 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
+
 import java.io.IOException;
 import java.util.List;
 
 /**
  * this class is used to display in terminal a selector of strings, usually phases
+ *
  * @author TiberioG Vito96
  */
 public class DefaultSelector {
@@ -16,6 +18,7 @@ public class DefaultSelector {
 
     /**
      * Constructor
+     *
      * @param mainContainer
      * @param title
      * @param listForSelector
@@ -26,12 +29,11 @@ public class DefaultSelector {
         this.listForSelector = listForSelector;
         this.width = Math.max(listForSelector.stream().mapToInt(String::length).max().orElse(title.length()), title.length()) + 5;
 
-        if (!centered){
+        if (!centered) {
             init = mainContainer.getInit();
-        }
-        else {
-            int col = (mainContainer.getColSpan() - width ) / 2;
-            init = new int[] {mainContainer.getInit()[0], col};
+        } else {
+            int col = (mainContainer.getColSpan() - width) / 2;
+            init = new int[]{mainContainer.getInit()[0], col};
         }
     }
 
@@ -48,6 +50,7 @@ public class DefaultSelector {
 
     /**
      * method to get the index of selection
+     *
      * @return int as the index
      */
     public int getSelectionIndex() {
@@ -72,11 +75,11 @@ public class DefaultSelector {
                         int next2 = System.in.read();
                         if (next1 == 91) { //  read [
                             if (next2 == 65) {                     //UP  arrow
-                                if (selection > 0 && selection <= listForSelector.size() -1) {
+                                if (selection > 0 && selection <= listForSelector.size() - 1) {
                                     selection--;
                                 }
                             } else if (next2 == 66) {              //DOWN arrow
-                                if (selection >= 0 && selection < listForSelector.size() -1) {
+                                if (selection >= 0 && selection < listForSelector.size() - 1) {
                                     selection++;
                                 }
                             }
@@ -95,6 +98,7 @@ public class DefaultSelector {
 
     /**
      * method to get the content of the selection
+     *
      * @return a String selected
      */
     public String getSelection() {
@@ -105,6 +109,7 @@ public class DefaultSelector {
 
     /**
      * prints the list
+     *
      * @param currentSelection
      */
     public void printListOfSelection(int currentSelection) {
@@ -158,6 +163,7 @@ public class DefaultSelector {
 
     /**
      * prints items
+     *
      * @param currentSelection
      */
     public void printMiddleItemLines(int currentSelection) {
@@ -172,8 +178,11 @@ public class DefaultSelector {
             if (i == currentSelection) System.out.print(Colors.reset());
             System.out.print("║");
             Terminal.moveAbsoluteCursor(init[0] + 4 + i, init[1]);
-        };
-    };
+        }
+        ;
+    }
+
+    ;
 
     /**
      * prints last line
@@ -181,7 +190,7 @@ public class DefaultSelector {
     public void printCloseLine() {
         //closeline
         System.out.print("╚");
-        for (int i = 0; i< (width); i++ ){
+        for (int i = 0; i < (width); i++) {
             System.out.print("═");
         }
         System.out.print("╝");

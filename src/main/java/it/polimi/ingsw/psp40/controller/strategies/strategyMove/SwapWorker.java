@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 
 /**
  * This strategy allows a {@link Worker}  move into an opponent Worker’s space by forcing their Worker to the space yours just vacated
+ *
  * @author sup3rgiu
  */
 public class SwapWorker extends DefaultMove {
 
     /**
      * constructor
+     *
      * @param match
      */
     public SwapWorker(Match match) {
@@ -26,9 +28,8 @@ public class SwapWorker extends DefaultMove {
     }
 
     /**
-     *
      * @param worker it's the {@link Worker} to move
-     * @param cell it's the new {@link Cell} where is moved
+     * @param cell   it's the new {@link Cell} where is moved
      * @throws ZeroCellsAvailableMoveException
      * @throws WrongCellSelectedMoveException
      * @throws WorkerAlreadyPresentException
@@ -36,10 +37,12 @@ public class SwapWorker extends DefaultMove {
     @Override
     public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException {
         List<Cell> availableCells = getAvailableCells(worker);
-        if(availableCells.size() == 0) { throw new ZeroCellsAvailableMoveException(); }
-        else if(!availableCells.contains(cell)) { throw new WrongCellSelectedMoveException(); }
-        else {
-            if(match.getLocation().getOccupant(cell) != null) // if cell is occupied by an enemy worker
+        if (availableCells.size() == 0) {
+            throw new ZeroCellsAvailableMoveException();
+        } else if (!availableCells.contains(cell)) {
+            throw new WrongCellSelectedMoveException();
+        } else {
+            if (match.getLocation().getOccupant(cell) != null) // if cell is occupied by an enemy worker
                 match.getLocation().swapLocation(match.getLocation().getLocation(worker), cell);
             else
                 match.getLocation().setLocation(cell, worker);
@@ -48,6 +51,7 @@ public class SwapWorker extends DefaultMove {
 
     /**
      * Compared to the {@link DefaultMove} this returns also the cell occupied by an enemy worker
+     *
      * @param worker it's the {@link Worker} you want to know about
      * @return a list of {@link Cell} where the  {@link Worker} can move
      */
@@ -58,7 +62,7 @@ public class SwapWorker extends DefaultMove {
         return adjCells.stream()
                 .filter(cell -> cell.getTower().getTopComponent().getComponentCode() <= workerCell.getTower().getTopComponent().getComponentCode() + 1) // remove cells where tower is 2 or more level higher than where the worker is
                 .filter(cell -> cell.getTower().getTopComponent() != Component.DOME) // remove cells where the tower is complete
-                .filter(cell -> (match.getLocation().getOccupant(cell) == null || match.getLocation().getOccupant(cell).getOwner() != worker.getOwner()) ) // remove cells where there is a worker owned by the current player
+                .filter(cell -> (match.getLocation().getOccupant(cell) == null || match.getLocation().getOccupant(cell).getOwner() != worker.getOwner())) // remove cells where there is a worker owned by the current player
                 .collect(Collectors.toList());
     }
 }

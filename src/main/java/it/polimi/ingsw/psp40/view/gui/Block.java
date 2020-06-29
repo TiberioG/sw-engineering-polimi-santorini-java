@@ -27,12 +27,14 @@ public abstract class Block extends ImageView {
 
     /**
      * Loads the correct image for the block depending on the given camera
+     *
      * @param cameraType
      */
     abstract void loadImage(GUIProperties.CameraType cameraType);
 
     /**
      * Places the block in the given position
+     *
      * @param row row (coordinate X) of the island where to place the block
      * @param col column (coordinate Y) of the island where to place the block
      */
@@ -40,12 +42,14 @@ public abstract class Block extends ImageView {
 
     /**
      * Creates a copy of the block
+     *
      * @return a copy of the block
      */
     abstract Block copy();
 
     /**
      * Creates a copy of the block changing the camera
+     *
      * @param cameraType
      * @return a copy of the block
      */
@@ -53,6 +57,7 @@ public abstract class Block extends ImageView {
 
     /**
      * Sets the given effect to the block
+     *
      * @param effect effect to apply to the block
      */
     protected void setBlockEffect(Effect effect) {
@@ -63,20 +68,22 @@ public abstract class Block extends ImageView {
      * Handles block click
      */
     protected void handleClick() {
-        if(GUI.gameScreenController != null)
+        if (GUI.gameScreenController != null)
             GUI.gameScreenController.blockClicked(row, col, z);
     }
 
     /**
      * Sets X position of the block
+     *
      * @param x
      */
     protected void setXPosition(double x) {
-        this.setX( x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera) ); // fix X position depending row, col and CameraType values
+        this.setX(x + GUIProperties.getIncrementalFix_x(this.row, this.col, currentCamera)); // fix X position depending row, col and CameraType values
     }
 
     /**
      * Returns the final X coordinate of the block, fixed with a corrective value
+     *
      * @param x initial X value (not yet fixed)
      * @return fixed X value
      */
@@ -86,14 +93,16 @@ public abstract class Block extends ImageView {
 
     /**
      * Sets Y position of the block
+     *
      * @param y
      */
     protected void setYPosition(double y) {
-        this.setY( y + GUIProperties.getIncrementalFix_y(this.row, this.col, currentCamera) ); // fix Y position depending row, col and CameraType values
+        this.setY(y + GUIProperties.getIncrementalFix_y(this.row, this.col, currentCamera)); // fix Y position depending row, col and CameraType values
     }
 
     /**
      * Returns the final Y coordinate of the block, fixed with a corrective value
+     *
      * @param y initial Y value (not yet fixed)
      * @return fixed Y value
      */
@@ -103,10 +112,11 @@ public abstract class Block extends ImageView {
 
     /**
      * Sets the camera of the block
+     *
      * @param cameraType
      */
     protected final void setCamera(GUIProperties.CameraType cameraType) {
-        if((cameraType != null) && (currentCamera == null || currentCamera != cameraType)) {
+        if ((cameraType != null) && (currentCamera == null || currentCamera != cameraType)) {
             currentCamera = cameraType;
             loadImage(cameraType);
             switch (cameraType) {
@@ -154,7 +164,7 @@ public abstract class Block extends ImageView {
                 )
         );
 
-        if(this.getOpacity() == 0) { // tiles (Ground elements)
+        if (this.getOpacity() == 0) { // tiles (Ground elements)
             this.setOpacity(0.55);
         }
 

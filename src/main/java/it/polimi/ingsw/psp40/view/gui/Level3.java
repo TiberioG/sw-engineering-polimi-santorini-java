@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Component;
-import javafx.scene.image.Image;
 
 /**
  * @author sup3rgiu
@@ -51,7 +50,7 @@ public class Level3 extends Block {
 
             default: // right and left
                 this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + GUIProperties.level3XFix);
-                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix);
+                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix);
                 UtilsGUI.slideInDownAnimation(this);
                 break;
         }

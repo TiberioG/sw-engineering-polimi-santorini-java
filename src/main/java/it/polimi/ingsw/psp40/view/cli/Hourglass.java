@@ -2,18 +2,16 @@ package it.polimi.ingsw.psp40.view.cli;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Class used to display a cool hourglass in ASCII while user is waiting
  * "Tempus fugit"
+ *
  * @author TiberioG
  */
-public class Hourglass implements Runnable{
+public class Hourglass implements Runnable {
     private Frame upper;
     private Frame lower;
     private volatile boolean cancelled;
@@ -21,8 +19,9 @@ public class Hourglass implements Runnable{
 
     /**
      * constructor
-     * @param upper  frame where the hourglass will be printed
-     * @param lower frame where to add additional messages
+     *
+     * @param upper   frame where the hourglass will be printed
+     * @param lower   frame where to add additional messages
      * @param lateral specifies if it's a lateral hourglass
      */
     public Hourglass(Frame upper, Frame lower, boolean lateral) {
@@ -34,11 +33,11 @@ public class Hourglass implements Runnable{
     @Override
     public void run() {
         // this is for the hourglass in the center
-        if(!lateral) {
+        if (!lateral) {
             try {
                 Terminal.noBuffer();
             } catch (IOException | InterruptedException e) {
-               // e.printStackTrace();
+                // e.printStackTrace();
             }
             upper.clear();
             Terminal.hideCursor();
@@ -70,7 +69,7 @@ public class Hourglass implements Runnable{
                         break;
                     }
                     try {
-                        upper.centerCenterFixed(URLReader(getClass().getResource("/ascii/hourglass/" + i)), "Your turn is over", 26, 23,10);
+                        upper.centerCenterFixed(URLReader(getClass().getResource("/ascii/hourglass/" + i)), "Your turn is over", 26, 23, 10);
                     } catch (IOException e) {
                         //
                     }
@@ -84,13 +83,13 @@ public class Hourglass implements Runnable{
     /**
      * stops the animation
      */
-    public void cancel()
-    {
+    public void cancel() {
         cancelled = true;
     }
 
     /**
      * small utility to convert paths to string
+     *
      * @param url where there is a resource
      * @return the path string
      * @throws IOException

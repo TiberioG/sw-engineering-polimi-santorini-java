@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Component;
-import javafx.scene.image.Image;
 
 /**
  * @author sup3rgiu

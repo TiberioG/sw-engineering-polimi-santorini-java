@@ -14,6 +14,7 @@ public class Card {
 
     /**
      * getter of id of the card
+     *
      * @return
      */
     public int getId() {
@@ -29,6 +30,7 @@ public class Card {
 
     /**
      * Geter of the name of the card
+     *
      * @return
      */
     public String getName() {
@@ -37,6 +39,7 @@ public class Card {
 
     /**
      * setter of name of the card
+     *
      * @param name
      */
     public void setName(String name) {
@@ -45,6 +48,7 @@ public class Card {
 
     /**
      * getter of type of card
+     *
      * @return
      */
     public String getType() {
@@ -53,6 +57,7 @@ public class Card {
 
     /**
      * setter of type of the card
+     *
      * @param type
      */
     public void setType(String type) {

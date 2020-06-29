@@ -1,12 +1,12 @@
 package it.polimi.ingsw.psp40.controller;
 
 import it.polimi.ingsw.psp40.commons.PhaseType;
-import it.polimi.ingsw.psp40.model.Player;
 
 import java.util.List;
 
 /**
  * This class rappresent a phase of {@link Turn}
+ *
  * @author Vito96
  */
 public class Phase {
@@ -16,6 +16,7 @@ public class Phase {
 
     /**
      * Constructor
+     *
      * @param type
      * @param nextPhases
      * @param needCheckForVictory
@@ -28,6 +29,7 @@ public class Phase {
 
     /**
      * Getter of the type of phase
+     *
      * @return the type of the pahse
      */
     public PhaseType getType() {
@@ -36,6 +38,7 @@ public class Phase {
 
     /**
      * Getter of the next phases available
+     *
      * @return an list of the next phases
      */
     public List<Phase> getNextPhases() {
@@ -44,6 +47,7 @@ public class Phase {
 
     /**
      * Getter for needCheckForVictory
+     *
      * @return the boolean which indicate if the phase need a check for victory
      */
     public boolean getNeedCheckForVictory() {

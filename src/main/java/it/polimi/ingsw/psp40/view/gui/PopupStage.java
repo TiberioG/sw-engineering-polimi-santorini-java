@@ -2,12 +2,10 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import animatefx.animation.AnimationFX;
 import animatefx.animation.ZoomIn;
-import javafx.animation.Animation;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -41,14 +39,14 @@ public class PopupStage extends Stage {
         //popupStage.initModality(Modality.APPLICATION_MODAL);
 
         // Calculate the center position of the parent Stage
-        double centerXPosition = ownerStage.getX() + ownerStage.getWidth()/2d;
-        double centerYPosition = ownerStage.getY() + ownerStage.getHeight()/2d;
+        double centerXPosition = ownerStage.getX() + ownerStage.getWidth() / 2d;
+        double centerYPosition = ownerStage.getY() + ownerStage.getHeight() / 2d;
         // Hide the pop-up stage before it is shown and becomes relocated
         this.setOnShowing(ev -> this.hide());
         // Relocate the pop-up Stage
         this.setOnShown(ev -> {
-            this.setX(centerXPosition - this.getWidth()/2d);
-            this.setY(centerYPosition - this.getHeight()/2d);
+            this.setX(centerXPosition - this.getWidth() / 2d);
+            this.setY(centerYPosition - this.getHeight() / 2d);
             this.show();
         });
 
@@ -83,7 +81,7 @@ public class PopupStage extends Stage {
         text.setLineSpacing(-5);
         text.setTextAlignment(TextAlignment.CENTER);
         double wrapWidth = this.ownerStage.getScene().getWidth() * 0.2;
-        if(text.getLayoutBounds().getWidth() > wrapWidth) {
+        if (text.getLayoutBounds().getWidth() > wrapWidth) {
             text.setWrappingWidth(wrapWidth);
         }
         return text;

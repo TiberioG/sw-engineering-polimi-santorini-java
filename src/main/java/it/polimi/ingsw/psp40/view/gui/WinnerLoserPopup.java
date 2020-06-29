@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
-import it.polimi.ingsw.psp40.model.Player;;
+import it.polimi.ingsw.psp40.model.Player;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -9,6 +9,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+;
 
 public class WinnerLoserPopup extends PopupStage {
 
@@ -23,6 +25,7 @@ public class WinnerLoserPopup extends PopupStage {
 
     /**
      * Constructor
+     *
      * @param ownerStage
      * @param isWinner
      * @param continueFunction
@@ -36,6 +39,7 @@ public class WinnerLoserPopup extends PopupStage {
 
     /**
      * Method that permit to a set a winningPlayer information in the popup
+     *
      * @param winningPlayer the player who has won
      */
     protected void setWinningPlayer(Player winningPlayer) {
@@ -60,7 +64,7 @@ public class WinnerLoserPopup extends PopupStage {
         text.setFont(new Font(24));
         text.setWrappingWidth(280);
         this.vBox.getChildren().add(text);
-        this.vBox.setPadding(new Insets(100, 20, 20 , 20));  // override default padding
+        this.vBox.setPadding(new Insets(100, 20, 20, 20));  // override default padding
         UtilsGUI.addClassToElement(vBox, isWinner ? "winner-popup" : "loser-popup");
 
         Button button = buildButton();
@@ -85,11 +89,11 @@ public class WinnerLoserPopup extends PopupStage {
 
     private String getDetails() {
         String details;
-        if(isWinner) {
+        if (isWinner) {
             details = "Congratulations!\nYou Won!";
         } else {
             details = "I'm sorry, you lost :(";
-            if (winningPlayer != null)  details += "\n\nThe winner is " + winningPlayer.getName();
+            if (winningPlayer != null) details += "\n\nThe winner is " + winningPlayer.getName();
         }
         return details;
     }

@@ -1,8 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.network.client.Client;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.stage.Stage;
 
 public abstract class ScreenController {
@@ -11,6 +9,7 @@ public abstract class ScreenController {
 
     /**
      * Set the client
+     *
      * @param client client to be setted
      */
     protected void setClient(Client client) {
@@ -19,6 +18,7 @@ public abstract class ScreenController {
 
     /**
      * Set the stage
+     *
      * @param stage client to be setted
      */
     protected void setPrimaryStage(Stage stage) {
@@ -27,6 +27,7 @@ public abstract class ScreenController {
 
     /**
      * Return the client
+     *
      * @return the client
      */
     protected Client getClient() {
@@ -35,9 +36,10 @@ public abstract class ScreenController {
 
     /**
      * Return the primaryStage
+     *
      * @return the primaryStage
      */
-    protected Stage getPrimaryStage(){
+    protected Stage getPrimaryStage() {
         return primaryStage;
     }
 }

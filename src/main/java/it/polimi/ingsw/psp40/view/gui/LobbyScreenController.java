@@ -2,16 +2,14 @@ package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.psp40.model.Worker;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 
 public class LobbyScreenController extends ScreenController {
-    private ObservableList<String> listOfPlayers = FXCollections.observableArrayList ();
+    private ObservableList<String> listOfPlayers = FXCollections.observableArrayList();
     private ConfirmPopup restoreMatchPopup;
 
     @FXML
@@ -24,38 +22,43 @@ public class LobbyScreenController extends ScreenController {
     private ListView listViewPlayers;
 
     @FXML
-    public void initialize() {}
+    public void initialize() {
+    }
 
     /**
      * Method for update label of titleLobbyText
+     *
      * @param text the label for update titleLobbyText
      */
     public void updateTitleLabel(String text) {
-            titleLobbyText.setText(text);
+        titleLobbyText.setText(text);
     }
 
     /**
      * Method to view add a player to the waiting player list
+     *
      * @param nameOfPlayer the name of the player to add
      */
     public void addPlayerToLobby(String nameOfPlayer) {
-            if (!listOfPlayers.contains(nameOfPlayer)) listOfPlayers.add(nameOfPlayer);
-            listViewPlayers.setItems(listOfPlayers);
-            subTitleLobbyText.setVisible(true);
+        if (!listOfPlayers.contains(nameOfPlayer)) listOfPlayers.add(nameOfPlayer);
+        listViewPlayers.setItems(listOfPlayers);
+        subTitleLobbyText.setVisible(true);
     }
 
     /**
      * Method to view remove a player to the waiting player list
+     *
      * @param nameOfPlayer the name of the player to add
      */
     public void removePlayerFromLobby(String nameOfPlayer) {
-            listOfPlayers.remove(nameOfPlayer);
-            listViewPlayers.setItems(listOfPlayers);
-            if (listOfPlayers.size() == 0) subTitleLobbyText.setVisible(false);
+        listOfPlayers.remove(nameOfPlayer);
+        listViewPlayers.setItems(listOfPlayers);
+        if (listOfPlayers.size() == 0) subTitleLobbyText.setVisible(false);
     }
 
     /**
      * Method to send the message to the server to retrieve the match and to close the popup
+     *
      * @param restoreMatch the name of the player to add
      */
     private void onActionRestoreMatchButton(Boolean restoreMatch) {

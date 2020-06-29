@@ -3,9 +3,7 @@ package it.polimi.ingsw.psp40.view.gui;
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -22,7 +20,6 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class GUI extends Application implements ViewInterface {
 
@@ -84,7 +81,8 @@ public class GUI extends Application implements ViewInterface {
 
     /**
      * Helper method to create a scene from a FXML file
-     * @param pathOfFxmlFile path of the FXML file
+     *
+     * @param pathOfFxmlFile    path of the FXML file
      * @param functionInterface FunctionInterface to run after scene creation
      */
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
@@ -107,6 +105,7 @@ public class GUI extends Application implements ViewInterface {
 
     /**
      * Helper method to get the correct text depending on the remaining players needed to start the match
+     *
      * @param remainingPlayers the remaining players for start the match
      * @return the builded text
      */
@@ -226,7 +225,7 @@ public class GUI extends Application implements ViewInterface {
             confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to create a new match?", () -> {
                 this.isLogged = false;
                 displaySetup();
-            },() -> {
+            }, () -> {
                 Platform.exit();
                 System.exit(0);
             });
@@ -258,8 +257,8 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLocationUpdated() {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.updateWorkersPosition();
             });
         }
@@ -267,8 +266,8 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayCellUpdated(Cell cell) {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.updateCell(cell);
             });
         }
@@ -277,8 +276,8 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayPlayersUpdated() {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.setPlayersInfo(client.getPlayerListCache());
             });
         }
@@ -292,10 +291,9 @@ public class GUI extends Application implements ViewInterface {
         if (mockingCard) {
             List<Integer> ids = new ArrayList<>(cards.keySet());
             Collections.shuffle(ids); // random order
-            int[] selection = ids.stream().limit(numPlayers).mapToInt(i->i).toArray();
-            client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-        }
-        else {
+            int[] selection = ids.stream().limit(numPlayers).mapToInt(i -> i).toArray();
+            client.sendToServer(new Message(TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        } else {
             createMainScene("/FXML/CardScreen.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
@@ -311,9 +309,8 @@ public class GUI extends Application implements ViewInterface {
         if (mockingCard) {
             int personalIdCard = availableCards.get(0).getId();
             client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
-        }
-        else {
-            if(cardScreenController != null)
+        } else {
+            if (cardScreenController != null)
                 cardScreenController.displayCardsForPersonalSelection(availableCards);
             else {
                 createMainScene("/FXML/CardScreen.fxml", () -> {
@@ -345,14 +342,14 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases() {
-        Platform.runLater(()-> {
-            if (gameScreenController != null)  gameScreenController.askDesiredPhase();
+        Platform.runLater(() -> {
+            if (gameScreenController != null) gameScreenController.askDesiredPhase();
         });
     }
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.highlightAvailableCellsForMove();
         });
     }
@@ -364,14 +361,14 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.highlightAvailableCellsForBuild();
         });
     }
 
     @Override
     public void displayEndTurn() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.endTurn();
         });
     }
@@ -412,7 +409,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLoserMessage(Player winningPlayer) {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false, () -> {
                 displaySetup();
             });
@@ -423,9 +420,9 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLoserPlayer(Player player) {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             confirmPopup = new ConfirmPopup(primaryStage, player.getName() + " has lost!", () -> {
-               confirmPopup.hide();
+                confirmPopup.hide();
             });
             confirmPopup.setLabelConfirmButton("Okay");
             confirmPopup.setClass("loser-popup");
@@ -436,6 +433,7 @@ public class GUI extends Application implements ViewInterface {
 
     /**
      * Shows a popup, deleting the previous one if present
+     *
      * @param popupArg popup to be shown
      */
     public static void showPopup(PopupStage popupArg) {
@@ -444,7 +442,8 @@ public class GUI extends Application implements ViewInterface {
 
     /**
      * Shows a popup, deleting the previous one if present
-     * @param popupArg popup to be shown
+     *
+     * @param popupArg    popup to be shown
      * @param speedFactor speed factor to increment/reduce animation speed
      */
     public static void showPopup(PopupStage popupArg, double speedFactor) {
@@ -457,7 +456,7 @@ public class GUI extends Application implements ViewInterface {
      * Deletes the current popup, if present
      */
     public static void deletePopup() {
-        if(popup != null) {
+        if (popup != null) {
             popup.close();
             popup = null;
         }

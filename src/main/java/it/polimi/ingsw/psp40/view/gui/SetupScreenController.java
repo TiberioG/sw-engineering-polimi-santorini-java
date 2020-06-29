@@ -8,11 +8,12 @@ import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -72,18 +73,20 @@ public class SetupScreenController extends ScreenController {
         LocalDate minDate = LocalDate.parse(Configuration.minDate, DateTimeFormatter.ofPattern(Configuration.formatDate));
         LocalDate maxDate = LocalDate.now();
         birthdayDatePicker.setDayCellFactory(d ->
-            new DateCell() {
-            @Override public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
-        }});
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
+                    }
+                });
         birthdayDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             boolean isValidDate = Utils.isValidDateBool(newValue);
             validationMap.put(birthdayDatePicker, isValidDate);
             validateSendFields();
         });
 
-        numOfPlayerComboBox.getItems().addAll(2,3);
+        numOfPlayerComboBox.getItems().addAll(2, 3);
 
         UtilsGUI.buttonHoverEffect(connectButton);
         UtilsGUI.buttonHoverEffect(sendInfoButton);
@@ -117,6 +120,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the click of connectButton
+     *
      * @param actionEvent
      */
     @FXML
@@ -129,6 +133,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the onEnter of ipAddressTextField
+     *
      * @param actionEvent
      */
     @FXML
@@ -138,6 +143,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the onEnter of ipAddressTextField
+     *
      * @param actionEvent
      */
     @FXML
@@ -147,6 +153,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the changes of ipAddressTextField
+     *
      * @param keyEvent
      */
     @FXML
@@ -163,10 +170,11 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the changes of portTextField
+     *
      * @param keyEvent
      */
     @FXML
-     public void portChanged(KeyEvent keyEvent) {
+    public void portChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidPort = Utils.isValidPort(Integer.parseInt("0" + portTextField.getText().trim()));
         if (hasInsertedValidPort) {
             UtilsGUI.removeClassToElement(portTextField, "error-text");
@@ -193,12 +201,13 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the changes of usernameTextField
+     *
      * @param keyEvent
      */
     @FXML
     public void usernameChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidUsername = Utils.isValidUsername(usernameTextField.getText());
-        if(hasInsertedValidUsername) {
+        if (hasInsertedValidUsername) {
             UtilsGUI.removeClassToElement(usernameTextField, "error-text");
         } else {
             UtilsGUI.addClassToElement(usernameTextField, "error-text");
@@ -209,6 +218,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the changes of numOfPlayerComboBox
+     *
      * @param actionEvent
      */
     @FXML
@@ -220,6 +230,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that handle the click of sendInfoButton and  information of the user to the server
+     *
      * @param actionEvent
      */
     public void handleSendInfoButton(ActionEvent actionEvent) {
@@ -247,6 +258,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that allows you to display an error alert with custom text
+     *
      * @param text the text of the error alert
      */
     public void errorAlertSetup(String text) {
@@ -257,6 +269,7 @@ public class SetupScreenController extends ScreenController {
 
     /**
      * Method that allows you to display an error alert for a login error
+     *
      * @param text the text of the error alert
      */
     public void errorAlertLogin(String text) {

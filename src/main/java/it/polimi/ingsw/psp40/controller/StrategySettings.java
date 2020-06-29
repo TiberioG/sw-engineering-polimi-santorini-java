@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.controller;
 
 /**
  * This class represents an object with all strategy names
+ *
  * @author Vito96
  */
 public class StrategySettings {
@@ -15,6 +16,7 @@ public class StrategySettings {
 
     /**
      * Getter for strategyMove
+     *
      * @return strategyMove's name
      */
     public String getStrategyMove() {
@@ -31,6 +33,7 @@ public class StrategySettings {
 
     /**
      * Getter for strategyWin
+     *
      * @return strategyWin's name
      */
     public String getStrategyWin() {
@@ -46,6 +49,7 @@ public class StrategySettings {
 
     /**
      * Getter for strategyBuild
+     *
      * @return strategyBuild's name
      */
     public String getStrategyBuild() {
@@ -63,6 +67,7 @@ public class StrategySettings {
 
     /**
      * Getter for strategyLose
+     *
      * @return strategyLose's name
      */
     public String getStrategyLose() {

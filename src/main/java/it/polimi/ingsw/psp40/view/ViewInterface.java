@@ -31,21 +31,24 @@ public interface ViewInterface {
     void displayLoginSuccessful();
 
     /**
-     *  Method that allows the display of user login failure
+     * Method that allows the display of user login failure
+     *
      * @param details the details of the failure
      */
     void displayLoginFailure(String details);
 
     /**
      * Method that allows you to view the arrival of a new player in the match
-     * @param playerJoined the name of the new player
+     *
+     * @param playerJoined    the name of the new player
      * @param remainingPlayer the players required remaining to start the match
      */
     void displayUserJoined(String playerJoined, Integer remainingPlayer);
 
     /**
      * Method that allows you to view the arrival of a new player in the match in a existing lobby
-     * @param otherPlayer the name of the new others player
+     *
+     * @param otherPlayer     the name of the new others player
      * @param remainingPlayer the players required remaining to start the match
      */
     void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayer);
@@ -62,6 +65,7 @@ public interface ViewInterface {
 
     /**
      * Method that allows you to view the disconnection of a player
+     *
      * @param username the name of disconnected player
      */
     void displayDisconnectedUser(String username);
@@ -78,37 +82,43 @@ public interface ViewInterface {
 
     /**
      * Method that allows the display of the form for the choice of cards to use in the match
-     * @param cards a map that contains the information of the available cards
+     *
+     * @param cards      a map that contains the information of the available cards
      * @param numPlayers the number of players in the match that allows you to know the number of cards to select
      */
     void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers);
 
     /**
      * Method that allows the display of the form for the choice of the personal card
+     *
      * @param availableCards a list with the available cards
      */
-    void displayChoicePersonalCard(List<Card> availableCards) ;
+    void displayChoicePersonalCard(List<Card> availableCards);
 
     /**
      * Method that notifies the automatic assignment of the personal card
+     *
      * @param card the assigned card
      */
     void displayForcedCard(Card card);
 
     /**
      * Method that allows you to view the map for choosing the initial positions of the workers
+     *
      * @param playerList a list of the player that contains the already selected color of the worker
      */
     void displaySetInitialPosition(List<Player> playerList);
 
     /**
      * Method that allows the display of the form for choosing the first player of the match
+     *
      * @param allPlayers list of players to choose from
      */
     void displayAskFirstPlayer(List<Player> allPlayers);
 
     /**
      * Method that allows you to choose an available phase of your turn
+     *
      * @param allPlayers list of players to choose from
      */
     void displayChoiceOfAvailablePhases();
@@ -150,12 +160,14 @@ public interface ViewInterface {
 
     /**
      * Method of displaying the losing message
+     *
      * @param winningPlayer the player who has won the match
      */
     void displayLoserMessage(Player winningPlayer);
 
     /**
      * Method of displaying the losing of other player
+     *
      * @param losingPlayer the player who has lose
      */
     void displayLoserPlayer(Player losingPlayer);

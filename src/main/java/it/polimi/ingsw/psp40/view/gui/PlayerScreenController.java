@@ -3,7 +3,10 @@ package it.polimi.ingsw.psp40.view.gui;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Player;
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,7 +20,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -29,6 +32,7 @@ import java.util.List;
 
 /**
  * class to show Player to select the first
+ *
  * @author TiberioG
  */
 public class PlayerScreenController extends ScreenController {
@@ -75,11 +79,10 @@ public class PlayerScreenController extends ScreenController {
     private AnchorPane anchorPane;
 
 
-
     private final StringProperty playerSelected = new SimpleStringProperty(null);
 
     /**
-     *fill scene
+     * fill scene
      */
     @FXML
     public void initialize() {
@@ -93,14 +96,14 @@ public class PlayerScreenController extends ScreenController {
 
     /**
      * set visulaization for 2 or 3 players
+     *
      * @param allPlayers
      */
-    protected void  displayPlayersForInitialSelection(List<Player> allPlayers) {
-        if (allPlayers.size() == 2){
+    protected void displayPlayersForInitialSelection(List<Player> allPlayers) {
+        if (allPlayers.size() == 2) {
             displayPapiro(allPlayers.get(0), 1);
             displayPapiro(allPlayers.get(1), 3);
-        }
-        else if (allPlayers.size() == 3){
+        } else if (allPlayers.size() == 3) {
             displayPapiro(allPlayers.get(0), 1);
             displayPapiro(allPlayers.get(1), 2);
             displayPapiro(allPlayers.get(2), 3);
@@ -109,15 +112,16 @@ public class PlayerScreenController extends ScreenController {
 
     /**
      * shows player name
-     * @param player {@link Player}
+     *
+     * @param player   {@link Player}
      * @param location is the position in screen
      */
     private void displayPapiro(Player player, int location) {
-        ImageView papiro ;
-        ImageView card ;
-        ImageView descr ;
-        TextArea textDescr ;
-        switch (location){
+        ImageView papiro;
+        ImageView card;
+        ImageView descr;
+        TextArea textDescr;
+        switch (location) {
             case 1:
                 papiro = left;
                 card = card1;
@@ -164,13 +168,12 @@ public class PlayerScreenController extends ScreenController {
         });
         papiro.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 mouseEvent -> {
-                    if (playerSelected.getValue() == null){
+                    if (playerSelected.getValue() == null) {
                         playerSelected.setValue((String) finalPapiro.getUserData());
                         ColorAdjust colorAdjust = new ColorAdjust();
                         colorAdjust.setBrightness(0.3);
                         finalPapiro.setEffect(colorAdjust);
-                    }
-                    else if (playerSelected.getValue().equals(finalPapiro.getUserData())) {
+                    } else if (playerSelected.getValue().equals(finalPapiro.getUserData())) {
                         playerSelected.setValue(null);
                         finalPapiro.setEffect(null);
                     }
@@ -189,7 +192,7 @@ public class PlayerScreenController extends ScreenController {
 
         double textWidth = text.getBoundsInLocal().getWidth();
         double maxTextWidth = papiro.getBoundsInLocal().getWidth() * 0.60;
-        if(textWidth > maxTextWidth) { // if username is too long, truncate it
+        if (textWidth > maxTextWidth) { // if username is too long, truncate it
             double estimatedWidthForChar = textWidth / text.getText().length();
             int charsToRemove = (int) ((textWidth - maxTextWidth) / estimatedWidthForChar);
             String truncatedUsername = username.substring(0, username.length() - charsToRemove - 1);
@@ -197,8 +200,8 @@ public class PlayerScreenController extends ScreenController {
             text.setText(truncatedUsername);
         }
 
-        double x = finalPapiro.getLayoutX() + papiro.getBoundsInLocal().getWidth() * 0.50 - text.getBoundsInLocal().getWidth()/2;
-        double y = finalPapiro.getLayoutY() + papiro.getBoundsInLocal().getHeight() * 0.30 + text.getBoundsInLocal().getHeight()/2;
+        double x = finalPapiro.getLayoutX() + papiro.getBoundsInLocal().getWidth() * 0.50 - text.getBoundsInLocal().getWidth() / 2;
+        double y = finalPapiro.getLayoutY() + papiro.getBoundsInLocal().getHeight() * 0.30 + text.getBoundsInLocal().getHeight() / 2;
         text.setX(x);
         text.setY(y);
         text.scaleXProperty().bind(papiro.scaleXProperty());
@@ -206,7 +209,7 @@ public class PlayerScreenController extends ScreenController {
 
         anchorPane.getChildren().add(text);
 
-        card.setImage(new Image(GUIProperties.class.getResource("/images/cardsFrame/" + player.getCurrentCard().getId() + ".png").toString()) );
+        card.setImage(new Image(GUIProperties.class.getResource("/images/cardsFrame/" + player.getCurrentCard().getId() + ".png").toString()));
         ImageView finalDescr = descr;
         card.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -222,6 +225,7 @@ public class PlayerScreenController extends ScreenController {
 
     /**
      * add effects
+     *
      * @param node
      * @return
      */

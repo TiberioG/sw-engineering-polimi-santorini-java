@@ -39,12 +39,12 @@ public class GUIProperties {
 
     protected static double level3Width = 132.5;
     protected static double level3Height = blockHeight;
-    protected static double level3XFix = level2XFix ;
+    protected static double level3XFix = level2XFix;
     protected static double level3YFix = level2YFix - 16;
 
     protected static double domeWidth = 80;
     protected static double domeHeight = blockHeight;
-    protected static double domeXFix = 26 ;
+    protected static double domeXFix = 26;
     protected static double domeYFix = -11;
 
     protected static double workerWidth = 80;
@@ -89,6 +89,7 @@ public class GUIProperties {
 
     /**
      * Method to get the image for a specified type of phase
+     *
      * @param phase the phase you want to have the image of
      * @return the image associated to the phase type
      */
@@ -118,7 +119,7 @@ public class GUIProperties {
     //TODO make javadoc
     protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
         double incrementalFix = 0;
-        if(cameraType == CameraType.LEFT) {
+        if (cameraType == CameraType.LEFT) {
             col = getCorrespondingLeftCol(row, col);
             row = getCorrespondingLeftRow(row, col);
             incrementalFix = (col - row) * (-2) - 3;
@@ -130,7 +131,7 @@ public class GUIProperties {
 
     //TODO make javadoc
     protected static double getIncrementalFix_y(int row, int col, CameraType cameraType) {
-        if(cameraType == CameraType.LEFT) {
+        if (cameraType == CameraType.LEFT) {
             row = getCorrespondingLeftRow(row, col);
         } else if (cameraType == CameraType.TOP) {
             // no special treatment required

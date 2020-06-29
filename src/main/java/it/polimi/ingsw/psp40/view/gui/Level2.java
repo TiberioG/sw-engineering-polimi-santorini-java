@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Component;
-import javafx.scene.image.Image;
 
 public class Level2 extends Block {
 
@@ -47,7 +46,7 @@ public class Level2 extends Block {
 
             default: // right and left
                 this.setXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + GUIProperties.level2XFix);
-                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level2YFix);
+                this.setYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level2YFix);
                 UtilsGUI.slideInDownAnimation(this);
                 break;
         }

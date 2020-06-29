@@ -1,8 +1,5 @@
 package it.polimi.ingsw.psp40.commons.messages;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.JsonAdapter;
 
 import java.io.Serializable;

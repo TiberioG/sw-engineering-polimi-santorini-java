@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.commons;
 
 /**
  * This is the class for the components of a tower
+ *
  * @author sup3rgiu
  */
 public enum Component {
@@ -31,11 +32,12 @@ public enum Component {
 
     /**
      * this method is useful to get all the names of the levels
+     *
      * @return an array of names of all the levels
      */
-    public static String[] allNames(){
-        String [] list = new String[Component.values().length];
-        for (int i = 0; i < Component.values().length; i++){
+    public static String[] allNames() {
+        String[] list = new String[Component.values().length];
+        for (int i = 0; i < Component.values().length; i++) {
             list[i] = Component.values()[i].toString();
         }
         return list;

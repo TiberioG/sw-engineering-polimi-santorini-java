@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface StrategyBuild {
     void build(Component CompToBuild, Cell WhereToBuild, Worker worker) throws SantoriniException;
+
     List<Cell> getBuildableCells(Worker worker);
+
     List<Integer> getComponentsBuildable(Cell cell);
 }

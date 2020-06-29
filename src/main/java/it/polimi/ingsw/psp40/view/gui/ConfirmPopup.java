@@ -1,11 +1,8 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
-import it.polimi.ingsw.psp40.model.Worker;
-import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -20,7 +17,7 @@ public class ConfirmPopup extends PopupStage {
         super(ownerStage);
         this.confirmFunction = confirmFunction;
         this.denyFunction = denyFunction;
-        this.text  = text;
+        this.text = text;
         UtilsGUI.addClassToElement(vBox, "vbox-popup-stage"); //default class
         createText();
         createTwoButtons();
@@ -29,7 +26,7 @@ public class ConfirmPopup extends PopupStage {
     public ConfirmPopup(Stage ownerStage, String text, FunctionInterface confirmFunction) {
         super(ownerStage);
         this.confirmFunction = confirmFunction;
-        this.text  = text;
+        this.text = text;
         UtilsGUI.addClassToElement(vBox, "vbox-popup-stage"); //default class
         createText();
         createOneButton();
@@ -42,6 +39,7 @@ public class ConfirmPopup extends PopupStage {
 
     /**
      * Method to set class to the vbox of the popup
+     *
      * @param nameClass the name of the class
      */
     public void setClass(String nameClass) {
@@ -50,6 +48,7 @@ public class ConfirmPopup extends PopupStage {
 
     /**
      * Method to set the label of the confirm button
+     *
      * @param label the label to set on the confirm button
      */
     public void setLabelConfirmButton(String label) {
@@ -58,6 +57,7 @@ public class ConfirmPopup extends PopupStage {
 
     /**
      * Method to set the label of the deny button
+     *
      * @param label the label to set on the deny button
      */
     public void setLabelDenyButton(String label) {

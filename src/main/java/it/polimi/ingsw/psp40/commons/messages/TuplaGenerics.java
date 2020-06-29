@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp40.commons.messages;
 
-public class TuplaGenerics<F,S> {
+public class TuplaGenerics<F, S> {
 
-    public TuplaGenerics(F first, S second){
+    public TuplaGenerics(F first, S second) {
         this.first = first;
         this.second = second;
     }

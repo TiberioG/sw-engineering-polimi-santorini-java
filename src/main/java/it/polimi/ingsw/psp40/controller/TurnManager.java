@@ -10,9 +10,8 @@ import it.polimi.ingsw.psp40.controller.strategies.strategyLose.StrategyLose;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
-import it.polimi.ingsw.psp40.network.server.VirtualView;
 import it.polimi.ingsw.psp40.model.*;
-import javafx.application.Platform;
+import it.polimi.ingsw.psp40.network.server.VirtualView;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -21,6 +20,7 @@ import java.util.List;
 
 /**
  * This class manage all operation of a turn of the current player of the match
+ *
  * @author Vito96
  */
 public class TurnManager {
@@ -37,6 +37,7 @@ public class TurnManager {
 
     /**
      * Constructor to init turnManager's instance
+     *
      * @param match the match of the turn
      */
     public TurnManager(Match match, VirtualView virtualView) {
@@ -60,7 +61,7 @@ public class TurnManager {
      * This method create and inizialize a turn for every player in the match
      */
     private void createTurns() {
-        for(Player player : match.getPlayers()) {
+        for (Player player : match.getPlayers()) {
             Turn turn = new Turn(player);
             buildStrategies(turn);
             turnsMap.put(player.getName(), turn);
@@ -71,20 +72,22 @@ public class TurnManager {
 
     /**
      * This method create strategy instances using reflection
-     * @param className the name of the class of the desired istance
-     * @param types the class of the params for the costructor of the desired instance
+     *
+     * @param className  the name of the class of the desired istance
+     * @param types      the class of the params for the costructor of the desired instance
      * @param parameters the parameters of the params for the constructor of the desired instance
      * @return the desidered istance
      * @throws Exception for errors while creating the instance
      */
     private Object createStrategyWithReflection(String className, Class[] types, Object[] parameters) throws Exception {
         Class clazz = Class.forName(className);
-        Constructor constructor =  clazz.getConstructor(types);
+        Constructor constructor = clazz.getConstructor(types);
         return constructor.newInstance(parameters);
     }
 
     /**
      * This method create set the strategy of the turn from the card of the current player
+     *
      * @param turn the turn to add strategy to it
      */
     private void buildStrategies(Turn turn) {
@@ -115,6 +118,7 @@ public class TurnManager {
 
     /**
      * This method call the move method of the strategyMove of the current turn and and call the updateCurrentPhase method to update the current phase
+     *
      * @param cell the cell destination of the selectedWorker
      */
     public void move(Cell cell) throws SantoriniException {
@@ -132,8 +136,8 @@ public class TurnManager {
         if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
             availableCell = currentTurn.getAvailableCellForBuild();
 
-            HashMap<Cell, List<Integer>>  mapOfAvailableCell = new HashMap<>();
-            for (Cell cell: availableCell) {
+            HashMap<Cell, List<Integer>> mapOfAvailableCell = new HashMap<>();
+            for (Cell cell : availableCell) {
                 mapOfAvailableCell.put(cell, currentTurn.getComponentsBuildable(cell));
             }
             updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.AVAILABLE_CELL_FOR_BUILD, mapOfAvailableCell));
@@ -142,8 +146,9 @@ public class TurnManager {
 
     /**
      * This method call the build method of the strategyBuild of the current turn and and call the updateCurrentPhase method to update the current phase
+     *
      * @param component the component to build on the selected cell
-     * @param cell the cell where to build the component
+     * @param cell      the cell where to build the component
      */
     public void build(Component component, Cell cell) throws SantoriniException {
         if (checkForPermittedPhase(PhaseType.BUILD_COMPONENT)) {
@@ -163,6 +168,7 @@ public class TurnManager {
 
     /**
      * This method check if the list of the next phases contains the phase type in the param
+     *
      * @param type the type of phase to check
      * @return a boolean which indicate if the next phases list contains the phase in the param
      */
@@ -173,6 +179,7 @@ public class TurnManager {
 
     /**
      * This method call the setSelectedWorker method of the current turn and update the virtual view with a message which contains the next phase available
+     *
      * @param worker the worker to select
      */
     public void selectWorker(Worker worker) {
@@ -184,6 +191,7 @@ public class TurnManager {
 
     /**
      * This method update the currentPhase with the phase of the same type in the nextPhases list with a check if the player has won or if the turn is over
+     *
      * @param type the type of the phase to update
      */
     private void updateCurrentPhase(PhaseType type) {
@@ -204,7 +212,8 @@ public class TurnManager {
             List<Phase> listOfNextPhase = currentTurn.getCurrentPhase().getNextPhases();
             if (listOfNextPhase.size() == 1 && listOfNextPhase.get(0).getType().equals(PhaseType.BUILD_COMPONENT) && currentTurn.checkLoseForBuild()) {
                 removePlayerForLost();
-            } else updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));
+            } else
+                updateVirtualView(new Message(getCurrentPlayer().getName(), TypeOfMessage.NEXT_PHASE_AVAILABLE, currentTurn.getCurrentPhase().getNextPhases()));
         }
     }
 
@@ -260,6 +269,7 @@ public class TurnManager {
 
     /**
      * This method return the player of the current turn
+     *
      * @return the player of the current turn
      */
     public Player getCurrentPlayer() {
@@ -268,6 +278,7 @@ public class TurnManager {
 
     /**
      * This method call the displayMessage of the virtualView
+     *
      * @param message the message to sent
      */
     private void updateVirtualView(Message message) {
@@ -276,6 +287,7 @@ public class TurnManager {
 
     /**
      * this method call the setWinningPlayer method of the {} and provides for the disconnection of users
+     *
      * @param name the username of the winning player
      */
     private void setWinningPlayer(String name) {
@@ -285,6 +297,7 @@ public class TurnManager {
 
     /**
      * This method call the disconnectUser method of the virtualView
+     *
      * @param username the username of the player to disconnect
      */
     private void disconnectUser(String username) {

@@ -3,8 +3,6 @@ package it.polimi.ingsw.psp40.view.gui;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
-import it.polimi.ingsw.psp40.model.Worker;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -63,7 +61,8 @@ public class CardScreenController extends ScreenController {
 
     /**
      * Method to manage the visualization of the available match cards in the game
-     * @param cards the available cards for selection
+     *
+     * @param cards    the available cards for selection
      * @param toSelect the number of cards to select
      */
     protected void displayCardsForInitialSelection(List<Card> cards, int toSelect) {
@@ -76,16 +75,17 @@ public class CardScreenController extends ScreenController {
         // add images to GridPane
         List<ImageView> cardImages = new ArrayList<>(cardsMap.values());
         int index = 0;
-        for (int row = 0; row < 3; row ++){
-            for (int col = 0; col < 3; col ++){
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
                 grid.add(cardImages.get(index), row, col);
-                index ++;
+                index++;
             }
         }
     }
 
     /**
      * Method to manage the display of the selected available cards
+     *
      * @param availableCards the available cards for the personal card selection
      */
     protected void displayCardsForPersonalSelection(List<Card> availableCards) {
@@ -98,13 +98,14 @@ public class CardScreenController extends ScreenController {
 
         // add images to HBox
         List<ImageView> cardImages = new ArrayList<>(cardsMap.values());
-        cardImages.forEach( cardImage -> hbox.getChildren().add(cardImage));
+        cardImages.forEach(cardImage -> hbox.getChildren().add(cardImage));
         grid.setVisible(false);
         hbox.setVisible(true);
     }
 
     /**
      * creates visualization of cards
+     *
      * @param cards
      */
     private void buildCards(List<Card> cards) {
@@ -144,6 +145,7 @@ public class CardScreenController extends ScreenController {
 
     /**
      * Method build the transition animation of a specified node
+     *
      * @param node the node to apply the animation
      * @return the builded transition
      */
@@ -172,15 +174,14 @@ public class CardScreenController extends ScreenController {
             ImageView cardView = cardsMap.get(card);
             cardView.addEventHandler(MouseEvent.MOUSE_PRESSED,
                     mouseEvent -> {
-                        if (selectedList.contains(card.getId())){
+                        if (selectedList.contains(card.getId())) {
                             for (int i = 0; i < selectedList.size(); i++) {
                                 if (card.getId() == selectedList.get(i)) {
                                     selectedList.remove(i);
                                     cardView.setEffect(null);
                                 }
                             }
-                        }
-                        else if (selectedList.size() < toSelect){
+                        } else if (selectedList.size() < toSelect) {
                             System.out.println("settable: " + card.getId());
                             selectedList.add(card.getId());
                             ColorAdjust colorAdjust = new ColorAdjust();
@@ -201,9 +202,9 @@ public class CardScreenController extends ScreenController {
         if (selectedListTmp.size() == toSelect) {
             Message message = new Message(typeOfMessageToSend);
 
-            if(typeOfMessageToSend == TypeOfMessage.SET_CARDS_TO_GAME)
+            if (typeOfMessageToSend == TypeOfMessage.SET_CARDS_TO_GAME)
                 message.setPayload(selectedListTmp);
-            else if(typeOfMessageToSend == TypeOfMessage.SET_CARD_TO_PLAYER)
+            else if (typeOfMessageToSend == TypeOfMessage.SET_CARD_TO_PLAYER)
                 message.setPayload(selectedListTmp.get(0));
 
             getClient().sendToServer(message);
