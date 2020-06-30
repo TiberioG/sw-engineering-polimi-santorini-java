@@ -123,7 +123,7 @@ public class ControllerTest {
         List<Integer> listOfSelectedCard = new ArrayList<>();
         listOfSelectedCard.add(0);
         listOfSelectedCard.add(1);
-        controller.update(new Message("ALL", TypeOfMessage.SET_CARDS_TO_GAME, listOfSelectedCard));
+        controller.update(new Message(nameOfFirstPlayer, TypeOfMessage.SET_CARDS_TO_GAME, listOfSelectedCard));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_PERSONAL_CARD));
     }
 
@@ -143,7 +143,7 @@ public class ControllerTest {
     @Test
     public void setFirstPlayer_firstPlayer() {
         controller.update(new Message("ALL", TypeOfMessage.START_MATCH, hashMapOfNewPlayers));
-        controller.update(new Message(nameOfSecondPlayer, TypeOfMessage.SET_FIRST_PLAYER, nameOfFirstPlayer));
+        controller.update(new Message(nameOfFirstPlayer, TypeOfMessage.SET_FIRST_PLAYER, nameOfFirstPlayer));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_POSITION_OF_WORKERS));
 
     }
@@ -163,7 +163,7 @@ public class ControllerTest {
         List<CoordinatesMessage> coordinatesMessageList = new ArrayList<>();
         coordinatesMessageList.add(new CoordinatesMessage(0,1));
         coordinatesMessageList.add(new CoordinatesMessage(1,1));
-        controller.update(new Message("ALL", TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.BLUE,  coordinatesMessageList)));
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(Colors.BLUE,  coordinatesMessageList)));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_POSITION_OF_WORKERS));
     }
 
@@ -275,7 +275,7 @@ public class ControllerTest {
 
         controller.update(new Message(nameOfSecondPlayer, TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
         assertFalse(verifyDisplayMessageCall(TypeOfMessage.AVAILABLE_CELL_FOR_MOVE));
-        
+
         controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.AVAILABLE_CELL_FOR_MOVE));
     }

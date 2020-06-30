@@ -117,7 +117,7 @@ todo
 | Mockito   | https://site.mockito.org                | 
 
 ## Authors (alphabetical order)
-* [ Tiberio Galbiati](https://github.com/)
-* [ Andrea Lampis ](https://github.com/)
-* [ Vito Monaco](https://github.com/)
+* [ Tiberio Galbiati](https://github.com/TiberioG)
+* [ Andrea Lampis ](https://github.com/sup3rgiu)
+* [ Vito Alessandro Monaco](https://github.com/Vito96)
 
