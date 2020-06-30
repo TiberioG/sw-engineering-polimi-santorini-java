@@ -330,6 +330,17 @@ public class Controller implements Listener<Message> {
         turnManager.endTurn();
     }
 
+
+    /**
+     * Method that checks if the {@link Message} can be managed, checking if the {@link Message} sender is the current player
+     *
+     * @param message message to check
+     */
+    private boolean checkValidityMessage(Message message) {
+        if (match == null || match.getCurrentPlayer() == null) return true;
+        else return message.getUsername().equals(match.getCurrentPlayer().getName());
+    }
+
     /**
      * Method that allows to call methods through reflections according to the type of the {@link Message} received
      *
@@ -340,7 +351,7 @@ public class Controller implements Listener<Message> {
         TypeOfMessage typeOfMessage = message.getTypeOfMessage();
         try {
             Method methodToInvoke = this.getClass().getDeclaredMethod(typeOfMessage.toString(), Message.class);
-            methodToInvoke.invoke(this, message);
+            if (checkValidityMessage(message)) methodToInvoke.invoke(this, message);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

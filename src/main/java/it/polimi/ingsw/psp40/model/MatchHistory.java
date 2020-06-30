@@ -244,7 +244,6 @@ public class MatchHistory {
         List<Cell> oldOccupiedCellList = oldLocation.getAllOccupied();
         oldPlayerList.forEach(oldPlayer -> {
             oldPlayer.getWorkers().forEach(oldWorker -> {
-                //TODO implementing equals on worker
                 Worker newWorker = match.getPlayerByName(oldPlayer.getName()).getWorkers().stream().filter(worker -> worker.getId() == oldWorker.getId()).findFirst().orElse(null);
                 Cell oldCell = oldOccupiedCellList.stream().filter(cell -> oldLocation.getOccupant(cell).getId() == newWorker.getId() && oldLocation.getOccupant(cell).getPlayerName().equals(newWorker.getPlayerName())).findFirst().orElse(null);
 

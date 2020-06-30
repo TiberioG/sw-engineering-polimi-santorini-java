@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ControllerTest {
@@ -255,5 +256,27 @@ public class ControllerTest {
         controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RESTORE_MATCH, false));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.STARTED_MATCH));
         assertTrue(verifyDisplayMessageCall(TypeOfMessage.CHOOSE_GAME_CARDS));
+    }
+
+    @Test
+    public void checkValidityMessage_checkBoolean() {
+        Match match = createFakeMatch();
+
+        try {
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("match"), match);
+            FieldSetter.setField(controller, controller.getClass().getDeclaredField("turnManager"), new TurnManager(match, virtualView));
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.SELECT_WORKER, 0));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.NEXT_PHASE_AVAILABLE));
+
+        controller.update(new Message(nameOfSecondPlayer, TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+        assertFalse(verifyDisplayMessageCall(TypeOfMessage.AVAILABLE_CELL_FOR_MOVE));
+        
+        controller.update(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));
+        assertTrue(verifyDisplayMessageCall(TypeOfMessage.AVAILABLE_CELL_FOR_MOVE));
     }
 }
