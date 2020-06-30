@@ -1,13 +1,10 @@
-
-
 # Prova Finale Ingegneria del Software 2020
-
-![SANTORINI LOGO](https://raw.githubusercontent.com/Vito96/ing-sw-2020-Monaco-Lampis-Galbiati/master/src/main/resources/images/santorini-logo.png)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  
 
+- [Features implemented](#features-implemented)
 - [Building](#building)
   - [Building with Maven](#building-with-maven)
   - [Using provided jars](#using-provided-jars)
@@ -22,6 +19,8 @@
 - [Authors (alphabetical order)](#authors-alphabetical-order)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Features implemented
 | Functionality | State |
 |:--------------------------------------|:------------------------------------:|
 | Basic rules                           | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
@@ -62,17 +61,29 @@ Our default port is 1234
 You can check the [logger](http://santorini40.xyz) to see the server status any time
 
 ### Run your server
-If you want to run the server on your machine you can use the following command
+If you want to run the server on your machine you can use the following command, this is the easiest way to run it
 ```bash
 java -jar server.jar
 ```
+If your're planning to run the server jar on a real server, please edit the [service.sh](/deliveries/final/jar/service.sh) script, editing the following paths and port: 
+```bash
+PATH_TO_JAR=/path/to/server.jar
+PATH_TO_LOGFILE=/path/to/logfile.log
+PID_PATH_NAME=/path/to/pid-file
+PORT=xxxx
+```
+Don't forget to `chmod +x ./service.sh` and then you can start, stop and restart the server using the following command which automatically creates a new thread, and ignores the HUP
+```bash
+./service.sh [ start | stop | restart ]
+```
 
 ## Client 
-Default loads the gui, if you wanna use our CoolCli please add cli
+By default, the client jar loads the GUI, if you wanna use the command line interface please add `cli` as argument. Otherwise, you can also double-click the jar file
 ```bash
-java -jar client.jar [cli] 
+java -jar client.jar [ cli ] 
 ```
-### Comparibility notes for cli
+### Compatibility notes for cli
+The command line version of the game is optimized for unix-like terminals.
 
 Our cli version of the game automatically resizes the terminal window for a better game experience.
 Most terminals allow this by default, in case you have XTerm or iTerm:  
@@ -82,13 +93,19 @@ Most terminals allow this by default, in case you have XTerm or iTerm:
  Otherwise please note that the minimum required size of the terminal to play the game is 160x50
 ## Documentation
 
+### Javadoc
 Javadoc is available at this link: http://santorini40.xyz/javadoc
 
-## Game screenshots
+### UML diagrams
+UML diagrams are [here](/deliveries/final/UML)
 
-[![asciicast](https://asciinema.org/a/328942.svg)](
-  https://asciinema.org/a/328942?autoplay=1)
+### Coverage report 
+todo
 
+## Gameplay screenshots
+![Alt Text](http://santorini40.xyz/img/GUIDEMO640px.gif)
+
+[![asciicast](https://asciinema.org/a/M7hixox96x6bTS28k6X1SDAz2.svg )](https://asciinema.org/a/M7hixox96x6bTS28k6X1SDAz2 )
 
 ## External libraries used
 

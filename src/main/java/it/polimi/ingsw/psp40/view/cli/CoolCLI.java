@@ -41,7 +41,6 @@ public class CoolCLI implements ViewInterface {
     private static Scanner in = new Scanner(System.in);
 
     private int currentWorkerId = 0; //temp var used to store the selected worker before move/build
-    private Card thiscard;
 
     private Date date = null; //
     private int numOfPlayers = 0;
@@ -477,7 +476,6 @@ public class CoolCLI implements ViewInterface {
     @Override
     public void displayForcedCard(Card card) {
         killHourglass();
-        thiscard = card;
         center.clear();
         try {
             center.center(URLReader(getClass().getResource("/ascii/cards/" + card.getId())), DELAY);
