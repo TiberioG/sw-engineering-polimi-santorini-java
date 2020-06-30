@@ -136,7 +136,7 @@ public class CardScreenController extends ScreenController {
             });
 
             cardsMap.put(card, cardView);
-            System.out.println(card.getId());
+            //System.out.println(card.getId());
         });
 
         addHandlerToCards();
@@ -182,7 +182,7 @@ public class CardScreenController extends ScreenController {
                                 }
                             }
                         } else if (selectedList.size() < toSelect) {
-                            System.out.println("settable: " + card.getId());
+                            //System.out.println("settable: " + card.getId());
                             selectedList.add(card.getId());
                             ColorAdjust colorAdjust = new ColorAdjust();
                             colorAdjust.setBrightness(0.5);

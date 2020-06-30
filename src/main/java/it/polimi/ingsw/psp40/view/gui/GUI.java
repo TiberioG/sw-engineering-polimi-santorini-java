@@ -285,7 +285,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        System.out.println("Card selection");
+        //System.out.println("Card selection");
 
         // just for testing
         if (mockingCard) {
@@ -305,7 +305,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        System.out.println("Card personal");
+        //System.out.println("Card personal");
         if (mockingCard) {
             int personalIdCard = availableCards.get(0).getId();
             client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
@@ -393,7 +393,7 @@ public class GUI extends Application implements ViewInterface {
             gameScreenController.setPrimaryStage(primaryStage);
             gameScreenController.updateWholeIsland();
             gameScreenController.setPlayersInfo(client.getPlayerListCache());
-            System.out.println(new Date().hashCode() + "creatematch");
+            //System.out.println(new Date().hashCode() + "creatematch");
         });
     }
 

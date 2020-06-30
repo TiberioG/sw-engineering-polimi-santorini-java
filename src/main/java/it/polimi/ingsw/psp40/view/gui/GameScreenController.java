@@ -171,7 +171,7 @@ public class GameScreenController extends ScreenController {
      * @param z Coordinate Z of the block
      */
     public void blockClicked(int x, int y, int z) {
-        System.out.println("Clicked: " + x + ", " + y + ", " + z);
+        //System.out.println("Clicked: " + x + ", " + y + ", " + z);
         if (!waiting) {
             if (checkLastSelectedPhase(PhaseType.MOVE_WORKER)) {
                 moveWorker(x, y, z);
@@ -190,7 +190,7 @@ public class GameScreenController extends ScreenController {
      * @param worker worker clicked
      */
     public void workerClicked(Worker worker) {
-        System.out.println("Worker clicked! " + worker.row + ", " + worker.col + ", " + worker.z);
+        //System.out.println("Worker clicked! " + worker.row + ", " + worker.col + ", " + worker.z);
         if (checkLastSelectedPhase(PhaseType.SELECT_WORKER) && !waiting) {
             if (worker.ownerUsername.equals(getClient().getUsername())) {
                 highlightAvailableWorkersForSelection(false);
