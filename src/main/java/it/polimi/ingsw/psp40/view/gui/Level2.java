@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 
 public class Level2 extends Block {
 

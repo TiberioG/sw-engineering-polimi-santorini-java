@@ -30,8 +30,8 @@ public class Match extends Publisher<Message> {
     /**
      * Constructor
      *
-     * @param matchID
-     * @param virtualView
+     * @param matchID ID of the match
+     * @param virtualView associated VirtuaLView instance
      */
     public Match(int matchID, VirtualView virtualView) {
         addListener(virtualView);
@@ -44,9 +44,9 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * Constructor used for testing
+     * Dumb constructor used for testing
      *
-     * @param matchID
+     * @param matchID ID of the match
      */
     public Match(int matchID) {
         this.matchID = matchID;
@@ -58,9 +58,9 @@ public class Match extends Publisher<Message> {
     /* Methods */
 
     /**
-     * getter of Match ID
+     * Getter of Match ID
      *
-     * @return of Match ID
+     * @return the ID of the match
      */
     public int getMatchID() {
         return matchID;
@@ -76,7 +76,7 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * getter of the {@link Island} of the match
+     * Getter of the {@link Island} of the match
      *
      * @return the {@link Island} of the match
      */
@@ -94,7 +94,7 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * getter of all the  {@link Card} in the match
+     * Getter of all the  {@link Card} in the match
      *
      * @return a list of {@link Card} in the match
      */
@@ -103,27 +103,27 @@ public class Match extends Publisher<Message> {
     }
 
     /**
-     * adds a {@link Card} to the match
+     * Adds a {@link Card} to the match
      *
-     * @param card
+     * @param card card to be added
      */
     public void addCard(Card card) {
         this.listCardsInGame.add(card);
     }
 
     /**
-     * getter of {@link Location}
+     * Getter of {@link Location}
      *
-     * @return {@link Location}
+     * @return {@link Location} associated to this match
      */
     public Location getLocation() {
         return location;
     }
 
     /**
-     * getter of {@link MatchProperties}
+     * Getter of {@link MatchProperties}
      *
-     * @return {@link MatchProperties} of the match
+     * @return {@link MatchProperties} of the match associated to this match
      */
     public MatchProperties getMatchProperties() {
         return matchProperties;

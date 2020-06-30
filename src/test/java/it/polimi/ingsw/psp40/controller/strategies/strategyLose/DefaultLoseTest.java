@@ -1,18 +1,14 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyLose;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.model.CardManager;
-import it.polimi.ingsw.psp40.controller.TurnManager;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.DefaultMove;
-import it.polimi.ingsw.psp40.controller.strategies.strategyMove.PushEnemyWorker;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
-import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Match;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.model.Worker;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 

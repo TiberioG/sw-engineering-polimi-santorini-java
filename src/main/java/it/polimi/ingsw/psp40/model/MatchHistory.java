@@ -3,7 +3,6 @@ package it.polimi.ingsw.psp40.model;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.JsonAdapter;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyLose;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.DefaultBuild;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.DefaultMove;

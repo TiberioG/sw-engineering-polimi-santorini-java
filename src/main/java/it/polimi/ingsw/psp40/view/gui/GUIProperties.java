@@ -116,7 +116,13 @@ public class GUIProperties {
         return image;
     }
 
-    //TODO make javadoc
+    /**
+     * Returns the X (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+     * @param row
+     * @param col
+     * @param cameraType
+     * @return fixed position value
+     */
     protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
         double incrementalFix = 0;
         if (cameraType == CameraType.LEFT) {
@@ -129,7 +135,13 @@ public class GUIProperties {
         return incrementalFix;
     }
 
-    //TODO make javadoc
+    /**
+     * Returns the Y (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+     * @param row
+     * @param col
+     * @param cameraType
+     * @return fixed position value
+     */
     protected static double getIncrementalFix_y(int row, int col, CameraType cameraType) {
         if (cameraType == CameraType.LEFT) {
             row = getCorrespondingLeftRow(row, col);

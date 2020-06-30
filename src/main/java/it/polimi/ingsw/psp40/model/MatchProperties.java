@@ -20,7 +20,7 @@ public class MatchProperties {
 
 
     /**
-     * this resets all the parameters
+     * This resets all the parameters
      */
     public void resetParameterForTurn() {
         initialPositionMap = new HashMap<>();
@@ -30,7 +30,7 @@ public class MatchProperties {
     }
 
     /**
-     * getter of a HashMap of initial {@link Cell} position of workers at beginning of turn
+     * Getter of a HashMap of initial {@link Cell} position of workers at beginning of turn
      *
      * @return
      */
@@ -39,7 +39,7 @@ public class MatchProperties {
     }
 
     /**
-     * getter of a HashMap of initial level of workers at beginning of turn
+     * Getter of a HashMap of initial level of workers at beginning of turn
      *
      * @return
      */
@@ -77,7 +77,7 @@ public class MatchProperties {
     }
 
     /**
-     * getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+     * Getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
      *
      * @return the saved othersCantLevelUp
      */

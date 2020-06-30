@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.model;
 
-import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Publisher;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
@@ -43,7 +42,7 @@ public class Island extends Publisher<Message> {
     /**
      * Constructor to setup island as publisher
      *
-     * @param virtualView
+     * @param virtualView associated VirtauLView instance
      */
     public Island(VirtualView virtualView) {
         this();
@@ -117,11 +116,10 @@ public class Island extends Publisher<Message> {
 
 
     /**
-     * The only public method to build things, this one calls the protected one in Tower.
-     * Then sends a message to the view
+     * Adds the given component to the tower built on the given cell
      *
-     * @param component
-     * @param cell
+     * @param component component to build
+     * @param cell cell where to build
      * @throws BuildLowerComponentException
      */
     public void addComponent(Component component, Cell cell) throws BuildLowerComponentException {
@@ -131,8 +129,7 @@ public class Island extends Publisher<Message> {
     }
 
     /**
-     * The only public method to remove things, this one calls the protected one in Tower.
-     * Then sends a message to the view
+     * Removes the last component from the tower built on the given cell
      *
      * @param cell
      */
@@ -150,9 +147,9 @@ public class Island extends Publisher<Message> {
     }
 
     /**
-     * Sends the cell that has just been modified with a new component
+     * Sends to the view the cell that has just been modified with a new component
      *
-     * @param cell
+     * @param cell modified cell
      */
     private void updateSpecific(Cell cell) {
         publish(new Message("ALL", TypeOfMessage.TOWER_UPDATED, cell));

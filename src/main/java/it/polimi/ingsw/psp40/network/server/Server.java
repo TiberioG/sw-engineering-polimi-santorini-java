@@ -128,6 +128,10 @@ public class Server {
 
             default:
                 try {
+                    String uuid = usernameToUUIDMap.get(message.getUsername());
+                    if (uuid == null || !uuid.equals(message.getUUID())) { // check if message comes from the legit user
+                        return;
+                    }
                     int matchID = UUIDtoMatchMap.get(message.getUUID());
                     VirtualView view = matchToVirtualViewMap.get(matchID);
                     view.handleMessage(message);

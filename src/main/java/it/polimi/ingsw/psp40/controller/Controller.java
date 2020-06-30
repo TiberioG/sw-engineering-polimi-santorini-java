@@ -2,7 +2,7 @@ package it.polimi.ingsw.psp40.controller;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.Listener;
 import it.polimi.ingsw.psp40.commons.messages.*;

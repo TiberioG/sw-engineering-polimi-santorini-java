@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedBuildException;

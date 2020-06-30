@@ -43,7 +43,7 @@ public class UtilsGUI {
     }
 
     /**
-     * Method that allows you to make a hover effect to a specified button
+     * Method that allows you to apply a hover effect to a specified button
      *
      * @param button the button you want to apply the effect to
      */
@@ -53,7 +53,7 @@ public class UtilsGUI {
 
 
     /**
-     * Method that allows you to make a hover with a persistence effect to a specified button
+     * Method that allows you to apply a hover effect, with persistence if needed, to a specified button
      *
      * @param button the button you want to apply the effect to
      */
@@ -62,7 +62,7 @@ public class UtilsGUI {
     }
 
     /**
-     * Method that allows you to make a hover with a persistence effect to a specified node
+     * Method that allows you to apply a hover effect, with persistence if needed, to a specified node
      *
      * @param node        the node you want to apply the effect to
      * @param persistence if persistence is true, keep the effect applied even when not hover
@@ -88,7 +88,12 @@ public class UtilsGUI {
         });
     }
 
-    //TODO make javadoc
+    /**
+     * Applies a binding to the effect property of the specified node. When property is true, the effect is applied, otherwise it is removed
+     * @param node node to which apply the effect
+     * @param effect effect to be applied
+     * @param property property to monitor for changes
+     */
     private static void applyEffectBinding(Node node, Effect effect, BooleanProperty property) {
         node.effectProperty().bind(Bindings.when(
                 property.isEqualTo(trueBool))
@@ -96,7 +101,10 @@ public class UtilsGUI {
                 .otherwise((Effect) null));
     }
 
-    //TODO make javadoc
+    /**
+     * Adds an hover effect to the given node. Effect is an "highlight effect"
+     * @param node node to which apply the effect
+     */
     protected static void nodeHoverEffect(Node node) {
         node.hoverProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {

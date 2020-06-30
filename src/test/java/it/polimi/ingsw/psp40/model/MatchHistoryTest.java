@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp40.model;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.network.server.Server;

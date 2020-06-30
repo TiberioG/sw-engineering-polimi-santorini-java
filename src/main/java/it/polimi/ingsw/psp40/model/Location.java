@@ -77,9 +77,9 @@ public class Location extends Publisher<Message> {
     }
 
     /**
-     * Gets the cell where a worker is
+     * Gets the cell where a worker is placed
      *
-     * @param worker
+     * @param worker worker to lookup
      * @return {@link Cell} where the worker is
      */
     public Cell getLocation(Worker worker) {
@@ -152,7 +152,7 @@ public class Location extends Publisher<Message> {
     }
 
     /**
-     * this returns the workers who have been moved in a turn
+     * Returns the workers who have been moved in a turn
      *
      * @return a list of {@link Worker} who have been moved in a turn
      */
@@ -161,7 +161,7 @@ public class Location extends Publisher<Message> {
     }
 
     /**
-     * this method makes a copy to this class
+     * Makes a copy to this class
      *
      * @return a Location copy serialized as JSON
      */

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp40.commons;
+package it.polimi.ingsw.psp40.model;
 
 /**
  * This is the class for the components of a tower

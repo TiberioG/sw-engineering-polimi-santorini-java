@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
