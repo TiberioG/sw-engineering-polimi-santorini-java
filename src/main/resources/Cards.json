@@ -2,7 +2,7 @@
   "id": 0,
   "name": "Apollo",
   "type": "Your Move",
-  "description": "Your Worker may move into an opponent Worker’s space by forcing their Worker to the space yours just vacated.",
+  "description": "Your Worker may move into an opponent Worker's space by forcing their Worker to the space yours just vacated.",
   "strategySettings": {
     "strategyMove": "SwapWorker"
   }
@@ -37,7 +37,7 @@
   {
     "id": 2,
     "name": "Athena",
-    "type": "Opponent’s Turn",
+    "type": "Opponent's Turn",
     "description": "If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.",
     "strategySettings": {
       "strategyMove": "OthersCantLevelUp",
@@ -109,7 +109,7 @@
     "id": 6,
     "name": "Minotaur",
     "type": "Your Move",
-    "description": "Your Worker may move into an opponent Worker’s space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.",
+    "description": "Your Worker may move into an opponent Worker's space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.",
     "strategySettings": {
       "strategyMove": "PushEnemyWorker"
     }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp40.commons.Colors;
 
 /**
  * This is the class for the Worker
+ *
  * @author Vito96
  */
 public class Worker {
@@ -15,6 +16,7 @@ public class Worker {
 
     /**
      * constructor
+     *
      * @param id
      * @param color
      * @param owner
@@ -28,6 +30,7 @@ public class Worker {
 
     /**
      * getter of id of Worker
+     *
      * @return
      */
     public int getId() {
@@ -36,6 +39,7 @@ public class Worker {
 
     /**
      * getter of {@link Colors} of Worker
+     *
      * @return
      */
     public Colors getColor() {
@@ -44,6 +48,7 @@ public class Worker {
 
     /**
      * getter of the {@link Player} who owns this worker
+     *
      * @return
      */
     public Player getOwner() {
@@ -53,9 +58,10 @@ public class Worker {
     /**
      * getter of the name of the player,
      * we use this since Player is transient and otherwise I cannot get the name of player when it' serialized
+     *
      * @return the string
      */
-    public String getPlayerName(){
+    public String getPlayerName() {
         return playerName;
     }
 

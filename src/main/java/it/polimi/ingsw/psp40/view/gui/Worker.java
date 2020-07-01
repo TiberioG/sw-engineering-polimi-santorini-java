@@ -1,12 +1,13 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import animatefx.animation.AnimationFX;
+import animatefx.animation.Tada;
 import it.polimi.ingsw.psp40.commons.Colors;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
-import animatefx.animation.*;
 import javafx.util.Duration;
 
 /**
@@ -39,7 +40,7 @@ public class Worker extends Block {
 
     @Override
     protected void handleClick() {
-        if(GUI.gameScreenController != null)
+        if (GUI.gameScreenController != null)
             GUI.gameScreenController.workerClicked(this);
     }
 
@@ -47,24 +48,22 @@ public class Worker extends Block {
     void loadImage(GUIProperties.CameraType cameraType) {
         switch (cameraType) {
             case RIGHT:
-                if(z == 1)
+                if (z == 1)
                     this.setImage(GUIProperties.image_worker_dx);
                 else if (z == 4) {
                     this.setImage(GUIProperties.image_worker_cut_lvl3_dx);
                     this.setFitWidth(GUIProperties.worker_lvl3_Width);
-                }
-                else
+                } else
                     this.setImage(GUIProperties.image_worker_cut_dx);
                 break;
 
             case LEFT:
-                if(z == 1)
+                if (z == 1)
                     this.setImage(GUIProperties.image_worker_sx);
                 else if (z == 4) {
                     this.setImage(GUIProperties.image_worker_cut_lvl3_sx);
                     this.setFitWidth(GUIProperties.worker_lvl3_Width);
-                }
-                else
+                } else
                     this.setImage(GUIProperties.image_worker_cut_sx);
                 break;
 
@@ -92,15 +91,30 @@ public class Worker extends Block {
         }
     }
 
+    /**
+     * Moves the worker from its position to the new one, without movement animation
+     *
+     * @param row row where to move
+     * @param col col where to move
+     * @param z   z (level) where to move
+     */
     protected void move(int row, int col, int z) {
         this.move(row, col, z, true);
     }
 
-    protected void move (int row, int col, int z, boolean withAnimation) {
+    /**
+     * Moves the worker from its position to the new one, with movement animation if specified
+     *
+     * @param row           row where to move
+     * @param col           col where to move
+     * @param z             z (level) where to move
+     * @param withAnimation
+     */
+    protected void move(int row, int col, int z, boolean withAnimation) {
         this.z = z + 1;
         this.row = row;
         this.col = col;
-        if(!withAnimation) { // load new image immediately only if worker is moving without animation
+        if (!withAnimation) { // load new image immediately only if worker is moving without animation
             loadImage(currentCamera);
         }
         switch (currentCamera) {
@@ -135,7 +149,7 @@ public class Worker extends Block {
                 break;
 
             default: // right and left
-                switch(this.z) {
+                switch (this.z) {
                     case 1:
                         endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 39);
                         endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf + 5);
@@ -148,18 +162,18 @@ public class Worker extends Block {
 
                     case 3:
                         endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
-                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level2YFix - 49.5);
+                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level2YFix - 49.5);
                         break;
 
                     case 4:
                         endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);
-                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing)  - GUIProperties.tileHeightHalf - GUIProperties.level1Height/2 + GUIProperties.level3YFix - 56.5); // 56.5
+                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix - 56.5); // 56.5
                         break;
                 }
                 break;
         }
 
-        if(withAnimation) {
+        if (withAnimation) {
             loadDefaultWorkerImage(); // use default worker while moving
             applyColor();
             startTransition(endX, endY);
@@ -171,31 +185,47 @@ public class Worker extends Block {
     }
 
     private void startTransition(double endX, double endY) {
-        Timeline move1 = new Timeline();
-        move1.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(0.5),
-                new KeyValue(this.yProperty(), this.getY()-100)
-        ));
-
-        Timeline move2 = new Timeline();
-        move2.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(1.0),
-                new KeyValue(this.xProperty(), endX),
-                new KeyValue(this.yProperty(), endY-100)
-        ));
-
-        Timeline move3 = new Timeline();
-        move3.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(0.5),
-                new KeyValue(this.yProperty(), endY)
-        ));
-        move3.setOnFinished(e -> {
-            loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it's overridden in GameScreenController
-            this.setDisable(false);
-        });
-
         this.setDisable(true);
-        moveAnimation = new SequentialTransition(move1, move2, move3);
+
+        if (currentCamera.equals(GUIProperties.CameraType.TOP)) {
+            Timeline move1 = new Timeline();
+            move1.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(0.5),
+                    new KeyValue(this.xProperty(), endX),
+                    new KeyValue(this.yProperty(), endY)
+            ));
+            move1.setOnFinished(e -> {
+                loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it's overridden in GameScreenController
+                this.setDisable(false);
+            });
+            moveAnimation = new SequentialTransition(move1);
+        } else {
+            Timeline move1 = new Timeline();
+            move1.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(0.5),
+                    new KeyValue(this.yProperty(), this.getY() - 100)
+            ));
+
+            Timeline move2 = new Timeline();
+            move2.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(1.0),
+                    new KeyValue(this.xProperty(), endX),
+                    new KeyValue(this.yProperty(), endY - 100)
+            ));
+
+            Timeline move3 = new Timeline();
+            move3.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(0.5),
+                    new KeyValue(this.yProperty(), endY)
+            ));
+
+            move3.setOnFinished(e -> {
+                loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it's overridden in GameScreenController
+                this.setDisable(false);
+            });
+            moveAnimation = new SequentialTransition(move1, move2, move3);
+        }
+
         moveAnimation.play();
     }
 
@@ -231,13 +261,16 @@ public class Worker extends Block {
 
     @Override
     protected void setBlockEffect(Effect effect) {
-        if(effect != null) {    // apply custom effect
+        if (effect != null) {    // apply custom effect
             this.setEffect(effect);
         } else {                // restore worker color
             applyColor();
         }
     }
 
+    /**
+     * Starts animation for the selection phase
+     */
     protected void startSelectionAnimation() {
         selectionAnimation = new Tada(this);
 
@@ -250,8 +283,11 @@ public class Worker extends Block {
         selectionAnimation.play();
     }
 
+    /**
+     * Stops animation for the selection phase
+     */
     protected void stopSelectionAnimation() {
-        if(selectionAnimation != null) {
+        if (selectionAnimation != null) {
             selectionAnimation.stop();
 
             // restore image, otherwise it's scaled/rotated

@@ -1,8 +1,7 @@
 package it.polimi.ingsw.psp40.commons;
 
+import it.polimi.ingsw.psp40.model.Component;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ComponentTest {
 

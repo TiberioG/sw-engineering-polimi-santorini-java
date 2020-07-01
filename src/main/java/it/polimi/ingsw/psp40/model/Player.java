@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp40.model;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.Publisher;
+import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.network.server.VirtualView;
 
@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * This is the class for the Player
+ *
  * @author Vito96
  */
 public class Player extends Publisher<Message> {
@@ -28,9 +29,10 @@ public class Player extends Publisher<Message> {
 
     /**
      * Constructor
-     * @param name
-     * @param birthday
-     * @param virtualView
+     *
+     * @param name username of the player
+     * @param birthday birthday of the player
+     * @param virtualView associated VirtualView instance
      */
     public Player(String name, Date birthday, VirtualView virtualView) {
         addListener(virtualView);
@@ -39,9 +41,10 @@ public class Player extends Publisher<Message> {
     }
 
     /**
-     * Stupid constructor for testing
-     * @param name
-     * @param birthday
+     * Dumb constructor for testing
+     *
+     * @param name username of the player
+     * @param birthday birthday of the player
      */
     public Player(String name, Date birthday) {
         this(name, birthday, null);
@@ -51,6 +54,7 @@ public class Player extends Publisher<Message> {
 
     /**
      * Getter of name of Player
+     *
      * @return string name
      */
     public String getName() {
@@ -59,7 +63,8 @@ public class Player extends Publisher<Message> {
 
     /**
      * Getter of birthday of player
-     * @return
+     *
+     * @return birthday
      */
     public Date getBirthday() {
         return birthday;
@@ -67,7 +72,8 @@ public class Player extends Publisher<Message> {
 
     /**
      * Getter of the {@link Card} associated now with the player
-     * @return
+     *
+     * @return current card associated to the player
      */
     public Card getCurrentCard() {
         return currentCard;
@@ -75,7 +81,8 @@ public class Player extends Publisher<Message> {
 
     /**
      * setter to associate a {@link Card} to the player
-     * @param currentCard
+     *
+     * @param currentCard card to be associated to the player
      */
     public void setCurrentCard(Card currentCard) {
         this.currentCard = currentCard;
@@ -84,6 +91,7 @@ public class Player extends Publisher<Message> {
 
     /**
      * Method that allows the creation and addition of a worker
+     *
      * @param color color of the worker
      * @return worker the created worker
      */
@@ -97,7 +105,8 @@ public class Player extends Publisher<Message> {
     }
 
     /**
-     * getter of all the Workers of the player
+     * Getter of all the Workers of the player
+     *
      * @return an ArrayList of the workers belonging to the player
      */
     public List<Worker> getWorkers() {

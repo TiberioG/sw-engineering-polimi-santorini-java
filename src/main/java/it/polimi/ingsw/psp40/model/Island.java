@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.model;
 
-import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.Publisher;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 /**
  * This is the class for the Island (billboard)
  * we called island because billboard is longer and less cool
+ *
  * @author sup3rgiu, TiberioG
  */
 public class Island extends Publisher<Message> {
@@ -41,9 +41,10 @@ public class Island extends Publisher<Message> {
 
     /**
      * Constructor to setup island as publisher
-     * @param virtualView
+     *
+     * @param virtualView associated VirtauLView instance
      */
-    public Island(VirtualView virtualView){
+    public Island(VirtualView virtualView) {
         this();
         addListener(virtualView);
         publish(new Message("ALL", TypeOfMessage.ISLAND_UPDATED, this.field));
@@ -51,6 +52,7 @@ public class Island extends Publisher<Message> {
 
     /**
      * Get game field
+     *
      * @return game field object
      */
     public Cell[][] getField() {
@@ -59,6 +61,7 @@ public class Island extends Publisher<Message> {
 
     /**
      * Returns max coordinate X of the billboard
+     *
      * @return max coordinate X
      */
     public static int getMaxX() {
@@ -67,6 +70,7 @@ public class Island extends Publisher<Message> {
 
     /**
      * Returns max coordinate Y of the billboard
+     *
      * @return max coordinate Y
      */
     public static int getMaxY() {
@@ -75,31 +79,33 @@ public class Island extends Publisher<Message> {
 
     /**
      * Returns the cell with the given coordinates
+     *
      * @param x coordinate X
      * @param y coordinate Y
      * @return cell at the given coordinate
      * @throws CellOutOfBoundsException if coordinate X or coordinate Y are out of island bounds
      */
     public Cell getCell(int x, int y) throws CellOutOfBoundsException {
-        if(x < 0 || x > maxX || y < 0 || y > maxY)
+        if (x < 0 || x > maxX || y < 0 || y > maxY)
             throw new CellOutOfBoundsException();
         return this.field[x][y];
     }
 
     /**
      * Return the adjacent cells given an instance of cell
+     *
      * @param cell initial cell
      * @return an {@link ArrayList} of {@link Cell}
      */
-    public ArrayList<Cell> getAdjCells (Cell cell) {
+    public ArrayList<Cell> getAdjCells(Cell cell) {
         int x = cell.getCoordX();
         int y = cell.getCoordY();
         ArrayList<Cell> adjacentCells = new ArrayList<>();
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                if ((i != 0) || ( j!= 0)) {
-                    if (x+i >= 0 && y+j >= 0 && x+i<=maxX && y+j<=maxY) { //check boundaries
-                        adjacentCells.add(field[x+i][y+j]);
+                if ((i != 0) || (j != 0)) {
+                    if (x + i >= 0 && y + j >= 0 && x + i <= maxX && y + j <= maxY) { //check boundaries
+                        adjacentCells.add(field[x + i][y + j]);
                     }
                 }
             }
@@ -110,24 +116,24 @@ public class Island extends Publisher<Message> {
 
 
     /**
-     * The only public method to build things, this one calls the protected one in Tower.
-     * Then sends a message to the view
-     * @param component
-     * @param cell
+     * Adds the given component to the tower built on the given cell
+     *
+     * @param component component to build
+     * @param cell cell where to build
      * @throws BuildLowerComponentException
      */
     public void addComponent(Component component, Cell cell) throws BuildLowerComponentException {
-       cell.getTower().addComponent(component);
-       this.update();
-       this.updateSpecific(cell);
+        cell.getTower().addComponent(component);
+        this.update();
+        this.updateSpecific(cell);
     }
 
     /**
-     * The only public method to remove things, this one calls the protected one in Tower.
-     * Then sends a message to the view
+     * Removes the last component from the tower built on the given cell
+     *
      * @param cell
      */
-    public void removeComponent(Cell cell) throws  RemoveGroundLevelException {
+    public void removeComponent(Cell cell) throws RemoveGroundLevelException {
         cell.getTower().removeComponent();
         this.update();
         this.updateSpecific(cell);
@@ -136,15 +142,16 @@ public class Island extends Publisher<Message> {
     /**
      * Sends to the view a copy of all the field
      */
-    private void update (){
+    private void update() {
         publish(new Message("ALL", TypeOfMessage.ISLAND_UPDATED, field));
     }
 
     /**
-     * Sends the cell that has just been modified with a new component
-     * @param cell
+     * Sends to the view the cell that has just been modified with a new component
+     *
+     * @param cell modified cell
      */
-    private void updateSpecific(Cell cell){
+    private void updateSpecific(Cell cell) {
         publish(new Message("ALL", TypeOfMessage.TOWER_UPDATED, cell));
     }
 

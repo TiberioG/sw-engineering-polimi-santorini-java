@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import it.polimi.ingsw.psp40.model.Player;;
+import it.polimi.ingsw.psp40.commons.FunctionInterface;
+import it.polimi.ingsw.psp40.model.Player;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -9,35 +10,40 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+;
+
 public class WinnerLoserPopup extends PopupStage {
 
     private boolean isWinner;
-    private Player winner;
-    private Player loser;
-    private boolean shouldContinue;
-    private String details = null;
+    private Player winningPlayer;
+    private FunctionInterface continueFunction;
+    private String labelButton = "Restart game!";
 
     protected Image image_popup_winner = new Image(getClass().getResource("/images/winner_popup.png").toString());
     protected Image image_popup_loser = new Image(getClass().getResource("/images/loser_popup.png").toString());
 
-    WinnerLoserPopup(Stage ownerStage, boolean isWinner) {
-        this(ownerStage, isWinner, null);
-    }
 
-    WinnerLoserPopup(Stage ownerStage, boolean isWinner, String details) {
+    /**
+     * Constructor
+     *
+     * @param ownerStage
+     * @param isWinner
+     * @param continueFunction
+     */
+    WinnerLoserPopup(Stage ownerStage, boolean isWinner, FunctionInterface continueFunction) {
         super(ownerStage);
         this.isWinner = isWinner;
-        this.details = details;
+        this.continueFunction = continueFunction;
         build();
     }
 
-    protected void setWinner(Player winningPlayer) {
-        this.winner = winningPlayer;
-    }
-
-    protected void setLoser(Player losingPlayer) {
-        this.loser = losingPlayer;
-        this.shouldContinue = true;
+    /**
+     * Method that permit to a set a winningPlayer information in the popup
+     *
+     * @param winningPlayer the player who has won
+     */
+    protected void setWinningPlayer(Player winningPlayer) {
+        this.winningPlayer = winningPlayer;
     }
 
     private void build() {
@@ -58,7 +64,7 @@ public class WinnerLoserPopup extends PopupStage {
         text.setFont(new Font(24));
         text.setWrappingWidth(280);
         this.vBox.getChildren().add(text);
-        this.vBox.setPadding(new Insets(100, 20, 20 , 20));  // override default padding
+        this.vBox.setPadding(new Insets(100, 20, 20, 20));  // override default padding
         UtilsGUI.addClassToElement(vBox, isWinner ? "winner-popup" : "loser-popup");
 
         Button button = buildButton();
@@ -66,21 +72,15 @@ public class WinnerLoserPopup extends PopupStage {
     }
 
     private Button buildButton() {
-
-        String label = shouldContinue ? "Continue" : "Something";
-
-        Button button = new Button(label);
+        Button button = new Button(labelButton);
         button.setPrefHeight(50);
         button.setPrefWidth(150);
         button.setStyle("-fx-font-size:18");
         button.setOnAction(event -> {
-            if(shouldContinue) {
-                this.ownerStage.getScene().getRoot().setEffect(null);
-                this.ownerStage.getScene().getRoot().setDisable(false);
-                this.hide();
-            } else {
-                // todo: back to home or close?
-            }
+            this.ownerStage.getScene().getRoot().setEffect(null);
+            this.ownerStage.getScene().getRoot().setDisable(false);
+            this.hide();
+            continueFunction.executeFunction();
         });
         UtilsGUI.buttonHoverEffect(button);
         return button;
@@ -88,21 +88,12 @@ public class WinnerLoserPopup extends PopupStage {
 
 
     private String getDetails() {
-        if(details != null) {
-            return details;
-        }
         String details;
-        if(isWinner) {
+        if (isWinner) {
             details = "Congratulations!\nYou Won!";
-        } else { // someone has lost. You or someone else
-            if(loser != null) {
-                details = loser.getName() + " has lost";
-            } else {
-                details = "I'm sorry, you lost :(";
-                if (winner != null) {
-                    details += "\n\nThe winner is " + winner.getName();
-                }
-            }
+        } else {
+            details = "I'm sorry, you lost :(";
+            if (winningPlayer != null) details += "\n\nThe winner is " + winningPlayer.getName();
         }
         return details;
     }

@@ -1,25 +1,23 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
-import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class ConfirmPopup extends PopupStage {
     private FunctionInterface confirmFunction;
     private FunctionInterface denyFunction;
-    private String labelConfirmButton = "YES";
-    private String labelDenyButton = "NO";
     private String text;
+    private Button confirmButton;
+    private Button denyButton;
 
     public ConfirmPopup(Stage ownerStage, String text, FunctionInterface confirmFunction, FunctionInterface denyFunction) {
         super(ownerStage);
         this.confirmFunction = confirmFunction;
         this.denyFunction = denyFunction;
-        this.text  = text;
+        this.text = text;
         UtilsGUI.addClassToElement(vBox, "vbox-popup-stage"); //default class
         createText();
         createTwoButtons();
@@ -28,22 +26,42 @@ public class ConfirmPopup extends PopupStage {
     public ConfirmPopup(Stage ownerStage, String text, FunctionInterface confirmFunction) {
         super(ownerStage);
         this.confirmFunction = confirmFunction;
-        this.text  = text;
+        this.text = text;
         UtilsGUI.addClassToElement(vBox, "vbox-popup-stage"); //default class
         createText();
         createOneButton();
     }
 
+    /*
+     * Method to set class to the vbox of the popup
+     * @param nameClass ded
+     */
+
+    /**
+     * Method to set class to the vbox of the popup
+     *
+     * @param nameClass the name of the class
+     */
     public void setClass(String nameClass) {
         UtilsGUI.addClassToElement(vBox, nameClass);
     }
 
-    public void setLabelConfirmButton(String copy) {
-        labelConfirmButton = copy.toUpperCase();
+    /**
+     * Method to set the label of the confirm button
+     *
+     * @param label the label to set on the confirm button
+     */
+    public void setLabelConfirmButton(String label) {
+        confirmButton.setText(label.toUpperCase());
     }
 
+    /**
+     * Method to set the label of the deny button
+     *
+     * @param label the label to set on the deny button
+     */
     public void setLabelDenyButton(String label) {
-        labelDenyButton = label.toUpperCase();
+        denyButton.setText(label.toUpperCase());
     }
 
     private void createText() {
@@ -56,7 +74,7 @@ public class ConfirmPopup extends PopupStage {
     }
 
     private void createOneButton() {
-        Button confirmButton = createButton(labelConfirmButton);
+        confirmButton = createButton("YES");
         confirmButton.setOnAction(actionEvent -> {
             removeEffect();
             this.confirmFunction.executeFunction();
@@ -65,8 +83,7 @@ public class ConfirmPopup extends PopupStage {
     }
 
     private void createTwoButtons() {
-
-        Button confirmButton = createButton(labelConfirmButton);
+        confirmButton = createButton("YES");
         confirmButton.setPrefHeight(35);
         confirmButton.setPrefWidth(80);
         confirmButton.setOnAction(actionEvent -> {
@@ -74,7 +91,7 @@ public class ConfirmPopup extends PopupStage {
             this.confirmFunction.executeFunction();
         });
 
-        Button denyButton = createButton(labelDenyButton);
+        denyButton = createButton("NO");
         denyButton.setPrefHeight(35);
         denyButton.setPrefWidth(80);
         denyButton.setOnAction(actionEvent -> {

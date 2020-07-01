@@ -9,11 +9,13 @@ import java.util.stream.Collectors;
 
 /**
  * This strategy allows a worker to move one additional time, but not back to its initial space
+ *
  * @author sup3rgiu
  */
 public class DoubleMove extends DefaultMove {
     /**
      * Constructor
+     *
      * @param match
      */
     public DoubleMove(Match match) {
@@ -22,6 +24,7 @@ public class DoubleMove extends DefaultMove {
 
     /**
      * This method allows a {@link Worker} to move again but not in the cell where it was before
+     *
      * @param worker it's the {@link Worker} you want to know about
      * @return a list of {@link Cell} where is possible to move
      */

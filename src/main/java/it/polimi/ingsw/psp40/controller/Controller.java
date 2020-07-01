@@ -2,7 +2,7 @@ package it.polimi.ingsw.psp40.controller;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.Listener;
 import it.polimi.ingsw.psp40.commons.messages.*;
@@ -15,11 +15,11 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import java.util.stream.Collectors;
 
 /**
  * This class manages the logic of the game
+ *
  * @author Vito96
  */
 public class Controller implements Listener<Message> {
@@ -31,6 +31,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Constructor
+     *
      * @param virtualView
      */
     public Controller(VirtualView virtualView) {
@@ -40,6 +41,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method for create a new match with a specified matchId
+     *
      * @param matchID the identifier of the new match
      */
     private void createNewMatch(int matchID) {
@@ -49,7 +51,8 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method for creating and adding a player to the match
-     * @param name the name of the new player
+     *
+     * @param name     the name of the new player
      * @param birthday the birthday of the new player
      */
     private void addPlayerToMatch(String name, Date birthday) {
@@ -59,6 +62,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method for adding the available selected cards to te match
+     *
      * @param cardIdList a list of {@link Integer} which rappresent the identifier of the cards
      */
     private void addCardToMatch(List<Integer> cardIdList) {
@@ -67,7 +71,8 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method for associate a card to a specified player
-     * @param name the name of the specified player
+     *
+     * @param name   the name of the specified player
      * @param cardId the identifier of the card
      */
     private void addCardToPlayer(String name, int cardId) {
@@ -86,9 +91,10 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method for retrieve and send the selectable card to a specified player
+     *
      * @param nameOfPlayer the name of the specified player
      */
-    private void sendSelectableCards (String nameOfPlayer) {
+    private void sendSelectableCards(String nameOfPlayer) {
         List<TuplaGenerics<Card, String>> listOfSelectableCards = new ArrayList<>();
 
         match.getCards().forEach(card -> {
@@ -106,6 +112,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method for check if exist a backuped match with the same players
+     *
      * @param playersData a map which contains the player data
      */
     private boolean checkExistanceOfOldMatch(Map<String, String> playersData) {
@@ -119,11 +126,12 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows the creation of a new match
+     *
      * @param message message containing player information
      */
     @SuppressWarnings("unused")
     private void startMatch(Message message) {
-        Map<String, String> playersData = (Map<String, String>)message.getPayload(Map.class);
+        Map<String, String> playersData = (Map<String, String>) message.getPayload(Map.class);
 
         createNewMatch(message.getMatchID());
         playersData.forEach((username, date) -> {
@@ -133,6 +141,7 @@ public class Controller implements Listener<Message> {
                 e.printStackTrace();
             }
         });
+        match.buildOrderedList(Comparator.comparing(Player::getBirthday).reversed());
         match.setCurrentPlayer(match.getPlayers().get(0));
 
         if (checkExistanceOfOldMatch(playersData)) {
@@ -145,11 +154,12 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows the recovery of a backuped match or allows the start of a new match
+     *
      * @param message message containing the information for creating or retrieving the match
      */
     @SuppressWarnings("unused")
     private void restoreMatch(Message message) {
-        boolean restoreMatch = (boolean)message.getPayload(boolean.class);
+        boolean restoreMatch = (boolean) message.getPayload(boolean.class);
         if (restoreMatch) {
             match = MatchHistory.restoreMatch(virtualView, oldMatch);
             virtualView.setMatchID(match.getMatchID());
@@ -177,11 +187,13 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows the recovery of a backuped match or allows the start of a new match
+     *
      * @param message message containing the information for creating or retrieving the match
      */
     @SuppressWarnings("unused")
     private void setCardToGame(Message message) {
-        List<Integer> listOfIdCard = (List<Integer>) message.getPayload(new TypeToken<List<Integer>>() {}.getType());
+        List<Integer> listOfIdCard = (List<Integer>) message.getPayload(new TypeToken<List<Integer>>() {
+        }.getType());
         addCardToMatch(listOfIdCard);
         sendSelectableCards(match.getPlayers().get(match.selectNextCurrentPlayer()).getName());
     }
@@ -189,6 +201,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows the sending and choice of available cards and if all players have chosen the card sends the event for the choice of the first player
+     *
      * @param message message containing the information of the choicen card
      */
     @SuppressWarnings("unused")
@@ -210,12 +223,12 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows to set the first player
+     *
      * @param message message containing the information of the first player
      */
     @SuppressWarnings("unused")
     private void setFirstPlayer(Message message) {
-        String nameOfFirstPlayer = (String)message.getPayload(String.class);
-        match.buildOrderedList(Comparator.comparing(Player::getBirthday)); //fa lista ordinata prima
+        String nameOfFirstPlayer = (String) message.getPayload(String.class);
         match.setCurrentPlayer(nameOfFirstPlayer); //mette il primo player selezionato dalla view
         match.rescaleListFromCurrentPlayer();
         virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_POSITION_OF_WORKERS, match.getPlayers())); //getting first player is the fist who position workers
@@ -223,6 +236,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows you to position the {@link Worker} on the {@link Island}
+     *
      * @param message message containing the information of the positioning
      */
     @SuppressWarnings("unused")
@@ -231,7 +245,7 @@ public class Controller implements Listener<Message> {
         selectWorkersMessage.getPositionOfWorkers().forEach(position -> {
             Worker worker = match.getCurrentPlayer().addWorker(selectWorkersMessage.getColorOfWorkers());
             try {
-                match.getLocation().setLocation(match.getIsland().getCell(position.getX(),position.getY()), worker);
+                match.getLocation().setLocation(match.getIsland().getCell(position.getX(), position.getY()), worker);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -246,6 +260,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows the selection of the {@link Worker} for the current {@link Turn}
+     *
      * @param message message containing the information of the selected {@link Worker}
      */
     @SuppressWarnings("unused")
@@ -255,6 +270,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows you to retrieve the available cells to move the previously selected {@link Worker}
+     *
      * @param message message present for use through reflection
      */
     @SuppressWarnings("unused")
@@ -262,6 +278,11 @@ public class Controller implements Listener<Message> {
         turnManager.getAvailableCellForMove();
     }
 
+    /**
+     * Method that allows you the {@link Worker} selected on the turn
+     *
+     * @param message message present for use through reflection
+     */
     @SuppressWarnings("unused")
     private void moveWorker(Message message) {
         CoordinatesMessage coordinatesMessage = (CoordinatesMessage) message.getPayload(CoordinatesMessage.class);
@@ -274,6 +295,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows you to retrieve the available cells to build the previously selected {@link Worker}
+     *
      * @param message message present for use through reflection
      */
     @SuppressWarnings("unused")
@@ -284,11 +306,13 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows you to build a {@link Component} on a specific {@link Cell} available for construction
+     *
      * @param message message that contains {@link Cell} and {@link Component} information for the construction
      */
     @SuppressWarnings("unused")
     private void buildCell(Message message) {
-        TuplaGenerics<Component, CoordinatesMessage> tuplaForBuildComponent = (TuplaGenerics<Component, CoordinatesMessage>) message.getPayload(new TypeToken<TuplaGenerics<Component,CoordinatesMessage>>() {}.getType());
+        TuplaGenerics<Component, CoordinatesMessage> tuplaForBuildComponent = (TuplaGenerics<Component, CoordinatesMessage>) message.getPayload(new TypeToken<TuplaGenerics<Component, CoordinatesMessage>>() {
+        }.getType());
         try {
             turnManager.build(tuplaForBuildComponent.getFirst(), match.getIsland().getCell(tuplaForBuildComponent.getSecond().getX(), tuplaForBuildComponent.getSecond().getY()));
         } catch (SantoriniException e) {
@@ -298,6 +322,7 @@ public class Controller implements Listener<Message> {
 
     /**
      * Method that allows you to request to finish the turn
+     *
      * @param message message present for use through reflection
      */
     @SuppressWarnings("unused")
@@ -305,24 +330,20 @@ public class Controller implements Listener<Message> {
         turnManager.endTurn();
     }
 
-    /*private void initNewMatch(Message message) {
-        if (match.isMatchedEnded() == true) {
-            String nameOfWinningPlayer = match.getCurrentPlayer().getName();
-            List<Player> playerList = match.getPlayers();
-            createNewMatch();
 
-            playerList.forEach(player -> {
-                addPlayerToMatch(player.getName(), player.getBirthday());
-            });
-
-            match.setCurrentPlayer(match.getPlayerByName(nameOfWinningPlayer));
-            match.rescaleListFromCurrentPlayer();
-            virtualView.displayMessage(new Message(match.getCurrentPlayer().getName(), TypeOfMessage.CHOOSE_GAME_CARDS, new ChooseGameCardMessage(cardManager.getCardMap(), match.getPlayers().size())));
-        };
-    }*/
+    /**
+     * Method that checks if the {@link Message} can be managed, checking if the {@link Message} sender is the current player
+     *
+     * @param message message to check
+     */
+    private boolean checkValidityMessage(Message message) {
+        if (match == null || match.getCurrentPlayer() == null) return true;
+        else return message.getUsername().equals(match.getCurrentPlayer().getName());
+    }
 
     /**
      * Method that allows to call methods through reflections according to the type of the {@link Message} received
+     *
      * @param message message containing the information received
      */
     @Override
@@ -330,7 +351,7 @@ public class Controller implements Listener<Message> {
         TypeOfMessage typeOfMessage = message.getTypeOfMessage();
         try {
             Method methodToInvoke = this.getClass().getDeclaredMethod(typeOfMessage.toString(), Message.class);
-            methodToInvoke.invoke(this, message);
+            if (checkValidityMessage(message)) methodToInvoke.invoke(this, message);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

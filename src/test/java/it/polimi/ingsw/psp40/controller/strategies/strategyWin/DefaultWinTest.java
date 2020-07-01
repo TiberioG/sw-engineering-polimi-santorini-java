@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyWin;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.controller.TurnManager;
 import it.polimi.ingsw.psp40.controller.strategies.strategyMove.DefaultMove;

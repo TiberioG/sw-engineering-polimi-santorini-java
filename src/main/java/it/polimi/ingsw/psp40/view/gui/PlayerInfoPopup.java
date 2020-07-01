@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.model.Player;
-import it.polimi.ingsw.psp40.view.cli.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -25,7 +24,7 @@ public class PlayerInfoPopup extends Stage {
         this.player = player;
         this.ownerStage = ownerStage;
         this.initOwner(ownerStage);
-            buildStage(node);
+        buildStage(node);
         buildPopup();
     }
 
@@ -37,7 +36,7 @@ public class PlayerInfoPopup extends Stage {
         // Relocate the pop-up Stage
         this.setOnShown(ev -> {
             double x = node.localToScreen(node.getBoundsInLocal()).getMaxX();
-            if((boolean) node.getUserData()) { // if is an image in right pane of BorderPane
+            if ((boolean) node.getUserData()) { // if is an image in right pane of BorderPane
                 x = x - this.getWidth() - node.getBoundsInParent().getWidth();
             }
             double y = node.localToScreen(node.getBoundsInLocal()).getMaxY() - node.getBoundsInParent().getHeight();
@@ -74,7 +73,7 @@ public class PlayerInfoPopup extends Stage {
         Text text = new Text(string);
         text.setTextAlignment(TextAlignment.CENTER);
         double wrapWidth = this.ownerStage.getScene().getWidth() * 0.2;
-        if(text.getLayoutBounds().getWidth() > wrapWidth) {
+        if (text.getLayoutBounds().getWidth() > wrapWidth) {
             text.setWrappingWidth(wrapWidth);
         }
         return text;

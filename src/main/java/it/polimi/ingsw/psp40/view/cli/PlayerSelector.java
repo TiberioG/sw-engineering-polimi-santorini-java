@@ -9,11 +9,12 @@ import java.util.List;
 
 /**
  * Tis class is used to show the selection of players
+ *
  * @author TiberioG
  */
 public class PlayerSelector {
-    private final static int  SPACING = 3;
-    private String title ="Select first player"; // this will be upperCASED automatically
+    private final static int SPACING = 3;
+    private String title = "Select first player"; // this will be upperCASED automatically
     private int widthLeft;
     private int widthRight;
 
@@ -22,29 +23,33 @@ public class PlayerSelector {
 
     private Frame f1;
     private Frame f2;
+    private Frame container;
 
     /**
      * constructor
+     *
      * @param allPlayers a list of player to select
-     * @param container {@link Frame} where you want to show the selector
+     * @param container  {@link Frame} where you want to show the selector
      */
-    public PlayerSelector(List<Player> allPlayers, Frame container){
+    public PlayerSelector(List<Player> allPlayers, Frame container) {
         this.allPlayers = allPlayers;
+        this.container = container;
         names = allPlayers.stream().map(Player::getName).toArray(String[]::new);
         widthLeft = Math.max(Utils.longestArray(names), title.length()) + 5;
         widthRight = widthLeft + 5;
 
         //this is used to create a 2frame centered layout inseide the container
-        f1 = new Frame(new int[]{10, (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 }, container.getAbsEnd(), container.getIn(), container.getOut());
-        f2 = new Frame(new int[]{10, ( (container.getColSpan() - (widthLeft + SPACING + widthRight) ) / 2 ) + widthLeft + SPACING }, container.getAbsEnd(), container.getIn(), container.getOut());
+        f1 = new Frame(new int[]{container.getInit()[0], (container.getColSpan() - (widthLeft + SPACING + widthRight)) / 2}, container.getAbsEnd(), container.getIn(), container.getOut());
+        f2 = new Frame(new int[]{container.getInit()[0], ((container.getColSpan() - (widthLeft + SPACING + widthRight)) / 2) + widthLeft + SPACING}, container.getAbsEnd(), container.getIn(), container.getOut());
     }
 
 
     /**
      * returns the selected string
+     *
      * @return
      */
-    public String selection (){
+    public String selection() {
         try {
             Terminal.noBuffer();
         } catch (IOException | InterruptedException e) {
@@ -62,7 +67,7 @@ public class PlayerSelector {
 
                     //GETTING SPACEBAR to positiom
                     if (c == 32) {
-                     break;
+                        break;
                     }
 
                     //getting an ARROW KEY
@@ -71,11 +76,11 @@ public class PlayerSelector {
                         int next2 = System.in.read();
                         if (next1 == 91) { //  read [
                             if (next2 == 65) {                     //UP  arrow
-                                if (selection > 0 && selection <= allPlayers.size() -1) {
+                                if (selection > 0 && selection <= allPlayers.size() - 1) {
                                     selection--;
                                 }
                             } else if (next2 == 66) {              //DOWN arrow
-                                if (selection >= 0 && selection < allPlayers.size() -1) {
+                                if (selection >= 0 && selection < allPlayers.size() - 1) {
                                     selection++;
                                 }
                             }
@@ -95,7 +100,12 @@ public class PlayerSelector {
     }
 
 
-    private void print (int current) {
+    /**
+     * prints the player selector
+     *
+     * @param current highlited row
+     */
+    private void print(int current) {
         int height = allPlayers.size();
         int innerwidth = widthLeft - 4;
 
@@ -150,15 +160,22 @@ public class PlayerSelector {
 
         //closeline
         System.out.print("╚");
-        for (int i = 0; i< (widthLeft); i++ ){
+        for (int i = 0; i < (widthLeft); i++) {
             System.out.print("═");
         }
         System.out.print("╝");
+
+        //System.out.print(Utils.centerString(container.getColSpan(), "Use arrows to navigate, confirm your selection with SPACEBAR"));
     }
 
 
-
-    private void showText(String cardname,  String description){
+    /**
+     * method to show the name and the description of the card of a player
+     *
+     * @param cardname    name of the card
+     * @param description of the card
+     */
+    private void showText(String cardname, String description) {
         f2.clearRight(); //ued to odelete previous box
         String titleString = Utils.centerString(widthLeft, "Card " + cardname); //title
         StringBuilder title = new StringBuilder();
@@ -193,7 +210,7 @@ public class PlayerSelector {
 
         //middle item lines
         for (int i = 0; i < lines.length; i++) {
-            String output = String.format("  %-"+ widthLeft + "s", lines[i]);
+            String output = String.format("  %-" + widthLeft + "s", lines[i]);
             System.out.print("║ ");
             System.out.print(output);
             System.out.print("  ║");
@@ -203,7 +220,7 @@ public class PlayerSelector {
 
         //closeline
         System.out.print("╚");
-        for (int i = 0; i< (widthRight ); i++ ){
+        for (int i = 0; i < (widthRight); i++) {
             System.out.print("═");
         }
         System.out.print("╝");

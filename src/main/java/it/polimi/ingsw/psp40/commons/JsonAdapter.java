@@ -4,10 +4,10 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
 import java.io.InputStreamReader;
-import java.io.Writer;
 
 /**
  * This is an adapter class for {@link JsonReader} class and {@link Gson} class
+ *
  * @author Vito96
  */
 public class JsonAdapter {
@@ -21,6 +21,7 @@ public class JsonAdapter {
 
     /**
      * Constructor: init jsonReader class
+     *
      * @param pathOfFile the relative path of the json file
      */
     public JsonAdapter(String pathOfFile) {
@@ -29,14 +30,15 @@ public class JsonAdapter {
 
     /**
      * Constructor: init jsonReader class and init the first structure of the json file
-     * @param pathOfFile the relative path of the json file
+     *
+     * @param pathOfFile      the relative path of the json file
      * @param typeOfFirstNode the type of the first structure of the json file
      */
     public JsonAdapter(String pathOfFile, String typeOfFirstNode) {
         this(pathOfFile);
         if (typeOfFirstNode.equals("array")) {
             mainJsonArray = new Gson().fromJson(jsonReader, JsonArray.class);
-        } else if (typeOfFirstNode .equals("object")) {
+        } else if (typeOfFirstNode.equals("object")) {
             mainJsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
         }
     }
@@ -45,6 +47,7 @@ public class JsonAdapter {
 
     /**
      * This method return the mainJsonObject
+     *
      * @return the mainJsonObject of json file
      */
     public JsonObject getMainJsonObject() {
@@ -53,6 +56,7 @@ public class JsonAdapter {
 
     /**
      * This method return the mainJsonArray
+     *
      * @return the mainJsonArray of json file
      */
     public JsonArray getMainJsonArray() {
@@ -61,8 +65,9 @@ public class JsonAdapter {
 
     /**
      * return from the {@link JsonObject} the string value of a specified key or return a defaultValue if the key is not present
+     *
      * @param jsonObject
-     * @param keyValue the key of the desired value
+     * @param keyValue     the key of the desired value
      * @param defaultValue the return value if the key is not present
      * @return the value of the key
      */
@@ -75,8 +80,9 @@ public class JsonAdapter {
 
     /**
      * return from the {@link JsonObject} the string value of a specified key
+     *
      * @param jsonObject
-     * @param keyValue the key of the desired value
+     * @param keyValue   the key of the desired value
      * @return the value of the key
      */
     public static String getStringFromJsonObject(JsonObject jsonObject, String keyValue) {
@@ -88,8 +94,9 @@ public class JsonAdapter {
 
     /**
      * return from the {@link JsonObject} the int value of a specified key or return a defaultValue if the key is not present
+     *
      * @param jsonObject
-     * @param keyValue the key of the desired value
+     * @param keyValue     the key of the desired value
      * @param defaultValue the return value if the key is not present
      * @return the value of the key
      */
@@ -102,8 +109,9 @@ public class JsonAdapter {
 
     /**
      * return from the {@link JsonObject} the int value of a specified key
+     *
      * @param jsonObject
-     * @param keyValue the key of the desired value
+     * @param keyValue   the key of the desired value
      * @return the value of the key
      */
     public static int getIntFromJsonObject(JsonObject jsonObject, String keyValue) {

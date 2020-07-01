@@ -8,10 +8,10 @@ import java.util.List;
 
 /**
  * This class is used to set temporary flags and save some state of a turn
+ *
  * @author Vito96, TiberioG, sup3rgiu
  */
 public class MatchProperties {
-    private int currentTurnId = -1;
     private HashMap<Worker, Cell> initialPositionMap = new HashMap<>();
     private HashMap<Worker, Integer> initialLevels = new HashMap<>();
     private HashMap<Worker, Cell> builtInThisTurn = new HashMap<>();
@@ -20,10 +20,9 @@ public class MatchProperties {
 
 
     /**
-     * this resets all the parameters
+     * This resets all the parameters
      */
     public void resetParameterForTurn() {
-        currentTurnId = -1;
         initialPositionMap = new HashMap<>();
         initialLevels = new HashMap<>();
         builtInThisTurn = new HashMap<>();
@@ -31,7 +30,8 @@ public class MatchProperties {
     }
 
     /**
-     * getter of a HashMap of initial {@link Cell} position of workers at beginning of turn
+     * Getter of a HashMap of initial {@link Cell} position of workers at beginning of turn
+     *
      * @return
      */
     public HashMap<Worker, Cell> getInitialPositionMap() {
@@ -39,7 +39,8 @@ public class MatchProperties {
     }
 
     /**
-     * getter of a HashMap of initial level of workers at beginning of turn
+     * Getter of a HashMap of initial level of workers at beginning of turn
+     *
      * @return
      */
     public HashMap<Worker, Integer> getInitialLevels() {
@@ -48,6 +49,7 @@ public class MatchProperties {
 
     /**
      * Getter of {@link PhaseType} happened in the turn
+     *
      * @return
      */
     public List<PhaseType> getPerformedPhases() {
@@ -55,42 +57,36 @@ public class MatchProperties {
     }
 
     /**
-     * Getter of current turnid
-     * @return
-     * @deprecated
-     */
-    public int getCurrentTurnId() {
-        return currentTurnId;
-    }
-
-    /**
      * This method is used to update the table of the builds done during a turn
+     *
      * @param worker is the {@link Worker} that has built
-     * @param cell is the {@link Cell} where the worker has built
+     * @param cell   is the {@link Cell} where the worker has built
      */
-    public void builtNow(Worker worker, Cell cell){
+    public void builtNow(Worker worker, Cell cell) {
         builtInThisTurn.put(worker, cell);
     }
 
     /**
      * This method is used to get where a Worker has built during the turn
+     *
      * @param worker is the {@link Worker} that has built
      * @return the {@link Cell} where the worker has built
      */
-    public Cell getPreviousBuild(Worker worker){
+    public Cell getPreviousBuild(Worker worker) {
         return builtInThisTurn.get(worker);
     }
 
     /**
-     * getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
-     * @return the flag
+     * Getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+     *
+     * @return the saved othersCantLevelUp
      */
-    public boolean isOthersCantLevelUp() {
+    public boolean getOthersCantLevelUp() {
         return othersCantLevelUp;
     }
 
     /**
-     * setter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+     * Setter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
      */
     public void setOthersCantLevelUp(boolean othersCantLevelUp) {
         this.othersCantLevelUp = othersCantLevelUp;

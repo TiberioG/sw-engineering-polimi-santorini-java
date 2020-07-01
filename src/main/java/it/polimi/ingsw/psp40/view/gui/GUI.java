@@ -1,13 +1,9 @@
 package it.polimi.ingsw.psp40.view.gui;
 
-import animatefx.animation.ZoomIn;
 import it.polimi.ingsw.psp40.commons.FunctionInterface;
-import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
-import it.polimi.ingsw.psp40.controller.Phase;
 import it.polimi.ingsw.psp40.model.Card;
-import it.polimi.ingsw.psp40.model.CardManager;
 import it.polimi.ingsw.psp40.model.Cell;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.network.client.Client;
@@ -22,10 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class GUI extends Application implements ViewInterface {
@@ -34,6 +27,7 @@ public class GUI extends Application implements ViewInterface {
 
     private boolean mockingConnection = false;
     private boolean mockingCard = false;
+    private int mockNumOfPlayers = 2; // 2 or 3
 
     private Stage primaryStage;
 
@@ -80,53 +74,17 @@ public class GUI extends Application implements ViewInterface {
         client = new Client();
         client.setView(this);
 
+        // showSceneForTest();
+
         displaySetup();
-
-/*        createMainScene("/FXML/GameScreen.fxml", () -> {
-            primaryStage.setResizable(true);
-            primaryStage.show();
-            gameScreenController = fxmlLoader.getController();
-            gameScreenController.setClient(client);
-            gameScreenController.setPrimaryStage(primaryStage);
-            client.setUsername("Andrea");
-
-            Card card0 = CardManager.initCardManager().getCardById(0);
-            Card card1 = CardManager.initCardManager().getCardById(1);
-            Card card2 = CardManager.initCardManager().getCardById(2);
-            Player player0 = new Player("Andrea", new Date());
-            player0.setCurrentCard(card0);
-            Player player1 = new Player("Pippo", new Date());
-            player1.setCurrentCard(card1);
-            Player player2 = new Player("Paperino", new Date());
-            player2.setCurrentCard(card2);
-            List<Player> playerList = new ArrayList<>();
-            playerList.add(player0);
-            playerList.add(player1);
-            playerList.add(player2);
-            gameScreenController.setPlayersInfo(playerList);
-        });*/
-
-/*        createMainScene("/FXML/LobbyScreen.fxml", () -> {
-            primaryStage.show();
-            lobbyScreenController = fxmlLoader.getController();
-            lobbyScreenController.setClient(client);
-            lobbyScreenController.setPrimaryStage(primaryStage);
-            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
-            lobbyScreenController.addPlayerToLobby("ciaoen");
-            lobbyScreenController.addPlayerToLobby(" asa aswa as");
-        });*/
-
-/*        createMainScene("/FXML/CardScreen.fxml", () -> {
-            primaryStage.show();
-            cardScreenController = fxmlLoader.getController();
-            cardScreenController.setClient(client);
-            cardScreenController.setPrimaryStage(primaryStage);
-            //cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
-        });*/
-
-
     }
 
+    /**
+     * Helper method to create a scene from a FXML file
+     *
+     * @param pathOfFxmlFile    path of the FXML file
+     * @param functionInterface FunctionInterface to run after scene creation
+     */
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
         Platform.runLater(() -> {
             fxmlLoader = new FXMLLoader();
@@ -145,6 +103,12 @@ public class GUI extends Application implements ViewInterface {
         });
     }
 
+    /**
+     * Helper method to get the correct text depending on the remaining players needed to start the match
+     *
+     * @param remainingPlayers the remaining players for start the match
+     * @return the builded text
+     */
     private String getTextForRemainingPlayers(Integer remainingPlayers) {
         String text;
         switch (remainingPlayers) {
@@ -163,6 +127,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displaySetup() {
+        resetControllers();
         createMainScene("/FXML/SetupScreen.fxml", () -> {
             primaryStage.setTitle("Santorini");
             primaryStage.setResizable(false);
@@ -205,7 +170,7 @@ public class GUI extends Application implements ViewInterface {
 
         // just for testing
         if (mockingConnection) {
-            setupScreenController.mockSendLogin();
+            setupScreenController.mockSendLogin(mockNumOfPlayers);
         }
     }
 
@@ -213,7 +178,6 @@ public class GUI extends Application implements ViewInterface {
     public void displayLoginSuccessful() {
         //create lobby
         System.out.println("You have been logged in successfully");
-        isLogged = true;
     }
 
     @Override
@@ -234,6 +198,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayers) {
+        isLogged = true;
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
@@ -257,19 +222,22 @@ public class GUI extends Application implements ViewInterface {
     @Override
     public void displayDisconnectedUser(String description) {
         Platform.runLater(() -> {
-            confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to continue creating a new match?", () -> {
+            confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to create a new match?", () -> {
+                this.isLogged = false;
+                displaySetup();
+            }, () -> {
                 Platform.exit();
                 System.exit(0);
             });
-            confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            confirmPopup.show();
+            GUI.showPopup(confirmPopup, 2);
         });
     }
 
     @Override
     public void displayDisconnected() {
+        isLogged = false;
         Platform.runLater(() -> {
             confirmPopup = new ConfirmPopup(primaryStage, "I'm sorry, the connection to the server was lost :(", () -> {
                 Platform.exit();
@@ -278,7 +246,7 @@ public class GUI extends Application implements ViewInterface {
             confirmPopup.setLabelConfirmButton("Exit");
             confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            confirmPopup.show();
+            GUI.showPopup(confirmPopup, 2);
         });
     }
 
@@ -289,8 +257,8 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLocationUpdated() {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.updateWorkersPosition();
             });
         }
@@ -298,23 +266,34 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayCellUpdated(Cell cell) {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.updateCell(cell);
+            });
+        }
+    }
+
+
+    @Override
+    public void displayPlayersUpdated() {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
+                gameScreenController.setPlayersInfo(client.getPlayerListCache());
             });
         }
     }
 
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        System.out.println("Card selection");
+        //System.out.println("Card selection");
 
         // just for testing
         if (mockingCard) {
-           int[] selection = {0, 1};
-           client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-        }
-        else {
+            List<Integer> ids = new ArrayList<>(cards.keySet());
+            Collections.shuffle(ids); // random order
+            int[] selection = ids.stream().limit(numPlayers).mapToInt(i -> i).toArray();
+            client.sendToServer(new Message(TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        } else {
             createMainScene("/FXML/CardScreen.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
@@ -326,13 +305,12 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        System.out.println("Card personal");
+        //System.out.println("Card personal");
         if (mockingCard) {
             int personalIdCard = availableCards.get(0).getId();
             client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
-        }
-        else {
-            if(cardScreenController != null)
+        } else {
+            if (cardScreenController != null)
                 cardScreenController.displayCardsForPersonalSelection(availableCards);
             else {
                 createMainScene("/FXML/CardScreen.fxml", () -> {
@@ -345,10 +323,6 @@ public class GUI extends Application implements ViewInterface {
         }
     }
 
-    @Override
-    public void displayCardInGame(List<Card> cardInGame) {
-
-    }
 
     @Override
     public void displayForcedCard(Card card) {
@@ -368,14 +342,14 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases() {
-        Platform.runLater(()-> {
-            if (gameScreenController != null)  gameScreenController.askDesiredPhase();
+        Platform.runLater(() -> {
+            if (gameScreenController != null) gameScreenController.askDesiredPhase();
         });
     }
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.highlightAvailableCellsForMove();
         });
     }
@@ -387,20 +361,21 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.highlightAvailableCellsForBuild();
         });
     }
 
     @Override
     public void displayEndTurn() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.endTurn();
         });
     }
 
     @Override
     public void displayLobbyCreated(String playersWaiting) {
+        isLogged = true;
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
@@ -418,45 +393,150 @@ public class GUI extends Application implements ViewInterface {
             gameScreenController.setPrimaryStage(primaryStage);
             gameScreenController.updateWholeIsland();
             gameScreenController.setPlayersInfo(client.getPlayerListCache());
-            System.out.println(new Date().hashCode() + "creatematch");
+            //System.out.println(new Date().hashCode() + "creatematch");
         });
     }
 
     @Override
     public void displayWinnerMessage() {
         Platform.runLater(() -> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);
-            popup.showWithAnimation();
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true, () -> {
+                displaySetup();
+            });
+            GUI.showPopup(popup);
         });
     }
 
     @Override
     public void displayLoserMessage(Player winningPlayer) {
-        Platform.runLater(()-> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
-            popup.setWinner(winningPlayer);
-            popup.showWithAnimation();
+        Platform.runLater(() -> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false, () -> {
+                displaySetup();
+            });
+            popup.setWinningPlayer(winningPlayer);
+            GUI.showPopup(popup);
         });
     }
 
     @Override
     public void displayLoserPlayer(Player player) {
-        Platform.runLater(()-> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
-            popup.setLoser(player);
-            popup.showWithAnimation();
+        Platform.runLater(() -> {
+            confirmPopup = new ConfirmPopup(primaryStage, player.getName() + " has lost!", () -> {
+                confirmPopup.hide();
+            });
+            confirmPopup.setLabelConfirmButton("Okay");
+            confirmPopup.setClass("loser-popup");
+            // Show Popup
+            GUI.showPopup(confirmPopup, 1.5);
         });
     }
 
+    /**
+     * Shows a popup, deleting the previous one if present
+     *
+     * @param popupArg popup to be shown
+     */
     public static void showPopup(PopupStage popupArg) {
-        popup = popupArg;
-        popup.show();
+        showPopup(popupArg, 1);
     }
 
+    /**
+     * Shows a popup, deleting the previous one if present
+     *
+     * @param popupArg    popup to be shown
+     * @param speedFactor speed factor to increment/reduce animation speed
+     */
+    public static void showPopup(PopupStage popupArg, double speedFactor) {
+        deletePopup();
+        popup = popupArg;
+        popup.showWithAnimation(speedFactor);
+    }
+
+    /**
+     * Deletes the current popup, if present
+     */
     public static void deletePopup() {
-        if(popup != null) {
+        if (popup != null) {
             popup.close();
             popup = null;
         }
     }
+
+    /**
+     * Reset all controller
+     */
+    private void resetControllers() {
+        setupScreenController = null;
+        lobbyScreenController = null;
+        gameScreenController = null;
+        cardScreenController = null;
+        playerScreenController = null;
+    }
+
+    // method to show a specific scene at startup --> only for testing
+    private void showSceneForTest() {
+        /*        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            primaryStage.show();
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            Player player2 = new Player("Paperino", new Date());
+            player2.setCurrentCard(card2);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerList.add(player2);
+            gameScreenController.setPlayersInfo(playerList);
+        });*/
+
+/*        createMainScene("/FXML/LobbyScreen.fxml", () -> {
+            primaryStage.show();
+            lobbyScreenController = fxmlLoader.getController();
+            lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
+            lobbyScreenController.addPlayerToLobby("ciaoen");
+            lobbyScreenController.addPlayerToLobby(" asa aswa as");
+        });*/
+
+/*        createMainScene("/FXML/CardScreen.fxml", () -> {
+            primaryStage.show();
+            cardScreenController = fxmlLoader.getController();
+            cardScreenController.setClient(client);
+            cardScreenController.setPrimaryStage(primaryStage);
+            //cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
+        });*/
+
+/*        createMainScene("/FXML/PlayerScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            primaryStage.show();
+            playerScreenController = fxmlLoader.getController();
+            playerScreenController.setClient(client);
+            playerScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerScreenController.displayPlayersForInitialSelection(playerList);
+        });*/
+    }
+
 }

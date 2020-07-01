@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp40.commons.messages.Message;
 /**
  * @author sup3rgiu
  */
-public interface ServerObserver
-{
-  void handleMessage(Message message);
+public interface ServerObserver {
+    void handleMessage(Message message);
 }

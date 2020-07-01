@@ -10,5 +10,6 @@ import it.polimi.ingsw.psp40.model.Worker;
  */
 public interface StrategyLose {
     boolean checkLoseForMove(StrategyMove strategyMove);
+
     boolean checkLoseForBuild(StrategyBuild strategyBuild, Worker worker);
 }

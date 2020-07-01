@@ -39,12 +39,12 @@ public class GUIProperties {
 
     protected static double level3Width = 132.5;
     protected static double level3Height = blockHeight;
-    protected static double level3XFix = level2XFix ;
+    protected static double level3XFix = level2XFix;
     protected static double level3YFix = level2YFix - 16;
 
     protected static double domeWidth = 80;
     protected static double domeHeight = blockHeight;
-    protected static double domeXFix = 26 ;
+    protected static double domeXFix = 26;
     protected static double domeYFix = -11;
 
     protected static double workerWidth = 80;
@@ -87,6 +87,12 @@ public class GUIProperties {
     protected static Image image_select_worker_phase = new Image(GUIProperties.class.getResource("/images/phases/select_worker_phase.png").toString());
     protected static Image image_end_turn_phase = new Image(GUIProperties.class.getResource("/images/phases/end_turn_phase.png").toString());
 
+    /**
+     * Method to get the image for a specified type of phase
+     *
+     * @param phase the phase you want to have the image of
+     * @return the image associated to the phase type
+     */
     protected static Image getImageForPhase(Phase phase) {
         Image image = null;
         switch (phase.getType()) {
@@ -110,10 +116,16 @@ public class GUIProperties {
         return image;
     }
 
-
+    /**
+     * Returns the X (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+     * @param row
+     * @param col
+     * @param cameraType
+     * @return fixed position value
+     */
     protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
         double incrementalFix = 0;
-        if(cameraType == CameraType.LEFT) {
+        if (cameraType == CameraType.LEFT) {
             col = getCorrespondingLeftCol(row, col);
             row = getCorrespondingLeftRow(row, col);
             incrementalFix = (col - row) * (-2) - 3;
@@ -123,11 +135,18 @@ public class GUIProperties {
         return incrementalFix;
     }
 
+    /**
+     * Returns the Y (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+     * @param row
+     * @param col
+     * @param cameraType
+     * @return fixed position value
+     */
     protected static double getIncrementalFix_y(int row, int col, CameraType cameraType) {
-        if(cameraType == CameraType.LEFT) {
+        if (cameraType == CameraType.LEFT) {
             row = getCorrespondingLeftRow(row, col);
         } else if (cameraType == CameraType.TOP) {
-            // todo
+            // no special treatment required
         }
         return (row * 2.5) - 6;
     }

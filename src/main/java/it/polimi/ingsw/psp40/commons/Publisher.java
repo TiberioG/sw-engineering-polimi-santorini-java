@@ -13,12 +13,12 @@ public abstract class Publisher<T> {
     }
 
     public void addListener(Listener<T> listener) {
-        if(listener != null) {
+        if (listener != null) {
             listeners.add(listener);
         }
     }
 
-    public void removeListener(Listener<T> listener){
+    public void removeListener(Listener<T> listener) {
         listeners.remove(listener);
     }
 

@@ -32,9 +32,12 @@ restart)
       PID=$(cat $PID_PATH_NAME);
       echo "$SERVICE_NAME stopping ...";
       kill $PID;
+      sleep 2
+      pkill java;
       echo "$SERVICE_NAME stopped ...";
       rm $PID_PATH_NAME
       rm  $PATH_TO_LOGFILE
+      sleep 2;
       echo "$SERVICE_NAME starting ..."
       nohup nohup java -jar $PATH_TO_JAR $PORT $PATH_TO_LOGFILE >> server.out 2>&1&
       echo $! > $PID_PATH_NAME

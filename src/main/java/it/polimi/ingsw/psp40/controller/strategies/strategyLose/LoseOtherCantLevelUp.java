@@ -9,21 +9,24 @@ import it.polimi.ingsw.psp40.model.Worker;
 /**
  * This Class is used when a player can lose because the strategy {@link OthersCantLevelUp}
  * is applied which means in this turn the workers cannot level up
+ *
  * @author Vito96
  */
-public class LoseOtherCantLevelUp extends DefaultLose{
+public class LoseOtherCantLevelUp extends DefaultLose {
 
     /**
      * Constructor
+     *
      * @param match
      */
-    public LoseOtherCantLevelUp (Match match) {
+    public LoseOtherCantLevelUp(Match match) {
         super(match);
     }
 
 
     /**
      * This method returns TRUE and resets the flag  if and only if all the workers of a player cannot move
+     *
      * @param strategyMove it's the strategy linked to the card of the player
      * @return TRUE if and only if all the workers of a player cannot move according to his card
      */
@@ -36,8 +39,9 @@ public class LoseOtherCantLevelUp extends DefaultLose{
 
     /**
      * This method returns TRUE and resets the flag if a worker cannot build any component according to his strategy
+     *
      * @param strategyBuild the strategy of the player
-     * @param worker the worker of the player to check
+     * @param worker        the worker of the player to check
      * @return TRUE if and only if the worker cannot build any component according to his strategy
      */
     @Override

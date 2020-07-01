@@ -13,22 +13,26 @@ public class Card {
 
 
     /**
-     * getter of id of the card
-     * @return
+     * Getter of id of the card
+     *
+     * @return id of the card
      */
     public int getId() {
         return id;
     }
 
     /**
-     * setter of id of the card
+     * Setter of id of the card
+     *
+     * @param id id of the card
      */
     public void setId(int id) {
         this.id = id;
     }
 
     /**
-     * Geter of the name of the card
+     * Getter of the name of the card
+     *
      * @return
      */
     public String getName() {
@@ -36,7 +40,8 @@ public class Card {
     }
 
     /**
-     * setter of name of the card
+     * Setter of name of the card
+     *
      * @param name
      */
     public void setName(String name) {
@@ -44,7 +49,8 @@ public class Card {
     }
 
     /**
-     * getter of type of card
+     * Getter of type of card
+     *
      * @return
      */
     public String getType() {
@@ -52,33 +58,65 @@ public class Card {
     }
 
     /**
-     * setter of type of the card
+     * Setter of type of the card
+     *
      * @param type
      */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Getter of card's description
+     *
+     * @return
+     */
     public String getDescription() {
         return description;
     }
 
+
+    /**
+     * Setter of card's description
+     *
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Getter of initial phase associated to this card
+     *
+     * @return initial phase
+     */
     public Phase getInitialPhase() {
         return initialPhase;
     }
 
+    /**
+     * Setter of the initial phase associated to this card
+     *
+     * @param initialPhase initial phase to be associated to this card
+     */
     public void setInitialPhase(Phase initialPhase) {
         this.initialPhase = initialPhase;
     }
 
+    /**
+     * Getter of {@link StrategySettings} instance associated to this card
+     *
+     * @return
+     */
     public StrategySettings getStrategySettings() {
         return strategySettings;
     }
 
+    /**
+     * Setter of {@link StrategySettings} instance associated to this card
+     *
+     * @param strategySettings {@link StrategySettings} instance to be associated to this card
+     */
     public void setStrategySettings(StrategySettings strategySettings) {
         this.strategySettings = strategySettings;
     }
