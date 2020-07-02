@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp40.commons.messages;
 
-public class CoordinatesMessage  {
+public class CoordinatesMessage {
 
-    public CoordinatesMessage(int x, int y){
+    public CoordinatesMessage(int x, int y) {
         this.x = x;
         this.y = y;
     }

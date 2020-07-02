@@ -1,0 +1,177 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MatchProperties</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MatchProperties (it.polimi.ingsw.psp40.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MatchProperties</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/ 20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.PhaseType;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.ArrayList;
+<i>6</i>&nbsp;import java.util.HashMap;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class is used to set temporary flags and save some state of a turn
+<i>11</i>&nbsp; *
+<i>12</i>&nbsp; * @author Vito96, TiberioG, sup3rgiu
+<i>13</i>&nbsp; */
+<b class="fc"><i>14</i>&nbsp;public class MatchProperties {</b>
+<b class="fc"><i>15</i>&nbsp;    private HashMap&lt;Worker, Cell&gt; initialPositionMap = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>16</i>&nbsp;    private HashMap&lt;Worker, Integer&gt; initialLevels = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>17</i>&nbsp;    private HashMap&lt;Worker, Cell&gt; builtInThisTurn = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>18</i>&nbsp;    private List&lt;PhaseType&gt; performedPhases = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>19</i>&nbsp;    private boolean othersCantLevelUp = false;</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * This resets all the parameters
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    public void resetParameterForTurn() {
+<b class="fc"><i>26</i>&nbsp;        initialPositionMap = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>27</i>&nbsp;        initialLevels = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>28</i>&nbsp;        builtInThisTurn = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>29</i>&nbsp;        performedPhases = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    /**
+<i>33</i>&nbsp;     * Getter of a HashMap of initial {@link Cell} position of workers at beginning of turn
+<i>34</i>&nbsp;     *
+<i>35</i>&nbsp;     * @return
+<i>36</i>&nbsp;     */
+<i>37</i>&nbsp;    public HashMap&lt;Worker, Cell&gt; getInitialPositionMap() {
+<b class="fc"><i>38</i>&nbsp;        return initialPositionMap;</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Getter of a HashMap of initial level of workers at beginning of turn
+<i>43</i>&nbsp;     *
+<i>44</i>&nbsp;     * @return
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    public HashMap&lt;Worker, Integer&gt; getInitialLevels() {
+<b class="fc"><i>47</i>&nbsp;        return initialLevels;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Getter of {@link PhaseType} happened in the turn
+<i>52</i>&nbsp;     *
+<i>53</i>&nbsp;     * @return
+<i>54</i>&nbsp;     */
+<i>55</i>&nbsp;    public List&lt;PhaseType&gt; getPerformedPhases() {
+<b class="fc"><i>56</i>&nbsp;        return performedPhases;</b>
+<i>57</i>&nbsp;    }
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    /**
+<i>60</i>&nbsp;     * This method is used to update the table of the builds done during a turn
+<i>61</i>&nbsp;     *
+<i>62</i>&nbsp;     * @param worker is the {@link Worker} that has built
+<i>63</i>&nbsp;     * @param cell   is the {@link Cell} where the worker has built
+<i>64</i>&nbsp;     */
+<i>65</i>&nbsp;    public void builtNow(Worker worker, Cell cell) {
+<b class="fc"><i>66</i>&nbsp;        builtInThisTurn.put(worker, cell);</b>
+<b class="fc"><i>67</i>&nbsp;    }</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    /**
+<i>70</i>&nbsp;     * This method is used to get where a Worker has built during the turn
+<i>71</i>&nbsp;     *
+<i>72</i>&nbsp;     * @param worker is the {@link Worker} that has built
+<i>73</i>&nbsp;     * @return the {@link Cell} where the worker has built
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public Cell getPreviousBuild(Worker worker) {
+<b class="fc"><i>76</i>&nbsp;        return builtInThisTurn.get(worker);</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * Getter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+<i>81</i>&nbsp;     *
+<i>82</i>&nbsp;     * @return the saved othersCantLevelUp
+<i>83</i>&nbsp;     */
+<i>84</i>&nbsp;    public boolean getOthersCantLevelUp() {
+<b class="fc"><i>85</i>&nbsp;        return othersCantLevelUp;</b>
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    /**
+<i>89</i>&nbsp;     * Setter of flag for {@link it.polimi.ingsw.psp40.controller.strategies.strategyMove.OthersCantLevelUp}
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    public void setOthersCantLevelUp(boolean othersCantLevelUp) {
+<b class="fc"><i>92</i>&nbsp;        this.othersCantLevelUp = othersCantLevelUp;</b>
+<b class="fc"><i>93</i>&nbsp;    }</b>
+<i>94</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

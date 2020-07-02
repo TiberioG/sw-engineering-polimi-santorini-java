@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PlayerInfoPopup</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PlayerInfoPopup (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlayerInfoPopup</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.model.Player;
+<i>4</i>&nbsp;import javafx.geometry.Insets;
+<i>5</i>&nbsp;import javafx.geometry.Pos;
+<i>6</i>&nbsp;import javafx.scene.Node;
+<i>7</i>&nbsp;import javafx.scene.Scene;
+<i>8</i>&nbsp;import javafx.scene.layout.VBox;
+<i>9</i>&nbsp;import javafx.scene.paint.Color;
+<i>10</i>&nbsp;import javafx.scene.text.Text;
+<i>11</i>&nbsp;import javafx.scene.text.TextAlignment;
+<i>12</i>&nbsp;import javafx.stage.Stage;
+<i>13</i>&nbsp;import javafx.stage.StageStyle;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class PlayerInfoPopup extends Stage {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    protected final Stage ownerStage;
+<b class="nc"><i>18</i>&nbsp;    protected final VBox vBox = new VBox(5);</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    private final Player player;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    PlayerInfoPopup(Stage ownerStage, Player player, Node node) {
+<b class="nc"><i>23</i>&nbsp;        super();</b>
+<b class="nc"><i>24</i>&nbsp;        this.player = player;</b>
+<b class="nc"><i>25</i>&nbsp;        this.ownerStage = ownerStage;</b>
+<b class="nc"><i>26</i>&nbsp;        this.initOwner(ownerStage);</b>
+<b class="nc"><i>27</i>&nbsp;        buildStage(node);</b>
+<b class="nc"><i>28</i>&nbsp;        buildPopup();</b>
+<i>29</i>&nbsp;    }
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private void buildStage(Node node) {
+<b class="nc"><i>32</i>&nbsp;        this.initStyle(StageStyle.TRANSPARENT);</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;        // Hide the pop-up stage before it is shown and becomes relocated
+<b class="nc"><i>35</i>&nbsp;        this.setOnShowing(ev -&gt; this.hide());</b>
+<i>36</i>&nbsp;        // Relocate the pop-up Stage
+<b class="nc"><i>37</i>&nbsp;        this.setOnShown(ev -&gt; {</b>
+<b class="nc"><i>38</i>&nbsp;            double x = node.localToScreen(node.getBoundsInLocal()).getMaxX();</b>
+<b class="nc"><i>39</i>&nbsp;            if ((boolean) node.getUserData()) { // if is an image in right pane of BorderPane</b>
+<b class="nc"><i>40</i>&nbsp;                x = x - this.getWidth() - node.getBoundsInParent().getWidth();</b>
+<i>41</i>&nbsp;            }
+<b class="nc"><i>42</i>&nbsp;            double y = node.localToScreen(node.getBoundsInLocal()).getMaxY() - node.getBoundsInParent().getHeight();</b>
+<b class="nc"><i>43</i>&nbsp;            this.setX(x);</b>
+<b class="nc"><i>44</i>&nbsp;            this.setY(y);</b>
+<b class="nc"><i>45</i>&nbsp;            this.show();</b>
+<i>46</i>&nbsp;        });
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;        // Relocate the pop-up if the primary stage is moved
+<b class="nc"><i>49</i>&nbsp;        ownerStage.xProperty().addListener((obs, oldVal, newVal) -&gt; {</b>
+<b class="nc"><i>50</i>&nbsp;            this.setX(this.getX() + (newVal.intValue() - oldVal.intValue()));</b>
+<i>51</i>&nbsp;        });
+<b class="nc"><i>52</i>&nbsp;        ownerStage.yProperty().addListener((obs, oldVal, newVal) -&gt; {</b>
+<b class="nc"><i>53</i>&nbsp;            this.setY(this.getY() + (newVal.intValue() - oldVal.intValue()));</b>
+<i>54</i>&nbsp;        });
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    private void buildPopup() {
+<b class="nc"><i>58</i>&nbsp;        vBox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>59</i>&nbsp;        vBox.setPadding(new Insets(20));</b>
+<b class="nc"><i>60</i>&nbsp;        UtilsGUI.addClassToElement(vBox, &quot;player-info-popup&quot;);</b>
+<i>61</i>&nbsp;
+<b class="nc"><i>62</i>&nbsp;        vBox.getChildren().add(createText(&quot;User: &quot; + player.getName()));</b>
+<b class="nc"><i>63</i>&nbsp;        vBox.getChildren().add(createText(&quot;God: &quot; + player.getCurrentCard().getName()));</b>
+<b class="nc"><i>64</i>&nbsp;        vBox.getChildren().add(createText(player.getCurrentCard().getDescription()));</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;        // Set scene
+<b class="nc"><i>67</i>&nbsp;        Scene scene = new Scene(vBox, Color.TRANSPARENT);</b>
+<b class="nc"><i>68</i>&nbsp;        scene.getStylesheets().add(getClass().getResource(&quot;/css/style.css&quot;).toExternalForm());</b>
+<b class="nc"><i>69</i>&nbsp;        this.setScene(scene);</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    protected Text createText(String string) {
+<b class="nc"><i>73</i>&nbsp;        Text text = new Text(string);</b>
+<b class="nc"><i>74</i>&nbsp;        text.setTextAlignment(TextAlignment.CENTER);</b>
+<b class="nc"><i>75</i>&nbsp;        double wrapWidth = this.ownerStage.getScene().getWidth() * 0.2;</b>
+<b class="nc"><i>76</i>&nbsp;        if (text.getLayoutBounds().getWidth() &gt; wrapWidth) {</b>
+<b class="nc"><i>77</i>&nbsp;            text.setWrappingWidth(wrapWidth);</b>
+<i>78</i>&nbsp;        }
+<b class="nc"><i>79</i>&nbsp;        return text;</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

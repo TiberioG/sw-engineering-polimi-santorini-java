@@ -9,6 +9,7 @@
 # Maven
 log/
 target
+dependency-reduced-pom.xml
 
 #manifest files
 resources/manifest
@@ -16,3 +17,11 @@ resources/manifest
 
 #built jars
 classes/artifacts
+
+#reveal.js for presentation and bootstrap
+site/*
+
+#various files
+backupOfMatches.json
+logfile.log.lck
+logfile.log

@@ -26,7 +26,7 @@ public class Map extends Group {
     protected List<Block> getTiles() {
         List<Block> tiles = new ArrayList<>();
         this.getChildren().forEach(node -> {
-            if(node instanceof Block) {
+            if (node instanceof Block) {
                 tiles.add((Block) node);
             }
         });

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.psp40.commons.messages;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.JsonAdapter;
 
 import java.io.Serializable;
@@ -26,7 +23,6 @@ public class Message implements Serializable {
         this.typeOfMessage = typeOfMessage;
     }
 
-    //todo quanti bei costruttori
     public Message(TypeOfMessage typeOfMessage) {
         this.typeOfMessage = typeOfMessage;
     }
@@ -69,13 +65,11 @@ public class Message implements Serializable {
     }
 
     public Object getPayload(Class classType) {
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
-        return gson.fromJson(this.jsonMessage, classType);
+        return JsonAdapter.getGsonBuilder().fromJson(this.jsonMessage, classType);
     }
 
     public Object getPayload(Type type) {
-        Gson gson = new GsonBuilder().setDateFormat(Configuration.formatDate).serializeNulls().create();
-        return gson.fromJson(this.jsonMessage, type);
+        return JsonAdapter.getGsonBuilder().fromJson(this.jsonMessage, type);
     }
 
     @Override

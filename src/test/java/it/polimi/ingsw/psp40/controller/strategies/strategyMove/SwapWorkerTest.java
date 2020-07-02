@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyMove;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedMoveException;
 import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableMoveException;

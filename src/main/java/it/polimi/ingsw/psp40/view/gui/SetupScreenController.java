@@ -1,15 +1,14 @@
 package it.polimi.ingsw.psp40.view.gui;
 
+import animatefx.animation.ZoomIn;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.messages.LoginMessage;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
 import it.polimi.ingsw.psp40.view.cli.Utils;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
@@ -58,6 +57,9 @@ public class SetupScreenController extends ScreenController {
     @FXML
     private ComboBox<Integer> numOfPlayerComboBox;
 
+    @FXML
+    private ImageView santoriniLogo;
+
 
     /* Methods */
 
@@ -71,30 +73,41 @@ public class SetupScreenController extends ScreenController {
         LocalDate minDate = LocalDate.parse(Configuration.minDate, DateTimeFormatter.ofPattern(Configuration.formatDate));
         LocalDate maxDate = LocalDate.now();
         birthdayDatePicker.setDayCellFactory(d ->
-            new DateCell() {
-            @Override public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
-        }});
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
+                    }
+                });
+        birthdayDatePicker.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            boolean isValidDate = Utils.isValidDateBool(newValue);
+            validationMap.put(birthdayDatePicker, isValidDate);
+            validateSendFields();
+        });
 
-        numOfPlayerComboBox.getItems().addAll(2,3);
+        numOfPlayerComboBox.getItems().addAll(2, 3);
 
         UtilsGUI.buttonHoverEffect(connectButton);
         UtilsGUI.buttonHoverEffect(sendInfoButton);
+
+        new ZoomIn(santoriniLogo).play();
+        new ZoomIn(vBoxForServerProps).play();
+
+        vBoxForServerProps.requestFocus(); // remove initial focus from first TextField
     }
 
-        // todo remove me, just for testing
-    protected void mockSendConnect () {
+    // just for testing
+    protected void mockSendConnect() {
         getClient().setServerIP("localhost");
         getClient().setServerPort(Integer.parseInt("1234"));
         getClient().connectToServer();
     }
 
-    // todo remove me, just for testing
-    protected void mockSendLogin () {
+    // just for testing
+    protected void mockSendLogin(int numOfPlayers) {
         String username = (new Date()).toString();
         Date birthday = new Date();
-        int numOfPlayers = 2;
         getClient().setUsername(username);
         LoginMessage loginMessage = new LoginMessage(username, birthday, numOfPlayers, TypeOfMessage.LOGIN);
         try {
@@ -105,54 +118,121 @@ public class SetupScreenController extends ScreenController {
         getClient().sendToServer(loginMessage);
     }
 
-
+    /**
+     * Method that handle the click of connectButton
+     *
+     * @param actionEvent
+     */
     @FXML
     public void handleConnectButton(ActionEvent actionEvent) {
+        validationMap.clear();
         getClient().setServerIP(ipAddressTextField.getText());
         getClient().setServerPort(Integer.parseInt("0" + portTextField.getText().trim()));
         getClient().connectToServer();
     }
 
+    /**
+     * Method that handle the onEnter of ipAddressTextField
+     *
+     * @param actionEvent
+     */
     @FXML
     public void onEnterIpAddress(ActionEvent actionEvent) {
         portTextField.requestFocus();
     }
 
+    /**
+     * Method that handle the onEnter of ipAddressTextField
+     *
+     * @param actionEvent
+     */
     @FXML
     public void onEnterPortText(ActionEvent actionEvent) {
         connectButton.fire();
     }
 
+    /**
+     * Method that handle the changes of ipAddressTextField
+     *
+     * @param keyEvent
+     */
     @FXML
     public void ipAddressChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidIp = Utils.isValidIp(ipAddressTextField.getText());
         validationMap.put(ipAddressTextField, hasInsertedValidIp);
         if (hasInsertedValidIp) {
-            ScreenController.removeClassToElement(ipAddressTextField, "error-text");
+            UtilsGUI.removeClassToElement(ipAddressTextField, "error-text");
         } else {
-            ScreenController.addClassToElement(ipAddressTextField, "error-text");
+            UtilsGUI.addClassToElement(ipAddressTextField, "error-text");
         }
-        validateFields();
+        validateConnectFields();
     }
 
+    /**
+     * Method that handle the changes of portTextField
+     *
+     * @param keyEvent
+     */
     @FXML
-     public void portChanged(KeyEvent keyEvent) {
+    public void portChanged(KeyEvent keyEvent) {
         boolean hasInsertedValidPort = Utils.isValidPort(Integer.parseInt("0" + portTextField.getText().trim()));
         if (hasInsertedValidPort) {
-            ScreenController.removeClassToElement(portTextField, "error-text");
+            UtilsGUI.removeClassToElement(portTextField, "error-text");
         } else {
-            ScreenController.addClassToElement(portTextField, "error-text");
+            UtilsGUI.addClassToElement(portTextField, "error-text");
         }
         validationMap.put(portTextField, hasInsertedValidPort);
-        validateFields();
+        validateConnectFields();
     }
 
+
+    /**
+     * Method that displays the form needed to enter user data
+     */
     public void displayUserForm() {
+        validationMap.clear();
         vBoxForServerProps.setVisible(false);
         vBoxForUserProps.setVisible(true);
+        vBoxForUserProps.requestFocus(); // remove initial focus from first TextField
+        validationMap.put(usernameTextField, false);
+        validationMap.put(birthdayDatePicker, false);
+        validationMap.put(numOfPlayerComboBox, false);
     }
 
+    /**
+     * Method that handle the changes of usernameTextField
+     *
+     * @param keyEvent
+     */
     @FXML
+    public void usernameChanged(KeyEvent keyEvent) {
+        boolean hasInsertedValidUsername = Utils.isValidUsername(usernameTextField.getText());
+        if (hasInsertedValidUsername) {
+            UtilsGUI.removeClassToElement(usernameTextField, "error-text");
+        } else {
+            UtilsGUI.addClassToElement(usernameTextField, "error-text");
+        }
+        validationMap.put(usernameTextField, hasInsertedValidUsername);
+        validateSendFields();
+    }
+
+    /**
+     * Method that handle the changes of numOfPlayerComboBox
+     *
+     * @param actionEvent
+     */
+    @FXML
+    public void numOfPlayerChanged(ActionEvent actionEvent) {
+        boolean validNumOfPlayer = numOfPlayerComboBox.getItems().contains(numOfPlayerComboBox.getValue());
+        validationMap.put(numOfPlayerComboBox, validNumOfPlayer);
+        validateSendFields();
+    }
+
+    /**
+     * Method that handle the click of sendInfoButton and  information of the user to the server
+     *
+     * @param actionEvent
+     */
     public void handleSendInfoButton(ActionEvent actionEvent) {
         String username = usernameTextField.getText();
 
@@ -168,22 +248,48 @@ public class SetupScreenController extends ScreenController {
         getClient().sendToServer(loginMessage);
     }
 
-    public void errorAlert(String text) {
-        Platform.runLater(() -> {
-            TilePane r = new TilePane();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText(text);
-            alert.show();
-            anchorPane.getChildren().add(r);
-            ScreenController.addClassToElement(usernameTextField, "error-text");
-        });
+    private void errorAlert(String text) {
+        TilePane r = new TilePane();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(text);
+        alert.show();
+        anchorPane.getChildren().add(r);
     }
 
-    private void validateFields() {
+    /**
+     * Method that allows you to display an error alert with custom text
+     *
+     * @param text the text of the error alert
+     */
+    public void errorAlertSetup(String text) {
+        connectButton.setDisable(true);
+        errorAlert(text);
+    }
+
+
+    /**
+     * Method that allows you to display an error alert for a login error
+     *
+     * @param text the text of the error alert
+     */
+    public void errorAlertLogin(String text) {
+        UtilsGUI.addClassToElement(usernameTextField, "error-text");
+        errorAlert(text);
+    }
+
+    private void validateConnectFields() {
         if (validationMap.values().stream().filter(valid -> valid.equals(Boolean.FALSE)).findFirst().orElse(true)) {
             connectButton.setDisable(false);
         } else {
             connectButton.setDisable(true);
+        }
+    }
+
+    private void validateSendFields() {
+        if (validationMap.values().stream().filter(valid -> valid.equals(Boolean.FALSE)).findFirst().orElse(true)) {
+            sendInfoButton.setDisable(false);
+        } else {
+            sendInfoButton.setDisable(true);
         }
     }
 

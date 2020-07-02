@@ -7,10 +7,14 @@ public enum TypeOfMessage {
     DISCONNECTED_SERVER_SIDE,
     LOGIN_SUCCESSFUL,
     LOGIN_FAILURE,
-    NUM_PLAYERS_FAILURE, // todo implementarlo client side
+    NUM_PLAYERS_FAILURE,
     LOBBY_CREATED,
     CREATED_MATCH,      //obj_type : null
+    PROPOSE_RESTORE_MATCH,
+    RESTORE_MATCH("restoreMatch"),
+    RESTORED_MATCH,
     START_MATCH("startMatch"),      //obj_type : null
+    STARTED_MATCH,
     LOGIN,        //obj_type : Tupla(String, Date)
     USER_JOINED,
     HOW_MANY_PLAYERS,
@@ -38,6 +42,7 @@ public enum TypeOfMessage {
     RETRIEVE_CELL_FOR_BUILD("retrieveCellForBuild"),
     AVAILABLE_CELL_FOR_BUILD,
     BUILD_CELL("buildCell"),
+    REQUEST_END_TURN("endTurn"),
     INIT_NEW_MATCH,
 
     TOWER_UPDATED,

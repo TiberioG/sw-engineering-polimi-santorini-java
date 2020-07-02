@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.controller;
 
-import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.psp40.controller.strategies.strategyLose.StrategyLose;
@@ -8,18 +7,20 @@ import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.Cell;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.model.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * This class is used to define a turn
+ *
+ * @author Vito96
+ */
 public class Turn {
     private Player player;
-
     private Phase currentPhase;
-
     private Worker selectedWorker;
 
     private StrategyMove strategyMove;
@@ -28,7 +29,8 @@ public class Turn {
     private StrategyLose strategyLose;
 
     /**
-     * Constructor to  init turn instance
+     * Constructor to init turn instance
+     *
      * @param player the player of the turn
      */
     public Turn(Player player) {
@@ -37,16 +39,16 @@ public class Turn {
     }
 
     /**
-     * Method for initialize the turn
+     * Method to initialize the turn
      */
     public void initializeTurn() {
         currentPhase = player.getCurrentCard().getInitialPhase();
         selectedWorker = null;
     }
 
-
     /**
      * Method to set the strategyBuild in the turn
+     *
      * @param strategyBuild the strategyBuild to set
      */
     public void setStrategyBuild(StrategyBuild strategyBuild) {
@@ -55,6 +57,7 @@ public class Turn {
 
     /**
      * Method to set the strategyMove in the turn
+     *
      * @param strategyMove the strategyMove to set
      */
     public void setStrategyMove(StrategyMove strategyMove) {
@@ -63,6 +66,7 @@ public class Turn {
 
     /**
      * Method to set the strategyWin in the turn
+     *
      * @param strategyWin the strategyWin to set
      */
     public void setStrategyWin(StrategyWin strategyWin) {
@@ -71,6 +75,7 @@ public class Turn {
 
     /**
      * Method to set the strategyLose in the turn
+     *
      * @param strategyLose the strategyLose to set
      */
     public void setStrategyLose(StrategyLose strategyLose) {
@@ -80,6 +85,7 @@ public class Turn {
 
     /**
      * Method to retrieve the player of the turn
+     *
      * @return the {@link Player} of the turn
      */
     public Player getPlayer() {
@@ -89,6 +95,7 @@ public class Turn {
 
     /**
      * This method call the getAvailableCells of the strategyMove for retrieve the available cell for move
+     *
      * @return an {@link List<Cell>} of available cells
      */
     public List<Cell> getAvailableCellForMove() {
@@ -105,6 +112,7 @@ public class Turn {
 
     /**
      * This method call the getBuildableCells of the strategyMove for retrieve the available cell for build
+     *
      * @return an {@link List<Cell>} of available cells
      */
     public List<Cell> getAvailableCellForBuild() {
@@ -113,6 +121,7 @@ public class Turn {
 
     /**
      * This method call the getComponentsBuildable of the strategyMove for retrieve the components available for specified cell
+     *
      * @return an {@link List<Integer>} which rappresent the specified {@link Component}
      */
     public List<Integer> getComponentsBuildable(Cell cell) {
@@ -121,8 +130,9 @@ public class Turn {
 
     /**
      * This method call the build of the strategyBuild
+     *
      * @param component the component to build
-     * @param cell the cell to build on
+     * @param cell      the cell to build on
      */
     public void build(Component component, Cell cell) throws SantoriniException {
         this.strategyBuild.build(component, cell, selectedWorker);
@@ -130,6 +140,7 @@ public class Turn {
 
     /**
      * This method call the checkWin of the strategyWin
+     *
      * @return a {@link boolean} which indicate if the player has win or not
      */
     public boolean checkWin() {
@@ -138,16 +149,17 @@ public class Turn {
 
     /**
      * This method set the {@link Worker} in the turn
+     *
      * @return a {@link boolean} which indicate if the player has win or not
      */
     public void setSelectedWorker(Worker selectedWorker) {
-        //todo aggiungere check che il worker appartenga al player
         this.selectedWorker = selectedWorker;
     }
 
     /**
      * This method call the checkLoseForMove of the strategyLose
-     * @return a {@link boolean} which indicate if the player has lose
+     *
+     * @return a {@link boolean} which indicate if the player has lost
      */
     public boolean checkLoseForMove() {
         return strategyLose.checkLoseForMove(strategyMove);
@@ -155,7 +167,8 @@ public class Turn {
 
     /**
      * This method call the checkLoseForBuild of the strategyLose
-     * @return a {@link boolean} which indicate if the player has lose
+     *
+     * @return a {@link boolean} which indicate if the player has lost
      */
     public boolean checkLoseForBuild() {
         return strategyLose.checkLoseForBuild(strategyBuild, selectedWorker);
@@ -172,6 +185,7 @@ public class Turn {
 
     /**
      * This method return the current phase of the turn
+     *
      * @return the current phase of the turn
      */
     public Phase getCurrentPhase() {

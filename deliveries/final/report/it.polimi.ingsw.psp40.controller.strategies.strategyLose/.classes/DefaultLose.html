@@ -1,0 +1,134 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DefaultLose</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.controller.strategies.strategyLose</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DefaultLose (it.polimi.ingsw.psp40.controller.strategies.strategyLose)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DefaultLose</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.controller.strategies.strategyLose;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.model.Match;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.model.Worker;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * This Class is used to define the default rules for loosing a match
+<i>10</i>&nbsp; *
+<i>11</i>&nbsp; * @author Vito96
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;public class DefaultLose implements StrategyLose {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /* Attributes */
+<i>16</i>&nbsp;    protected Match match;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Constructor
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     * @param match
+<i>22</i>&nbsp;     */
+<b class="fc"><i>23</i>&nbsp;    public DefaultLose(Match match) {</b>
+<b class="fc"><i>24</i>&nbsp;        this.match = match;</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /* Methods */
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * This method returns TRUE if and oly if  all the workers of a player cannot move
+<i>31</i>&nbsp;     *
+<i>32</i>&nbsp;     * @param strategyMove it&#39;s the strategy linked to the card of the player
+<i>33</i>&nbsp;     * @return TRUE if and only if all the workers of a player cannot move according to his card
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    @Override
+<i>36</i>&nbsp;    public boolean checkLoseForMove(StrategyMove strategyMove) {
+<b class="fc"><i>37</i>&nbsp;        return match.getCurrentPlayer().getWorkers().stream().filter(worker -&gt; strategyMove.getAvailableCells(worker).size() &gt; 0).count() == 0;</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * This method returns TRUE if a worker cannot build any component according to his strategy
+<i>42</i>&nbsp;     *
+<i>43</i>&nbsp;     * @param strategyBuild the strategy of the player
+<i>44</i>&nbsp;     * @param worker        the worker of the player to check
+<i>45</i>&nbsp;     * @return TRUE if and oly if the worker cannot build any component according to his strategy
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    public boolean checkLoseForBuild(StrategyBuild strategyBuild, Worker worker) {
+<b class="fc"><i>49</i>&nbsp;        return strategyBuild.getBuildableCells(worker).size() == 0;</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

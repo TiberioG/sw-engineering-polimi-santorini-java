@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyBuild;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.commons.Component;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.exceptions.ComponentNotAllowed;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedBuildException;
@@ -84,7 +84,7 @@ public class DefaultBuildTest {
         match.getIsland().addComponent(Component.FIRST_LEVEL, match.getIsland().getCell(1, 2));
 
         strategyBuild = new DefaultBuild(match);
-        match.getMatchProperties().resetAllParameter();
+        match.getMatchProperties().resetParameterForTurn();
     }
 
 

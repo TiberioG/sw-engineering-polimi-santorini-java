@@ -1,20 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="card-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.PlayerScreenController">
+<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" styleClass="card-pane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp40.view.gui.PlayerScreenController">
     <children>
-        <ImageView fitHeight="800.0" fitWidth="406.0" layoutX="798.0" layoutY="-1.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <image>
-                <Image url="@../images/clp_bg2.png" />
-            </image>
-        </ImageView>
-        <TextArea fx:id="textTitle" editable="false" layoutX="846.0" layoutY="109.0" prefHeight="128.0" prefWidth="302.0" styleClass="card-title" wrapText="true" />
-        <Button fx:id="endButton" layoutX="930.0" layoutY="660.0" mnemonicParsing="false" onAction="#end" prefHeight="35.0" prefWidth="134.0" text="End" />
-        <TextArea fx:id="textDescr" editable="false" layoutX="848.0" layoutY="257.0" prefHeight="259.0" prefWidth="298.0" style="-fx-background-color: transparent;" styleClass="card-description" wrapText="true" />
-        <TextArea fx:id="selected" editable="false" layoutX="858.0" layoutY="541.0" prefHeight="67.0" prefWidth="277.0" styleClass="card-title" wrapText="true" />
-      <VBox fx:id="vBox" alignment="CENTER" layoutX="68.0" layoutY="50.0" prefHeight="699.0" prefWidth="658.0" spacing="20.0" AnchorPane.bottomAnchor="50.666666666666636" AnchorPane.leftAnchor="68.0" AnchorPane.rightAnchor="474.0" AnchorPane.topAnchor="50.0" />
+      <ImageView fitHeight="800.0" fitWidth="435.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/versus/fg_panel1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="800.0" fitWidth="435.0" layoutX="844.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/versus/fg_panel5.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="800.0" fitWidth="491.0" layoutX="355.0" pickOnBounds="true">
+         <image>
+            <Image url="@../images/versus/fg_panel4.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="left" fitHeight="99.0" fitWidth="325.0" layoutX="46.0" layoutY="165.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/papiro.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="center" fitHeight="99.0" fitWidth="325.0" layoutX="453.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/papiro.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="right" fitHeight="99.0" fitWidth="325.0" layoutX="849.0" layoutY="165.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/papiro.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="card1" fitHeight="300.0" fitWidth="200.0" layoutX="113.0" layoutY="285.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="card2" fitHeight="300.0" fitWidth="200.0" layoutX="890.0" layoutY="298.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="card3" fitHeight="300.0" fitWidth="200.0" layoutX="497.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true" />
+        <TextArea fx:id="textTitle" editable="false" layoutX="417.0" layoutY="42.0" prefHeight="51.0" prefWidth="391.0" styleClass="card-title" wrapText="true" />
+      <ImageView fx:id="descrLeft" fitHeight="321.0" fitWidth="461.0" layoutX="315.0" layoutY="250.0" pickOnBounds="true" visible="false">
+         <image>
+            <Image url="@../images/versus/descrSX.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="descrRight" fitHeight="321.0" fitWidth="461.0" layoutX="428.0" layoutY="250.0" pickOnBounds="true" visible="false">
+         <image>
+            <Image url="@../images/versus/descrRX.png" />
+         </image>
+      </ImageView>
+      <TextArea fx:id="descrR" editable="false" layoutX="455.0" layoutY="278.0" prefHeight="266.0" prefWidth="296.0" styleClass="card-description" wrapText="true" />
+      <TextArea fx:id="descrL" editable="false" layoutX="447.0" layoutY="277.0" prefHeight="266.0" prefWidth="296.0" styleClass="card-description" wrapText="true" />
+      <Button fx:id="endButton" layoutX="459.0" layoutY="632.0" mnemonicParsing="false" onAction="#end" prefHeight="55.0" prefWidth="287.0" style="-fx-font-size: 19;" text="End" />
+      <ImageView fx:id="descrCent" fitHeight="248.0" fitWidth="640.0" layoutX="280.0" layoutY="549.0" pickOnBounds="true" visible="false">
+         <image>
+            <Image url="@../images/versus/descrCX.png" />
+         </image>
+      </ImageView>
+      <TextArea fx:id="descrC" editable="false" layoutX="315.0" layoutY="623.0" prefHeight="163.0" prefWidth="577.0" styleClass="card-description" wrapText="true" />
     </children>
 </AnchorPane>

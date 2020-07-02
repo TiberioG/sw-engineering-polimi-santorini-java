@@ -3,8 +3,8 @@
 }
 
 .setup-pane {
-    -fx-background-image: url("../images/bg_modeselect.png");
-    -fx-background-size: cover;
+    -fx-background-image: url("../images/bgmodd.png");
+    -fx-background-position: right bottom;
 }
 
 .card-pane {
@@ -16,20 +16,39 @@
 }
 
 .popup-stage {
+    -fx-background-color: transparent;
+}
+
+.connect-button {
+    -fx-font-size: 17;
+}
+
+.vbox-popup-stage {
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 2;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-background-color: #ecf0f1;
+}
+
+.player-info-popup {
     -fx-background-color: rgba(255, 255, 255, 0.8);
     -fx-border-width: 3;
 }
 
-.winner-popup {
-    -fx-border-color: green;
-}
-
-.loser-popup {
-    -fx-border-color: red;
-}
 
 .disconnected-popup {
-    -fx-border-color: red;
+    -fx-border-color: #e74c3c;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: #ecf0f1;
+}
+
+.waiting-popup {
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
 }
 
 TextField {
@@ -43,6 +62,7 @@ Button {
     -fx-background-color: transparent;
     -fx-text-origin: top;
     -fx-text-alignment: center;
+    -fx-text-fill: #dfe3e3
 }
 
 ListView {
@@ -61,15 +81,35 @@ ListView .list-cell:even {
 }
 
 
-Label {
+Label, .label, Text, .text {
     -fx-font-family: "Ink Blossoms";
     -fx-text-fill: #346b93;
 }
+
+.hbox-phases {
+    -fx-background-color: rgba(124, 134, 134, 0.7);
+    -fx-background-radius: 10;
+}
+
+/*.outline {
+    -fx-fill: white;
+    -fx-stroke: #346b93;
+    -fx-stroke-width: 1px;
+}*/
 
 .error-text {
     -fx-border-color: red;
 }
 
+.players-waiting-list .list-cell {
+    -fx-alignment: center;
+    -fx-padding: 0 0 -7 0;
+    -fx-font-size: 16;
+}
+
+.camera-view-button {
+    -fx-font-size: 15;
+}
 
 .card-title, .card-title .viewport, .card-title .content{
     -fx-font-family: "Garamond";
@@ -85,6 +125,14 @@ Label {
     -fx-text-alignment: center;
     -fx-font-size: 30;
     -fx-background-color: transparent;
+}
+
+.instructionsLabel {
+    -fx-font-size: 18;
+}
+
+.instructionsLabel .text {
+    -fx-line-spacing: -12px;
 }
 
 

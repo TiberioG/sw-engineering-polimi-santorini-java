@@ -8,12 +8,14 @@ import java.util.ArrayList;
 
 /**
  * Class used to manage the appearence of Terminal using mainly ansi codes and stty command
- * @author tiberioG
+ *
+ * @author TiberioG
  */
 public class Terminal {
     private static String ttyConfig;
 
     /**
+     * Disable buffer in terminal calling stty
      *
      * @throws IOException
      * @throws InterruptedException
@@ -32,6 +34,12 @@ public class Terminal {
 
     }
 
+    /**
+     * enables again buffer if needed, calling again stty
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void yesBuffer() throws IOException, InterruptedException {
 
         //restore previous config
@@ -51,30 +59,40 @@ public class Terminal {
      * Method to resize the terminal
      * To enable these in XTerm, set the following resource to true: allowWindowOps
      * To enable these in iTerm2, deselect the following: Preferences > Profiles > [profile] > Terminal > Disable session-initiated window resizing
+     *
      * @param rows
      * @param cols
      */
-    public static void resize(int rows, int cols){
-        System.out.print("\u001b[8;"+ rows + ";" + cols + "t");
+    public static void resize(int rows, int cols) {
+        System.out.print("\u001b[8;" + rows + ";" + cols + "t");
 
     }
 
-    public static void superClear(){
+    public static void superClear() {
         System.out.print("\u001b[3J"); //clear
         System.out.print("\u001b[H"); //set cursor at top left
         System.out.print("\u001b[J"); //clear
     }
 
-    public static void clearAll(){
-        System.out.print("\u001b[3J"); //clear entire screen and delete all lines saved in the scrollback buffer
-     }
-
-    public static void clearScreen(){
-        System.out.print("\u001b[2J"); // clear entire screen (and moves cursor to upper left
+    /**
+     * clear entire screen and delete all lines saved in the scrollback buffer
+     */
+    public static void clearAll() {
+        System.out.print("\u001b[3J");
     }
 
-    public static void clearLine(){
-        System.out.print("\u001b[2K"); // clear entire line
+    /**
+     * clear entire screen (and moves cursor to upper left
+     */
+    public static void clearScreen() {
+        System.out.print("\u001b[2J");
+    }
+
+    /**
+     * clear entire line
+     */
+    public static void clearLine() {
+        System.out.print("\u001b[2K");
     }
 
     /**
@@ -91,41 +109,38 @@ public class Terminal {
         System.out.print("\u001b[?25l");
     }
 
-    public static void downCursor(int i){
-        System.out.print("\u001b[" + i + "B");
-    }
-    public static void forwCursor(int i){
-        System.out.print("\u001b[" + i + "C");
-    }
-    public static void backwCursor(int i){
-        System.out.print("\u001b[" + i + "D");
-    }
-    public static void upCursor(int i){
-        System.out.print("\u001b[" + i + "A");
-    }
-
-    public static void moveRelativeCursor(int sugiu, int dxsx){
-        if (sugiu < 0 ){
+    /**
+     * moves cursor relatively to actual position
+     *
+     * @param sugiu
+     * @param dxsx
+     */
+    public static void moveRelativeCursor(int sugiu, int dxsx) {
+        if (sugiu < 0) {
             int abs = Math.abs(sugiu);
-            System.out.print("\u001b["+abs+"A"); //up
+            System.out.print("\u001b[" + abs + "A"); //up
+        } else {
+            System.out.print("\u001b[" + sugiu + "B");
         }
-        else {
-            System.out.print("\u001b["+sugiu+"B");
-        }
-        if (dxsx < 0 ){
+        if (dxsx < 0) {
             int abs = Math.abs(dxsx);
-            System.out.print("\u001b["+abs+"D");
-        }
-        else {
-            System.out.print("\u001b["+dxsx+"C");
+            System.out.print("\u001b[" + abs + "D");
+        } else {
+            System.out.print("\u001b[" + dxsx + "C");
         }
     }
 
-    public static void moveAbsoluteCursor(int row, int col){
-        System.out.print("\u001b["+row+";"+col+"H");
+    public static void moveAbsoluteCursor(int row, int col) {
+        System.out.print("\u001b[" + row + ";" + col + "H");
     }
 
-
+    /**
+     * This is able to get the coordinates of the current position of cursor
+     * I don't delete this cause it took one afternoon to get it working and can be useful in future
+     *
+     * @return the coordinates of the current position of cursor
+     * @throws IOException
+     */
     public static int[] getAbsoluteCursor() throws IOException {
         ArrayList<Integer> row = new ArrayList<Integer>();
         ArrayList<Integer> col = new ArrayList<Integer>();
@@ -149,12 +164,12 @@ public class Terminal {
         int[] out = new int[2];
 
         //conversion from ASCII -> String -> Int -> DECimal int
-        for(int i = col.size() - 1 ; i >= 0; i--){
+        for (int i = col.size() - 1; i >= 0; i--) {
             int k = 0;
-            String cifra = Character.toString(col.get(col.size()- i - 1));
+            String cifra = Character.toString(col.get(col.size() - i - 1));
             out[1] = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + out[1]);
         }
-        for(int i = row.size() - 1 ; i >=0; i--){
+        for (int i = row.size() - 1; i >= 0; i--) {
             String cifra = Character.toString(row.get(row.size() - i - 1));
             out[0] = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + out[0]);
         }
@@ -163,14 +178,14 @@ public class Terminal {
     }
 
     /**
-     *  Execute the stty command with the specified arguments
-     *  against the current active terminal.
-     *  author:
-     *  https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
+     * Execute the stty command with the specified arguments
+     * against the current active terminal.
+     * author:
+     * https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
      */
     private static String stty(final String args) throws IOException, InterruptedException {
         String cmd = "stty " + args + " < /dev/tty";
-        return exec(new String[] {
+        return exec(new String[]{
                 "sh",
                 "-c",
                 cmd
@@ -178,12 +193,12 @@ public class Terminal {
     }
 
     /**
-     *  Execute the specified command and return the output
-     *  (both stdout and stderr).
-     *  author:
-     *  https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
+     * Execute the specified command and return the output
+     * (both stdout and stderr).
+     * author:
+     * https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
      */
-    private static String exec(final String[] cmd)  throws IOException, InterruptedException {
+    private static String exec(final String[] cmd) throws IOException, InterruptedException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         Process p = Runtime.getRuntime().exec(cmd);
         int c;
@@ -196,8 +211,7 @@ public class Terminal {
             bout.write(c);
         }
         p.waitFor();
-        return  new String(bout.toByteArray());
+        return new String(bout.toByteArray());
     }
-
 
 }

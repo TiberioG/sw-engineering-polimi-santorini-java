@@ -1,0 +1,293 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GUIProperties</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GUIProperties (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GUIProperties</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 84)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GUIProperties$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GUIProperties$CameraType</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 89)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.controller.Phase;
+<i>4</i>&nbsp;import javafx.scene.image.Image;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * @author sup3rgiu
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;
+<b class="nc"><i>10</i>&nbsp;public class GUIProperties {</b>
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;    protected static int numRows = 5;</b>
+<b class="nc"><i>13</i>&nbsp;    protected static int numCols = 5;</b>
+<i>14</i>&nbsp;
+<b class="nc"><i>15</i>&nbsp;    protected static double tileWidth = 162;</b>
+<b class="nc"><i>16</i>&nbsp;    protected static double tileWidthHalf = tileWidth / 2;</b>
+<b class="nc"><i>17</i>&nbsp;    protected static double tileHeight = 100;</b>
+<b class="nc"><i>18</i>&nbsp;    protected static double tileHeightHalf = tileHeight / 2;</b>
+<b class="nc"><i>19</i>&nbsp;    protected static double tileXSpacing = 7;</b>
+<b class="nc"><i>20</i>&nbsp;    protected static double tileYSpacing = 2.5;</b>
+<i>21</i>&nbsp;
+<b class="nc"><i>22</i>&nbsp;    protected static double blockTopWidth = 96;</b>
+<b class="nc"><i>23</i>&nbsp;    protected static double tileTopWidth = blockTopWidth;</b>
+<b class="nc"><i>24</i>&nbsp;    protected static double tileTopHeight = blockTopWidth;</b>
+<b class="nc"><i>25</i>&nbsp;    protected static double tileTopXSpacing = 11.5;</b>
+<b class="nc"><i>26</i>&nbsp;    protected static double tileTopYSpacing = 9.5;</b>
+<b class="nc"><i>27</i>&nbsp;    protected static double level1TopWidth = blockTopWidth, level2TopWidth = blockTopWidth, level3TopWidth = blockTopWidth, domeTopWidth = blockTopWidth, workerTopWidth = blockTopWidth;</b>
+<i>28</i>&nbsp;
+<b class="nc"><i>29</i>&nbsp;    private static double blockWidth = 200;</b>
+<b class="nc"><i>30</i>&nbsp;    private static double blockHeight = 150;</b>
+<i>31</i>&nbsp;
+<b class="nc"><i>32</i>&nbsp;    protected static double level1Width = blockWidth;</b>
+<b class="nc"><i>33</i>&nbsp;    protected static double level1Height = blockHeight;</b>
+<i>34</i>&nbsp;
+<b class="nc"><i>35</i>&nbsp;    protected static double level2Width = blockWidth;</b>
+<b class="nc"><i>36</i>&nbsp;    protected static double level2Height = 135;</b>
+<b class="nc"><i>37</i>&nbsp;    protected static double level2XFix = 15;</b>
+<b class="nc"><i>38</i>&nbsp;    protected static double level2YFix = 23.5;</b>
+<i>39</i>&nbsp;
+<b class="nc"><i>40</i>&nbsp;    protected static double level3Width = 132.5;</b>
+<b class="nc"><i>41</i>&nbsp;    protected static double level3Height = blockHeight;</b>
+<b class="nc"><i>42</i>&nbsp;    protected static double level3XFix = level2XFix;</b>
+<b class="nc"><i>43</i>&nbsp;    protected static double level3YFix = level2YFix - 16;</b>
+<i>44</i>&nbsp;
+<b class="nc"><i>45</i>&nbsp;    protected static double domeWidth = 80;</b>
+<b class="nc"><i>46</i>&nbsp;    protected static double domeHeight = blockHeight;</b>
+<b class="nc"><i>47</i>&nbsp;    protected static double domeXFix = 26;</b>
+<b class="nc"><i>48</i>&nbsp;    protected static double domeYFix = -11;</b>
+<i>49</i>&nbsp;
+<b class="nc"><i>50</i>&nbsp;    protected static double workerWidth = 80;</b>
+<b class="nc"><i>51</i>&nbsp;    protected static double worker_lvl3_Width = 76;</b>
+<b class="nc"><i>52</i>&nbsp;    protected static double workerHeight = blockHeight;</b>
+<i>53</i>&nbsp;
+<b class="nc"><i>54</i>&nbsp;    protected enum CameraType {</b>
+<b class="nc"><i>55</i>&nbsp;        RIGHT, // DEFAULT/ABSOLUTE VIEW</b>
+<b class="nc"><i>56</i>&nbsp;        LEFT,</b>
+<b class="nc"><i>57</i>&nbsp;        TOP</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /* IMAGES */
+<i>61</i>&nbsp;
+<b class="nc"><i>62</i>&nbsp;    protected static Image image_ground_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/tile_dx.png&quot;).toString());</b>
+<b class="nc"><i>63</i>&nbsp;    protected static Image image_ground_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/tile_sx.png&quot;).toString());</b>
+<b class="nc"><i>64</i>&nbsp;    protected static Image image_ground_top = new Image(GUIProperties.class.getResource(&quot;/images/blocks/top/tile_top.png&quot;).toString());</b>
+<b class="nc"><i>65</i>&nbsp;    protected static Image image_level1_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/level1_dx.png&quot;).toString());</b>
+<b class="nc"><i>66</i>&nbsp;    protected static Image image_level1_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/level1_sx.png&quot;).toString());</b>
+<b class="nc"><i>67</i>&nbsp;    protected static Image image_level1_top = new Image(GUIProperties.class.getResource(&quot;/images/blocks/top/level1_top.png&quot;).toString());</b>
+<b class="nc"><i>68</i>&nbsp;    protected static Image image_level2_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/level2_dx.png&quot;).toString());</b>
+<b class="nc"><i>69</i>&nbsp;    protected static Image image_level2_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/level2_sx.png&quot;).toString());</b>
+<b class="nc"><i>70</i>&nbsp;    protected static Image image_level2_top = new Image(GUIProperties.class.getResource(&quot;/images/blocks/top/level2_top.png&quot;).toString());</b>
+<b class="nc"><i>71</i>&nbsp;    protected static Image image_level3_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/level3_dx.png&quot;).toString());</b>
+<b class="nc"><i>72</i>&nbsp;    protected static Image image_level3_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/level3_sx.png&quot;).toString());</b>
+<b class="nc"><i>73</i>&nbsp;    protected static Image image_level3_top = new Image(GUIProperties.class.getResource(&quot;/images/blocks/top/level3_top.png&quot;).toString());</b>
+<b class="nc"><i>74</i>&nbsp;    protected static Image image_dome_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/dome_dx.png&quot;).toString());</b>
+<b class="nc"><i>75</i>&nbsp;    protected static Image image_dome_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/dome_sx.png&quot;).toString());</b>
+<b class="nc"><i>76</i>&nbsp;    protected static Image image_dome_top = new Image(GUIProperties.class.getResource(&quot;/images/blocks/top/dome_top.png&quot;).toString());</b>
+<b class="nc"><i>77</i>&nbsp;    protected static Image image_worker_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/worker_dx.png&quot;).toString());</b>
+<b class="nc"><i>78</i>&nbsp;    protected static Image image_worker_cut_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/worker_cut_dx.png&quot;).toString());</b>
+<b class="nc"><i>79</i>&nbsp;    protected static Image image_worker_cut_lvl3_dx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/dx/worker_cut_lvl3_dx.png&quot;).toString());</b>
+<b class="nc"><i>80</i>&nbsp;    protected static Image image_worker_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/worker_sx.png&quot;).toString());</b>
+<b class="nc"><i>81</i>&nbsp;    protected static Image image_worker_cut_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/worker_cut_sx.png&quot;).toString());</b>
+<b class="nc"><i>82</i>&nbsp;    protected static Image image_worker_cut_lvl3_sx = new Image(GUIProperties.class.getResource(&quot;/images/blocks/sx/worker_cut_lvl3_sx.png&quot;).toString());</b>
+<b class="nc"><i>83</i>&nbsp;    protected static Image image_worker_top = new Image(GUIProperties.class.getResource(&quot;/images/blocks/top/worker_top.png&quot;).toString());</b>
+<i>84</i>&nbsp;
+<b class="nc"><i>85</i>&nbsp;    protected static Image image_move_phase = new Image(GUIProperties.class.getResource(&quot;/images/phases/move_phase.png&quot;).toString());</b>
+<b class="nc"><i>86</i>&nbsp;    protected static Image image_build_phase = new Image(GUIProperties.class.getResource(&quot;/images/phases/build_phase.png&quot;).toString());</b>
+<b class="nc"><i>87</i>&nbsp;    protected static Image image_select_worker_phase = new Image(GUIProperties.class.getResource(&quot;/images/phases/select_worker_phase.png&quot;).toString());</b>
+<b class="nc"><i>88</i>&nbsp;    protected static Image image_end_turn_phase = new Image(GUIProperties.class.getResource(&quot;/images/phases/end_turn_phase.png&quot;).toString());</b>
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * Method to get the image for a specified type of phase
+<i>92</i>&nbsp;     *
+<i>93</i>&nbsp;     * @param phase the phase you want to have the image of
+<i>94</i>&nbsp;     * @return the image associated to the phase type
+<i>95</i>&nbsp;     */
+<i>96</i>&nbsp;    protected static Image getImageForPhase(Phase phase) {
+<b class="nc"><i>97</i>&nbsp;        Image image = null;</b>
+<b class="nc"><i>98</i>&nbsp;        switch (phase.getType()) {</b>
+<i>99</i>&nbsp;            case MOVE_WORKER:
+<b class="nc"><i>100</i>&nbsp;                image = image_move_phase;</b>
+<b class="nc"><i>101</i>&nbsp;                break;</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;            case BUILD_COMPONENT:
+<b class="nc"><i>104</i>&nbsp;                image = image_build_phase;</b>
+<b class="nc"><i>105</i>&nbsp;                break;</b>
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;            case SELECT_WORKER:
+<b class="nc"><i>108</i>&nbsp;                image = image_select_worker_phase;</b>
+<b class="nc"><i>109</i>&nbsp;                break;</b>
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;            case END_TURN:
+<b class="nc"><i>112</i>&nbsp;                image = image_end_turn_phase;</b>
+<i>113</i>&nbsp;                break;
+<i>114</i>&nbsp;        }
+<i>115</i>&nbsp;
+<b class="nc"><i>116</i>&nbsp;        return image;</b>
+<i>117</i>&nbsp;    }
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    /**
+<i>120</i>&nbsp;     * Returns the X (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+<i>121</i>&nbsp;     *
+<i>122</i>&nbsp;     * @param row
+<i>123</i>&nbsp;     * @param col
+<i>124</i>&nbsp;     * @param cameraType
+<i>125</i>&nbsp;     * @return fixed position value
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    protected static double getIncrementalFix_x(int row, int col, CameraType cameraType) {
+<b class="nc"><i>128</i>&nbsp;        double incrementalFix = 0;</b>
+<b class="nc"><i>129</i>&nbsp;        if (cameraType == CameraType.LEFT) {</b>
+<b class="nc"><i>130</i>&nbsp;            col = getCorrespondingLeftCol(row, col);</b>
+<b class="nc"><i>131</i>&nbsp;            row = getCorrespondingLeftRow(row, col);</b>
+<b class="nc"><i>132</i>&nbsp;            incrementalFix = (col - row) * (-2) - 3;</b>
+<b class="nc"><i>133</i>&nbsp;        } else if (cameraType == CameraType.TOP) {</b>
+<b class="nc"><i>134</i>&nbsp;            incrementalFix = row * (-0.2);</b>
+<i>135</i>&nbsp;        }
+<b class="nc"><i>136</i>&nbsp;        return incrementalFix;</b>
+<i>137</i>&nbsp;    }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    /**
+<i>140</i>&nbsp;     * Returns the Y (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+<i>141</i>&nbsp;     *
+<i>142</i>&nbsp;     * @param row
+<i>143</i>&nbsp;     * @param col
+<i>144</i>&nbsp;     * @param cameraType
+<i>145</i>&nbsp;     * @return fixed position value
+<i>146</i>&nbsp;     */
+<i>147</i>&nbsp;    protected static double getIncrementalFix_y(int row, int col, CameraType cameraType) {
+<b class="nc"><i>148</i>&nbsp;        if (cameraType == CameraType.LEFT) {</b>
+<b class="nc"><i>149</i>&nbsp;            row = getCorrespondingLeftRow(row, col);</b>
+<b class="nc"><i>150</i>&nbsp;        } else if (cameraType == CameraType.TOP) {</b>
+<i>151</i>&nbsp;            // no special treatment required
+<i>152</i>&nbsp;        }
+<b class="nc"><i>153</i>&nbsp;        return (row * 2.5) - 6;</b>
+<i>154</i>&nbsp;    }
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;    protected static int getCorrespondingLeftRow(int row, int col) {
+<b class="nc"><i>157</i>&nbsp;        return GUIProperties.numRows - 1 - col;</b>
+<i>158</i>&nbsp;    }
+<i>159</i>&nbsp;
+<i>160</i>&nbsp;    protected static int getCorrespondingLeftCol(int row, int col) {
+<b class="nc"><i>161</i>&nbsp;        return row;</b>
+<i>162</i>&nbsp;    }
+<i>163</i>&nbsp;
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

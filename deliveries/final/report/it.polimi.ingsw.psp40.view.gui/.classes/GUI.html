@@ -1,0 +1,628 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GUI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GUI (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 70)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 176)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.FunctionInterface;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.model.Card;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.model.Cell;
+<i>8</i>&nbsp;import it.polimi.ingsw.psp40.model.Player;
+<i>9</i>&nbsp;import it.polimi.ingsw.psp40.network.client.Client;
+<i>10</i>&nbsp;import it.polimi.ingsw.psp40.view.ViewInterface;
+<i>11</i>&nbsp;import javafx.application.Application;
+<i>12</i>&nbsp;import javafx.application.Platform;
+<i>13</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>14</i>&nbsp;import javafx.scene.Scene;
+<i>15</i>&nbsp;import javafx.scene.control.Label;
+<i>16</i>&nbsp;import javafx.scene.text.Font;
+<i>17</i>&nbsp;import javafx.stage.Stage;
+<i>18</i>&nbsp;import javafx.stage.WindowEvent;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;import java.io.IOException;
+<i>21</i>&nbsp;import java.util.ArrayList;
+<i>22</i>&nbsp;import java.util.Collections;
+<i>23</i>&nbsp;import java.util.HashMap;
+<i>24</i>&nbsp;import java.util.List;
+<i>25</i>&nbsp;import java.util.logging.Logger;
+<i>26</i>&nbsp;
+<b class="nc"><i>27</i>&nbsp;public class GUI extends Application implements ViewInterface {</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /* Attributes */
+<i>30</i>&nbsp;
+<b class="nc"><i>31</i>&nbsp;    private boolean mockingConnection = false;</b>
+<b class="nc"><i>32</i>&nbsp;    private boolean mockingCard = false;</b>
+<b class="nc"><i>33</i>&nbsp;    private int mockNumOfPlayers = 2; // 2 or 3</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    private Stage primaryStage;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    private static PopupStage popup;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    private Client client;
+<i>40</i>&nbsp;
+<b class="nc"><i>41</i>&nbsp;    private final String errorString = &quot;ERROR&quot;;</b>
+<i>42</i>&nbsp;
+<b class="nc"><i>43</i>&nbsp;    private static final Logger LOGGER = Logger.getLogger(&quot;GUI&quot;);</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    private SetupScreenController setupScreenController;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    private LobbyScreenController lobbyScreenController;
+<i>48</i>&nbsp;
+<b class="nc"><i>49</i>&nbsp;    protected static GameScreenController gameScreenController = null;</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    private CardScreenController cardScreenController;
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    private PlayerScreenController playerScreenController;
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    private FXMLLoader fxmlLoader;
+<i>56</i>&nbsp;
+<b class="nc"><i>57</i>&nbsp;    private boolean isLogged = false;</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    private ConfirmPopup confirmPopup;
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /* Methods */
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    @Override
+<i>64</i>&nbsp;    public void start(Stage primaryStage) {
+<b class="nc"><i>65</i>&nbsp;        Font.loadFont(getClass().getResourceAsStream(&quot;/fonts/InkBlossoms.ttf&quot;), 28);</b>
+<b class="nc"><i>66</i>&nbsp;        Font.loadFont(getClass().getResourceAsStream(&quot;/fonts/Garamond.ttf&quot;), 28);</b>
+<b class="nc"><i>67</i>&nbsp;        Font.loadFont(getClass().getResourceAsStream(&quot;/fonts/negotiatefree.ttf&quot;), 28);</b>
+<b class="nc"><i>68</i>&nbsp;        this.primaryStage = primaryStage;</b>
+<i>69</i>&nbsp;
+<b class="nc"><i>70</i>&nbsp;        primaryStage.setOnCloseRequest((WindowEvent t) -&gt; {</b>
+<b class="nc"><i>71</i>&nbsp;            Platform.exit();</b>
+<b class="nc"><i>72</i>&nbsp;            System.exit(0);</b>
+<i>73</i>&nbsp;        });
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;        // List&lt;String&gt; args = getParameters().getRaw();
+<i>76</i>&nbsp;
+<b class="nc"><i>77</i>&nbsp;        client = new Client();</b>
+<b class="nc"><i>78</i>&nbsp;        client.setView(this);</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;        // showSceneForTest();
+<i>81</i>&nbsp;
+<b class="nc"><i>82</i>&nbsp;        displaySetup();</b>
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     * Helper method to create a scene from a FXML file
+<i>87</i>&nbsp;     *
+<i>88</i>&nbsp;     * @param pathOfFxmlFile    path of the FXML file
+<i>89</i>&nbsp;     * @param functionInterface FunctionInterface to run after scene creation
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
+<b class="nc"><i>92</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>93</i>&nbsp;            fxmlLoader = new FXMLLoader();</b>
+<b class="nc"><i>94</i>&nbsp;            fxmlLoader.setLocation(getClass().getResource(pathOfFxmlFile));</b>
+<i>95</i>&nbsp;            Scene scene;
+<i>96</i>&nbsp;            try {
+<b class="nc"><i>97</i>&nbsp;                scene = new Scene(fxmlLoader.load());</b>
+<b class="nc"><i>98</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>99</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>100</i>&nbsp;                scene = new Scene(new Label(errorString));</b>
+<b class="nc"><i>101</i>&nbsp;            }</b>
+<b class="nc"><i>102</i>&nbsp;            primaryStage.setScene(scene);</b>
+<b class="nc"><i>103</i>&nbsp;            primaryStage.setResizable(false);</b>
+<b class="nc"><i>104</i>&nbsp;            GUI.deletePopup();</b>
+<b class="nc"><i>105</i>&nbsp;            functionInterface.executeFunction();</b>
+<i>106</i>&nbsp;        });
+<i>107</i>&nbsp;    }
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;    /**
+<i>110</i>&nbsp;     * Helper method to get the correct text depending on the remaining players needed to start the match
+<i>111</i>&nbsp;     *
+<i>112</i>&nbsp;     * @param remainingPlayers the remaining players for start the match
+<i>113</i>&nbsp;     * @return the builded text
+<i>114</i>&nbsp;     */
+<i>115</i>&nbsp;    private String getTextForRemainingPlayers(Integer remainingPlayers) {
+<i>116</i>&nbsp;        String text;
+<b class="nc"><i>117</i>&nbsp;        switch (remainingPlayers) {</b>
+<i>118</i>&nbsp;            case 0:
+<b class="nc"><i>119</i>&nbsp;                text = &quot;The game&#39;s starting!&quot;;</b>
+<b class="nc"><i>120</i>&nbsp;                break;</b>
+<i>121</i>&nbsp;            case 1:
+<b class="nc"><i>122</i>&nbsp;                text = &quot;Waiting for another player&quot;;</b>
+<b class="nc"><i>123</i>&nbsp;                break;</b>
+<i>124</i>&nbsp;            default:
+<b class="nc"><i>125</i>&nbsp;                text = &quot;Waiting for others &quot; + remainingPlayers + &quot; players&quot;;</b>
+<i>126</i>&nbsp;                break;
+<i>127</i>&nbsp;        }
+<b class="nc"><i>128</i>&nbsp;        return text;</b>
+<i>129</i>&nbsp;    }
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    @Override
+<i>132</i>&nbsp;    public void displaySetup() {
+<b class="nc"><i>133</i>&nbsp;        resetControllers();</b>
+<b class="nc"><i>134</i>&nbsp;        createMainScene(&quot;/FXML/SetupScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>135</i>&nbsp;            primaryStage.setTitle(&quot;Santorini&quot;);</b>
+<b class="nc"><i>136</i>&nbsp;            primaryStage.setResizable(false);</b>
+<b class="nc"><i>137</i>&nbsp;            primaryStage.show();</b>
+<b class="nc"><i>138</i>&nbsp;            setupScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>139</i>&nbsp;            setupScreenController.setClient(client);</b>
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;            // just for testing
+<b class="nc"><i>142</i>&nbsp;            if (mockingConnection) {</b>
+<b class="nc"><i>143</i>&nbsp;                setupScreenController.mockSendConnect();</b>
+<i>144</i>&nbsp;            }
+<i>145</i>&nbsp;
+<b class="nc"><i>146</i>&nbsp;            if (isLogged) setupScreenController.displayUserForm();</b>
+<i>147</i>&nbsp;        });
+<i>148</i>&nbsp;    }
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;    @Override
+<i>151</i>&nbsp;    public void displaySetInitialPosition(List&lt;Player&gt; playerList) {
+<b class="nc"><i>152</i>&nbsp;        createMainScene(&quot;/FXML/GameScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>153</i>&nbsp;            primaryStage.setResizable(true);</b>
+<b class="nc"><i>154</i>&nbsp;            gameScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>155</i>&nbsp;            gameScreenController.setClient(client);</b>
+<b class="nc"><i>156</i>&nbsp;            gameScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>157</i>&nbsp;            gameScreenController.updateWholeIsland();</b>
+<b class="nc"><i>158</i>&nbsp;            gameScreenController.setInitialPosition(playerList);</b>
+<b class="nc"><i>159</i>&nbsp;            gameScreenController.setPlayersInfo(playerList);</b>
+<i>160</i>&nbsp;        });
+<i>161</i>&nbsp;    }
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    @Override
+<i>164</i>&nbsp;    public void displaySetupFailure() {
+<b class="nc"><i>165</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>166</i>&nbsp;            setupScreenController.errorAlertSetup(&quot;The server is not reachable, please enter another address!&quot;);</b>
+<i>167</i>&nbsp;        });
+<i>168</i>&nbsp;    }
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    @Override
+<i>171</i>&nbsp;    public void displayLogin() {
+<b class="nc"><i>172</i>&nbsp;        setupScreenController.displayUserForm();</b>
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;        // just for testing
+<b class="nc"><i>175</i>&nbsp;        if (mockingConnection) {</b>
+<b class="nc"><i>176</i>&nbsp;            setupScreenController.mockSendLogin(mockNumOfPlayers);</b>
+<i>177</i>&nbsp;        }
+<i>178</i>&nbsp;    }
+<i>179</i>&nbsp;
+<i>180</i>&nbsp;    @Override
+<i>181</i>&nbsp;    public void displayLoginSuccessful() {
+<i>182</i>&nbsp;        //create lobby
+<b class="nc"><i>183</i>&nbsp;        System.out.println(&quot;You have been logged in successfully&quot;);</b>
+<i>184</i>&nbsp;    }
+<i>185</i>&nbsp;
+<i>186</i>&nbsp;    @Override
+<i>187</i>&nbsp;    public void displayLoginFailure(String details) {
+<b class="nc"><i>188</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<i>189</i>&nbsp;            //System.out.println(details);
+<b class="nc"><i>190</i>&nbsp;            setupScreenController.errorAlertLogin(&quot;I&#39;m sorry, this username is already taken.\nPlease try with a different username&quot;);</b>
+<i>191</i>&nbsp;        });
+<i>192</i>&nbsp;    }
+<i>193</i>&nbsp;
+<i>194</i>&nbsp;    @Override
+<i>195</i>&nbsp;    public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayers) {
+<b class="nc"><i>196</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>197</i>&nbsp;            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));</b>
+<b class="nc"><i>198</i>&nbsp;            lobbyScreenController.addPlayerToLobby(nameOfOPlayer);</b>
+<i>199</i>&nbsp;        });
+<i>200</i>&nbsp;    }
+<i>201</i>&nbsp;
+<i>202</i>&nbsp;    @Override
+<i>203</i>&nbsp;    public void displayAddedToQueue(List&lt;String&gt; otherPlayer, Integer remainingPlayers) {
+<b class="nc"><i>204</i>&nbsp;        isLogged = true;</b>
+<b class="nc"><i>205</i>&nbsp;        createMainScene(&quot;/FXML/LobbyScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>206</i>&nbsp;            lobbyScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>207</i>&nbsp;            lobbyScreenController.setClient(client);</b>
+<b class="nc"><i>208</i>&nbsp;            lobbyScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>209</i>&nbsp;            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));</b>
+<b class="nc"><i>210</i>&nbsp;            otherPlayer.forEach(player -&gt; lobbyScreenController.addPlayerToLobby(player));</b>
+<i>211</i>&nbsp;        });
+<i>212</i>&nbsp;    }
+<i>213</i>&nbsp;
+<i>214</i>&nbsp;    @Override
+<i>215</i>&nbsp;    public void displayProposeRestoreMatch() {
+<b class="nc"><i>216</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>217</i>&nbsp;            lobbyScreenController.showRestoreMatchPopup();</b>
+<i>218</i>&nbsp;        });
+<i>219</i>&nbsp;    }
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;    @Override
+<i>222</i>&nbsp;    public void displayStartingMatch() {
+<i>223</i>&nbsp;    }
+<i>224</i>&nbsp;
+<i>225</i>&nbsp;    @Override
+<i>226</i>&nbsp;    public void displayDisconnectedUser(String description) {
+<b class="nc"><i>227</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>228</i>&nbsp;            confirmPopup = new ConfirmPopup(primaryStage, description + &quot; has left the game.\nWe can&#39;t continue this match :( \n Do you want to create a new match?&quot;, () -&gt; {</b>
+<b class="nc"><i>229</i>&nbsp;                this.isLogged = false;</b>
+<b class="nc"><i>230</i>&nbsp;                displaySetup();</b>
+<i>231</i>&nbsp;            }, () -&gt; {
+<b class="nc"><i>232</i>&nbsp;                Platform.exit();</b>
+<b class="nc"><i>233</i>&nbsp;                System.exit(0);</b>
+<i>234</i>&nbsp;            });
+<b class="nc"><i>235</i>&nbsp;            confirmPopup.setClass(&quot;disconnected-popup&quot;);</b>
+<i>236</i>&nbsp;            // Show Popup
+<b class="nc"><i>237</i>&nbsp;            GUI.showPopup(confirmPopup, 2);</b>
+<i>238</i>&nbsp;        });
+<i>239</i>&nbsp;    }
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    @Override
+<i>242</i>&nbsp;    public void displayDisconnected() {
+<b class="nc"><i>243</i>&nbsp;        isLogged = false;</b>
+<b class="nc"><i>244</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>245</i>&nbsp;            confirmPopup = new ConfirmPopup(primaryStage, &quot;I&#39;m sorry, the connection to the server was lost :(&quot;, () -&gt; {</b>
+<b class="nc"><i>246</i>&nbsp;                Platform.exit();</b>
+<b class="nc"><i>247</i>&nbsp;                System.exit(0);</b>
+<i>248</i>&nbsp;            });
+<b class="nc"><i>249</i>&nbsp;            confirmPopup.setLabelConfirmButton(&quot;Exit&quot;);</b>
+<b class="nc"><i>250</i>&nbsp;            confirmPopup.setClass(&quot;disconnected-popup&quot;);</b>
+<i>251</i>&nbsp;            // Show Popup
+<b class="nc"><i>252</i>&nbsp;            GUI.showPopup(confirmPopup, 2);</b>
+<i>253</i>&nbsp;        });
+<i>254</i>&nbsp;    }
+<i>255</i>&nbsp;
+<i>256</i>&nbsp;    @Override
+<i>257</i>&nbsp;    public void displayGenericMessage(String message) {
+<i>258</i>&nbsp;
+<i>259</i>&nbsp;    }
+<i>260</i>&nbsp;
+<i>261</i>&nbsp;    @Override
+<i>262</i>&nbsp;    public void displayLocationUpdated() {
+<b class="nc"><i>263</i>&nbsp;        if (gameScreenController != null) {</b>
+<b class="nc"><i>264</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>265</i>&nbsp;                gameScreenController.updateWorkersPosition();</b>
+<i>266</i>&nbsp;            });
+<i>267</i>&nbsp;        }
+<i>268</i>&nbsp;    }
+<i>269</i>&nbsp;
+<i>270</i>&nbsp;    @Override
+<i>271</i>&nbsp;    public void displayCellUpdated(Cell cell) {
+<b class="nc"><i>272</i>&nbsp;        if (gameScreenController != null) {</b>
+<b class="nc"><i>273</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>274</i>&nbsp;                gameScreenController.updateCell(cell);</b>
+<i>275</i>&nbsp;            });
+<i>276</i>&nbsp;        }
+<i>277</i>&nbsp;    }
+<i>278</i>&nbsp;
+<i>279</i>&nbsp;
+<i>280</i>&nbsp;    @Override
+<i>281</i>&nbsp;    public void displayPlayersUpdated() {
+<b class="nc"><i>282</i>&nbsp;        if (gameScreenController != null) {</b>
+<b class="nc"><i>283</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>284</i>&nbsp;                gameScreenController.setPlayersInfo(client.getPlayerListCache());</b>
+<i>285</i>&nbsp;            });
+<i>286</i>&nbsp;        }
+<i>287</i>&nbsp;    }
+<i>288</i>&nbsp;
+<i>289</i>&nbsp;    @Override
+<i>290</i>&nbsp;    public void displayCardSelection(HashMap&lt;Integer, Card&gt; cards, int numPlayers) {
+<i>291</i>&nbsp;        //System.out.println(&quot;Card selection&quot;);
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;        // just for testing
+<b class="nc"><i>294</i>&nbsp;        if (mockingCard) {</b>
+<b class="nc"><i>295</i>&nbsp;            List&lt;Integer&gt; ids = new ArrayList&lt;&gt;(cards.keySet());</b>
+<b class="nc"><i>296</i>&nbsp;            Collections.shuffle(ids); // random order</b>
+<b class="nc"><i>297</i>&nbsp;            int[] selection = ids.stream().limit(numPlayers).mapToInt(i -&gt; i).toArray();</b>
+<b class="nc"><i>298</i>&nbsp;            client.sendToServer(new Message(TypeOfMessage.SET_CARDS_TO_GAME, selection));</b>
+<b class="nc"><i>299</i>&nbsp;        } else {</b>
+<b class="nc"><i>300</i>&nbsp;            createMainScene(&quot;/FXML/CardScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>301</i>&nbsp;                cardScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>302</i>&nbsp;                cardScreenController.setClient(client);</b>
+<b class="nc"><i>303</i>&nbsp;                cardScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>304</i>&nbsp;                cardScreenController.displayCardsForInitialSelection(new ArrayList&lt;&gt;(cards.values()), numPlayers);</b>
+<i>305</i>&nbsp;            });
+<i>306</i>&nbsp;        }
+<i>307</i>&nbsp;    }
+<i>308</i>&nbsp;
+<i>309</i>&nbsp;    @Override
+<i>310</i>&nbsp;    public void displayChoicePersonalCard(List&lt;Card&gt; availableCards) {
+<i>311</i>&nbsp;        //System.out.println(&quot;Card personal&quot;);
+<b class="nc"><i>312</i>&nbsp;        if (mockingCard) {</b>
+<b class="nc"><i>313</i>&nbsp;            int personalIdCard = availableCards.get(0).getId();</b>
+<b class="nc"><i>314</i>&nbsp;            client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));</b>
+<b class="nc"><i>315</i>&nbsp;        } else {</b>
+<b class="nc"><i>316</i>&nbsp;            if (cardScreenController != null)</b>
+<b class="nc"><i>317</i>&nbsp;                cardScreenController.displayCardsForPersonalSelection(availableCards);</b>
+<i>318</i>&nbsp;            else {
+<b class="nc"><i>319</i>&nbsp;                createMainScene(&quot;/FXML/CardScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>320</i>&nbsp;                    cardScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>321</i>&nbsp;                    cardScreenController.setClient(client);</b>
+<b class="nc"><i>322</i>&nbsp;                    cardScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>323</i>&nbsp;                    cardScreenController.displayCardsForPersonalSelection(availableCards);</b>
+<i>324</i>&nbsp;                });
+<i>325</i>&nbsp;            }
+<i>326</i>&nbsp;        }
+<i>327</i>&nbsp;    }
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;
+<i>330</i>&nbsp;    @Override
+<i>331</i>&nbsp;    public void displayForcedCard(Card card) {
+<b class="nc"><i>332</i>&nbsp;        System.out.println(&quot;Your card has been forced. It is: &quot; + card.getName());</b>
+<i>333</i>&nbsp;    }
+<i>334</i>&nbsp;
+<i>335</i>&nbsp;    @Override
+<i>336</i>&nbsp;    public void displayAskFirstPlayer(List&lt;Player&gt; allPlayers) {
+<b class="nc"><i>337</i>&nbsp;        createMainScene(&quot;/FXML/PlayerScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>338</i>&nbsp;            playerScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>339</i>&nbsp;            playerScreenController.setClient(client);</b>
+<b class="nc"><i>340</i>&nbsp;            playerScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>341</i>&nbsp;            playerScreenController.displayPlayersForInitialSelection(allPlayers);</b>
+<i>342</i>&nbsp;        });
+<i>343</i>&nbsp;
+<i>344</i>&nbsp;    }
+<i>345</i>&nbsp;
+<i>346</i>&nbsp;    @Override
+<i>347</i>&nbsp;    public void displayChoiceOfAvailablePhases() {
+<b class="nc"><i>348</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>349</i>&nbsp;            if (gameScreenController != null) gameScreenController.askDesiredPhase();</b>
+<i>350</i>&nbsp;        });
+<i>351</i>&nbsp;    }
+<i>352</i>&nbsp;
+<i>353</i>&nbsp;    @Override
+<i>354</i>&nbsp;    public void displayChoiceOfAvailableCellForMove() {
+<b class="nc"><i>355</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>356</i>&nbsp;            gameScreenController.highlightAvailableCellsForMove();</b>
+<i>357</i>&nbsp;        });
+<i>358</i>&nbsp;    }
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;    @Override
+<i>361</i>&nbsp;    public void displayChoiceSelectionOfWorker() {
+<i>362</i>&nbsp;        // nothing here
+<i>363</i>&nbsp;    }
+<i>364</i>&nbsp;
+<i>365</i>&nbsp;    @Override
+<i>366</i>&nbsp;    public void displayChoiceOfAvailableCellForBuild() {
+<b class="nc"><i>367</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>368</i>&nbsp;            gameScreenController.highlightAvailableCellsForBuild();</b>
+<i>369</i>&nbsp;        });
+<i>370</i>&nbsp;    }
+<i>371</i>&nbsp;
+<i>372</i>&nbsp;    @Override
+<i>373</i>&nbsp;    public void displayEndTurn() {
+<b class="nc"><i>374</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>375</i>&nbsp;            gameScreenController.endTurn();</b>
+<i>376</i>&nbsp;        });
+<i>377</i>&nbsp;    }
+<i>378</i>&nbsp;
+<i>379</i>&nbsp;    @Override
+<i>380</i>&nbsp;    public void displayLobbyCreated(String playersWaiting) {
+<b class="nc"><i>381</i>&nbsp;        isLogged = true;</b>
+<b class="nc"><i>382</i>&nbsp;        createMainScene(&quot;/FXML/LobbyScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>383</i>&nbsp;            lobbyScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>384</i>&nbsp;            lobbyScreenController.setClient(client);</b>
+<b class="nc"><i>385</i>&nbsp;            lobbyScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>386</i>&nbsp;            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(Integer.parseInt(playersWaiting)));</b>
+<i>387</i>&nbsp;        });
+<i>388</i>&nbsp;    }
+<i>389</i>&nbsp;
+<i>390</i>&nbsp;    @Override
+<i>391</i>&nbsp;    public void displayRestoredMatch() {
+<b class="nc"><i>392</i>&nbsp;        createMainScene(&quot;/FXML/GameScreen.fxml&quot;, () -&gt; {</b>
+<b class="nc"><i>393</i>&nbsp;            primaryStage.setResizable(true);</b>
+<b class="nc"><i>394</i>&nbsp;            gameScreenController = fxmlLoader.getController();</b>
+<b class="nc"><i>395</i>&nbsp;            gameScreenController.setClient(client);</b>
+<b class="nc"><i>396</i>&nbsp;            gameScreenController.setPrimaryStage(primaryStage);</b>
+<b class="nc"><i>397</i>&nbsp;            gameScreenController.updateWholeIsland();</b>
+<b class="nc"><i>398</i>&nbsp;            gameScreenController.setPlayersInfo(client.getPlayerListCache());</b>
+<i>399</i>&nbsp;            //System.out.println(new Date().hashCode() + &quot;creatematch&quot;);
+<i>400</i>&nbsp;        });
+<i>401</i>&nbsp;    }
+<i>402</i>&nbsp;
+<i>403</i>&nbsp;    @Override
+<i>404</i>&nbsp;    public void displayWinnerMessage() {
+<b class="nc"><i>405</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>406</i>&nbsp;            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true, () -&gt; {</b>
+<b class="nc"><i>407</i>&nbsp;                displaySetup();</b>
+<i>408</i>&nbsp;            });
+<b class="nc"><i>409</i>&nbsp;            GUI.showPopup(popup);</b>
+<i>410</i>&nbsp;        });
+<i>411</i>&nbsp;    }
+<i>412</i>&nbsp;
+<i>413</i>&nbsp;    @Override
+<i>414</i>&nbsp;    public void displayLoserMessage(Player winningPlayer) {
+<b class="nc"><i>415</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>416</i>&nbsp;            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false, () -&gt; {</b>
+<b class="nc"><i>417</i>&nbsp;                displaySetup();</b>
+<i>418</i>&nbsp;            });
+<b class="nc"><i>419</i>&nbsp;            popup.setWinningPlayer(winningPlayer);</b>
+<b class="nc"><i>420</i>&nbsp;            GUI.showPopup(popup);</b>
+<i>421</i>&nbsp;        });
+<i>422</i>&nbsp;    }
+<i>423</i>&nbsp;
+<i>424</i>&nbsp;    @Override
+<i>425</i>&nbsp;    public void displayLoserPlayer(Player player) {
+<b class="nc"><i>426</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>427</i>&nbsp;            confirmPopup = new ConfirmPopup(primaryStage, player.getName() + &quot; has lost!&quot;, () -&gt; {</b>
+<b class="nc"><i>428</i>&nbsp;                confirmPopup.hide();</b>
+<i>429</i>&nbsp;            });
+<b class="nc"><i>430</i>&nbsp;            confirmPopup.setLabelConfirmButton(&quot;Okay&quot;);</b>
+<b class="nc"><i>431</i>&nbsp;            confirmPopup.setClass(&quot;loser-popup&quot;);</b>
+<i>432</i>&nbsp;            // Show Popup
+<b class="nc"><i>433</i>&nbsp;            GUI.showPopup(confirmPopup, 1.5);</b>
+<i>434</i>&nbsp;        });
+<i>435</i>&nbsp;    }
+<i>436</i>&nbsp;
+<i>437</i>&nbsp;    /**
+<i>438</i>&nbsp;     * Shows a popup, deleting the previous one if present
+<i>439</i>&nbsp;     *
+<i>440</i>&nbsp;     * @param popupArg popup to be shown
+<i>441</i>&nbsp;     */
+<i>442</i>&nbsp;    public static void showPopup(PopupStage popupArg) {
+<b class="nc"><i>443</i>&nbsp;        showPopup(popupArg, 1);</b>
+<i>444</i>&nbsp;    }
+<i>445</i>&nbsp;
+<i>446</i>&nbsp;    /**
+<i>447</i>&nbsp;     * Shows a popup, deleting the previous one if present
+<i>448</i>&nbsp;     *
+<i>449</i>&nbsp;     * @param popupArg    popup to be shown
+<i>450</i>&nbsp;     * @param speedFactor speed factor to increment/reduce animation speed
+<i>451</i>&nbsp;     */
+<i>452</i>&nbsp;    public static void showPopup(PopupStage popupArg, double speedFactor) {
+<b class="nc"><i>453</i>&nbsp;        deletePopup();</b>
+<b class="nc"><i>454</i>&nbsp;        popup = popupArg;</b>
+<b class="nc"><i>455</i>&nbsp;        popup.showWithAnimation(speedFactor);</b>
+<i>456</i>&nbsp;    }
+<i>457</i>&nbsp;
+<i>458</i>&nbsp;    /**
+<i>459</i>&nbsp;     * Deletes the current popup, if present
+<i>460</i>&nbsp;     */
+<i>461</i>&nbsp;    public static void deletePopup() {
+<b class="nc"><i>462</i>&nbsp;        if (popup != null) {</b>
+<b class="nc"><i>463</i>&nbsp;            popup.close();</b>
+<b class="nc"><i>464</i>&nbsp;            popup = null;</b>
+<i>465</i>&nbsp;        }
+<i>466</i>&nbsp;    }
+<i>467</i>&nbsp;
+<i>468</i>&nbsp;    /**
+<i>469</i>&nbsp;     * Reset all controller
+<i>470</i>&nbsp;     */
+<i>471</i>&nbsp;    private void resetControllers() {
+<b class="nc"><i>472</i>&nbsp;        setupScreenController = null;</b>
+<b class="nc"><i>473</i>&nbsp;        lobbyScreenController = null;</b>
+<b class="nc"><i>474</i>&nbsp;        gameScreenController = null;</b>
+<b class="nc"><i>475</i>&nbsp;        cardScreenController = null;</b>
+<b class="nc"><i>476</i>&nbsp;        playerScreenController = null;</b>
+<i>477</i>&nbsp;    }
+<i>478</i>&nbsp;
+<i>479</i>&nbsp;    // method to show a specific scene at startup --&gt; only for testing
+<i>480</i>&nbsp;    private void showSceneForTest() {
+<i>481</i>&nbsp;        /*        createMainScene(&quot;/FXML/GameScreen.fxml&quot;, () -&gt; {
+<i>482</i>&nbsp;            primaryStage.setResizable(true);
+<i>483</i>&nbsp;            primaryStage.show();
+<i>484</i>&nbsp;            gameScreenController = fxmlLoader.getController();
+<i>485</i>&nbsp;            gameScreenController.setClient(client);
+<i>486</i>&nbsp;            gameScreenController.setPrimaryStage(primaryStage);
+<i>487</i>&nbsp;            client.setUsername(&quot;Andrea&quot;);
+<i>488</i>&nbsp;
+<i>489</i>&nbsp;            Card card0 = CardManager.initCardManager().getCardById(0);
+<i>490</i>&nbsp;            Card card1 = CardManager.initCardManager().getCardById(1);
+<i>491</i>&nbsp;            Card card2 = CardManager.initCardManager().getCardById(2);
+<i>492</i>&nbsp;            Player player0 = new Player(&quot;Andrea&quot;, new Date());
+<i>493</i>&nbsp;            player0.setCurrentCard(card0);
+<i>494</i>&nbsp;            Player player1 = new Player(&quot;Pippo&quot;, new Date());
+<i>495</i>&nbsp;            player1.setCurrentCard(card1);
+<i>496</i>&nbsp;            Player player2 = new Player(&quot;Paperino&quot;, new Date());
+<i>497</i>&nbsp;            player2.setCurrentCard(card2);
+<i>498</i>&nbsp;            List&lt;Player&gt; playerList = new ArrayList&lt;&gt;();
+<i>499</i>&nbsp;            playerList.add(player0);
+<i>500</i>&nbsp;            playerList.add(player1);
+<i>501</i>&nbsp;            playerList.add(player2);
+<i>502</i>&nbsp;            gameScreenController.setPlayersInfo(playerList);
+<i>503</i>&nbsp;        });*/
+<i>504</i>&nbsp;
+<i>505</i>&nbsp;/*        createMainScene(&quot;/FXML/LobbyScreen.fxml&quot;, () -&gt; {
+<i>506</i>&nbsp;            primaryStage.show();
+<i>507</i>&nbsp;            lobbyScreenController = fxmlLoader.getController();
+<i>508</i>&nbsp;            lobbyScreenController.setClient(client);
+<i>509</i>&nbsp;            lobbyScreenController.setPrimaryStage(primaryStage);
+<i>510</i>&nbsp;            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
+<i>511</i>&nbsp;            lobbyScreenController.addPlayerToLobby(&quot;ciaoen&quot;);
+<i>512</i>&nbsp;            lobbyScreenController.addPlayerToLobby(&quot; asa aswa as&quot;);
+<i>513</i>&nbsp;        });*/
+<i>514</i>&nbsp;
+<i>515</i>&nbsp;/*        createMainScene(&quot;/FXML/CardScreen.fxml&quot;, () -&gt; {
+<i>516</i>&nbsp;            primaryStage.show();
+<i>517</i>&nbsp;            cardScreenController = fxmlLoader.getController();
+<i>518</i>&nbsp;            cardScreenController.setClient(client);
+<i>519</i>&nbsp;            cardScreenController.setPrimaryStage(primaryStage);
+<i>520</i>&nbsp;            //cardScreenController.displayCardsForInitialSelection(new ArrayList&lt;&gt;(cards.values()), numPlayers);
+<i>521</i>&nbsp;        });*/
+<i>522</i>&nbsp;
+<i>523</i>&nbsp;/*        createMainScene(&quot;/FXML/PlayerScreen.fxml&quot;, () -&gt; {
+<i>524</i>&nbsp;            primaryStage.setResizable(true);
+<i>525</i>&nbsp;            primaryStage.show();
+<i>526</i>&nbsp;            playerScreenController = fxmlLoader.getController();
+<i>527</i>&nbsp;            playerScreenController.setClient(client);
+<i>528</i>&nbsp;            playerScreenController.setPrimaryStage(primaryStage);
+<i>529</i>&nbsp;            client.setUsername(&quot;Andrea&quot;);
+<i>530</i>&nbsp;
+<i>531</i>&nbsp;            Card card0 = CardManager.initCardManager().getCardById(0);
+<i>532</i>&nbsp;            Card card1 = CardManager.initCardManager().getCardById(1);
+<i>533</i>&nbsp;            Card card2 = CardManager.initCardManager().getCardById(2);
+<i>534</i>&nbsp;            Player player0 = new Player(&quot;Andrea&quot;, new Date());
+<i>535</i>&nbsp;            player0.setCurrentCard(card0);
+<i>536</i>&nbsp;            Player player1 = new Player(&quot;Pippo&quot;, new Date());
+<i>537</i>&nbsp;            player1.setCurrentCard(card1);
+<i>538</i>&nbsp;            List&lt;Player&gt; playerList = new ArrayList&lt;&gt;();
+<i>539</i>&nbsp;            playerList.add(player0);
+<i>540</i>&nbsp;            playerList.add(player1);
+<i>541</i>&nbsp;            playerScreenController.displayPlayersForInitialSelection(playerList);
+<i>542</i>&nbsp;        });*/
+<i>543</i>&nbsp;    }
+<i>544</i>&nbsp;
+<i>545</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

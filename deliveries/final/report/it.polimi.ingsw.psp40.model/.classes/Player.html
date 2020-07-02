@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Player</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Player (it.polimi.ingsw.psp40.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Player</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (21/ 21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.Publisher;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.Message;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.network.server.VirtualView;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.ArrayList;
+<i>10</i>&nbsp;import java.util.Date;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * This is the class for the Player
+<i>16</i>&nbsp; *
+<i>17</i>&nbsp; * @author Vito96
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;public class Player extends Publisher&lt;Message&gt; {
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /* Attributes */
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private final String name;
+<i>24</i>&nbsp;    private final Date birthday;
+<i>25</i>&nbsp;    private Card currentCard;
+<b class="fc"><i>26</i>&nbsp;    private List&lt;Worker&gt; workers = new ArrayList&lt;&gt;();</b>
+<i>27</i>&nbsp;    //private String UUID;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Constructor
+<i>32</i>&nbsp;     *
+<i>33</i>&nbsp;     * @param name        username of the player
+<i>34</i>&nbsp;     * @param birthday    birthday of the player
+<i>35</i>&nbsp;     * @param virtualView associated VirtualView instance
+<i>36</i>&nbsp;     */
+<b class="fc"><i>37</i>&nbsp;    public Player(String name, Date birthday, VirtualView virtualView) {</b>
+<b class="fc"><i>38</i>&nbsp;        addListener(virtualView);</b>
+<b class="fc"><i>39</i>&nbsp;        this.name = name;</b>
+<b class="fc"><i>40</i>&nbsp;        this.birthday = birthday;</b>
+<b class="fc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * Dumb constructor for testing
+<i>45</i>&nbsp;     *
+<i>46</i>&nbsp;     * @param name     username of the player
+<i>47</i>&nbsp;     * @param birthday birthday of the player
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    public Player(String name, Date birthday) {
+<b class="fc"><i>50</i>&nbsp;        this(name, birthday, null);</b>
+<b class="fc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    /* Methods */
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * Getter of name of Player
+<i>57</i>&nbsp;     *
+<i>58</i>&nbsp;     * @return string name
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    public String getName() {
+<b class="fc"><i>61</i>&nbsp;        return name;</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    /**
+<i>65</i>&nbsp;     * Getter of birthday of player
+<i>66</i>&nbsp;     *
+<i>67</i>&nbsp;     * @return birthday
+<i>68</i>&nbsp;     */
+<i>69</i>&nbsp;    public Date getBirthday() {
+<b class="fc"><i>70</i>&nbsp;        return birthday;</b>
+<i>71</i>&nbsp;    }
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    /**
+<i>74</i>&nbsp;     * Getter of the {@link Card} associated now with the player
+<i>75</i>&nbsp;     *
+<i>76</i>&nbsp;     * @return current card associated to the player
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    public Card getCurrentCard() {
+<b class="fc"><i>79</i>&nbsp;        return currentCard;</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    /**
+<i>83</i>&nbsp;     * setter to associate a {@link Card} to the player
+<i>84</i>&nbsp;     *
+<i>85</i>&nbsp;     * @param currentCard card to be associated to the player
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public void setCurrentCard(Card currentCard) {
+<b class="fc"><i>88</i>&nbsp;        this.currentCard = currentCard;</b>
+<b class="fc"><i>89</i>&nbsp;        publish(new Message(&quot;ALL&quot;, TypeOfMessage.PLAYER_UPDATED, this));</b>
+<b class="fc"><i>90</i>&nbsp;    }</b>
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Method that allows the creation and addition of a worker
+<i>94</i>&nbsp;     *
+<i>95</i>&nbsp;     * @param color color of the worker
+<i>96</i>&nbsp;     * @return worker the created worker
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    public Worker addWorker(Colors color) {
+<b class="fc"><i>99</i>&nbsp;        int id = 0;</b>
+<b class="fc"><i>100</i>&nbsp;        if (workers.size() &gt; 0) id = workers.get(workers.size() - 1).getId() + 1;</b>
+<b class="fc"><i>101</i>&nbsp;        Worker worker = new Worker(id, color, this);</b>
+<b class="fc"><i>102</i>&nbsp;        workers.add(worker);</b>
+<b class="fc"><i>103</i>&nbsp;        publish(new Message(&quot;ALL&quot;, TypeOfMessage.PLAYER_UPDATED, this));</b>
+<b class="fc"><i>104</i>&nbsp;        return worker;</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    /**
+<i>108</i>&nbsp;     * Getter of all the Workers of the player
+<i>109</i>&nbsp;     *
+<i>110</i>&nbsp;     * @return an ArrayList of the workers belonging to the player
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    public List&lt;Worker&gt; getWorkers() {
+<b class="fc"><i>113</i>&nbsp;        return workers;</b>
+<i>114</i>&nbsp;    }
+<i>115</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

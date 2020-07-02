@@ -19,6 +19,7 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -29,8 +30,11 @@ public class GUI extends Application implements ViewInterface {
 
     private boolean mockingConnection = false;
     private boolean mockingCard = false;
+    private int mockNumOfPlayers = 2; // 2 or 3
 
     private Stage primaryStage;
+
+    private static PopupStage popup;
 
     private Client client;
 
@@ -49,6 +53,10 @@ public class GUI extends Application implements ViewInterface {
     private PlayerScreenController playerScreenController;
 
     private FXMLLoader fxmlLoader;
+
+    private boolean isLogged = false;
+
+    private ConfirmPopup confirmPopup;
 
     /* Methods */
 
@@ -69,9 +77,17 @@ public class GUI extends Application implements ViewInterface {
         client = new Client();
         client.setView(this);
 
+        // showSceneForTest();
+
         displaySetup();
     }
 
+    /**
+     * Helper method to create a scene from a FXML file
+     *
+     * @param pathOfFxmlFile    path of the FXML file
+     * @param functionInterface FunctionInterface to run after scene creation
+     */
     private void createMainScene(String pathOfFxmlFile, FunctionInterface functionInterface) {
         Platform.runLater(() -> {
             fxmlLoader = new FXMLLoader();
@@ -84,21 +100,29 @@ public class GUI extends Application implements ViewInterface {
                 scene = new Scene(new Label(errorString));
             }
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            GUI.deletePopup();
             functionInterface.executeFunction();
         });
     }
 
+    /**
+     * Helper method to get the correct text depending on the remaining players needed to start the match
+     *
+     * @param remainingPlayers the remaining players for start the match
+     * @return the builded text
+     */
     private String getTextForRemainingPlayers(Integer remainingPlayers) {
         String text;
         switch (remainingPlayers) {
             case 0:
-                text = "La partita sta per iniziare!";
+                text = "The game's starting!";
                 break;
             case 1:
-                text = "In attesa di un altro giocatore";
+                text = "Waiting for another player";
                 break;
             default:
-                text = "In attesa di altri " + remainingPlayers + " giocatori";
+                text = "Waiting for others " + remainingPlayers + " players";
                 break;
         }
         return text;
@@ -106,6 +130,7 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displaySetup() {
+        resetControllers();
         createMainScene("/FXML/SetupScreen.fxml", () -> {
             primaryStage.setTitle("Santorini");
             primaryStage.setResizable(false);
@@ -113,38 +138,42 @@ public class GUI extends Application implements ViewInterface {
             setupScreenController = fxmlLoader.getController();
             setupScreenController.setClient(client);
 
-            // todo remove me, just for testing
+            // just for testing
             if (mockingConnection) {
                 setupScreenController.mockSendConnect();
             }
+
+            if (isLogged) setupScreenController.displayUserForm();
         });
     }
 
     @Override
     public void displaySetInitialPosition(List<Player> playerList) {
-        Platform.runLater(() -> {
-            createMainScene("/FXML/GameScreen.fxml", () -> {
-                gameScreenController = fxmlLoader.getController();
-                gameScreenController.setClient(client);
-                gameScreenController.updateWholeIsland();
-                gameScreenController.setInitialPosition(playerList);
-                gameScreenController.setPlayersInfo(playerList);
-            });
+        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            gameScreenController.updateWholeIsland();
+            gameScreenController.setInitialPosition(playerList);
+            gameScreenController.setPlayersInfo(playerList);
         });
     }
 
     @Override
     public void displaySetupFailure() {
-        setupScreenController.errorAlert("Il server non è raggiungibile, inserisci un altro indirizzo!");
+        Platform.runLater(() -> {
+            setupScreenController.errorAlertSetup("The server is not reachable, please enter another address!");
+        });
     }
 
     @Override
     public void displayLogin() {
         setupScreenController.displayUserForm();
 
-        // todo remove me, just for testing
+        // just for testing
         if (mockingConnection) {
-            setupScreenController.mockSendLogin();
+            setupScreenController.mockSendLogin(mockNumOfPlayers);
         }
     }
 
@@ -156,38 +185,71 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLoginFailure(String details) {
-        System.out.println(details);
-        setupScreenController.errorAlert("Il nome è già utilizzato, inserisci un'altro nome!");
+        Platform.runLater(() -> {
+            //System.out.println(details);
+            setupScreenController.errorAlertLogin("I'm sorry, this username is already taken.\nPlease try with a different username");
+        });
     }
 
     @Override
     public void displayUserJoined(String nameOfOPlayer, Integer remainingPlayers) {
-        lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
-        lobbyScreenController.addPlayerToLobby(nameOfOPlayer);
+        Platform.runLater(() -> {
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
+            lobbyScreenController.addPlayerToLobby(nameOfOPlayer);
+        });
     }
 
     @Override
     public void displayAddedToQueue(List<String> otherPlayer, Integer remainingPlayers) {
+        isLogged = true;
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
             lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(remainingPlayers));
             otherPlayer.forEach(player -> lobbyScreenController.addPlayerToLobby(player));
         });
     }
 
     @Override
-    public void displayStartingMatch() {
-
+    public void displayProposeRestoreMatch() {
+        Platform.runLater(() -> {
+            lobbyScreenController.showRestoreMatchPopup();
+        });
     }
 
     @Override
-    public void displayDisconnected(String details) {
+    public void displayStartingMatch() {
+    }
+
+    @Override
+    public void displayDisconnectedUser(String description) {
         Platform.runLater(() -> {
-            // Init Popup
-            PopupStage popupStage = new DisconnectedPopup(primaryStage, details);
+            confirmPopup = new ConfirmPopup(primaryStage, description + " has left the game.\nWe can't continue this match :( \n Do you want to create a new match?", () -> {
+                this.isLogged = false;
+                displaySetup();
+            }, () -> {
+                Platform.exit();
+                System.exit(0);
+            });
+            confirmPopup.setClass("disconnected-popup");
             // Show Popup
-            popupStage.show();
+            GUI.showPopup(confirmPopup, 2);
+        });
+    }
+
+    @Override
+    public void displayDisconnected() {
+        isLogged = false;
+        Platform.runLater(() -> {
+            confirmPopup = new ConfirmPopup(primaryStage, "I'm sorry, the connection to the server was lost :(", () -> {
+                Platform.exit();
+                System.exit(0);
+            });
+            confirmPopup.setLabelConfirmButton("Exit");
+            confirmPopup.setClass("disconnected-popup");
+            // Show Popup
+            GUI.showPopup(confirmPopup, 2);
         });
     }
 
@@ -198,8 +260,8 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayLocationUpdated() {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.updateWorkersPosition();
             });
         }
@@ -207,26 +269,38 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayCellUpdated(Cell cell) {
-        if(gameScreenController != null) {
-            Platform.runLater(()-> {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
                 gameScreenController.updateCell(cell);
+            });
+        }
+    }
+
+
+    @Override
+    public void displayPlayersUpdated() {
+        if (gameScreenController != null) {
+            Platform.runLater(() -> {
+                gameScreenController.setPlayersInfo(client.getPlayerListCache());
             });
         }
     }
 
     @Override
     public void displayCardSelection(HashMap<Integer, Card> cards, int numPlayers) {
-        System.out.println("Card selection");
+        //System.out.println("Card selection");
 
-        // todo remove me, just for testing
+        // just for testing
         if (mockingCard) {
-           int[] selection = {0, 1};
-           client.sendToServer(new Message( TypeOfMessage.SET_CARDS_TO_GAME, selection));
-        }
-        else {
+            List<Integer> ids = new ArrayList<>(cards.keySet());
+            Collections.shuffle(ids); // random order
+            int[] selection = ids.stream().limit(numPlayers).mapToInt(i -> i).toArray();
+            client.sendToServer(new Message(TypeOfMessage.SET_CARDS_TO_GAME, selection));
+        } else {
             createMainScene("/FXML/CardScreen.fxml", () -> {
                 cardScreenController = fxmlLoader.getController();
                 cardScreenController.setClient(client);
+                cardScreenController.setPrimaryStage(primaryStage);
                 cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
             });
         }
@@ -234,28 +308,24 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoicePersonalCard(List<Card> availableCards) {
-        System.out.println("Card personal");
+        //System.out.println("Card personal");
         if (mockingCard) {
             int personalIdCard = availableCards.get(0).getId();
             client.sendToServer(new Message(TypeOfMessage.SET_CARD_TO_PLAYER, personalIdCard));
-        }
-        else {
-            if(cardScreenController != null)
+        } else {
+            if (cardScreenController != null)
                 cardScreenController.displayCardsForPersonalSelection(availableCards);
             else {
                 createMainScene("/FXML/CardScreen.fxml", () -> {
                     cardScreenController = fxmlLoader.getController();
                     cardScreenController.setClient(client);
+                    cardScreenController.setPrimaryStage(primaryStage);
                     cardScreenController.displayCardsForPersonalSelection(availableCards);
                 });
             }
         }
     }
 
-    @Override
-    public void displayCardInGame(List<Card> cardInGame) {
-
-    }
 
     @Override
     public void displayForcedCard(Card card) {
@@ -267,6 +337,7 @@ public class GUI extends Application implements ViewInterface {
         createMainScene("/FXML/PlayerScreen.fxml", () -> {
             playerScreenController = fxmlLoader.getController();
             playerScreenController.setClient(client);
+            playerScreenController.setPrimaryStage(primaryStage);
             playerScreenController.displayPlayersForInitialSelection(allPlayers);
         });
 
@@ -274,14 +345,14 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailablePhases() {
-        Platform.runLater(()-> {
-            gameScreenController.askDesiredPhase();
+        Platform.runLater(() -> {
+            if (gameScreenController != null) gameScreenController.askDesiredPhase();
         });
     }
 
     @Override
     public void displayChoiceOfAvailableCellForMove() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.highlightAvailableCellsForMove();
         });
     }
@@ -293,60 +364,182 @@ public class GUI extends Application implements ViewInterface {
 
     @Override
     public void displayChoiceOfAvailableCellForBuild() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.highlightAvailableCellsForBuild();
         });
     }
 
     @Override
     public void displayEndTurn() {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             gameScreenController.endTurn();
         });
     }
 
     @Override
-    public void displayMoveWorker() {
-
-    }
-
-    @Override
-    public void displayBuildBlock() {
-
-    }
-
-    @Override
     public void displayLobbyCreated(String playersWaiting) {
+        isLogged = true;
         createMainScene("/FXML/LobbyScreen.fxml", () -> {
             lobbyScreenController = fxmlLoader.getController();
             lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
             lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(Integer.parseInt(playersWaiting)));
+        });
+    }
+
+    @Override
+    public void displayRestoredMatch() {
+        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            gameScreenController.updateWholeIsland();
+            gameScreenController.setPlayersInfo(client.getPlayerListCache());
+            //System.out.println(new Date().hashCode() + "creatematch");
         });
     }
 
     @Override
     public void displayWinnerMessage() {
         Platform.runLater(() -> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true);
-            popup.show();
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, true, () -> {
+                displaySetup();
+            });
+            GUI.showPopup(popup);
         });
     }
 
     @Override
     public void displayLoserMessage(Player winningPlayer) {
-        Platform.runLater(()-> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
-            popup.setWinner(winningPlayer);
-            popup.show();
+        Platform.runLater(() -> {
+            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false, () -> {
+                displaySetup();
+            });
+            popup.setWinningPlayer(winningPlayer);
+            GUI.showPopup(popup);
         });
     }
 
     @Override
     public void displayLoserPlayer(Player player) {
-        Platform.runLater(()-> {
-            WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false);
-            popup.setLoser(player);
-            popup.show();
+        Platform.runLater(() -> {
+            confirmPopup = new ConfirmPopup(primaryStage, player.getName() + " has lost!", () -> {
+                confirmPopup.hide();
+            });
+            confirmPopup.setLabelConfirmButton("Okay");
+            confirmPopup.setClass("loser-popup");
+            // Show Popup
+            GUI.showPopup(confirmPopup, 1.5);
         });
     }
+
+    /**
+     * Shows a popup, deleting the previous one if present
+     *
+     * @param popupArg popup to be shown
+     */
+    public static void showPopup(PopupStage popupArg) {
+        showPopup(popupArg, 1);
+    }
+
+    /**
+     * Shows a popup, deleting the previous one if present
+     *
+     * @param popupArg    popup to be shown
+     * @param speedFactor speed factor to increment/reduce animation speed
+     */
+    public static void showPopup(PopupStage popupArg, double speedFactor) {
+        deletePopup();
+        popup = popupArg;
+        popup.showWithAnimation(speedFactor);
+    }
+
+    /**
+     * Deletes the current popup, if present
+     */
+    public static void deletePopup() {
+        if (popup != null) {
+            popup.close();
+            popup = null;
+        }
+    }
+
+    /**
+     * Reset all controller
+     */
+    private void resetControllers() {
+        setupScreenController = null;
+        lobbyScreenController = null;
+        gameScreenController = null;
+        cardScreenController = null;
+        playerScreenController = null;
+    }
+
+    // method to show a specific scene at startup --> only for testing
+    private void showSceneForTest() {
+        /*        createMainScene("/FXML/GameScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            primaryStage.show();
+            gameScreenController = fxmlLoader.getController();
+            gameScreenController.setClient(client);
+            gameScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            Player player2 = new Player("Paperino", new Date());
+            player2.setCurrentCard(card2);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerList.add(player2);
+            gameScreenController.setPlayersInfo(playerList);
+        });*/
+
+/*        createMainScene("/FXML/LobbyScreen.fxml", () -> {
+            primaryStage.show();
+            lobbyScreenController = fxmlLoader.getController();
+            lobbyScreenController.setClient(client);
+            lobbyScreenController.setPrimaryStage(primaryStage);
+            lobbyScreenController.updateTitleLabel(getTextForRemainingPlayers(1));
+            lobbyScreenController.addPlayerToLobby("ciaoen");
+            lobbyScreenController.addPlayerToLobby(" asa aswa as");
+        });*/
+
+/*        createMainScene("/FXML/CardScreen.fxml", () -> {
+            primaryStage.show();
+            cardScreenController = fxmlLoader.getController();
+            cardScreenController.setClient(client);
+            cardScreenController.setPrimaryStage(primaryStage);
+            //cardScreenController.displayCardsForInitialSelection(new ArrayList<>(cards.values()), numPlayers);
+        });*/
+
+/*        createMainScene("/FXML/PlayerScreen.fxml", () -> {
+            primaryStage.setResizable(true);
+            primaryStage.show();
+            playerScreenController = fxmlLoader.getController();
+            playerScreenController.setClient(client);
+            playerScreenController.setPrimaryStage(primaryStage);
+            client.setUsername("Andrea");
+
+            Card card0 = CardManager.initCardManager().getCardById(0);
+            Card card1 = CardManager.initCardManager().getCardById(1);
+            Card card2 = CardManager.initCardManager().getCardById(2);
+            Player player0 = new Player("Andrea", new Date());
+            player0.setCurrentCard(card0);
+            Player player1 = new Player("Pippo", new Date());
+            player1.setCurrentCard(card1);
+            List<Player> playerList = new ArrayList<>();
+            playerList.add(player0);
+            playerList.add(player1);
+            playerScreenController.displayPlayersForInitialSelection(playerList);
+        });*/
+    }
+
 }

@@ -1,17 +1,17 @@
 [{
   "id": 0,
   "name": "Apollo",
-  "type": "Tuo spostamento",
-  "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (usando le normali regole di spostamento) e costringerlo a occupare la casella appena liberata, scambiando le posizioni.",
+  "type": "Your Move",
+  "description": "Your Worker may move into an opponent Worker's space by forcing their Worker to the space yours just vacated.",
   "strategySettings": {
     "strategyMove": "SwapWorker"
   }
 },
   {
     "id": 1,
-    "name": "Artemide",
-    "type": "Tuo spostamento",
-    "description": "Il tuo lavoratore può spostarsi una volta in più, ma non può tornare nella casella da cui è partito",
+    "name": "Artemis",
+    "type": "Your Move",
+    "description": "Your Worker may move one additional time, but not back to its initial space.",
     "permittedPhases": {
       "type": "selectWorker",
       "nextPhases": [{
@@ -36,9 +36,9 @@
   },
   {
     "id": 2,
-    "name": "Atena",
-    "type": "Turno dell'avversario",
-    "description": "Se nel tuo ultimo turno uno dei tuoi lavoratori è salito di livello, in questo turno gli lavoratori avversari non possono salire di livello",
+    "name": "Athena",
+    "type": "Opponent's Turn",
+    "description": "If one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.",
     "strategySettings": {
       "strategyMove": "OthersCantLevelUp",
       "strategyLose": "LoseOtherCantLevelUp"
@@ -46,18 +46,18 @@
   },
   {
     "id": 3,
-    "name": "Atlante",
-    "type": "Tua costruzione",
-    "description": "Il tuo lavoratore può costruire una cupola su qualsiasi livello, compreso il terreno",
+    "name": "Atlas",
+    "type": "Your Build",
+    "description": "Your Worker may build a dome at any level.",
     "strategySettings": {
       "strategyBuild": "DomeAnywhere"
     }
   },
   {
     "id": 4,
-    "name": "Demetra",
-    "type": "Tua costruzione",
-    "description": "Il tuo lavoratore può costruire una volta in più, ma non nella stessa cella",
+    "name": "Demeter",
+    "type": "Your Build",
+    "description": "Your Worker may build one additional time, but not on the same space.",
     "permittedPhases": {
       "type": "selectWorker",
       "nextPhases": [{
@@ -67,7 +67,11 @@
           "type": "buildComponent",
           "nextPhases": [{
             "type": "buildComponent"
-          }]
+          },
+            {
+              "type": "endTurn"
+            }
+          ]
         }]
       }]
     },
@@ -77,9 +81,9 @@
   },
   {
     "id": 5,
-    "name": "Efesto",
-    "type": "Tua costruzione",
-    "description": "Il tuo lavoratore può costruire un blocco aggiuntivo (non una cupola) al di sopra del primo blocco",
+    "name": "Hephaestus",
+    "type": "Your Build",
+    "description": "Your Worker may build one additional block (not dome) on top of your first block.",
     "permittedPhases": {
       "type": "selectWorker",
       "nextPhases": [{
@@ -89,6 +93,10 @@
           "type": "buildComponent",
           "nextPhases": [{
             "type": "buildComponent"
+          },
+          {
+            "type": "endTurn"
+
           }]
         }]
       }]
@@ -99,9 +107,9 @@
   },
   {
     "id": 6,
-    "name": "Minotauro",
-    "type": "Tuo spostamento",
-    "description": "Il tuo lavoratore può spostarsi nella casella di un lavoratore avversario (in base alle normali regole di spostamento) se la casella successiva nella stessa direzione è libera. Il lavoratore avversario è costretto a spostarti in quella casella (indipendentemente dal livello).",
+    "name": "Minotaur",
+    "type": "Your Move",
+    "description": "Your Worker may move into an opponent Worker's space, if their Worker can be forced one space straight backwards to an unoccupied space at any level.",
     "strategySettings": {
       "strategyMove": "PushEnemyWorker"
     }
@@ -109,17 +117,17 @@
   {
     "id": 7,
     "name": "Pan",
-    "type": "Condizione di vittoria",
-    "description": "Vinci anche se il tuo lavoratore è sceso di due o più livello",
+    "type": "Win Condition",
+    "description": "You also win if your Worker moves down two or more levels.",
     "strategySettings": {
       "strategyWin": "WinGoingDownTwice"
     }
   },
   {
     "id": 8,
-    "name": "Prometeo",
-    "type": "Tuo turno",
-    "description": "Se il tuo lavoratore non può salire di livello può costruire sia prima, sia dopo essere stato mosso.",
+    "name": "Prometheus",
+    "type": "Your Turn",
+    "description": "If your Worker does not move up, it may build both before and after moving.",
     "permittedPhases": {
       "type": "selectWorker",
       "nextPhases": [{

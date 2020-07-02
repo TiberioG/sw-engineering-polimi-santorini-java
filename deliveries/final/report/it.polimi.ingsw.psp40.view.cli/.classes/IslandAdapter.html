@@ -1,0 +1,263 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: IslandAdapter</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: IslandAdapter (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">IslandAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.model.Cell;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.model.Component;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.model.Location;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.io.IOException;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * This class is used to transform the field of cells and the location form the model to a matrix of
+<i>14</i>&nbsp; * &quot;No man is an island&quot;
+<i>15</i>&nbsp; *
+<i>16</i>&nbsp; * @author TiberioG
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class IslandAdapter {
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    private SquareCell[][] matrix;
+<i>21</i>&nbsp;    private int len;
+<i>22</i>&nbsp;    private int hei;
+<i>23</i>&nbsp;    private Frame frame;
+<i>24</i>&nbsp;
+<b class="nc"><i>25</i>&nbsp;    private final int SPACING_H = 1;</b>
+<b class="nc"><i>26</i>&nbsp;    final int SPACING_V = 1;</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * costructor for a new island adapter
+<i>31</i>&nbsp;     *
+<i>32</i>&nbsp;     * @param field    a matrix of {@link Cell} coming from model
+<i>33</i>&nbsp;     * @param location the {@link Location} from model
+<i>34</i>&nbsp;     * @param frame    the {@link Frame} where to print the island
+<i>35</i>&nbsp;     */
+<b class="nc"><i>36</i>&nbsp;    public IslandAdapter(Cell[][] field, Location location, Frame frame) {</b>
+<b class="nc"><i>37</i>&nbsp;        this.frame = frame;</b>
+<b class="nc"><i>38</i>&nbsp;        this.matrix = new SquareCell[field.length][field.length];</b>
+<b class="nc"><i>39</i>&nbsp;        this.len = SquareCell.getLen();</b>
+<b class="nc"><i>40</i>&nbsp;        this.hei = SquareCell.getHei();</b>
+<b class="nc"><i>41</i>&nbsp;        int initRow = frame.getInit()[0];</b>
+<b class="nc"><i>42</i>&nbsp;        int initCol = frame.getInit()[1];</b>
+<i>43</i>&nbsp;
+<b class="nc"><i>44</i>&nbsp;        for (int row = 0; row &lt; field.length; row++) {</b>
+<b class="nc"><i>45</i>&nbsp;            for (int col = 0; col &lt; field.length; col++) {</b>
+<b class="nc"><i>46</i>&nbsp;                matrix[row][col] = new SquareCell(levelify(field[row][col].getTower().getComponents()), initRow + row * (hei + SPACING_H), initCol + col * (len + SPACING_V));</b>
+<b class="nc"><i>47</i>&nbsp;                if (location.getOccupant(row, col) != null) {</b>
+<i>48</i>&nbsp;                    //case cell is with worker
+<b class="nc"><i>49</i>&nbsp;                    matrix[row][col].setWorker(location.getOccupant(row, col).getColor());</b>
+<i>50</i>&nbsp;                }
+<i>51</i>&nbsp;            }
+<i>52</i>&nbsp;        }
+<i>53</i>&nbsp;    }
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * method to print all the island
+<i>57</i>&nbsp;     *
+<i>58</i>&nbsp;     * @throws IOException
+<i>59</i>&nbsp;     * @throws InterruptedException
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    void print() throws IOException, InterruptedException {
+<b class="nc"><i>62</i>&nbsp;        Terminal.noBuffer();</b>
+<b class="nc"><i>63</i>&nbsp;        Terminal.hideCursor();</b>
+<i>64</i>&nbsp;
+<b class="nc"><i>65</i>&nbsp;        for (SquareCell[] squareCells : matrix) {</b>
+<b class="nc"><i>66</i>&nbsp;            for (int col = 0; col &lt; matrix.length; col++) {</b>
+<b class="nc"><i>67</i>&nbsp;                squareCells[col].print();</b>
+<i>68</i>&nbsp;            }
+<i>69</i>&nbsp;        }
+<b class="nc"><i>70</i>&nbsp;        System.out.print(Colors.reset());</b>
+<i>71</i>&nbsp;    }
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    /**
+<i>74</i>&nbsp;     * method to add the visualization of the coordinates in the cells of the map
+<i>75</i>&nbsp;     */
+<i>76</i>&nbsp;    void debug() {
+<b class="nc"><i>77</i>&nbsp;        for (int row = 0; row &lt; matrix.length; row++) {</b>
+<b class="nc"><i>78</i>&nbsp;            for (int col = 0; col &lt; matrix.length; col++) {</b>
+<b class="nc"><i>79</i>&nbsp;                matrix[row][col].coordinates(row, col);</b>
+<i>80</i>&nbsp;            }
+<i>81</i>&nbsp;        }
+<b class="nc"><i>82</i>&nbsp;        System.out.print(Colors.reset());</b>
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     * used to set a {@link SquareCell} selected
+<i>87</i>&nbsp;     *
+<i>88</i>&nbsp;     * @param r row
+<i>89</i>&nbsp;     * @param c col
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    void setSelected(int r, int c) {
+<b class="nc"><i>92</i>&nbsp;        clearSelected();</b>
+<b class="nc"><i>93</i>&nbsp;        matrix[r][c].setSelected(true);</b>
+<i>94</i>&nbsp;    }
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * makes all {@link SquareCell}  NOT selected
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;    void clearSelected() {
+<b class="nc"><i>100</i>&nbsp;        for (SquareCell[] squareCells : matrix) {</b>
+<b class="nc"><i>101</i>&nbsp;            for (int col = 0; col &lt; matrix.length; col++) {</b>
+<b class="nc"><i>102</i>&nbsp;                squareCells[col].setSelected(false);</b>
+<i>103</i>&nbsp;            }
+<i>104</i>&nbsp;        }
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    /**
+<i>108</i>&nbsp;     * adds a worker in a {@link SquareCell}
+<i>109</i>&nbsp;     *
+<i>110</i>&nbsp;     * @param r     row
+<i>111</i>&nbsp;     * @param c     col
+<i>112</i>&nbsp;     * @param color {@link Colors} of the worker
+<i>113</i>&nbsp;     */
+<i>114</i>&nbsp;    void setWorker(int r, int c, Colors color) {
+<b class="nc"><i>115</i>&nbsp;        matrix[r][c].setTempWorker(color);</b>
+<i>116</i>&nbsp;    }
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    /**
+<i>119</i>&nbsp;     * adds a level in a {@link SquareCell}
+<i>120</i>&nbsp;     *
+<i>121</i>&nbsp;     * @param r         row
+<i>122</i>&nbsp;     * @param c         col
+<i>123</i>&nbsp;     * @param templevel int level to add
+<i>124</i>&nbsp;     */
+<i>125</i>&nbsp;    void setTempLevel(int r, int c, int templevel) {
+<b class="nc"><i>126</i>&nbsp;        matrix[r][c].setTempLevel(templevel);</b>
+<i>127</i>&nbsp;    }
+<i>128</i>&nbsp;
+<i>129</i>&nbsp;    /**
+<i>130</i>&nbsp;     * makes a list of {@link SquareCell} as available
+<i>131</i>&nbsp;     *
+<i>132</i>&nbsp;     * @param availableCells a list of {@link Cell}
+<i>133</i>&nbsp;     */
+<i>134</i>&nbsp;    public void setMovable(List&lt;Cell&gt; availableCells) {
+<b class="nc"><i>135</i>&nbsp;        for (Cell cell : availableCells) {</b>
+<b class="nc"><i>136</i>&nbsp;            for (int row = 0; row &lt; matrix.length; row++) {</b>
+<b class="nc"><i>137</i>&nbsp;                for (int col = 0; col &lt; matrix.length; col++) {</b>
+<b class="nc"><i>138</i>&nbsp;                    if (row == cell.getCoordX() &amp;&amp; col == cell.getCoordY()) {</b>
+<b class="nc"><i>139</i>&nbsp;                        matrix[row][col].setMovable(true);</b>
+<i>140</i>&nbsp;                    }
+<i>141</i>&nbsp;                }
+<i>142</i>&nbsp;            }
+<b class="nc"><i>143</i>&nbsp;        }</b>
+<i>144</i>&nbsp;    }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    /**
+<i>147</i>&nbsp;     * makes all the cells NOT movable
+<i>148</i>&nbsp;     */
+<i>149</i>&nbsp;    void clearMovable() {
+<b class="nc"><i>150</i>&nbsp;        for (SquareCell[] squareCells : matrix) {</b>
+<b class="nc"><i>151</i>&nbsp;            for (int col = 0; col &lt; matrix.length; col++) {</b>
+<b class="nc"><i>152</i>&nbsp;                squareCells[col].setMovable(false);</b>
+<i>153</i>&nbsp;            }
+<i>154</i>&nbsp;        }
+<i>155</i>&nbsp;    }
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;    /**
+<i>158</i>&nbsp;     * getter of the matrix of {@link SquareCell}
+<i>159</i>&nbsp;     *
+<i>160</i>&nbsp;     * @return the matrix of {@link SquareCell}
+<i>161</i>&nbsp;     */
+<i>162</i>&nbsp;    public SquareCell[][] getMatrix() {
+<b class="nc"><i>163</i>&nbsp;        return this.matrix;</b>
+<i>164</i>&nbsp;    }
+<i>165</i>&nbsp;
+<i>166</i>&nbsp;    /**
+<i>167</i>&nbsp;     * utility to make a list of Components as an array of booleans
+<i>168</i>&nbsp;     *
+<i>169</i>&nbsp;     * @param components
+<i>170</i>&nbsp;     * @return
+<i>171</i>&nbsp;     */
+<i>172</i>&nbsp;    private boolean[] levelify(List&lt;Component&gt; components) {
+<b class="nc"><i>173</i>&nbsp;        boolean[] levels = new boolean[5];</b>
+<b class="nc"><i>174</i>&nbsp;        for (Component component : components) {</b>
+<b class="nc"><i>175</i>&nbsp;            levels[component.getComponentCode()] = true;</b>
+<b class="nc"><i>176</i>&nbsp;        }</b>
+<b class="nc"><i>177</i>&nbsp;        return levels;</b>
+<i>178</i>&nbsp;    }
+<i>179</i>&nbsp;
+<i>180</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

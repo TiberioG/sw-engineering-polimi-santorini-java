@@ -10,24 +10,38 @@ import it.polimi.ingsw.psp40.model.Worker;
 
 import java.util.List;
 
-// ATENA
-
+/**
+ * This strategy check f one of your Workers moved up on your last turn, opponent Workers cannot move up this turn.
+ *
+ * @author sup3rgiu
+ */
 public class OthersCantLevelUp extends DefaultMove {
 
-    /* Constructor(s) */
-
+    /**
+     * Constructor
+     *
+     * @param match
+     */
     public OthersCantLevelUp(Match match) {
         super(match);
     }
 
-    /* Methods */
-
+    /**
+     * This methods activates when a worker has moved up, setting the parameter which prevents the enemy's Workers to level up
+     *
+     * @param worker it's the {@link Worker} to move
+     * @param cell   it's the new {@link Cell} where is moved
+     * @throws ZeroCellsAvailableMoveException
+     * @throws WrongCellSelectedMoveException
+     * @throws WorkerAlreadyPresentException
+     * @throws CellOutOfBoundsException
+     */
     @Override
     public void move(Worker worker, Cell cell) throws ZeroCellsAvailableMoveException, WrongCellSelectedMoveException, WorkerAlreadyPresentException, CellOutOfBoundsException {
         try {
             Cell origWorkerCell = match.getLocation().getLocation(worker);
             super.move(worker, cell);
-            if(cell.getTower().getTopComponent().getComponentCode() > origWorkerCell.getTower().getTopComponent().getComponentCode()) { // I'm going up
+            if (cell.getTower().getTopComponent().getComponentCode() > origWorkerCell.getTower().getTopComponent().getComponentCode()) { // I'm going up
                 match.getMatchProperties().setOthersCantLevelUp(true);
             }
         } catch (ZeroCellsAvailableMoveException e) {
@@ -41,6 +55,12 @@ public class OthersCantLevelUp extends DefaultMove {
         }
     }
 
+    /**
+     * This method is like the default {@link DefaultMove} but disable the flag "Others can't level up"
+     *
+     * @param worker it's the {@link Worker} you want to know about
+     * @return the list of available {@link Cell} for move
+     */
     @Override
     public List<Cell> getAvailableCells(Worker worker) {
         match.getMatchProperties().setOthersCantLevelUp(false);

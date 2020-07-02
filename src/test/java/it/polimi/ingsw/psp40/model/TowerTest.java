@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.model;
 
-import it.polimi.ingsw.psp40.commons.Component;
 import it.polimi.ingsw.psp40.exceptions.BuildLowerComponentException;
 import it.polimi.ingsw.psp40.exceptions.RemoveGroundLevelException;
 import org.junit.After;
