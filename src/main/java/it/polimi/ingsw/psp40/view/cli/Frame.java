@@ -123,32 +123,6 @@ class Frame {
     }
 
     /**
-     * prints a border around the frame
-     */
-    void border() {
-        for (int i = 0; i < rowSpan; i++) {
-            Terminal.moveAbsoluteCursor(absInit[0] + i, absInit[1]); // scendo di una riga ogni volta
-            System.out.print("┃");
-        }
-
-        start();
-        for (int j = 0; j < colSpan; j++) {
-            System.out.print("━");
-        }
-
-        for (int i = 1; i < rowSpan; i++) {
-            Terminal.moveAbsoluteCursor(absInit[0] + i, absEnd[1]);
-            System.out.print("┃");
-        }
-
-        start();
-        for (int j = 0; j < colSpan; j++) {
-            System.out.print("━");
-        }
-
-    }
-
-    /**
      * prints a string centered
      *
      * @param toWrite
