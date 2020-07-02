@@ -189,10 +189,10 @@ public class Client implements ServerObserver {
 
             case SERVER_LOST:
                 this.stopHeartbeat();
-                view.displayDisconnected(); // will close the socket and terminate the execution
+                view.displayDisconnected(); // will close the socket
                 break;
 
-            case HEARTBEAT: // I won't receive this here anymore. Check ServerAdapter.java
+            case HEARTBEAT:
                 //System.out.println("SERVER IS ALIVE");
                 break;
 
