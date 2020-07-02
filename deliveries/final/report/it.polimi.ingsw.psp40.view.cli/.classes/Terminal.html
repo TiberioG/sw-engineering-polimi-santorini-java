@@ -1,0 +1,300 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Terminal</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Terminal (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Terminal</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 62)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import java.io.ByteArrayOutputStream;
+<i>5</i>&nbsp;import java.io.IOException;
+<i>6</i>&nbsp;import java.io.InputStream;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * Class used to manage the appearence of Terminal using mainly ansi codes and stty command
+<i>11</i>&nbsp; *
+<i>12</i>&nbsp; * @author TiberioG
+<i>13</i>&nbsp; */
+<b class="nc"><i>14</i>&nbsp;public class Terminal {</b>
+<i>15</i>&nbsp;    private static String ttyConfig;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * Disable buffer in terminal calling stty
+<i>19</i>&nbsp;     *
+<i>20</i>&nbsp;     * @throws IOException
+<i>21</i>&nbsp;     * @throws InterruptedException
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public static void noBuffer() throws IOException, InterruptedException {
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;        //save current tty configuration
+<b class="nc"><i>26</i>&nbsp;        ttyConfig = stty(&quot;-g&quot;);</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;        // set the console to be character-buffered instead of line-buffered
+<i>29</i>&nbsp;        // min1 with -icanon, set 1 characters minimum for a completed read
+<b class="nc"><i>30</i>&nbsp;        stty(&quot;-icanon min 1&quot;);</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;        // disable character echoing
+<b class="nc"><i>33</i>&nbsp;        stty(&quot;-echo&quot;);</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * enables again buffer if needed, calling again stty
+<i>39</i>&nbsp;     *
+<i>40</i>&nbsp;     * @throws IOException
+<i>41</i>&nbsp;     * @throws InterruptedException
+<i>42</i>&nbsp;     */
+<i>43</i>&nbsp;    public static void yesBuffer() throws IOException, InterruptedException {
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;        //restore previous config
+<b class="nc"><i>46</i>&nbsp;        if (ttyConfig != null) {</b>
+<b class="nc"><i>47</i>&nbsp;            stty(ttyConfig);</b>
+<b class="nc"><i>48</i>&nbsp;            ttyConfig = null;</b>
+<i>49</i>&nbsp;        }
+<i>50</i>&nbsp;        //enable again charachter echoing
+<b class="nc"><i>51</i>&nbsp;        stty(&quot;echo&quot;);</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;        //enable erase, kill, werase, and rprnt special characters
+<b class="nc"><i>54</i>&nbsp;        stty(&quot;icanon min 1&quot;);</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * Method to resize the terminal
+<i>60</i>&nbsp;     * To enable these in XTerm, set the following resource to true: allowWindowOps
+<i>61</i>&nbsp;     * To enable these in iTerm2, deselect the following: Preferences &gt; Profiles &gt; [profile] &gt; Terminal &gt; Disable session-initiated window resizing
+<i>62</i>&nbsp;     *
+<i>63</i>&nbsp;     * @param rows
+<i>64</i>&nbsp;     * @param cols
+<i>65</i>&nbsp;     */
+<i>66</i>&nbsp;    public static void resize(int rows, int cols) {
+<b class="nc"><i>67</i>&nbsp;        System.out.print(&quot;\u001b[8;&quot; + rows + &quot;;&quot; + cols + &quot;t&quot;);</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public static void superClear() {
+<b class="nc"><i>72</i>&nbsp;        System.out.print(&quot;\u001b[3J&quot;); //clear</b>
+<b class="nc"><i>73</i>&nbsp;        System.out.print(&quot;\u001b[H&quot;); //set cursor at top left</b>
+<b class="nc"><i>74</i>&nbsp;        System.out.print(&quot;\u001b[J&quot;); //clear</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * clear entire screen and delete all lines saved in the scrollback buffer
+<i>79</i>&nbsp;     */
+<i>80</i>&nbsp;    public static void clearAll() {
+<b class="nc"><i>81</i>&nbsp;        System.out.print(&quot;\u001b[3J&quot;);</b>
+<i>82</i>&nbsp;    }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**
+<i>85</i>&nbsp;     * clear entire screen (and moves cursor to upper left
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public static void clearScreen() {
+<b class="nc"><i>88</i>&nbsp;        System.out.print(&quot;\u001b[2J&quot;);</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * clear entire line
+<i>93</i>&nbsp;     */
+<i>94</i>&nbsp;    public static void clearLine() {
+<b class="nc"><i>95</i>&nbsp;        System.out.print(&quot;\u001b[2K&quot;);</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    /**
+<i>99</i>&nbsp;     * Method to enable showing the cursor in Terminal
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    public static void showCursor() {
+<b class="nc"><i>102</i>&nbsp;        System.out.print(&quot;\u001b[?25h&quot;);</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Method to disable showing the cursor in Terminal
+<i>107</i>&nbsp;     */
+<i>108</i>&nbsp;    public static void hideCursor() {
+<b class="nc"><i>109</i>&nbsp;        System.out.print(&quot;\u001b[?25l&quot;);</b>
+<i>110</i>&nbsp;    }
+<i>111</i>&nbsp;
+<i>112</i>&nbsp;    /**
+<i>113</i>&nbsp;     * moves cursor relatively to actual position
+<i>114</i>&nbsp;     *
+<i>115</i>&nbsp;     * @param sugiu
+<i>116</i>&nbsp;     * @param dxsx
+<i>117</i>&nbsp;     */
+<i>118</i>&nbsp;    public static void moveRelativeCursor(int sugiu, int dxsx) {
+<b class="nc"><i>119</i>&nbsp;        if (sugiu &lt; 0) {</b>
+<b class="nc"><i>120</i>&nbsp;            int abs = Math.abs(sugiu);</b>
+<b class="nc"><i>121</i>&nbsp;            System.out.print(&quot;\u001b[&quot; + abs + &quot;A&quot;); //up</b>
+<b class="nc"><i>122</i>&nbsp;        } else {</b>
+<b class="nc"><i>123</i>&nbsp;            System.out.print(&quot;\u001b[&quot; + sugiu + &quot;B&quot;);</b>
+<i>124</i>&nbsp;        }
+<b class="nc"><i>125</i>&nbsp;        if (dxsx &lt; 0) {</b>
+<b class="nc"><i>126</i>&nbsp;            int abs = Math.abs(dxsx);</b>
+<b class="nc"><i>127</i>&nbsp;            System.out.print(&quot;\u001b[&quot; + abs + &quot;D&quot;);</b>
+<b class="nc"><i>128</i>&nbsp;        } else {</b>
+<b class="nc"><i>129</i>&nbsp;            System.out.print(&quot;\u001b[&quot; + dxsx + &quot;C&quot;);</b>
+<i>130</i>&nbsp;        }
+<i>131</i>&nbsp;    }
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    public static void moveAbsoluteCursor(int row, int col) {
+<b class="nc"><i>134</i>&nbsp;        System.out.print(&quot;\u001b[&quot; + row + &quot;;&quot; + col + &quot;H&quot;);</b>
+<i>135</i>&nbsp;    }
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;    /**
+<i>138</i>&nbsp;     * This is able to get the coordinates of the current position of cursor
+<i>139</i>&nbsp;     * I don&#39;t delete this cause it took one afternoon to get it working and can be useful in future
+<i>140</i>&nbsp;     *
+<i>141</i>&nbsp;     * @return the coordinates of the current position of cursor
+<i>142</i>&nbsp;     * @throws IOException
+<i>143</i>&nbsp;     */
+<i>144</i>&nbsp;    public static int[] getAbsoluteCursor() throws IOException {
+<b class="nc"><i>145</i>&nbsp;        ArrayList&lt;Integer&gt; row = new ArrayList&lt;Integer&gt;();</b>
+<b class="nc"><i>146</i>&nbsp;        ArrayList&lt;Integer&gt; col = new ArrayList&lt;Integer&gt;();</b>
+<i>147</i>&nbsp;
+<b class="nc"><i>148</i>&nbsp;        System.out.print(&quot;\u001b[6n&quot;); //Sending this i receive ESC[row;colR</b>
+<b class="nc"><i>149</i>&nbsp;        int next1 = System.in.read();</b>
+<b class="nc"><i>150</i>&nbsp;        int next2 = System.in.read();</b>
+<i>151</i>&nbsp;
+<b class="nc"><i>152</i>&nbsp;        if (next1 == 27 &amp;&amp; next2 == 91) { //parsing ESC[</b>
+<i>153</i>&nbsp;            do {
+<b class="nc"><i>154</i>&nbsp;                row.add(System.in.read());</b>
+<b class="nc"><i>155</i>&nbsp;            } while (row.get(row.size() - 1) != 59); // ;</b>
+<i>156</i>&nbsp;            do {
+<b class="nc"><i>157</i>&nbsp;                col.add(System.in.read());</b>
+<b class="nc"><i>158</i>&nbsp;            } while (col.get(col.size() - 1) != 82); // R</b>
+<i>159</i>&nbsp;
+<b class="nc"><i>160</i>&nbsp;            row.remove(row.size() - 1);</b>
+<b class="nc"><i>161</i>&nbsp;            col.remove(col.size() - 1);</b>
+<i>162</i>&nbsp;        }
+<i>163</i>&nbsp;
+<b class="nc"><i>164</i>&nbsp;        int[] out = new int[2];</b>
+<i>165</i>&nbsp;
+<i>166</i>&nbsp;        //conversion from ASCII -&gt; String -&gt; Int -&gt; DECimal int
+<b class="nc"><i>167</i>&nbsp;        for (int i = col.size() - 1; i &gt;= 0; i--) {</b>
+<b class="nc"><i>168</i>&nbsp;            int k = 0;</b>
+<b class="nc"><i>169</i>&nbsp;            String cifra = Character.toString(col.get(col.size() - i - 1));</b>
+<b class="nc"><i>170</i>&nbsp;            out[1] = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + out[1]);</b>
+<i>171</i>&nbsp;        }
+<b class="nc"><i>172</i>&nbsp;        for (int i = row.size() - 1; i &gt;= 0; i--) {</b>
+<b class="nc"><i>173</i>&nbsp;            String cifra = Character.toString(row.get(row.size() - i - 1));</b>
+<b class="nc"><i>174</i>&nbsp;            out[0] = (int) (Integer.parseInt(cifra) * Math.pow(10, i) + out[0]);</b>
+<i>175</i>&nbsp;        }
+<b class="nc"><i>176</i>&nbsp;        return out;</b>
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    }
+<i>179</i>&nbsp;
+<i>180</i>&nbsp;    /**
+<i>181</i>&nbsp;     * Execute the stty command with the specified arguments
+<i>182</i>&nbsp;     * against the current active terminal.
+<i>183</i>&nbsp;     * author:
+<i>184</i>&nbsp;     * https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
+<i>185</i>&nbsp;     */
+<i>186</i>&nbsp;    private static String stty(final String args) throws IOException, InterruptedException {
+<b class="nc"><i>187</i>&nbsp;        String cmd = &quot;stty &quot; + args + &quot; &lt; /dev/tty&quot;;</b>
+<b class="nc"><i>188</i>&nbsp;        return exec(new String[]{</b>
+<i>189</i>&nbsp;                &quot;sh&quot;,
+<i>190</i>&nbsp;                &quot;-c&quot;,
+<i>191</i>&nbsp;                cmd
+<i>192</i>&nbsp;        });
+<i>193</i>&nbsp;    }
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;    /**
+<i>196</i>&nbsp;     * Execute the specified command and return the output
+<i>197</i>&nbsp;     * (both stdout and stderr).
+<i>198</i>&nbsp;     * author:
+<i>199</i>&nbsp;     * https://www.darkcoding.net/software/non-blocking-console-io-is-not-possible/
+<i>200</i>&nbsp;     */
+<i>201</i>&nbsp;    private static String exec(final String[] cmd) throws IOException, InterruptedException {
+<b class="nc"><i>202</i>&nbsp;        ByteArrayOutputStream bout = new ByteArrayOutputStream();</b>
+<b class="nc"><i>203</i>&nbsp;        Process p = Runtime.getRuntime().exec(cmd);</b>
+<i>204</i>&nbsp;        int c;
+<b class="nc"><i>205</i>&nbsp;        InputStream in = p.getInputStream();</b>
+<b class="nc"><i>206</i>&nbsp;        while ((c = in.read()) != -1) {</b>
+<b class="nc"><i>207</i>&nbsp;            bout.write(c);</b>
+<i>208</i>&nbsp;        }
+<b class="nc"><i>209</i>&nbsp;        in = p.getErrorStream();</b>
+<b class="nc"><i>210</i>&nbsp;        while ((c = in.read()) != -1) {</b>
+<b class="nc"><i>211</i>&nbsp;            bout.write(c);</b>
+<i>212</i>&nbsp;        }
+<b class="nc"><i>213</i>&nbsp;        p.waitFor();</b>
+<b class="nc"><i>214</i>&nbsp;        return new String(bout.toByteArray());</b>
+<i>215</i>&nbsp;    }
+<i>216</i>&nbsp;
+<i>217</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

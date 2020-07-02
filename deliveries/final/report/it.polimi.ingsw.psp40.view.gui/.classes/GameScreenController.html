@@ -1,0 +1,1309 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameScreenController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameScreenController (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameScreenController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 86)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 554)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameScreenController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 87)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 556)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>4</i>&nbsp;import it.polimi.ingsw.psp40.commons.PhaseType;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.messages.*;
+<i>6</i>&nbsp;import it.polimi.ingsw.psp40.controller.Phase;
+<i>7</i>&nbsp;import it.polimi.ingsw.psp40.model.*;
+<i>8</i>&nbsp;import javafx.animation.*;
+<i>9</i>&nbsp;import javafx.beans.property.BooleanProperty;
+<i>10</i>&nbsp;import javafx.beans.property.SimpleBooleanProperty;
+<i>11</i>&nbsp;import javafx.event.ActionEvent;
+<i>12</i>&nbsp;import javafx.fxml.FXML;
+<i>13</i>&nbsp;import javafx.geometry.Dimension2D;
+<i>14</i>&nbsp;import javafx.geometry.Insets;
+<i>15</i>&nbsp;import javafx.geometry.Pos;
+<i>16</i>&nbsp;import javafx.scene.Group;
+<i>17</i>&nbsp;import javafx.scene.control.Button;
+<i>18</i>&nbsp;import javafx.scene.control.Label;
+<i>19</i>&nbsp;import javafx.scene.effect.ColorAdjust;
+<i>20</i>&nbsp;import javafx.scene.image.Image;
+<i>21</i>&nbsp;import javafx.scene.image.ImageView;
+<i>22</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>23</i>&nbsp;import javafx.scene.layout.*;
+<i>24</i>&nbsp;import javafx.util.Duration;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;import java.util.ArrayList;
+<i>27</i>&nbsp;import java.util.Arrays;
+<i>28</i>&nbsp;import java.util.List;
+<i>29</i>&nbsp;import java.util.concurrent.atomic.AtomicBoolean;
+<i>30</i>&nbsp;import java.util.stream.Collectors;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;/**
+<i>33</i>&nbsp; * @author sup3rgiu
+<i>34</i>&nbsp; */
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;
+<b class="nc"><i>37</i>&nbsp;public class GameScreenController extends ScreenController {</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /* FXML Attributes */
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    @FXML
+<i>42</i>&nbsp;    public ImageView island_sx;
+<i>43</i>&nbsp;    @FXML
+<i>44</i>&nbsp;    public ImageView island_dx;
+<i>45</i>&nbsp;    @FXML
+<i>46</i>&nbsp;    public ImageView island_top;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    @FXML
+<i>49</i>&nbsp;    private Button rightViewButton;
+<i>50</i>&nbsp;    @FXML
+<i>51</i>&nbsp;    private Button leftViewButton;
+<i>52</i>&nbsp;    @FXML
+<i>53</i>&nbsp;    private Button topViewButton;
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    @FXML
+<i>56</i>&nbsp;    private Pane myPane_dx;
+<i>57</i>&nbsp;    @FXML
+<i>58</i>&nbsp;    private Pane myPane_sx;
+<i>59</i>&nbsp;    @FXML
+<i>60</i>&nbsp;    private Pane myPane_top;
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    @FXML
+<i>63</i>&nbsp;    private BorderPane borderPane;
+<i>64</i>&nbsp;    @FXML
+<i>65</i>&nbsp;    private AnchorPane rightAnchorPane;
+<i>66</i>&nbsp;    @FXML
+<i>67</i>&nbsp;    private AnchorPane leftAnchorPane;
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    /* BORDER PANE: RIGHT */
+<i>70</i>&nbsp;    @FXML
+<i>71</i>&nbsp;    private HBox hboxPhases;
+<i>72</i>&nbsp;    @FXML
+<i>73</i>&nbsp;    private Label instructionsLabel;
+<i>74</i>&nbsp;    @FXML
+<i>75</i>&nbsp;    private ImageView helpBoardImageView;
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    /* BORDER PANE: CENTER */
+<i>79</i>&nbsp;    @FXML
+<i>80</i>&nbsp;    private AnchorPane centerAnchorPane;
+<i>81</i>&nbsp;    @FXML
+<i>82</i>&nbsp;    private StackPane stackPane;
+<i>83</i>&nbsp;    @FXML
+<i>84</i>&nbsp;    private Group islandsGroup;
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    /* Attributes */
+<i>87</i>&nbsp;
+<b class="nc"><i>88</i>&nbsp;    private final List&lt;Block&gt; levels_dx = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>89</i>&nbsp;    private final List&lt;Block&gt; levels_sx = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>90</i>&nbsp;    private final List&lt;Block&gt; levels_top = new ArrayList&lt;&gt;();</b>
+<i>91</i>&nbsp;
+<b class="nc"><i>92</i>&nbsp;    private final List&lt;Worker&gt; workers_dx = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>93</i>&nbsp;    private final List&lt;Worker&gt; workers_sx = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>94</i>&nbsp;    private final List&lt;Worker&gt; workers_top = new ArrayList&lt;&gt;();</b>
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    private Map map_dx;
+<i>97</i>&nbsp;    private Map map_sx;
+<i>98</i>&nbsp;    private Map map_top;
+<i>99</i>&nbsp;
+<b class="nc"><i>100</i>&nbsp;    private Worker selectedWorker = null;</b>
+<b class="nc"><i>101</i>&nbsp;    private boolean waiting = false;</b>
+<b class="nc"><i>102</i>&nbsp;    private List&lt;PhaseType&gt; selectedPhases = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>103</i>&nbsp;    private boolean shouldPositionWorkers = false;</b>
+<b class="nc"><i>104</i>&nbsp;    private Colors chosenColor = null;</b>
+<i>105</i>&nbsp;
+<b class="nc"><i>106</i>&nbsp;    private final ColorAdjust grayscale = new ColorAdjust(0, -1, 0, 0); // equivalent to grayscale.setSaturation(-1);</b>
+<b class="nc"><i>107</i>&nbsp;    private boolean isMapDisabled = false;</b>
+<i>108</i>&nbsp;
+<b class="nc"><i>109</i>&nbsp;    private ConfirmPopup confirmPopup = null;</b>
+<i>110</i>&nbsp;
+<b class="nc"><i>111</i>&nbsp;    private Transition instructionsLabelTransition = null;</b>
+<i>112</i>&nbsp;
+<b class="nc"><i>113</i>&nbsp;    private Background background_dx = null;</b>
+<b class="nc"><i>114</i>&nbsp;    private Background background_sx = null;</b>
+<b class="nc"><i>115</i>&nbsp;    private Background background_top = null;</b>
+<i>116</i>&nbsp;
+<b class="nc"><i>117</i>&nbsp;    private VBox myVbox = null;</b>
+<b class="nc"><i>118</i>&nbsp;    private VBox enemyVbox = null;</b>
+<b class="nc"><i>119</i>&nbsp;    private HBox enemyHbox = null;</b>
+<i>120</i>&nbsp;
+<b class="nc"><i>121</i>&nbsp;    private GUIProperties.CameraType currentCamera = GUIProperties.CameraType.RIGHT;  // default camera</b>
+<b class="nc"><i>122</i>&nbsp;    private final BooleanProperty isRightCamera = new SimpleBooleanProperty(true); // default camera</b>
+<b class="nc"><i>123</i>&nbsp;    private final BooleanProperty isLeftCamera = new SimpleBooleanProperty(false);</b>
+<b class="nc"><i>124</i>&nbsp;    private final BooleanProperty isTopCamera = new SimpleBooleanProperty(false);</b>
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    /* Methods */
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    @FXML
+<i>129</i>&nbsp;    public void initialize() {
+<i>130</i>&nbsp;
+<b class="nc"><i>131</i>&nbsp;        map_dx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.RIGHT);</b>
+<b class="nc"><i>132</i>&nbsp;        map_sx = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.LEFT);</b>
+<b class="nc"><i>133</i>&nbsp;        map_top = new Map(new Dimension2D(GUIProperties.numRows, GUIProperties.numCols), GUIProperties.CameraType.TOP);</b>
+<i>134</i>&nbsp;
+<b class="nc"><i>135</i>&nbsp;        myPane_dx.getChildren().add(map_dx);</b>
+<b class="nc"><i>136</i>&nbsp;        myPane_sx.getChildren().add(map_sx);</b>
+<b class="nc"><i>137</i>&nbsp;        myPane_top.getChildren().add(map_top);</b>
+<b class="nc"><i>138</i>&nbsp;        myPane_sx.setVisible(false);</b>
+<b class="nc"><i>139</i>&nbsp;        myPane_top.setVisible(false);</b>
+<i>140</i>&nbsp;
+<b class="nc"><i>141</i>&nbsp;        UtilsGUI.buttonHoverEffectWithPersistence(leftViewButton, isLeftCamera);</b>
+<b class="nc"><i>142</i>&nbsp;        UtilsGUI.buttonHoverEffectWithPersistence(rightViewButton, isRightCamera);</b>
+<b class="nc"><i>143</i>&nbsp;        UtilsGUI.buttonHoverEffectWithPersistence(topViewButton, isTopCamera);</b>
+<i>144</i>&nbsp;
+<b class="nc"><i>145</i>&nbsp;        buildInstructionsLabelTransition();</b>
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;/*        rightAnchorPane.layoutXProperty().addListener((observable, oldValue, newValue) -&gt; { // keep rightAnchorPane&#39;s elements in position when switch camera from right to left and viceversa
+<i>148</i>&nbsp;            rightAnchorPane.getChildren().forEach(node -&gt; {
+<i>149</i>&nbsp;                double fixAnchor = (double) newValue &gt; (double) oldValue ? (double) newValue - (double) oldValue : 0;
+<i>150</i>&nbsp;                AnchorPane.setRightAnchor(node, 10.0 + fixAnchor);
+<i>151</i>&nbsp;            });
+<i>152</i>&nbsp;        });*/
+<i>153</i>&nbsp;
+<b class="nc"><i>154</i>&nbsp;        disableMap(true); // start with map disabled</b>
+<b class="nc"><i>155</i>&nbsp;        setInstructionsLabelText(&quot;Wait for your turn...&quot;);</b>
+<b class="nc"><i>156</i>&nbsp;        buildBackgrounds();</b>
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    }
+<i>159</i>&nbsp;
+<i>160</i>&nbsp;    /* METHODS TO HANDLE BLOCKS CLICK */
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    /**
+<i>163</i>&nbsp;     * Method called when a {@link Block} is clicked. Handles the action to be performed depending on the current phase
+<i>164</i>&nbsp;     *
+<i>165</i>&nbsp;     * @param x Coordinate X of the block
+<i>166</i>&nbsp;     * @param y Coordinate Y of the block
+<i>167</i>&nbsp;     * @param z Coordinate Z of the block
+<i>168</i>&nbsp;     */
+<i>169</i>&nbsp;    public void blockClicked(int x, int y, int z) {
+<i>170</i>&nbsp;        //System.out.println(&quot;Clicked: &quot; + x + &quot;, &quot; + y + &quot;, &quot; + z);
+<b class="nc"><i>171</i>&nbsp;        if (!waiting) {</b>
+<b class="nc"><i>172</i>&nbsp;            if (checkLastSelectedPhase(PhaseType.MOVE_WORKER)) {</b>
+<b class="nc"><i>173</i>&nbsp;                moveWorker(x, y, z);</b>
+<b class="nc"><i>174</i>&nbsp;            } else if (checkLastSelectedPhase(PhaseType.BUILD_COMPONENT)) {</b>
+<b class="nc"><i>175</i>&nbsp;                build(x, y, z);</b>
+<b class="nc"><i>176</i>&nbsp;            } else if (shouldPositionWorkers &amp;&amp; selectedPhases.size() == 0 &amp;&amp; !hasEnoughWorkers()) {</b>
+<b class="nc"><i>177</i>&nbsp;                placeWorker(x, y, z);</b>
+<i>178</i>&nbsp;            }
+<i>179</i>&nbsp;        }
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    /**
+<i>184</i>&nbsp;     * Method called when a {@link Worker} is clicked. Handles the action to be performed depending on the current phase
+<i>185</i>&nbsp;     *
+<i>186</i>&nbsp;     * @param worker worker clicked
+<i>187</i>&nbsp;     */
+<i>188</i>&nbsp;    public void workerClicked(Worker worker) {
+<i>189</i>&nbsp;        //System.out.println(&quot;Worker clicked! &quot; + worker.row + &quot;, &quot; + worker.col + &quot;, &quot; + worker.z);
+<b class="nc"><i>190</i>&nbsp;        if (checkLastSelectedPhase(PhaseType.SELECT_WORKER) &amp;&amp; !waiting) {</b>
+<b class="nc"><i>191</i>&nbsp;            if (worker.ownerUsername.equals(getClient().getUsername())) {</b>
+<b class="nc"><i>192</i>&nbsp;                highlightAvailableWorkersForSelection(false);</b>
+<b class="nc"><i>193</i>&nbsp;                selectedWorker = worker.copy();</b>
+<b class="nc"><i>194</i>&nbsp;                sendToServer(new Message(TypeOfMessage.SELECT_WORKER, selectedWorker.id));</b>
+<i>195</i>&nbsp;            }
+<b class="nc"><i>196</i>&nbsp;        } else if (checkLastSelectedPhase(PhaseType.MOVE_WORKER) &amp;&amp; !waiting) { // handle click on worker if I&#39;m in MOVE_WORKER phase. Useful when workers can be swapped</b>
+<b class="nc"><i>197</i>&nbsp;            moveWorker(worker.row, worker.col, worker.z - 1);</b>
+<i>198</i>&nbsp;        }
+<i>199</i>&nbsp;    }
+<i>200</i>&nbsp;
+<i>201</i>&nbsp;    /**
+<i>202</i>&nbsp;     * Highlights available {@link Worker}s for selection phase
+<i>203</i>&nbsp;     *
+<i>204</i>&nbsp;     * @param highlight true to highlight, false to remove highlight
+<i>205</i>&nbsp;     */
+<i>206</i>&nbsp;    private void highlightAvailableWorkersForSelection(boolean highlight) {
+<b class="nc"><i>207</i>&nbsp;        highlightAvailableWorkersForSelectionInView(workers_dx, highlight);</b>
+<b class="nc"><i>208</i>&nbsp;        highlightAvailableWorkersForSelectionInView(workers_sx, highlight);</b>
+<b class="nc"><i>209</i>&nbsp;        highlightAvailableWorkersForSelectionInView(workers_top, highlight);</b>
+<i>210</i>&nbsp;    }
+<i>211</i>&nbsp;
+<i>212</i>&nbsp;    private void highlightAvailableWorkersForSelectionInView(List&lt;Worker&gt; workers_view, boolean highlight) {
+<b class="nc"><i>213</i>&nbsp;        workers_view.forEach(worker -&gt; {</b>
+<b class="nc"><i>214</i>&nbsp;            if (worker.ownerUsername.equals(getClient().getUsername())) {</b>
+<b class="nc"><i>215</i>&nbsp;                if (highlight) {</b>
+<b class="nc"><i>216</i>&nbsp;                    worker.startSelectionAnimation();</b>
+<i>217</i>&nbsp;                } else {
+<b class="nc"><i>218</i>&nbsp;                    worker.stopSelectionAnimation();</b>
+<i>219</i>&nbsp;                }
+<i>220</i>&nbsp;            }
+<i>221</i>&nbsp;        });
+<i>222</i>&nbsp;    }
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /* METHODS TO HANDLE INITIAL POSITIONING OF MY WORKERS */
+<i>225</i>&nbsp;
+<i>226</i>&nbsp;    /**
+<i>227</i>&nbsp;     * Asks to the player the color of its workers and where place them at the start of the game
+<i>228</i>&nbsp;     *
+<i>229</i>&nbsp;     * @param playerList list of the Players in the match
+<i>230</i>&nbsp;     */
+<i>231</i>&nbsp;    protected void setInitialPosition(List&lt;Player&gt; playerList) {
+<b class="nc"><i>232</i>&nbsp;        List&lt;String&gt; colorAlreadyUsed = playerList.stream().flatMap(player -&gt; player.getWorkers().stream()).map(worker -&gt; worker.getColor().toString()).distinct().collect(Collectors.toList());</b>
+<b class="nc"><i>233</i>&nbsp;        List&lt;String&gt; colorsAvailable = Arrays.stream(Colors.allNames()).filter(colorAvailable -&gt; !colorAlreadyUsed.contains(colorAvailable)).collect(Collectors.toList());</b>
+<i>234</i>&nbsp;
+<b class="nc"><i>235</i>&nbsp;        VBox vbButtons = new VBox();</b>
+<b class="nc"><i>236</i>&nbsp;        vbButtons.setSpacing(5);</b>
+<b class="nc"><i>237</i>&nbsp;        vbButtons.setPadding(new Insets(10, 20, 10, 20));</b>
+<b class="nc"><i>238</i>&nbsp;        vbButtons.setPrefWidth(150);</b>
+<b class="nc"><i>239</i>&nbsp;        vbButtons.setTranslateY(50);</b>
+<i>240</i>&nbsp;
+<b class="nc"><i>241</i>&nbsp;        colorsAvailable.forEach(color -&gt; {</b>
+<b class="nc"><i>242</i>&nbsp;            Button button = new Button(color);</b>
+<b class="nc"><i>243</i>&nbsp;            button.setOnAction(actionEvent -&gt; {</b>
+<b class="nc"><i>244</i>&nbsp;                stackPane.getChildren().remove(vbButtons);</b>
+<b class="nc"><i>245</i>&nbsp;                disableMap(false);</b>
+<b class="nc"><i>246</i>&nbsp;                chosenColor = Colors.valueOf(color);</b>
+<b class="nc"><i>247</i>&nbsp;                setInstructionsLabelText(&quot;Place your two workers in free cells&quot;);</b>
+<b class="nc"><i>248</i>&nbsp;                highlightAvailableCellsInitialPosition();</b>
+<i>249</i>&nbsp;            });
+<b class="nc"><i>250</i>&nbsp;            UtilsGUI.buttonHoverEffect(button);</b>
+<b class="nc"><i>251</i>&nbsp;            button.setPrefWidth(vbButtons.getPrefWidth());</b>
+<b class="nc"><i>252</i>&nbsp;            vbButtons.getChildren().add(button);</b>
+<i>253</i>&nbsp;        });
+<i>254</i>&nbsp;
+<b class="nc"><i>255</i>&nbsp;        disableMap(true);</b>
+<b class="nc"><i>256</i>&nbsp;        vbButtons.setAlignment(Pos.TOP_CENTER);</b>
+<b class="nc"><i>257</i>&nbsp;        stackPane.getChildren().add(vbButtons);</b>
+<i>258</i>&nbsp;
+<b class="nc"><i>259</i>&nbsp;        setInstructionsLabelText(&quot;Select the color of your workers&quot;);</b>
+<i>260</i>&nbsp;    }
+<i>261</i>&nbsp;
+<i>262</i>&nbsp;    /**
+<i>263</i>&nbsp;     * Highlights available cells where to place workers at the start of the game
+<i>264</i>&nbsp;     */
+<i>265</i>&nbsp;    private void highlightAvailableCellsInitialPosition() {
+<b class="nc"><i>266</i>&nbsp;        List&lt;Cell&gt; availableCells = Arrays.stream(getClient().getFieldCache()).flatMap(Arrays::stream).collect(Collectors.toList()); // 2-dimensional array to List</b>
+<b class="nc"><i>267</i>&nbsp;        List&lt;Cell&gt; occupiedCells = new ArrayList&lt;&gt;(getClient().getLocationCache().getAllOccupied());</b>
+<b class="nc"><i>268</i>&nbsp;        availableCells.removeIf(cell -&gt; occupiedCells.stream().anyMatch(occupiedCell -&gt; cell.getCoordX() == occupiedCell.getCoordX() &amp;&amp; cell.getCoordY() == occupiedCell.getCoordY()));</b>
+<b class="nc"><i>269</i>&nbsp;        highlightAvailableCells(availableCells);</b>
+<b class="nc"><i>270</i>&nbsp;        waiting = false;</b>
+<b class="nc"><i>271</i>&nbsp;        selectedPhases = new ArrayList&lt;&gt;(); // just to be sure</b>
+<b class="nc"><i>272</i>&nbsp;        shouldPositionWorkers = true;</b>
+<i>273</i>&nbsp;    }
+<i>274</i>&nbsp;
+<i>275</i>&nbsp;    /**
+<i>276</i>&nbsp;     * Adds a {@link Worker} to the map in the given position
+<i>277</i>&nbsp;     *
+<i>278</i>&nbsp;     * @param x Coordinate X where to place the worker
+<i>279</i>&nbsp;     * @param y Coordinate Y where to place the worker
+<i>280</i>&nbsp;     * @param z Coordinate Z where to place the worker
+<i>281</i>&nbsp;     */
+<i>282</i>&nbsp;    private void placeWorker(int x, int y, int z) {
+<b class="nc"><i>283</i>&nbsp;        if (z == 0) { // just to be sure, but z != 0 could not happen</b>
+<b class="nc"><i>284</i>&nbsp;            boolean isCellOccupied = getClient().getLocationCache().getAllOccupied().stream().anyMatch(cell -&gt; (cell.getCoordX() == x &amp;&amp; cell.getCoordY() == y));</b>
+<b class="nc"><i>285</i>&nbsp;            isCellOccupied = isCellOccupied || workers_dx.stream().anyMatch(worker -&gt; worker.row == x &amp;&amp; worker.col == y); // check if I&#39;m not placing one worker over another worker just placed and not yet present in locationCache</b>
+<b class="nc"><i>286</i>&nbsp;            if (!isCellOccupied) {</b>
+<b class="nc"><i>287</i>&nbsp;                int id = (int) workers_dx.stream().filter(worker -&gt; worker.ownerUsername.equals(getClient().getUsername())).count();</b>
+<b class="nc"><i>288</i>&nbsp;                Worker worker = new Worker(x, y, getClient().getUsername(), id, chosenColor);</b>
+<b class="nc"><i>289</i>&nbsp;                addWorkerAndRefresh(worker);</b>
+<b class="nc"><i>290</i>&nbsp;                if (hasEnoughWorkers()) { // send to server the coordinates of my workers</b>
+<b class="nc"><i>291</i>&nbsp;                    List&lt;CoordinatesMessage&gt; workersCoord = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>292</i>&nbsp;                    workers_dx.stream()</b>
+<b class="nc"><i>293</i>&nbsp;                            .filter(_worker -&gt; _worker.ownerUsername.equals(getClient().getUsername())) // only my workers</b>
+<b class="nc"><i>294</i>&nbsp;                            .forEach(myWorker -&gt; {</b>
+<b class="nc"><i>295</i>&nbsp;                                workersCoord.add(myWorker.id, new CoordinatesMessage(myWorker.row, myWorker.col));</b>
+<i>296</i>&nbsp;                            });
+<i>297</i>&nbsp;
+<b class="nc"><i>298</i>&nbsp;                    sendToServer(new Message(TypeOfMessage.SET_POSITION_OF_WORKER, new SelectWorkersMessage(chosenColor, workersCoord)));</b>
+<i>299</i>&nbsp;
+<b class="nc"><i>300</i>&nbsp;                    setInstructionsLabelText(&quot;Wait for your turn...&quot;);</b>
+<i>301</i>&nbsp;                }
+<b class="nc"><i>302</i>&nbsp;            } else {</b>
+<b class="nc"><i>303</i>&nbsp;                System.out.println(&quot;You can&#39;t place a worker here&quot;);</b>
+<i>304</i>&nbsp;            }
+<i>305</i>&nbsp;        }
+<i>306</i>&nbsp;    }
+<i>307</i>&nbsp;
+<i>308</i>&nbsp;    /**
+<i>309</i>&nbsp;     * Method used to check if the player has placed enough workers
+<i>310</i>&nbsp;     *
+<i>311</i>&nbsp;     * @return true if player has placed enough workers
+<i>312</i>&nbsp;     */
+<i>313</i>&nbsp;    private boolean hasEnoughWorkers() {
+<b class="nc"><i>314</i>&nbsp;        return 2 == workers_dx.stream()</b>
+<b class="nc"><i>315</i>&nbsp;                .filter(worker -&gt; worker.ownerUsername.equals(getClient().getUsername()))</b>
+<b class="nc"><i>316</i>&nbsp;                .count();</b>
+<i>317</i>&nbsp;    }
+<i>318</i>&nbsp;
+<i>319</i>&nbsp;    /* METHODS TO HANDLE BUILD PHASE */
+<i>320</i>&nbsp;
+<i>321</i>&nbsp;    /**
+<i>322</i>&nbsp;     * Tries to build a {@link Block} in the given position. If position is not allowed, does nothing. If more than one component is available, asks which build
+<i>323</i>&nbsp;     *
+<i>324</i>&nbsp;     * @param x Coordinate X where to build
+<i>325</i>&nbsp;     * @param y Coordinate Y where to build
+<i>326</i>&nbsp;     * @param z Coordinate Z where to build
+<i>327</i>&nbsp;     */
+<i>328</i>&nbsp;    private void build(int x, int y, int z) {
+<i>329</i>&nbsp;
+<b class="nc"><i>330</i>&nbsp;        Cell desiredCell = getClient().getAvailableBuildCells().keySet().stream().filter(cell -&gt; cell.getCoordX() == x &amp;&amp; cell.getCoordY() == y).findFirst().orElse(null);</b>
+<b class="nc"><i>331</i>&nbsp;        if (desiredCell == null) {</b>
+<b class="nc"><i>332</i>&nbsp;            System.out.println(&quot;You can&#39;t build here&quot;);</b>
+<i>333</i>&nbsp;        } else {
+<b class="nc"><i>334</i>&nbsp;            List&lt;Integer&gt; listOfAvailableComponents = getClient().getAvailableBuildCells().get(desiredCell); // getting the components buildable in the selected cell</b>
+<b class="nc"><i>335</i>&nbsp;            if (listOfAvailableComponents.size() == 1) {</b>
+<b class="nc"><i>336</i>&nbsp;                Block block = null;</b>
+<b class="nc"><i>337</i>&nbsp;                switch (listOfAvailableComponents.get(0)) {</b>
+<i>338</i>&nbsp;                    case 1:
+<b class="nc"><i>339</i>&nbsp;                        block = new Level1(x, y);</b>
+<b class="nc"><i>340</i>&nbsp;                        break;</b>
+<i>341</i>&nbsp;                    case 2:
+<b class="nc"><i>342</i>&nbsp;                        block = new Level2(x, y);</b>
+<b class="nc"><i>343</i>&nbsp;                        break;</b>
+<i>344</i>&nbsp;                    case 3:
+<b class="nc"><i>345</i>&nbsp;                        block = new Level3(x, y);</b>
+<b class="nc"><i>346</i>&nbsp;                        break;</b>
+<i>347</i>&nbsp;                    case 4:
+<b class="nc"><i>348</i>&nbsp;                        block = new Dome(x, y);</b>
+<i>349</i>&nbsp;                        break;
+<i>350</i>&nbsp;                }
+<i>351</i>&nbsp;
+<b class="nc"><i>352</i>&nbsp;                if (block != null) { // just to be sure</b>
+<b class="nc"><i>353</i>&nbsp;                    addAndRefresh(block);</b>
+<b class="nc"><i>354</i>&nbsp;                    CoordinatesMessage buildCoord = new CoordinatesMessage(x, y);</b>
+<b class="nc"><i>355</i>&nbsp;                    sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics&lt;&gt;(Component.getComponent(listOfAvailableComponents.get(0)), buildCoord)));</b>
+<i>356</i>&nbsp;                }
+<b class="nc"><i>357</i>&nbsp;            } else {</b>
+<b class="nc"><i>358</i>&nbsp;                askWhichComponentBuild(listOfAvailableComponents, x, y, z);</b>
+<i>359</i>&nbsp;            }
+<i>360</i>&nbsp;        }
+<i>361</i>&nbsp;    }
+<i>362</i>&nbsp;
+<i>363</i>&nbsp;    /**
+<i>364</i>&nbsp;     * Asks to the player which component build in the given position
+<i>365</i>&nbsp;     *
+<i>366</i>&nbsp;     * @param listOfAvailableComponents list of available components
+<i>367</i>&nbsp;     * @param x                         Coordinate X where to build
+<i>368</i>&nbsp;     * @param y                         Coordinate Y where to build
+<i>369</i>&nbsp;     * @param z                         Coordinate Z where to build
+<i>370</i>&nbsp;     */
+<i>371</i>&nbsp;    private void askWhichComponentBuild(List&lt;Integer&gt; listOfAvailableComponents, int x, int y, int z) {
+<b class="nc"><i>372</i>&nbsp;        VBox vbButtons = new VBox();</b>
+<b class="nc"><i>373</i>&nbsp;        vbButtons.setSpacing(10);</b>
+<b class="nc"><i>374</i>&nbsp;        vbButtons.setPadding(new Insets(10, 20, 10, 20));</b>
+<b class="nc"><i>375</i>&nbsp;        vbButtons.setPrefWidth(150);</b>
+<i>376</i>&nbsp;
+<b class="nc"><i>377</i>&nbsp;        listOfAvailableComponents.forEach(componentCode -&gt; {</b>
+<b class="nc"><i>378</i>&nbsp;            Button button = new Button(Component.getName(componentCode));</b>
+<b class="nc"><i>379</i>&nbsp;            button.setOnAction(actionEvent -&gt; {</b>
+<b class="nc"><i>380</i>&nbsp;                stackPane.getChildren().remove(vbButtons);</b>
+<b class="nc"><i>381</i>&nbsp;                disableMap(false);</b>
+<b class="nc"><i>382</i>&nbsp;                buildComponent(x, y, z, componentCode);</b>
+<i>383</i>&nbsp;            });
+<b class="nc"><i>384</i>&nbsp;            button.setPrefWidth(vbButtons.getPrefWidth());</b>
+<b class="nc"><i>385</i>&nbsp;            vbButtons.getChildren().add(button);</b>
+<i>386</i>&nbsp;        });
+<i>387</i>&nbsp;
+<b class="nc"><i>388</i>&nbsp;        Button cancelButton = new Button(&quot;Cancel&quot;);</b>
+<b class="nc"><i>389</i>&nbsp;        cancelButton.setOnAction(actionEvent -&gt; {</b>
+<b class="nc"><i>390</i>&nbsp;            stackPane.getChildren().remove(vbButtons);</b>
+<b class="nc"><i>391</i>&nbsp;            disableMap(false);</b>
+<i>392</i>&nbsp;        });
+<b class="nc"><i>393</i>&nbsp;        cancelButton.setPrefWidth(vbButtons.getPrefWidth());</b>
+<b class="nc"><i>394</i>&nbsp;        vbButtons.getChildren().add(cancelButton);</b>
+<i>395</i>&nbsp;
+<b class="nc"><i>396</i>&nbsp;        disableMap(true);</b>
+<b class="nc"><i>397</i>&nbsp;        vbButtons.setAlignment(Pos.TOP_CENTER);</b>
+<b class="nc"><i>398</i>&nbsp;        stackPane.getChildren().add(vbButtons);</b>
+<i>399</i>&nbsp;    }
+<i>400</i>&nbsp;
+<i>401</i>&nbsp;    /**
+<i>402</i>&nbsp;     * Builds the given component in the given position
+<i>403</i>&nbsp;     *
+<i>404</i>&nbsp;     * @param x             Coordinate X where to build
+<i>405</i>&nbsp;     * @param y             Coordinate Y where to build
+<i>406</i>&nbsp;     * @param z             Coordinate Z where to build
+<i>407</i>&nbsp;     * @param componentCode code of the {@link Component} to build
+<i>408</i>&nbsp;     */
+<i>409</i>&nbsp;    private void buildComponent(int x, int y, int z, int componentCode) {
+<b class="nc"><i>410</i>&nbsp;        Block block = null;</b>
+<b class="nc"><i>411</i>&nbsp;        switch (componentCode) {</b>
+<i>412</i>&nbsp;            case 1:
+<b class="nc"><i>413</i>&nbsp;                block = new Level1(x, y);</b>
+<b class="nc"><i>414</i>&nbsp;                break;</b>
+<i>415</i>&nbsp;            case 2:
+<b class="nc"><i>416</i>&nbsp;                block = new Level2(x, y);</b>
+<b class="nc"><i>417</i>&nbsp;                break;</b>
+<i>418</i>&nbsp;            case 3:
+<b class="nc"><i>419</i>&nbsp;                block = new Level3(x, y);</b>
+<b class="nc"><i>420</i>&nbsp;                break;</b>
+<i>421</i>&nbsp;            case 4:
+<b class="nc"><i>422</i>&nbsp;                block = new Dome(x, y, z + 1);</b>
+<i>423</i>&nbsp;                break;
+<i>424</i>&nbsp;        }
+<i>425</i>&nbsp;
+<b class="nc"><i>426</i>&nbsp;        if (block != null) { // just to be sure</b>
+<b class="nc"><i>427</i>&nbsp;            CoordinatesMessage buildCoord = new CoordinatesMessage(x, y);</b>
+<b class="nc"><i>428</i>&nbsp;            sendToServer(new Message(TypeOfMessage.BUILD_CELL, new TuplaGenerics&lt;&gt;(Component.getComponent(componentCode), buildCoord)));</b>
+<b class="nc"><i>429</i>&nbsp;            addAndRefresh(block);</b>
+<i>430</i>&nbsp;        }
+<i>431</i>&nbsp;    }
+<i>432</i>&nbsp;
+<i>433</i>&nbsp;    /**
+<i>434</i>&nbsp;     * Highlights available cells where to build a block
+<i>435</i>&nbsp;     */
+<i>436</i>&nbsp;    protected void highlightAvailableCellsForBuild() {
+<b class="nc"><i>437</i>&nbsp;        List&lt;Cell&gt; availableCells = new ArrayList&lt;&gt;(getClient().getAvailableBuildCells().keySet());</b>
+<b class="nc"><i>438</i>&nbsp;        if (availableCells.size() &gt; 0) {</b>
+<b class="nc"><i>439</i>&nbsp;            highlightAvailableCells(availableCells);</b>
+<b class="nc"><i>440</i>&nbsp;            waiting = false;</b>
+<i>441</i>&nbsp;        } else {
+<b class="nc"><i>442</i>&nbsp;            confirmPopup = new ConfirmPopup(getPrimaryStage(), &quot;There are no cells available to build at this stage! Select another phase.\n&quot;, () -&gt; {</b>
+<b class="nc"><i>443</i>&nbsp;                confirmPopup.hide();</b>
+<b class="nc"><i>444</i>&nbsp;                GUI.deletePopup();</b>
+<b class="nc"><i>445</i>&nbsp;                selectedPhases.remove(selectedPhases.size() - 1);</b>
+<b class="nc"><i>446</i>&nbsp;                askDesiredPhase();</b>
+<i>447</i>&nbsp;            });
+<b class="nc"><i>448</i>&nbsp;            GUI.showPopup(confirmPopup, 2);</b>
+<i>449</i>&nbsp;        }
+<i>450</i>&nbsp;    }
+<i>451</i>&nbsp;
+<i>452</i>&nbsp;    /* METHODS TO HANDLE MOVE PHASE */
+<i>453</i>&nbsp;
+<i>454</i>&nbsp;    /**
+<i>455</i>&nbsp;     * Moves the selected worker in the given position
+<i>456</i>&nbsp;     *
+<i>457</i>&nbsp;     * @param x Coordinate X where to move the worker
+<i>458</i>&nbsp;     * @param y Coordinate Y where to move the worker
+<i>459</i>&nbsp;     * @param z Coordinate Z where to move the worker
+<i>460</i>&nbsp;     */
+<i>461</i>&nbsp;    private void moveWorker(int x, int y, int z) {
+<b class="nc"><i>462</i>&nbsp;        if (selectedWorker != null) {</b>
+<b class="nc"><i>463</i>&nbsp;            List&lt;Cell&gt; availableCells = getClient().getAvailableMoveCells();</b>
+<b class="nc"><i>464</i>&nbsp;            boolean isAvailableCell = availableCells.stream().anyMatch(cell -&gt; cell.getCoordX() == x &amp;&amp; cell.getCoordY() == y);</b>
+<b class="nc"><i>465</i>&nbsp;            if (isAvailableCell) {</b>
+<b class="nc"><i>466</i>&nbsp;                moveSelectedWorkerInView(x, y, z, workers_dx);</b>
+<b class="nc"><i>467</i>&nbsp;                moveSelectedWorkerInView(x, y, z, workers_top);</b>
+<b class="nc"><i>468</i>&nbsp;                Worker worker = moveSelectedWorkerInView(x, y, z, workers_sx);</b>
+<b class="nc"><i>469</i>&nbsp;                if (worker != null) {</b>
+<b class="nc"><i>470</i>&nbsp;                    worker.moveAnimation.setOnFinished(e -&gt; {</b>
+<b class="nc"><i>471</i>&nbsp;                        selectedWorker = worker.copy(); // update selectedWorker to update position after movement</b>
+<b class="nc"><i>472</i>&nbsp;                        CoordinatesMessage moveCoord = new CoordinatesMessage(x, y);</b>
+<b class="nc"><i>473</i>&nbsp;                        sendToServer(new Message(TypeOfMessage.MOVE_WORKER, moveCoord));</b>
+<i>474</i>&nbsp;                    });
+<i>475</i>&nbsp;                }
+<b class="nc"><i>476</i>&nbsp;                refresh();</b>
+<b class="nc"><i>477</i>&nbsp;            } else {</b>
+<b class="nc"><i>478</i>&nbsp;                System.out.println(&quot;You can&#39;t move here&quot;);</b>
+<i>479</i>&nbsp;            }
+<b class="nc"><i>480</i>&nbsp;        } else {</b>
+<b class="nc"><i>481</i>&nbsp;            System.out.println(&quot;Please first select a worker&quot;);</b>
+<i>482</i>&nbsp;        }
+<i>483</i>&nbsp;    }
+<i>484</i>&nbsp;
+<i>485</i>&nbsp;
+<i>486</i>&nbsp;    private Worker moveSelectedWorkerInView(int x, int y, int z, List&lt;Worker&gt; workers_view) {
+<b class="nc"><i>487</i>&nbsp;        for (Worker worker : workers_view) {</b>
+<b class="nc"><i>488</i>&nbsp;            if (worker.row == selectedWorker.row &amp;&amp; worker.col == selectedWorker.col &amp;&amp; worker.z == selectedWorker.z) {</b>
+<b class="nc"><i>489</i>&nbsp;                worker.move(x, y, z);</b>
+<b class="nc"><i>490</i>&nbsp;                return worker;</b>
+<i>491</i>&nbsp;            }
+<b class="nc"><i>492</i>&nbsp;        }</b>
+<b class="nc"><i>493</i>&nbsp;        return null;</b>
+<i>494</i>&nbsp;    }
+<i>495</i>&nbsp;
+<i>496</i>&nbsp;    /**
+<i>497</i>&nbsp;     * Highlights available cells where to move the selected worker
+<i>498</i>&nbsp;     */
+<i>499</i>&nbsp;    protected void highlightAvailableCellsForMove() {
+<b class="nc"><i>500</i>&nbsp;        List&lt;Cell&gt; availableCells = getClient().getAvailableMoveCells();</b>
+<b class="nc"><i>501</i>&nbsp;        if (availableCells.size() &gt; 0) {</b>
+<b class="nc"><i>502</i>&nbsp;            highlightAvailableCells(availableCells);</b>
+<b class="nc"><i>503</i>&nbsp;            waiting = false;</b>
+<i>504</i>&nbsp;        } else {
+<b class="nc"><i>505</i>&nbsp;            boolean moveAfterSelectWorker = selectedPhases.size() == 2;</b>
+<b class="nc"><i>506</i>&nbsp;            String text = &quot;There are no cells available to move at this stage! Select another&quot; + (moveAfterSelectWorker ? &quot;  worker.&quot; : &quot; phase&quot;);</b>
+<b class="nc"><i>507</i>&nbsp;            confirmPopup = new ConfirmPopup(getPrimaryStage(), text, () -&gt; {</b>
+<b class="nc"><i>508</i>&nbsp;                confirmPopup.hide();</b>
+<b class="nc"><i>509</i>&nbsp;                GUI.deletePopup();</b>
+<b class="nc"><i>510</i>&nbsp;                if (moveAfterSelectWorker) {</b>
+<b class="nc"><i>511</i>&nbsp;                    selectedPhases = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>512</i>&nbsp;                    phaseButtonClicked(PhaseType.SELECT_WORKER);</b>
+<i>513</i>&nbsp;                } else {
+<b class="nc"><i>514</i>&nbsp;                    selectedPhases.remove(selectedPhases.size() - 1);</b>
+<b class="nc"><i>515</i>&nbsp;                    askDesiredPhase();</b>
+<i>516</i>&nbsp;                }
+<i>517</i>&nbsp;            });
+<b class="nc"><i>518</i>&nbsp;            GUI.showPopup(confirmPopup, 2);</b>
+<i>519</i>&nbsp;        }
+<i>520</i>&nbsp;
+<i>521</i>&nbsp;    }
+<i>522</i>&nbsp;
+<i>523</i>&nbsp;    /* METHODS TO HANDLE PHASE SELECTION */
+<i>524</i>&nbsp;
+<i>525</i>&nbsp;    /**
+<i>526</i>&nbsp;     * Asks to the player which phase choose
+<i>527</i>&nbsp;     */
+<i>528</i>&nbsp;    protected void askDesiredPhase() {
+<b class="nc"><i>529</i>&nbsp;        List&lt;Phase&gt; phaseList = getClient().getListOfPhasesCache();</b>
+<b class="nc"><i>530</i>&nbsp;        if (phaseList.size() &gt; 1) {</b>
+<b class="nc"><i>531</i>&nbsp;            double phaseViewWidth = 150;</b>
+<i>532</i>&nbsp;
+<b class="nc"><i>533</i>&nbsp;            hboxPhases.getChildren().clear();</b>
+<b class="nc"><i>534</i>&nbsp;            hboxPhases.setSpacing(10);</b>
+<b class="nc"><i>535</i>&nbsp;            hboxPhases.setPadding(new Insets(10, 10, 10, 10));</b>
+<b class="nc"><i>536</i>&nbsp;            hboxPhases.setPrefWidth(phaseList.size() * phaseViewWidth + hboxPhases.getInsets().getLeft() + hboxPhases.getInsets().getRight() + hboxPhases.getSpacing() * (phaseList.size() - 1));</b>
+<b class="nc"><i>537</i>&nbsp;            hboxPhases.setAlignment(Pos.CENTER);</b>
+<i>538</i>&nbsp;
+<b class="nc"><i>539</i>&nbsp;            phaseList.forEach(phase -&gt; {</b>
+<b class="nc"><i>540</i>&nbsp;                ImageView phaseView = new ImageView(GUIProperties.getImageForPhase(phase));</b>
+<b class="nc"><i>541</i>&nbsp;                phaseView.setPreserveRatio(true);</b>
+<b class="nc"><i>542</i>&nbsp;                phaseView.setFitWidth(phaseViewWidth);</b>
+<b class="nc"><i>543</i>&nbsp;                phaseView.setSmooth(true);</b>
+<b class="nc"><i>544</i>&nbsp;                phaseView.setCache(true);</b>
+<b class="nc"><i>545</i>&nbsp;                UtilsGUI.nodeHoverEffect(phaseView);</b>
+<b class="nc"><i>546</i>&nbsp;                phaseView.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEvent -&gt; {</b>
+<b class="nc"><i>547</i>&nbsp;                    hboxPhases.setVisible(false);</b>
+<b class="nc"><i>548</i>&nbsp;                    disableMap(false);</b>
+<b class="nc"><i>549</i>&nbsp;                    phaseButtonClicked(phase.getType());</b>
+<i>550</i>&nbsp;                });
+<b class="nc"><i>551</i>&nbsp;                hboxPhases.getChildren().add(phaseView);</b>
+<i>552</i>&nbsp;            });
+<i>553</i>&nbsp;
+<b class="nc"><i>554</i>&nbsp;            disableMap(true);</b>
+<b class="nc"><i>555</i>&nbsp;            hboxPhases.setVisible(true);</b>
+<i>556</i>&nbsp;
+<b class="nc"><i>557</i>&nbsp;            setInstructionsLabelText(&quot;Select the desired action&quot;);</b>
+<i>558</i>&nbsp;
+<b class="nc"><i>559</i>&nbsp;        } else {</b>
+<b class="nc"><i>560</i>&nbsp;            disableMap(false);</b>
+<b class="nc"><i>561</i>&nbsp;            phaseButtonClicked(phaseList.get(0).getType());</b>
+<i>562</i>&nbsp;        }
+<i>563</i>&nbsp;    }
+<i>564</i>&nbsp;
+<i>565</i>&nbsp;    /**
+<i>566</i>&nbsp;     * Handles the selection of a phase
+<i>567</i>&nbsp;     *
+<i>568</i>&nbsp;     * @param selectedPhase phase chosen by the player
+<i>569</i>&nbsp;     */
+<i>570</i>&nbsp;    private void phaseButtonClicked(PhaseType selectedPhase) {
+<b class="nc"><i>571</i>&nbsp;        switch (selectedPhase) {</b>
+<i>572</i>&nbsp;            case SELECT_WORKER:
+<b class="nc"><i>573</i>&nbsp;                waiting = false;</b>
+<b class="nc"><i>574</i>&nbsp;                selectedPhases.add(PhaseType.SELECT_WORKER);</b>
+<b class="nc"><i>575</i>&nbsp;                highlightAvailableWorkersForSelection(true);</b>
+<b class="nc"><i>576</i>&nbsp;                setInstructionsLabelText(&quot;Select a worker&quot;);</b>
+<b class="nc"><i>577</i>&nbsp;                break;</b>
+<i>578</i>&nbsp;            case MOVE_WORKER:
+<b class="nc"><i>579</i>&nbsp;                selectedPhases.add(PhaseType.MOVE_WORKER);</b>
+<b class="nc"><i>580</i>&nbsp;                setInstructionsLabelText(&quot;Move the worker to one of the available cells&quot;);</b>
+<b class="nc"><i>581</i>&nbsp;                sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_MOVE));</b>
+<b class="nc"><i>582</i>&nbsp;                break;</b>
+<i>583</i>&nbsp;            case BUILD_COMPONENT:
+<b class="nc"><i>584</i>&nbsp;                selectedPhases.add(PhaseType.BUILD_COMPONENT);</b>
+<b class="nc"><i>585</i>&nbsp;                setInstructionsLabelText(&quot;Build in one of the available cells&quot;);</b>
+<b class="nc"><i>586</i>&nbsp;                sendToServer(new Message(TypeOfMessage.RETRIEVE_CELL_FOR_BUILD));</b>
+<b class="nc"><i>587</i>&nbsp;                break;</b>
+<i>588</i>&nbsp;            case END_TURN:
+<b class="nc"><i>589</i>&nbsp;                selectedPhases.add(PhaseType.END_TURN);</b>
+<b class="nc"><i>590</i>&nbsp;                setInstructionsLabelText(&quot;&quot;);</b>
+<b class="nc"><i>591</i>&nbsp;                sendToServer(new Message(TypeOfMessage.REQUEST_END_TURN));</b>
+<i>592</i>&nbsp;                break;
+<i>593</i>&nbsp;        }
+<i>594</i>&nbsp;    }
+<i>595</i>&nbsp;
+<i>596</i>&nbsp;    /* METHODS TO HANDLE END TURN */
+<i>597</i>&nbsp;
+<i>598</i>&nbsp;    /**
+<i>599</i>&nbsp;     * Put the status of the game as &quot;turn ended&quot;
+<i>600</i>&nbsp;     */
+<i>601</i>&nbsp;    protected void endTurn() {
+<b class="nc"><i>602</i>&nbsp;        selectedWorker = null;</b>
+<b class="nc"><i>603</i>&nbsp;        selectedPhases = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>604</i>&nbsp;        setInstructionsLabelText(&quot;Wait your turn...&quot;);</b>
+<i>605</i>&nbsp;    }
+<i>606</i>&nbsp;
+<i>607</i>&nbsp;    /* METHODS TO SHOW PLAYERS INFO */
+<i>608</i>&nbsp;
+<b class="nc"><i>609</i>&nbsp;    private double initialWidth_rightAnchorPane = 0;</b>
+<b class="nc"><i>610</i>&nbsp;    private double initialWidth_leftAnchorPane = 0;</b>
+<i>611</i>&nbsp;
+<i>612</i>&nbsp;    /**
+<i>613</i>&nbsp;     * Adds to the view all the info about the players in the match
+<i>614</i>&nbsp;     *
+<i>615</i>&nbsp;     * @param playerList list of players in the match
+<i>616</i>&nbsp;     */
+<i>617</i>&nbsp;    protected void setPlayersInfo(List&lt;Player&gt; playerList) {
+<b class="nc"><i>618</i>&nbsp;        if (enemyHbox != null) { // check if we are updating playersInfo. In that case, update it and return</b>
+<b class="nc"><i>619</i>&nbsp;            boolean playerHasBeenRemoved = computeDifferencesAndRemovePlayersInfoIfNeeded(playerList);</b>
+<b class="nc"><i>620</i>&nbsp;            if (playerHasBeenRemoved)</b>
+<i>621</i>&nbsp;                return;
+<i>622</i>&nbsp;        }
+<i>623</i>&nbsp;
+<b class="nc"><i>624</i>&nbsp;        myVbox = new VBox();</b>
+<b class="nc"><i>625</i>&nbsp;        enemyVbox = new VBox();</b>
+<b class="nc"><i>626</i>&nbsp;        enemyHbox = new HBox();</b>
+<i>627</i>&nbsp;
+<b class="nc"><i>628</i>&nbsp;        ImageView versusImage = new ImageView(new Image(getClass().getResource(&quot;/images/versus.png&quot;).toString()));</b>
+<b class="nc"><i>629</i>&nbsp;        versusImage.setPreserveRatio(true);</b>
+<b class="nc"><i>630</i>&nbsp;        versusImage.setFitHeight(45);</b>
+<b class="nc"><i>631</i>&nbsp;        enemyVbox.getChildren().add(versusImage);</b>
+<i>632</i>&nbsp;
+<b class="nc"><i>633</i>&nbsp;        if (initialWidth_leftAnchorPane == 0)</b>
+<b class="nc"><i>634</i>&nbsp;            initialWidth_leftAnchorPane = leftAnchorPane.getWidth();</b>
+<b class="nc"><i>635</i>&nbsp;        if (initialWidth_rightAnchorPane == 0)</b>
+<b class="nc"><i>636</i>&nbsp;            initialWidth_rightAnchorPane = rightAnchorPane.getWidth();</b>
+<i>637</i>&nbsp;
+<b class="nc"><i>638</i>&nbsp;        playerList.forEach(player -&gt; {</b>
+<b class="nc"><i>639</i>&nbsp;            ImageView imageView = new ImageView(new Image(getClass().getResource(&quot;/images/characterImage/image-card-&quot; + player.getCurrentCard().getId() + &quot;.png&quot;).toString()));</b>
+<b class="nc"><i>640</i>&nbsp;            imageView.setPreserveRatio(true);</b>
+<b class="nc"><i>641</i>&nbsp;            if (player.getName().equals(getClient().getUsername())) {</b>
+<b class="nc"><i>642</i>&nbsp;                imageView.setScaleX(-1); // reflect image</b>
+<b class="nc"><i>643</i>&nbsp;                imageView.setFitWidth(initialWidth_leftAnchorPane * 0.80);</b>
+<b class="nc"><i>644</i>&nbsp;                imageView.setUserData(player.getName());</b>
+<b class="nc"><i>645</i>&nbsp;                myVbox.getChildren().addAll(imageView);</b>
+<i>646</i>&nbsp;            } else {
+<b class="nc"><i>647</i>&nbsp;                imageView.setFitWidth(initialWidth_rightAnchorPane * 0.65);</b>
+<b class="nc"><i>648</i>&nbsp;                imageView.setUserData(player.getName());</b>
+<b class="nc"><i>649</i>&nbsp;                enemyHbox.getChildren().addAll(imageView);</b>
+<i>650</i>&nbsp;            }
+<b class="nc"><i>651</i>&nbsp;            addHoverHandler(player, imageView);</b>
+<i>652</i>&nbsp;        });
+<i>653</i>&nbsp;
+<i>654</i>&nbsp;
+<b class="nc"><i>655</i>&nbsp;        myVbox.setSpacing(15);</b>
+<b class="nc"><i>656</i>&nbsp;        myVbox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>657</i>&nbsp;        leftAnchorPane.getChildren().add(myVbox);</b>
+<b class="nc"><i>658</i>&nbsp;        AnchorPane.setBottomAnchor(myVbox, 20.0);</b>
+<b class="nc"><i>659</i>&nbsp;        AnchorPane.setLeftAnchor(myVbox, 10.0);</b>
+<i>660</i>&nbsp;
+<b class="nc"><i>661</i>&nbsp;        enemyHbox.setSpacing(10);</b>
+<b class="nc"><i>662</i>&nbsp;        enemyHbox.setAlignment(Pos.BOTTOM_CENTER);</b>
+<b class="nc"><i>663</i>&nbsp;        enemyVbox.setSpacing(15);</b>
+<b class="nc"><i>664</i>&nbsp;        enemyVbox.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>665</i>&nbsp;        enemyVbox.getChildren().add(enemyHbox);</b>
+<b class="nc"><i>666</i>&nbsp;        rightAnchorPane.getChildren().add(enemyVbox);</b>
+<b class="nc"><i>667</i>&nbsp;        AnchorPane.setBottomAnchor(enemyVbox, 20.0);</b>
+<i>668</i>&nbsp;        //AnchorPane.setRightAnchor(enemyVbox, 10.0);
+<b class="nc"><i>669</i>&nbsp;        double hboxWidth = enemyHbox.getChildrenUnmodifiable().stream().map(node -&gt; node.boundsInLocalProperty().getValue().getWidth()).reduce(0.0, Double::sum); // sum the width of all children elements</b>
+<b class="nc"><i>670</i>&nbsp;        hboxWidth += enemyHbox.getSpacing() * (enemyHbox.getChildrenUnmodifiable().size() - 1) + 10;  // add the spacing value to the width + extra spacing</b>
+<b class="nc"><i>671</i>&nbsp;        enemyVbox.setTranslateX(initialWidth_rightAnchorPane - hboxWidth);</b>
+<i>672</i>&nbsp;    }
+<i>673</i>&nbsp;
+<i>674</i>&nbsp;    private boolean computeDifferencesAndRemovePlayersInfoIfNeeded(List&lt;Player&gt; playerList) {
+<b class="nc"><i>675</i>&nbsp;        AtomicBoolean playerHasBeenRemoved = new AtomicBoolean(false);</b>
+<i>676</i>&nbsp;
+<b class="nc"><i>677</i>&nbsp;        List&lt;String&gt; playersNames = playerList.stream().map(Player::getName).collect(Collectors.toList());</b>
+<b class="nc"><i>678</i>&nbsp;        enemyHbox.getChildrenUnmodifiable().forEach(node -&gt; {</b>
+<b class="nc"><i>679</i>&nbsp;            if (!playersNames.contains(node.getUserData())) {</b>
+<b class="nc"><i>680</i>&nbsp;                enemyHbox.getChildren().remove(node);</b>
+<b class="nc"><i>681</i>&nbsp;                playerHasBeenRemoved.set(true);</b>
+<i>682</i>&nbsp;            }
+<i>683</i>&nbsp;        });
+<i>684</i>&nbsp;
+<i>685</i>&nbsp;        // update vbox position
+<b class="nc"><i>686</i>&nbsp;        if (playerHasBeenRemoved.get()) {</b>
+<b class="nc"><i>687</i>&nbsp;            double hboxWidth = enemyHbox.getChildrenUnmodifiable().stream().map(node -&gt; node.boundsInLocalProperty().getValue().getWidth()).reduce(0.0, Double::sum); // sum the width of all children elements</b>
+<b class="nc"><i>688</i>&nbsp;            hboxWidth += enemyHbox.getSpacing() * (enemyHbox.getChildrenUnmodifiable().size() - 1) + 10;  // add the spacing value to the width + extra spacing</b>
+<b class="nc"><i>689</i>&nbsp;            enemyVbox.setTranslateX(initialWidth_rightAnchorPane - hboxWidth);</b>
+<i>690</i>&nbsp;        }
+<i>691</i>&nbsp;
+<b class="nc"><i>692</i>&nbsp;        return playerHasBeenRemoved.get();</b>
+<i>693</i>&nbsp;    }
+<i>694</i>&nbsp;
+<i>695</i>&nbsp;    private void addHoverHandler(Player player, ImageView imageView) {
+<b class="nc"><i>696</i>&nbsp;        boolean isRightImage = !player.getName().equals(getClient().getUsername()); // image is in the right pane of the BorderPane</b>
+<b class="nc"><i>697</i>&nbsp;        imageView.setUserData(isRightImage);</b>
+<b class="nc"><i>698</i>&nbsp;        PlayerInfoPopup popup = new PlayerInfoPopup(getPrimaryStage(), player, imageView);</b>
+<i>699</i>&nbsp;
+<b class="nc"><i>700</i>&nbsp;        Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);</b>
+<b class="nc"><i>701</i>&nbsp;        Duration duration = Duration.millis(500);</b>
+<b class="nc"><i>702</i>&nbsp;        ScaleTransition st = new ScaleTransition(duration, imageView);</b>
+<b class="nc"><i>703</i>&nbsp;        st.setInterpolator(interpolator);</b>
+<b class="nc"><i>704</i>&nbsp;        st.setToX(Math.signum(imageView.getScaleX()) * 1.1); // keep the signum</b>
+<b class="nc"><i>705</i>&nbsp;        st.setToY(1.1);</b>
+<i>706</i>&nbsp;
+<b class="nc"><i>707</i>&nbsp;        imageView.hoverProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<b class="nc"><i>708</i>&nbsp;            if (newValue) {</b>
+<b class="nc"><i>709</i>&nbsp;                st.play();</b>
+<b class="nc"><i>710</i>&nbsp;                popup.show();</b>
+<i>711</i>&nbsp;            } else {
+<b class="nc"><i>712</i>&nbsp;                st.stop();</b>
+<b class="nc"><i>713</i>&nbsp;                imageView.scaleXProperty().setValue(Math.signum(imageView.getScaleX()) * 1);</b>
+<b class="nc"><i>714</i>&nbsp;                imageView.scaleYProperty().setValue(1);</b>
+<b class="nc"><i>715</i>&nbsp;                popup.hide();</b>
+<i>716</i>&nbsp;            }
+<i>717</i>&nbsp;        });
+<i>718</i>&nbsp;
+<i>719</i>&nbsp;    }
+<i>720</i>&nbsp;
+<i>721</i>&nbsp;    /* HELPER METHODS */
+<i>722</i>&nbsp;
+<i>723</i>&nbsp;    private void highlightAvailableCells(List&lt;Cell&gt; availableCells) {
+<b class="nc"><i>724</i>&nbsp;        highlightAvailableCellsInView(availableCells, levels_dx);</b>
+<b class="nc"><i>725</i>&nbsp;        highlightAvailableCellsInView(availableCells, map_dx.getTiles());</b>
+<b class="nc"><i>726</i>&nbsp;        highlightAvailableCellsInView(availableCells, levels_sx);</b>
+<b class="nc"><i>727</i>&nbsp;        highlightAvailableCellsInView(availableCells, map_sx.getTiles());</b>
+<b class="nc"><i>728</i>&nbsp;        highlightAvailableCellsInView(availableCells, levels_top);</b>
+<b class="nc"><i>729</i>&nbsp;        highlightAvailableCellsInView(availableCells, map_top.getTiles());</b>
+<i>730</i>&nbsp;    }
+<i>731</i>&nbsp;
+<i>732</i>&nbsp;    private void highlightAvailableCellsInView(List&lt;Cell&gt; availableCells, List&lt;Block&gt; view) {
+<b class="nc"><i>733</i>&nbsp;        availableCells.forEach(cell -&gt; {</b>
+<b class="nc"><i>734</i>&nbsp;            view.forEach(block -&gt; {</b>
+<b class="nc"><i>735</i>&nbsp;                if ((block.row == cell.getCoordX() &amp;&amp; block.col == cell.getCoordY())) {</b>
+<b class="nc"><i>736</i>&nbsp;                    block.highlightBlock();</b>
+<i>737</i>&nbsp;                }
+<i>738</i>&nbsp;            });
+<i>739</i>&nbsp;        });
+<i>740</i>&nbsp;    }
+<i>741</i>&nbsp;
+<i>742</i>&nbsp;    private void restoreHighlight() {
+<b class="nc"><i>743</i>&nbsp;        restoreHighlightInView(levels_dx);</b>
+<b class="nc"><i>744</i>&nbsp;        restoreHighlightInView(map_dx.getTiles());</b>
+<b class="nc"><i>745</i>&nbsp;        restoreHighlightInView(levels_sx);</b>
+<b class="nc"><i>746</i>&nbsp;        restoreHighlightInView(map_sx.getTiles());</b>
+<b class="nc"><i>747</i>&nbsp;        restoreHighlightInView(levels_top);</b>
+<b class="nc"><i>748</i>&nbsp;        restoreHighlightInView(map_top.getTiles());</b>
+<i>749</i>&nbsp;    }
+<i>750</i>&nbsp;
+<i>751</i>&nbsp;    private void restoreHighlightInView(List&lt;Block&gt; view) {
+<b class="nc"><i>752</i>&nbsp;        view.forEach(block -&gt; disableBlock(block, false));</b>
+<i>753</i>&nbsp;    }
+<i>754</i>&nbsp;
+<i>755</i>&nbsp;    //private Location tmpLocation = null;
+<i>756</i>&nbsp;
+<i>757</i>&nbsp;    /**
+<i>758</i>&nbsp;     * Updates the position of the workers using the cache updated by the server
+<i>759</i>&nbsp;     */
+<i>760</i>&nbsp;    protected void updateWorkersPosition() {
+<i>761</i>&nbsp;        //tmpLocation = getClient().getLocationCache().copy(); // this helps when multiple locationUpdate arrive in short time
+<b class="nc"><i>762</i>&nbsp;        cleanMaps(); // needed when a worker has been removed</b>
+<b class="nc"><i>763</i>&nbsp;        updateWorkersInView(workers_dx, levels_dx);</b>
+<b class="nc"><i>764</i>&nbsp;        updateWorkersInView(workers_sx, levels_sx);</b>
+<b class="nc"><i>765</i>&nbsp;        updateWorkersInView(workers_top, levels_top);</b>
+<b class="nc"><i>766</i>&nbsp;        getClient().clearModifiedWorkersCache();</b>
+<b class="nc"><i>767</i>&nbsp;        refresh();</b>
+<i>768</i>&nbsp;    }
+<i>769</i>&nbsp;
+<i>770</i>&nbsp;    private void updateWorkersInView(List&lt;Worker&gt; workers_view, List&lt;Block&gt; levels_view) {
+<i>771</i>&nbsp;        //Location location = getClient().getLocationCache();
+<i>772</i>&nbsp;
+<b class="nc"><i>773</i>&nbsp;        List&lt;it.polimi.ingsw.psp40.model.Worker&gt; workersCache = new ArrayList&lt;&gt;(getClient().getLocationCache().getAllOccupants());</b>
+<i>774</i>&nbsp;
+<b class="nc"><i>775</i>&nbsp;        new ArrayList&lt;&gt;(getClient().getModifiedWorkersCache()).forEach(worker -&gt; {</b>
+<b class="nc"><i>776</i>&nbsp;            if (workerExistsInCache(workersCache, worker)) { // one or more workers have been moved</b>
+<b class="nc"><i>777</i>&nbsp;                Cell newCell = cellOfModifiedWorker(worker);</b>
+<b class="nc"><i>778</i>&nbsp;                Worker worker_view = modifiedWorkerInView(worker, workers_view);</b>
+<b class="nc"><i>779</i>&nbsp;                if (newCell != null) {</b>
+<b class="nc"><i>780</i>&nbsp;                    if (worker_view != null) {</b>
+<b class="nc"><i>781</i>&nbsp;                        worker_view.move(newCell.getCoordX(), newCell.getCoordY(), newCell.getTower().getTopComponent().getComponentCode(), false);</b>
+<i>782</i>&nbsp;                    } else { // this happens when the game starts and different players are positioning their workers
+<b class="nc"><i>783</i>&nbsp;                        Worker newWorker = new Worker(newCell.getCoordX(), newCell.getCoordY(), worker.getPlayerName(), worker.getId(), worker.getColor());</b>
+<b class="nc"><i>784</i>&nbsp;                        addWorker(newWorker);</b>
+<i>785</i>&nbsp;                    }
+<i>786</i>&nbsp;                }
+<b class="nc"><i>787</i>&nbsp;            } else { // one or more workers have been removed</b>
+<b class="nc"><i>788</i>&nbsp;                Worker workerToRemove = modifiedWorkerInView(worker, workers_view);</b>
+<b class="nc"><i>789</i>&nbsp;                levels_view.remove(workerToRemove);</b>
+<b class="nc"><i>790</i>&nbsp;                workers_view.remove(workerToRemove);</b>
+<i>791</i>&nbsp;            }
+<i>792</i>&nbsp;        });
+<i>793</i>&nbsp;    }
+<i>794</i>&nbsp;
+<i>795</i>&nbsp;    private boolean workerExistsInCache(List&lt;it.polimi.ingsw.psp40.model.Worker&gt; workersCache, it.polimi.ingsw.psp40.model.Worker worker) {
+<b class="nc"><i>796</i>&nbsp;        return workersCache.stream().anyMatch(_worker -&gt; _worker.getId() == worker.getId() &amp;&amp; _worker.getPlayerName().equals(worker.getPlayerName()));</b>
+<i>797</i>&nbsp;    }
+<i>798</i>&nbsp;
+<i>799</i>&nbsp;    private Cell cellOfModifiedWorker(it.polimi.ingsw.psp40.model.Worker worker) {
+<i>800</i>&nbsp;        // return location.getLocation(worker); // non posso fare così perchè la serializzazione con GSON non preserve le reference
+<b class="nc"><i>801</i>&nbsp;        Location tmpLocation = getClient().getLocationCache();</b>
+<b class="nc"><i>802</i>&nbsp;        return tmpLocation.getAllOccupied().stream()</b>
+<b class="nc"><i>803</i>&nbsp;                .filter(cell -&gt; tmpLocation.getOccupant(cell).getPlayerName().equals(worker.getPlayerName()) &amp;&amp; tmpLocation.getOccupant(cell).getId() == worker.getId())</b>
+<b class="nc"><i>804</i>&nbsp;                .findFirst().orElse(null);</b>
+<i>805</i>&nbsp;    }
+<i>806</i>&nbsp;
+<i>807</i>&nbsp;    private Worker modifiedWorkerInView(it.polimi.ingsw.psp40.model.Worker modifiedWorker, List&lt;Worker&gt; workers_view) {
+<b class="nc"><i>808</i>&nbsp;        return workers_view.stream().filter(worker -&gt; modifiedWorker.getPlayerName().equals(worker.ownerUsername) &amp;&amp; modifiedWorker.getId() == worker.id).findFirst().orElse(null);</b>
+<i>809</i>&nbsp;    }
+<i>810</i>&nbsp;
+<i>811</i>&nbsp;    /**
+<i>812</i>&nbsp;     * Updates the components built on the given cell
+<i>813</i>&nbsp;     *
+<i>814</i>&nbsp;     * @param cell the cell to update
+<i>815</i>&nbsp;     */
+<i>816</i>&nbsp;    protected void updateCell(Cell cell) {
+<b class="nc"><i>817</i>&nbsp;        int x = cell.getCoordX();</b>
+<b class="nc"><i>818</i>&nbsp;        int y = cell.getCoordY();</b>
+<i>819</i>&nbsp;
+<b class="nc"><i>820</i>&nbsp;        boolean cellAlreadyUpdated = levels_dx.stream().anyMatch(_block -&gt; _block.row == x &amp;&amp; _block.col == y &amp;&amp; _block.component.getComponentCode() == cell.getTower().getTopComponent().getComponentCode()); // if the updateCell(cell) is called for the component that I&#39;ve just built, skip the update because the view is already updated</b>
+<b class="nc"><i>821</i>&nbsp;        if (cellAlreadyUpdated) {</b>
+<i>822</i>&nbsp;            return;
+<i>823</i>&nbsp;        }
+<i>824</i>&nbsp;
+<b class="nc"><i>825</i>&nbsp;        Block block = null;</b>
+<i>826</i>&nbsp;
+<b class="nc"><i>827</i>&nbsp;        switch (cell.getTower().getTopComponent().getComponentCode()) {</b>
+<i>828</i>&nbsp;            case 1:
+<b class="nc"><i>829</i>&nbsp;                block = new Level1(x, y);</b>
+<b class="nc"><i>830</i>&nbsp;                break;</b>
+<i>831</i>&nbsp;
+<i>832</i>&nbsp;            case 2:
+<b class="nc"><i>833</i>&nbsp;                block = new Level2(x, y);</b>
+<b class="nc"><i>834</i>&nbsp;                break;</b>
+<i>835</i>&nbsp;
+<i>836</i>&nbsp;            case 3:
+<b class="nc"><i>837</i>&nbsp;                block = new Level3(x, y);</b>
+<b class="nc"><i>838</i>&nbsp;                break;</b>
+<i>839</i>&nbsp;
+<i>840</i>&nbsp;            case 4:
+<b class="nc"><i>841</i>&nbsp;                block = new Dome(x, y, cell.getTower().getComponents().size() - 1);</b>
+<i>842</i>&nbsp;                break;
+<i>843</i>&nbsp;        }
+<i>844</i>&nbsp;
+<b class="nc"><i>845</i>&nbsp;        if (block != null) {</b>
+<b class="nc"><i>846</i>&nbsp;            addAndRefresh(block);</b>
+<i>847</i>&nbsp;        }
+<i>848</i>&nbsp;    }
+<i>849</i>&nbsp;
+<i>850</i>&nbsp;    /**
+<i>851</i>&nbsp;     * Rebuilds from scratch the whole island
+<i>852</i>&nbsp;     */
+<i>853</i>&nbsp;    protected void updateWholeIsland() {
+<b class="nc"><i>854</i>&nbsp;        clearBoard();</b>
+<i>855</i>&nbsp;
+<b class="nc"><i>856</i>&nbsp;        Location location = getClient().getLocationCache();</b>
+<b class="nc"><i>857</i>&nbsp;        Cell[][] field = getClient().getFieldCache();</b>
+<i>858</i>&nbsp;
+<b class="nc"><i>859</i>&nbsp;        for (int i = 0; i &lt; field.length; i++) {</b>
+<b class="nc"><i>860</i>&nbsp;            for (int j = 0; j &lt; field.length; j++) {</b>
+<b class="nc"><i>861</i>&nbsp;                Tower tower = field[i][j].getTower();</b>
+<b class="nc"><i>862</i>&nbsp;                List&lt;Component&gt; components = tower.getComponents();</b>
+<b class="nc"><i>863</i>&nbsp;                for (int k = 0; k &lt; components.size(); k++) {</b>
+<b class="nc"><i>864</i>&nbsp;                    switch (components.get(k).getComponentCode()) {</b>
+<i>865</i>&nbsp;                        case 1:
+<b class="nc"><i>866</i>&nbsp;                            addBlock(new Level1(i, j));</b>
+<b class="nc"><i>867</i>&nbsp;                            break;</b>
+<i>868</i>&nbsp;
+<i>869</i>&nbsp;                        case 2:
+<b class="nc"><i>870</i>&nbsp;                            addBlock(new Level2(i, j));</b>
+<b class="nc"><i>871</i>&nbsp;                            break;</b>
+<i>872</i>&nbsp;
+<i>873</i>&nbsp;                        case 3:
+<b class="nc"><i>874</i>&nbsp;                            addBlock(new Level3(i, j));</b>
+<b class="nc"><i>875</i>&nbsp;                            break;</b>
+<i>876</i>&nbsp;
+<i>877</i>&nbsp;                        case 4:
+<b class="nc"><i>878</i>&nbsp;                            addBlock(new Dome(i, j, k));</b>
+<i>879</i>&nbsp;                    }
+<i>880</i>&nbsp;                }
+<i>881</i>&nbsp;
+<b class="nc"><i>882</i>&nbsp;                it.polimi.ingsw.psp40.model.Worker occupant = location.getOccupant(i, j);</b>
+<b class="nc"><i>883</i>&nbsp;                if (occupant != null) {</b>
+<b class="nc"><i>884</i>&nbsp;                    Worker worker = new Worker(i, j, occupant.getPlayerName(), occupant.getId(), occupant.getColor());</b>
+<b class="nc"><i>885</i>&nbsp;                    worker.move(i, j, tower.getComponents().size() - 1, false);</b>
+<b class="nc"><i>886</i>&nbsp;                    addWorker(worker);</b>
+<i>887</i>&nbsp;                }
+<i>888</i>&nbsp;            }
+<i>889</i>&nbsp;        }
+<b class="nc"><i>890</i>&nbsp;        refresh();</b>
+<i>891</i>&nbsp;    }
+<i>892</i>&nbsp;
+<i>893</i>&nbsp;    private void disableMap(boolean disable) {
+<b class="nc"><i>894</i>&nbsp;        if (isMapDisabled != disable) {</b>
+<b class="nc"><i>895</i>&nbsp;            isMapDisabled = disable;</b>
+<b class="nc"><i>896</i>&nbsp;            islandsGroup.setDisable(disable);</b>
+<i>897</i>&nbsp;            /*if (disable) {
+<i>898</i>&nbsp;                islandsGroup.setEffect(grayscale);
+<i>899</i>&nbsp;            } else {
+<i>900</i>&nbsp;                islandsGroup.setEffect(null);
+<i>901</i>&nbsp;            }*/
+<i>902</i>&nbsp;        }
+<i>903</i>&nbsp;    }
+<i>904</i>&nbsp;
+<i>905</i>&nbsp;    private void disableBlock(Block block, boolean disable) {
+<b class="nc"><i>906</i>&nbsp;        block.setDisable(disable);</b>
+<b class="nc"><i>907</i>&nbsp;        if (disable) {</b>
+<b class="nc"><i>908</i>&nbsp;            block.setBlockEffect(grayscale);</b>
+<i>909</i>&nbsp;        } else {
+<b class="nc"><i>910</i>&nbsp;            block.setBlockEffect(null);</b>
+<i>911</i>&nbsp;        }
+<i>912</i>&nbsp;    }
+<i>913</i>&nbsp;
+<i>914</i>&nbsp;    /**
+<i>915</i>&nbsp;     * Adds the given block to all the views (left, right, top)
+<i>916</i>&nbsp;     *
+<i>917</i>&nbsp;     * @param block
+<i>918</i>&nbsp;     */
+<i>919</i>&nbsp;    private void addBlock(Block block) {
+<b class="nc"><i>920</i>&nbsp;        levels_dx.add(block);</b>
+<i>921</i>&nbsp;
+<b class="nc"><i>922</i>&nbsp;        Block block_sx = block.copyAndSetCamera(GUIProperties.CameraType.LEFT);</b>
+<b class="nc"><i>923</i>&nbsp;        levels_sx.add(block_sx);</b>
+<i>924</i>&nbsp;
+<b class="nc"><i>925</i>&nbsp;        Block block_top = block.copyAndSetCamera(GUIProperties.CameraType.TOP);</b>
+<b class="nc"><i>926</i>&nbsp;        levels_top.add(block_top);</b>
+<i>927</i>&nbsp;    }
+<i>928</i>&nbsp;
+<i>929</i>&nbsp;    /**
+<i>930</i>&nbsp;     * Adds the given worker to all the views (left, right, top)
+<i>931</i>&nbsp;     *
+<i>932</i>&nbsp;     * @param worker
+<i>933</i>&nbsp;     */
+<i>934</i>&nbsp;    private void addWorker(Worker worker) {
+<b class="nc"><i>935</i>&nbsp;        levels_dx.add(worker);</b>
+<b class="nc"><i>936</i>&nbsp;        workers_dx.add(worker);</b>
+<i>937</i>&nbsp;
+<b class="nc"><i>938</i>&nbsp;        Worker worker_sx = worker.copyAndSetCamera(GUIProperties.CameraType.LEFT);</b>
+<b class="nc"><i>939</i>&nbsp;        levels_sx.add(worker_sx);</b>
+<b class="nc"><i>940</i>&nbsp;        workers_sx.add(worker_sx);</b>
+<i>941</i>&nbsp;
+<b class="nc"><i>942</i>&nbsp;        Worker worker_top = worker.copyAndSetCamera(GUIProperties.CameraType.TOP);</b>
+<b class="nc"><i>943</i>&nbsp;        levels_top.add(worker_top);</b>
+<b class="nc"><i>944</i>&nbsp;        workers_top.add(worker_top);</b>
+<i>945</i>&nbsp;    }
+<i>946</i>&nbsp;
+<i>947</i>&nbsp;    /**
+<i>948</i>&nbsp;     * Adds the given worker to the island and refresh the view to show it
+<i>949</i>&nbsp;     *
+<i>950</i>&nbsp;     * @param worker
+<i>951</i>&nbsp;     */
+<i>952</i>&nbsp;    private void addWorkerAndRefresh(Worker worker) {
+<b class="nc"><i>953</i>&nbsp;        addWorker(worker);</b>
+<b class="nc"><i>954</i>&nbsp;        refresh();</b>
+<i>955</i>&nbsp;    }
+<i>956</i>&nbsp;
+<i>957</i>&nbsp;    /**
+<i>958</i>&nbsp;     * Adds the given block to the island and refresh the view to show it
+<i>959</i>&nbsp;     *
+<i>960</i>&nbsp;     * @param block
+<i>961</i>&nbsp;     */
+<i>962</i>&nbsp;    private void addAndRefresh(Block block) {
+<b class="nc"><i>963</i>&nbsp;        addBlock(block);</b>
+<b class="nc"><i>964</i>&nbsp;        refresh();</b>
+<i>965</i>&nbsp;    }
+<i>966</i>&nbsp;
+<i>967</i>&nbsp;    private boolean checkLastSelectedPhase(PhaseType phaseType) {
+<b class="nc"><i>968</i>&nbsp;        if (selectedPhases.size() == 0) return false;</b>
+<b class="nc"><i>969</i>&nbsp;        else return selectedPhases.get(selectedPhases.size() - 1).equals(phaseType);</b>
+<i>970</i>&nbsp;    }
+<i>971</i>&nbsp;
+<i>972</i>&nbsp;    /**
+<i>973</i>&nbsp;     * Refresh the views
+<i>974</i>&nbsp;     */
+<i>975</i>&nbsp;    private void refresh() {
+<b class="nc"><i>976</i>&nbsp;        reorderLevels(levels_dx);</b>
+<b class="nc"><i>977</i>&nbsp;        reorderLevels(levels_sx);</b>
+<b class="nc"><i>978</i>&nbsp;        reorderLevels(levels_top);</b>
+<i>979</i>&nbsp;
+<b class="nc"><i>980</i>&nbsp;        cleanMaps();</b>
+<i>981</i>&nbsp;
+<b class="nc"><i>982</i>&nbsp;        map_dx.getChildren().addAll(levels_dx);</b>
+<b class="nc"><i>983</i>&nbsp;        map_sx.getChildren().addAll(levels_sx);</b>
+<b class="nc"><i>984</i>&nbsp;        map_top.getChildren().addAll(levels_top);</b>
+<i>985</i>&nbsp;    }
+<i>986</i>&nbsp;
+<i>987</i>&nbsp;    // clean all Maps keeping only the Ground Levels
+<i>988</i>&nbsp;    private void cleanMaps() {
+<b class="nc"><i>989</i>&nbsp;        map_dx.getChildren().removeAll(levels_dx);</b>
+<b class="nc"><i>990</i>&nbsp;        map_sx.getChildren().removeAll(levels_sx);</b>
+<b class="nc"><i>991</i>&nbsp;        map_top.getChildren().removeAll(levels_top);</b>
+<i>992</i>&nbsp;    }
+<i>993</i>&nbsp;
+<i>994</i>&nbsp;    /**
+<i>995</i>&nbsp;     * Reorders blocks in the given view in order to keep blocks in the correct layer
+<i>996</i>&nbsp;     *
+<i>997</i>&nbsp;     * @param levels
+<i>998</i>&nbsp;     */
+<i>999</i>&nbsp;    private void reorderLevels(List&lt;Block&gt; levels) {
+<b class="nc"><i>1000</i>&nbsp;        levels.sort((b1, b2) -&gt; {</b>
+<b class="nc"><i>1001</i>&nbsp;            if (b1.currentCamera == b2.currentCamera) { // just to be sure, but &quot;levels&quot; list should contains only elements with the same CameraType</b>
+<b class="nc"><i>1002</i>&nbsp;                int b1_sum = 0;</b>
+<b class="nc"><i>1003</i>&nbsp;                int b2_sum = 0;</b>
+<i>1004</i>&nbsp;                // calculates view order priority depending on the CameraType
+<b class="nc"><i>1005</i>&nbsp;                if (b1.currentCamera == GUIProperties.CameraType.RIGHT) {</b>
+<b class="nc"><i>1006</i>&nbsp;                    b1_sum = b1.row + b1.col + b1.z;</b>
+<b class="nc"><i>1007</i>&nbsp;                    b2_sum = b2.row + b2.col + b2.z;</b>
+<b class="nc"><i>1008</i>&nbsp;                } else if (b1.currentCamera == GUIProperties.CameraType.LEFT) {</b>
+<b class="nc"><i>1009</i>&nbsp;                    b1_sum = GUIProperties.getCorrespondingLeftRow(b1.row, b1.col) + GUIProperties.getCorrespondingLeftCol(b1.row, b1.col) + b1.z;</b>
+<b class="nc"><i>1010</i>&nbsp;                    b2_sum = GUIProperties.getCorrespondingLeftRow(b2.row, b2.col) + GUIProperties.getCorrespondingLeftCol(b2.row, b2.col) + b2.z;</b>
+<b class="nc"><i>1011</i>&nbsp;                } else if (b1.currentCamera == GUIProperties.CameraType.TOP) {</b>
+<b class="nc"><i>1012</i>&nbsp;                    b1_sum = b1 instanceof Worker ? 99 : b1.z; // keep Workers always on front in top camera view</b>
+<b class="nc"><i>1013</i>&nbsp;                    b2_sum = b2 instanceof Worker ? 99 : b2.z;</b>
+<i>1014</i>&nbsp;                }
+<i>1015</i>&nbsp;
+<b class="nc"><i>1016</i>&nbsp;                if (b1_sum &gt; b2_sum) {</b>
+<b class="nc"><i>1017</i>&nbsp;                    b1.toFront();</b>
+<b class="nc"><i>1018</i>&nbsp;                    b2.toBack();</b>
+<b class="nc"><i>1019</i>&nbsp;                    return 1;</b>
+<b class="nc"><i>1020</i>&nbsp;                } else if (b1_sum &lt; b2_sum) {</b>
+<b class="nc"><i>1021</i>&nbsp;                    b2.toFront();</b>
+<b class="nc"><i>1022</i>&nbsp;                    b1.toBack();</b>
+<b class="nc"><i>1023</i>&nbsp;                    return -1;</b>
+<i>1024</i>&nbsp;                }
+<b class="nc"><i>1025</i>&nbsp;                return Integer.compare(b1_sum, b2_sum);</b>
+<i>1026</i>&nbsp;            }
+<b class="nc"><i>1027</i>&nbsp;            return 0;</b>
+<i>1028</i>&nbsp;        });
+<i>1029</i>&nbsp;    }
+<i>1030</i>&nbsp;
+<i>1031</i>&nbsp;    private void setInstructionsLabelText(String text) {
+<b class="nc"><i>1032</i>&nbsp;        instructionsLabel.setText(text);</b>
+<b class="nc"><i>1033</i>&nbsp;        instructionsLabelTransition.stop();</b>
+<b class="nc"><i>1034</i>&nbsp;        instructionsLabelTransition.play();</b>
+<i>1035</i>&nbsp;    }
+<i>1036</i>&nbsp;
+<i>1037</i>&nbsp;    private void buildInstructionsLabelTransition() {
+<b class="nc"><i>1038</i>&nbsp;        Interpolator interpolator = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);</b>
+<b class="nc"><i>1039</i>&nbsp;        Duration duration = Duration.millis(800);</b>
+<i>1040</i>&nbsp;
+<b class="nc"><i>1041</i>&nbsp;        ScaleTransition restoreTransiton = new ScaleTransition(Duration.millis(0), instructionsLabel);</b>
+<b class="nc"><i>1042</i>&nbsp;        restoreTransiton.setInterpolator(interpolator);</b>
+<b class="nc"><i>1043</i>&nbsp;        restoreTransiton.setToX(1);</b>
+<b class="nc"><i>1044</i>&nbsp;        restoreTransiton.setToY(1);</b>
+<i>1045</i>&nbsp;
+<b class="nc"><i>1046</i>&nbsp;        ScaleTransition st1 = new ScaleTransition(duration, instructionsLabel);</b>
+<b class="nc"><i>1047</i>&nbsp;        st1.setInterpolator(interpolator);</b>
+<b class="nc"><i>1048</i>&nbsp;        st1.setToX(1.15);</b>
+<b class="nc"><i>1049</i>&nbsp;        st1.setToY(1.15);</b>
+<i>1050</i>&nbsp;
+<b class="nc"><i>1051</i>&nbsp;        ScaleTransition st2 = new ScaleTransition(duration, instructionsLabel);</b>
+<b class="nc"><i>1052</i>&nbsp;        st2.setInterpolator(interpolator);</b>
+<b class="nc"><i>1053</i>&nbsp;        st2.setToX(1);</b>
+<b class="nc"><i>1054</i>&nbsp;        st2.setToY(1);</b>
+<i>1055</i>&nbsp;
+<b class="nc"><i>1056</i>&nbsp;        SequentialTransition sequentialTransition = new SequentialTransition(restoreTransiton, st1, st2);</b>
+<b class="nc"><i>1057</i>&nbsp;        sequentialTransition.setCycleCount(2);</b>
+<i>1058</i>&nbsp;
+<b class="nc"><i>1059</i>&nbsp;        instructionsLabelTransition = new SequentialTransition(sequentialTransition, new PauseTransition(Duration.millis(5000)));</b>
+<b class="nc"><i>1060</i>&nbsp;        instructionsLabelTransition.setCycleCount(Animation.INDEFINITE);</b>
+<i>1061</i>&nbsp;    }
+<i>1062</i>&nbsp;
+<i>1063</i>&nbsp;    private void buildBackgrounds() {
+<b class="nc"><i>1064</i>&nbsp;        double height = 1450;</b>
+<i>1065</i>&nbsp;
+<i>1066</i>&nbsp;        //BackgroundSize(double width, double height, boolean widthAsPercentage, boolean heightAsPercentage, boolean contain, boolean cover)
+<b class="nc"><i>1067</i>&nbsp;        BackgroundSize bgSize = new BackgroundSize(height * 16 / 9, height, false, false, false, false);</b>
+<i>1068</i>&nbsp;
+<i>1069</i>&nbsp;        /* BUILD BACKGROUND FOR RIGHT CAMERA (and set it as default) */
+<i>1070</i>&nbsp;        //public BackgroundImage(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY, BackgroundPosition position, BackgroundSize size)
+<b class="nc"><i>1071</i>&nbsp;        Image imgDx = new Image(getClass().getResource(&quot;/images/island_background_dx.png&quot;).toString());</b>
+<b class="nc"><i>1072</i>&nbsp;        BackgroundImage bgImgDx = new BackgroundImage(imgDx,</b>
+<i>1073</i>&nbsp;                BackgroundRepeat.NO_REPEAT,
+<i>1074</i>&nbsp;                BackgroundRepeat.NO_REPEAT,
+<i>1075</i>&nbsp;                BackgroundPosition.CENTER,
+<i>1076</i>&nbsp;                bgSize);
+<b class="nc"><i>1077</i>&nbsp;        background_dx = new Background(bgImgDx);</b>
+<b class="nc"><i>1078</i>&nbsp;        borderPane.setBackground(background_dx);</b>
+<i>1079</i>&nbsp;
+<i>1080</i>&nbsp;        /* BUILD BACKGROUND FOR LEFT CAMERA */
+<b class="nc"><i>1081</i>&nbsp;        Image imgSX = new Image(getClass().getResource(&quot;/images/island_background_sx.png&quot;).toString());</b>
+<b class="nc"><i>1082</i>&nbsp;        BackgroundImage bgImgSX = new BackgroundImage(imgSX,</b>
+<i>1083</i>&nbsp;                BackgroundRepeat.NO_REPEAT,
+<i>1084</i>&nbsp;                BackgroundRepeat.NO_REPEAT,
+<i>1085</i>&nbsp;                BackgroundPosition.CENTER,
+<i>1086</i>&nbsp;                bgSize);
+<b class="nc"><i>1087</i>&nbsp;        background_sx = new Background(bgImgSX);</b>
+<i>1088</i>&nbsp;
+<i>1089</i>&nbsp;        /* BUILD BACKGROUND FOR TOP CAMERA */
+<b class="nc"><i>1090</i>&nbsp;        Image imgTop = new Image(getClass().getResource(&quot;/images/island_background_top.png&quot;).toString());</b>
+<b class="nc"><i>1091</i>&nbsp;        BackgroundImage bgImgTop = new BackgroundImage(imgTop,</b>
+<i>1092</i>&nbsp;                BackgroundRepeat.NO_REPEAT,
+<i>1093</i>&nbsp;                BackgroundRepeat.NO_REPEAT,
+<i>1094</i>&nbsp;                BackgroundPosition.CENTER,
+<i>1095</i>&nbsp;                bgSize);
+<b class="nc"><i>1096</i>&nbsp;        background_top = new Background(bgImgTop);</b>
+<i>1097</i>&nbsp;    }
+<i>1098</i>&nbsp;
+<i>1099</i>&nbsp;    /**
+<i>1100</i>&nbsp;     * Sends a message to the server
+<i>1101</i>&nbsp;     *
+<i>1102</i>&nbsp;     * @param message message to be sent
+<i>1103</i>&nbsp;     */
+<i>1104</i>&nbsp;    private void sendToServer(Message message) {
+<b class="nc"><i>1105</i>&nbsp;        getClient().sendToServer(message);</b>
+<b class="nc"><i>1106</i>&nbsp;        waiting = true;</b>
+<i>1107</i>&nbsp;
+<b class="nc"><i>1108</i>&nbsp;        if (message.getTypeOfMessage() == TypeOfMessage.BUILD_CELL</b>
+<b class="nc"><i>1109</i>&nbsp;                || message.getTypeOfMessage() == TypeOfMessage.MOVE_WORKER</b>
+<b class="nc"><i>1110</i>&nbsp;                || message.getTypeOfMessage() == TypeOfMessage.SET_POSITION_OF_WORKER) {</b>
+<b class="nc"><i>1111</i>&nbsp;            restoreHighlight();</b>
+<i>1112</i>&nbsp;        }
+<i>1113</i>&nbsp;    }
+<i>1114</i>&nbsp;
+<i>1115</i>&nbsp;    private void clearBoard() {
+<b class="nc"><i>1116</i>&nbsp;        map_dx.getChildren().removeAll(levels_dx);</b>
+<b class="nc"><i>1117</i>&nbsp;        map_sx.getChildren().removeAll(levels_sx);</b>
+<b class="nc"><i>1118</i>&nbsp;        map_top.getChildren().removeAll(levels_top);</b>
+<b class="nc"><i>1119</i>&nbsp;        levels_dx.clear();</b>
+<b class="nc"><i>1120</i>&nbsp;        levels_sx.clear();</b>
+<b class="nc"><i>1121</i>&nbsp;        levels_top.clear();</b>
+<i>1122</i>&nbsp;    }
+<i>1123</i>&nbsp;
+<i>1124</i>&nbsp;    /**
+<i>1125</i>&nbsp;     * Handles &quot;Right Camera&quot; selection
+<i>1126</i>&nbsp;     *
+<i>1127</i>&nbsp;     * @param actionEvent
+<i>1128</i>&nbsp;     */
+<i>1129</i>&nbsp;    @FXML
+<i>1130</i>&nbsp;    public void rightViewButtonClicked(ActionEvent actionEvent) {
+<b class="nc"><i>1131</i>&nbsp;        currentCamera = GUIProperties.CameraType.RIGHT;</b>
+<b class="nc"><i>1132</i>&nbsp;        switchCamera();</b>
+<b class="nc"><i>1133</i>&nbsp;        myPane_sx.setVisible(false);</b>
+<b class="nc"><i>1134</i>&nbsp;        island_sx.setVisible(false);</b>
+<b class="nc"><i>1135</i>&nbsp;        myPane_top.setVisible(false);</b>
+<b class="nc"><i>1136</i>&nbsp;        island_top.setVisible(false);</b>
+<b class="nc"><i>1137</i>&nbsp;        island_dx.setVisible(true);</b>
+<b class="nc"><i>1138</i>&nbsp;        myPane_dx.setVisible(true);</b>
+<b class="nc"><i>1139</i>&nbsp;        borderPane.setBackground(background_dx);</b>
+<i>1140</i>&nbsp;    }
+<i>1141</i>&nbsp;
+<i>1142</i>&nbsp;    /**
+<i>1143</i>&nbsp;     * Handles &quot;Left Camera&quot; selection
+<i>1144</i>&nbsp;     *
+<i>1145</i>&nbsp;     * @param actionEvent
+<i>1146</i>&nbsp;     */
+<i>1147</i>&nbsp;    @FXML
+<i>1148</i>&nbsp;    public void leftViewButtonClicked(ActionEvent actionEvent) {
+<b class="nc"><i>1149</i>&nbsp;        currentCamera = GUIProperties.CameraType.LEFT;</b>
+<b class="nc"><i>1150</i>&nbsp;        switchCamera();</b>
+<b class="nc"><i>1151</i>&nbsp;        myPane_dx.setVisible(false);</b>
+<b class="nc"><i>1152</i>&nbsp;        island_dx.setVisible(false);</b>
+<b class="nc"><i>1153</i>&nbsp;        myPane_top.setVisible(false);</b>
+<b class="nc"><i>1154</i>&nbsp;        island_top.setVisible(false);</b>
+<b class="nc"><i>1155</i>&nbsp;        island_sx.setVisible(true);</b>
+<b class="nc"><i>1156</i>&nbsp;        myPane_sx.setVisible(true);</b>
+<b class="nc"><i>1157</i>&nbsp;        borderPane.setBackground(background_sx);</b>
+<i>1158</i>&nbsp;    }
+<i>1159</i>&nbsp;
+<i>1160</i>&nbsp;    /**
+<i>1161</i>&nbsp;     * Handles &quot;Top Camera&quot; selection
+<i>1162</i>&nbsp;     *
+<i>1163</i>&nbsp;     * @param actionEvent
+<i>1164</i>&nbsp;     */
+<i>1165</i>&nbsp;    @FXML
+<i>1166</i>&nbsp;    public void topViewButtonClicked(ActionEvent actionEvent) {
+<b class="nc"><i>1167</i>&nbsp;        currentCamera = GUIProperties.CameraType.TOP;</b>
+<b class="nc"><i>1168</i>&nbsp;        switchCamera();</b>
+<b class="nc"><i>1169</i>&nbsp;        myPane_dx.setVisible(false);</b>
+<b class="nc"><i>1170</i>&nbsp;        island_dx.setVisible(false);</b>
+<b class="nc"><i>1171</i>&nbsp;        myPane_sx.setVisible(false);</b>
+<b class="nc"><i>1172</i>&nbsp;        island_sx.setVisible(false);</b>
+<b class="nc"><i>1173</i>&nbsp;        myPane_top.setVisible(true);</b>
+<b class="nc"><i>1174</i>&nbsp;        island_top.setVisible(true);</b>
+<b class="nc"><i>1175</i>&nbsp;        borderPane.setBackground(background_top);</b>
+<i>1176</i>&nbsp;    }
+<i>1177</i>&nbsp;
+<i>1178</i>&nbsp;    private void switchCamera() {
+<b class="nc"><i>1179</i>&nbsp;        switch (currentCamera) {</b>
+<i>1180</i>&nbsp;            case TOP:
+<b class="nc"><i>1181</i>&nbsp;                isRightCamera.setValue(false);</b>
+<b class="nc"><i>1182</i>&nbsp;                isLeftCamera.setValue(false);</b>
+<b class="nc"><i>1183</i>&nbsp;                isTopCamera.setValue(true);</b>
+<b class="nc"><i>1184</i>&nbsp;                break;</b>
+<i>1185</i>&nbsp;
+<i>1186</i>&nbsp;            case LEFT:
+<b class="nc"><i>1187</i>&nbsp;                isRightCamera.setValue(false);</b>
+<b class="nc"><i>1188</i>&nbsp;                isLeftCamera.setValue(true);</b>
+<b class="nc"><i>1189</i>&nbsp;                isTopCamera.setValue(false);</b>
+<b class="nc"><i>1190</i>&nbsp;                break;</b>
+<i>1191</i>&nbsp;
+<i>1192</i>&nbsp;            case RIGHT:
+<b class="nc"><i>1193</i>&nbsp;                isRightCamera.setValue(true);</b>
+<b class="nc"><i>1194</i>&nbsp;                isLeftCamera.setValue(false);</b>
+<b class="nc"><i>1195</i>&nbsp;                isTopCamera.setValue(false);</b>
+<i>1196</i>&nbsp;                break;
+<i>1197</i>&nbsp;        }
+<i>1198</i>&nbsp;    }
+<i>1199</i>&nbsp;
+<i>1200</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

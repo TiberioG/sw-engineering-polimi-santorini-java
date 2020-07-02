@@ -1,0 +1,419 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Worker</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Worker (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Worker</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 145)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Worker$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 146)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import animatefx.animation.AnimationFX;
+<i>4</i>&nbsp;import animatefx.animation.Tada;
+<i>5</i>&nbsp;import it.polimi.ingsw.psp40.commons.Colors;
+<i>6</i>&nbsp;import javafx.animation.*;
+<i>7</i>&nbsp;import javafx.event.ActionEvent;
+<i>8</i>&nbsp;import javafx.event.EventHandler;
+<i>9</i>&nbsp;import javafx.scene.effect.*;
+<i>10</i>&nbsp;import javafx.scene.image.ImageView;
+<i>11</i>&nbsp;import javafx.util.Duration;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * @author sup3rgiu
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;public class Worker extends Block {
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    protected final Colors color;
+<i>20</i>&nbsp;    protected final String ownerUsername;
+<i>21</i>&nbsp;    protected final int id;
+<b class="nc"><i>22</i>&nbsp;    private AnimationFX selectionAnimation = null;</b>
+<i>23</i>&nbsp;    protected Animation moveAnimation;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    Worker(int row, int col, String ownerUsername, int id, Colors color) {
+<b class="nc"><i>26</i>&nbsp;        this(row, col, 1, GUIProperties.CameraType.RIGHT, ownerUsername, id, color);</b>
+<i>27</i>&nbsp;    }
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    private Worker(int row, int col, int z, GUIProperties.CameraType cameraType, String ownerUsername, int id, Colors color) {
+<b class="nc"><i>30</i>&nbsp;        super(row, col, z);</b>
+<b class="nc"><i>31</i>&nbsp;        this.ownerUsername = ownerUsername;</b>
+<b class="nc"><i>32</i>&nbsp;        this.id = id;</b>
+<b class="nc"><i>33</i>&nbsp;        this.color = color;</b>
+<b class="nc"><i>34</i>&nbsp;        this.setPreserveRatio(true);</b>
+<b class="nc"><i>35</i>&nbsp;        this.setFitWidth(GUIProperties.workerWidth);</b>
+<b class="nc"><i>36</i>&nbsp;        this.setFitHeight(GUIProperties.workerHeight);</b>
+<b class="nc"><i>37</i>&nbsp;        setCamera(cameraType);</b>
+<b class="nc"><i>38</i>&nbsp;        this.setOnMouseClicked(event -&gt; handleClick());</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    @Override
+<i>42</i>&nbsp;    protected void handleClick() {
+<b class="nc"><i>43</i>&nbsp;        if (GUI.gameScreenController != null)</b>
+<b class="nc"><i>44</i>&nbsp;            GUI.gameScreenController.workerClicked(this);</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    void loadImage(GUIProperties.CameraType cameraType) {
+<b class="nc"><i>49</i>&nbsp;        switch (cameraType) {</b>
+<i>50</i>&nbsp;            case RIGHT:
+<b class="nc"><i>51</i>&nbsp;                if (z == 1)</b>
+<b class="nc"><i>52</i>&nbsp;                    this.setImage(GUIProperties.image_worker_dx);</b>
+<b class="nc"><i>53</i>&nbsp;                else if (z == 4) {</b>
+<b class="nc"><i>54</i>&nbsp;                    this.setImage(GUIProperties.image_worker_cut_lvl3_dx);</b>
+<b class="nc"><i>55</i>&nbsp;                    this.setFitWidth(GUIProperties.worker_lvl3_Width);</b>
+<i>56</i>&nbsp;                } else
+<b class="nc"><i>57</i>&nbsp;                    this.setImage(GUIProperties.image_worker_cut_dx);</b>
+<b class="nc"><i>58</i>&nbsp;                break;</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;            case LEFT:
+<b class="nc"><i>61</i>&nbsp;                if (z == 1)</b>
+<b class="nc"><i>62</i>&nbsp;                    this.setImage(GUIProperties.image_worker_sx);</b>
+<b class="nc"><i>63</i>&nbsp;                else if (z == 4) {</b>
+<b class="nc"><i>64</i>&nbsp;                    this.setImage(GUIProperties.image_worker_cut_lvl3_sx);</b>
+<b class="nc"><i>65</i>&nbsp;                    this.setFitWidth(GUIProperties.worker_lvl3_Width);</b>
+<i>66</i>&nbsp;                } else
+<b class="nc"><i>67</i>&nbsp;                    this.setImage(GUIProperties.image_worker_cut_sx);</b>
+<b class="nc"><i>68</i>&nbsp;                break;</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;            case TOP:
+<b class="nc"><i>71</i>&nbsp;                this.setFitWidth(GUIProperties.workerTopWidth);</b>
+<b class="nc"><i>72</i>&nbsp;                this.setImage(GUIProperties.image_worker_top);</b>
+<i>73</i>&nbsp;                break;
+<i>74</i>&nbsp;        }
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    private void loadDefaultWorkerImage() {
+<b class="nc"><i>78</i>&nbsp;        switch (currentCamera) {</b>
+<i>79</i>&nbsp;            case RIGHT:
+<b class="nc"><i>80</i>&nbsp;                this.setImage(GUIProperties.image_worker_dx);</b>
+<b class="nc"><i>81</i>&nbsp;                break;</b>
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;            case LEFT:
+<b class="nc"><i>84</i>&nbsp;                this.setImage(GUIProperties.image_worker_sx);</b>
+<b class="nc"><i>85</i>&nbsp;                break;</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;            case TOP:
+<b class="nc"><i>88</i>&nbsp;                this.setFitWidth(GUIProperties.workerTopWidth);</b>
+<b class="nc"><i>89</i>&nbsp;                this.setImage(GUIProperties.image_worker_top);</b>
+<i>90</i>&nbsp;                break;
+<i>91</i>&nbsp;        }
+<i>92</i>&nbsp;    }
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    /**
+<i>95</i>&nbsp;     * Moves the worker from its position to the new one, without movement animation
+<i>96</i>&nbsp;     *
+<i>97</i>&nbsp;     * @param row row where to move
+<i>98</i>&nbsp;     * @param col col where to move
+<i>99</i>&nbsp;     * @param z   z (level) where to move
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    protected void move(int row, int col, int z) {
+<b class="nc"><i>102</i>&nbsp;        this.move(row, col, z, true);</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Moves the worker from its position to the new one, with movement animation if specified
+<i>107</i>&nbsp;     *
+<i>108</i>&nbsp;     * @param row           row where to move
+<i>109</i>&nbsp;     * @param col           col where to move
+<i>110</i>&nbsp;     * @param z             z (level) where to move
+<i>111</i>&nbsp;     * @param withAnimation
+<i>112</i>&nbsp;     */
+<i>113</i>&nbsp;    protected void move(int row, int col, int z, boolean withAnimation) {
+<b class="nc"><i>114</i>&nbsp;        this.z = z + 1;</b>
+<b class="nc"><i>115</i>&nbsp;        this.row = row;</b>
+<b class="nc"><i>116</i>&nbsp;        this.col = col;</b>
+<b class="nc"><i>117</i>&nbsp;        if (!withAnimation) { // load new image immediately only if worker is moving without animation</b>
+<b class="nc"><i>118</i>&nbsp;            loadImage(currentCamera);</b>
+<i>119</i>&nbsp;        }
+<b class="nc"><i>120</i>&nbsp;        switch (currentCamera) {</b>
+<i>121</i>&nbsp;            case RIGHT:
+<b class="nc"><i>122</i>&nbsp;                display(row, col, withAnimation);</b>
+<b class="nc"><i>123</i>&nbsp;                break;</b>
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;            case LEFT:
+<b class="nc"><i>126</i>&nbsp;                int leftRow = GUIProperties.getCorrespondingLeftRow(row, col);</b>
+<b class="nc"><i>127</i>&nbsp;                int leftCol = GUIProperties.getCorrespondingLeftCol(row, col);</b>
+<b class="nc"><i>128</i>&nbsp;                display(leftRow, leftCol, withAnimation);</b>
+<b class="nc"><i>129</i>&nbsp;                break;</b>
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;            case TOP:
+<b class="nc"><i>132</i>&nbsp;                display(row, col, withAnimation);</b>
+<i>133</i>&nbsp;                break;
+<i>134</i>&nbsp;        }
+<i>135</i>&nbsp;    }
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;    @Override
+<i>138</i>&nbsp;    void display(int row, int col) {
+<b class="nc"><i>139</i>&nbsp;        display(row, col, false);</b>
+<i>140</i>&nbsp;    }
+<i>141</i>&nbsp;
+<i>142</i>&nbsp;    void display(int row, int col, boolean withAnimation) {
+<b class="nc"><i>143</i>&nbsp;        double endX = 0;</b>
+<b class="nc"><i>144</i>&nbsp;        double endY = 0;</b>
+<b class="nc"><i>145</i>&nbsp;        switch (currentCamera) {</b>
+<i>146</i>&nbsp;            case TOP:
+<b class="nc"><i>147</i>&nbsp;                endX = this.getFixedXPosition(col * (GUIProperties.tileTopWidth + GUIProperties.tileTopXSpacing));</b>
+<b class="nc"><i>148</i>&nbsp;                endY = this.getFixedYPosition(row * (GUIProperties.tileTopHeight + GUIProperties.tileTopYSpacing));</b>
+<b class="nc"><i>149</i>&nbsp;                break;</b>
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;            default: // right and left
+<b class="nc"><i>152</i>&nbsp;                switch (this.z) {</b>
+<i>153</i>&nbsp;                    case 1:
+<b class="nc"><i>154</i>&nbsp;                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 39);</b>
+<b class="nc"><i>155</i>&nbsp;                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf + 5);</b>
+<b class="nc"><i>156</i>&nbsp;                        break;</b>
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;                    case 2:
+<b class="nc"><i>159</i>&nbsp;                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);</b>
+<b class="nc"><i>160</i>&nbsp;                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - 50);</b>
+<b class="nc"><i>161</i>&nbsp;                        break;</b>
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;                    case 3:
+<b class="nc"><i>164</i>&nbsp;                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);</b>
+<b class="nc"><i>165</i>&nbsp;                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level2YFix - 49.5);</b>
+<b class="nc"><i>166</i>&nbsp;                        break;</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;                    case 4:
+<b class="nc"><i>169</i>&nbsp;                        endX = this.getFixedXPosition((col - row) * (GUIProperties.tileWidthHalf + GUIProperties.tileXSpacing) + 43);</b>
+<b class="nc"><i>170</i>&nbsp;                        endY = this.getFixedYPosition((col + row) * (GUIProperties.tileHeightHalf + GUIProperties.tileYSpacing) - GUIProperties.tileHeightHalf - GUIProperties.level1Height / 2 + GUIProperties.level3YFix - 56.5); // 56.5</b>
+<i>171</i>&nbsp;                        break;
+<i>172</i>&nbsp;                }
+<i>173</i>&nbsp;                break;
+<i>174</i>&nbsp;        }
+<i>175</i>&nbsp;
+<b class="nc"><i>176</i>&nbsp;        if (withAnimation) {</b>
+<b class="nc"><i>177</i>&nbsp;            loadDefaultWorkerImage(); // use default worker while moving</b>
+<b class="nc"><i>178</i>&nbsp;            applyColor();</b>
+<b class="nc"><i>179</i>&nbsp;            startTransition(endX, endY);</b>
+<i>180</i>&nbsp;        } else {
+<b class="nc"><i>181</i>&nbsp;            this.setX(endX);</b>
+<b class="nc"><i>182</i>&nbsp;            this.setY(endY);</b>
+<b class="nc"><i>183</i>&nbsp;            applyColor();</b>
+<i>184</i>&nbsp;        }
+<i>185</i>&nbsp;    }
+<i>186</i>&nbsp;
+<i>187</i>&nbsp;    private void startTransition(double endX, double endY) {
+<b class="nc"><i>188</i>&nbsp;        this.setDisable(true);</b>
+<i>189</i>&nbsp;
+<b class="nc"><i>190</i>&nbsp;        if (currentCamera.equals(GUIProperties.CameraType.TOP)) {</b>
+<b class="nc"><i>191</i>&nbsp;            Timeline move1 = new Timeline();</b>
+<b class="nc"><i>192</i>&nbsp;            move1.getKeyFrames().add(new KeyFrame(</b>
+<b class="nc"><i>193</i>&nbsp;                    Duration.seconds(0.5),</b>
+<b class="nc"><i>194</i>&nbsp;                    new KeyValue(this.xProperty(), endX),</b>
+<b class="nc"><i>195</i>&nbsp;                    new KeyValue(this.yProperty(), endY)</b>
+<i>196</i>&nbsp;            ));
+<b class="nc"><i>197</i>&nbsp;            move1.setOnFinished(e -&gt; {</b>
+<b class="nc"><i>198</i>&nbsp;                loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it&#39;s overridden in GameScreenController</b>
+<b class="nc"><i>199</i>&nbsp;                this.setDisable(false);</b>
+<i>200</i>&nbsp;            });
+<b class="nc"><i>201</i>&nbsp;            moveAnimation = new SequentialTransition(move1);</b>
+<b class="nc"><i>202</i>&nbsp;        } else {</b>
+<b class="nc"><i>203</i>&nbsp;            Timeline move1 = new Timeline();</b>
+<b class="nc"><i>204</i>&nbsp;            move1.getKeyFrames().add(new KeyFrame(</b>
+<b class="nc"><i>205</i>&nbsp;                    Duration.seconds(0.5),</b>
+<b class="nc"><i>206</i>&nbsp;                    new KeyValue(this.yProperty(), this.getY() - 100)</b>
+<i>207</i>&nbsp;            ));
+<i>208</i>&nbsp;
+<b class="nc"><i>209</i>&nbsp;            Timeline move2 = new Timeline();</b>
+<b class="nc"><i>210</i>&nbsp;            move2.getKeyFrames().add(new KeyFrame(</b>
+<b class="nc"><i>211</i>&nbsp;                    Duration.seconds(1.0),</b>
+<b class="nc"><i>212</i>&nbsp;                    new KeyValue(this.xProperty(), endX),</b>
+<b class="nc"><i>213</i>&nbsp;                    new KeyValue(this.yProperty(), endY - 100)</b>
+<i>214</i>&nbsp;            ));
+<i>215</i>&nbsp;
+<b class="nc"><i>216</i>&nbsp;            Timeline move3 = new Timeline();</b>
+<b class="nc"><i>217</i>&nbsp;            move3.getKeyFrames().add(new KeyFrame(</b>
+<b class="nc"><i>218</i>&nbsp;                    Duration.seconds(0.5),</b>
+<b class="nc"><i>219</i>&nbsp;                    new KeyValue(this.yProperty(), endY)</b>
+<i>220</i>&nbsp;            ));
+<i>221</i>&nbsp;
+<b class="nc"><i>222</i>&nbsp;            move3.setOnFinished(e -&gt; {</b>
+<b class="nc"><i>223</i>&nbsp;                loadImage(currentCamera); // load new image only when animation is finished. Do not use moveAnimation.setOnFinished() because it&#39;s overridden in GameScreenController</b>
+<b class="nc"><i>224</i>&nbsp;                this.setDisable(false);</b>
+<i>225</i>&nbsp;            });
+<b class="nc"><i>226</i>&nbsp;            moveAnimation = new SequentialTransition(move1, move2, move3);</b>
+<i>227</i>&nbsp;        }
+<i>228</i>&nbsp;
+<b class="nc"><i>229</i>&nbsp;        moveAnimation.play();</b>
+<i>230</i>&nbsp;    }
+<i>231</i>&nbsp;
+<i>232</i>&nbsp;    private void applyColor() {
+<b class="nc"><i>233</i>&nbsp;        ImageView clipImage = new ImageView(this.getImage());</b>
+<b class="nc"><i>234</i>&nbsp;        clipImage.setPreserveRatio(true);</b>
+<b class="nc"><i>235</i>&nbsp;        clipImage.setFitWidth(this.getFitWidth());</b>
+<b class="nc"><i>236</i>&nbsp;        clipImage.setFitHeight(this.getFitHeight());</b>
+<b class="nc"><i>237</i>&nbsp;        clipImage.setX(this.getX());</b>
+<b class="nc"><i>238</i>&nbsp;        clipImage.setY(this.getY());</b>
+<b class="nc"><i>239</i>&nbsp;        clipImage.xProperty().bind(this.xProperty()); // follow worker when he is moving</b>
+<b class="nc"><i>240</i>&nbsp;        clipImage.yProperty().bind(this.yProperty());</b>
+<b class="nc"><i>241</i>&nbsp;        this.setClip(clipImage);</b>
+<b class="nc"><i>242</i>&nbsp;        ColorAdjust monochrome = new ColorAdjust();</b>
+<b class="nc"><i>243</i>&nbsp;        monochrome.setSaturation(-1.0);</b>
+<b class="nc"><i>244</i>&nbsp;        ColorInput colorInput = new ColorInput(</b>
+<b class="nc"><i>245</i>&nbsp;                this.getX(),</b>
+<b class="nc"><i>246</i>&nbsp;                this.getY(),</b>
+<b class="nc"><i>247</i>&nbsp;                this.getImage().getWidth(),</b>
+<b class="nc"><i>248</i>&nbsp;                this.getImage().getHeight(),</b>
+<b class="nc"><i>249</i>&nbsp;                this.color.getPaintColor()</b>
+<i>250</i>&nbsp;        );
+<b class="nc"><i>251</i>&nbsp;        colorInput.xProperty().bind(this.xProperty());</b>
+<b class="nc"><i>252</i>&nbsp;        colorInput.yProperty().bind(this.yProperty());</b>
+<b class="nc"><i>253</i>&nbsp;        Blend blush = new Blend(</b>
+<i>254</i>&nbsp;                BlendMode.MULTIPLY,
+<i>255</i>&nbsp;                monochrome,
+<i>256</i>&nbsp;                colorInput
+<i>257</i>&nbsp;        );
+<i>258</i>&nbsp;
+<b class="nc"><i>259</i>&nbsp;        this.setEffect(blush);</b>
+<i>260</i>&nbsp;    }
+<i>261</i>&nbsp;
+<i>262</i>&nbsp;    @Override
+<i>263</i>&nbsp;    protected void setBlockEffect(Effect effect) {
+<b class="nc"><i>264</i>&nbsp;        if (effect != null) {    // apply custom effect</b>
+<b class="nc"><i>265</i>&nbsp;            this.setEffect(effect);</b>
+<i>266</i>&nbsp;        } else {                // restore worker color
+<b class="nc"><i>267</i>&nbsp;            applyColor();</b>
+<i>268</i>&nbsp;        }
+<i>269</i>&nbsp;    }
+<i>270</i>&nbsp;
+<i>271</i>&nbsp;    /**
+<i>272</i>&nbsp;     * Starts animation for the selection phase
+<i>273</i>&nbsp;     */
+<i>274</i>&nbsp;    protected void startSelectionAnimation() {
+<b class="nc"><i>275</i>&nbsp;        selectionAnimation = new Tada(this);</b>
+<i>276</i>&nbsp;
+<b class="nc"><i>277</i>&nbsp;        EventHandler&lt;ActionEvent&gt; eventHandler = e -&gt; {</b>
+<b class="nc"><i>278</i>&nbsp;            selectionAnimation.setDelay(new Duration(500));</b>
+<b class="nc"><i>279</i>&nbsp;            selectionAnimation.play();</b>
+<i>280</i>&nbsp;        };
+<i>281</i>&nbsp;
+<b class="nc"><i>282</i>&nbsp;        selectionAnimation.setOnFinished(eventHandler); // repeat, with delay between</b>
+<b class="nc"><i>283</i>&nbsp;        selectionAnimation.play();</b>
+<i>284</i>&nbsp;    }
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;    /**
+<i>287</i>&nbsp;     * Stops animation for the selection phase
+<i>288</i>&nbsp;     */
+<i>289</i>&nbsp;    protected void stopSelectionAnimation() {
+<b class="nc"><i>290</i>&nbsp;        if (selectionAnimation != null) {</b>
+<b class="nc"><i>291</i>&nbsp;            selectionAnimation.stop();</b>
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;            // restore image, otherwise it&#39;s scaled/rotated
+<b class="nc"><i>294</i>&nbsp;            this.scaleXProperty().setValue(1);</b>
+<b class="nc"><i>295</i>&nbsp;            this.scaleYProperty().setValue(1);</b>
+<b class="nc"><i>296</i>&nbsp;            this.scaleZProperty().setValue(1);</b>
+<b class="nc"><i>297</i>&nbsp;            this.rotateProperty().setValue(0);</b>
+<i>298</i>&nbsp;        }
+<i>299</i>&nbsp;    }
+<i>300</i>&nbsp;
+<i>301</i>&nbsp;    @Override
+<i>302</i>&nbsp;    Worker copy() {
+<b class="nc"><i>303</i>&nbsp;        return new Worker(this.row, this.col, this.z, this.currentCamera, this.ownerUsername, this.id, this.color);</b>
+<i>304</i>&nbsp;    }
+<i>305</i>&nbsp;
+<i>306</i>&nbsp;    @Override
+<i>307</i>&nbsp;    Worker copyAndSetCamera(GUIProperties.CameraType cameraType) {
+<b class="nc"><i>308</i>&nbsp;        return new Worker(this.row, this.col, this.z, cameraType, this.ownerUsername, this.id, this.color);</b>
+<i>309</i>&nbsp;    }
+<i>310</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

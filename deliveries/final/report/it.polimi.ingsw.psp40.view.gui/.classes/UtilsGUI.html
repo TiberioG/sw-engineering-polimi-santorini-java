@@ -1,0 +1,220 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UtilsGUI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UtilsGUI (it.polimi.ingsw.psp40.view.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UtilsGUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.animation.Interpolator;
+<i>4</i>&nbsp;import javafx.animation.KeyFrame;
+<i>5</i>&nbsp;import javafx.animation.KeyValue;
+<i>6</i>&nbsp;import javafx.animation.Timeline;
+<i>7</i>&nbsp;import javafx.beans.binding.Bindings;
+<i>8</i>&nbsp;import javafx.beans.property.BooleanProperty;
+<i>9</i>&nbsp;import javafx.beans.property.SimpleBooleanProperty;
+<i>10</i>&nbsp;import javafx.collections.ObservableList;
+<i>11</i>&nbsp;import javafx.scene.Node;
+<i>12</i>&nbsp;import javafx.scene.control.Button;
+<i>13</i>&nbsp;import javafx.scene.effect.ColorAdjust;
+<i>14</i>&nbsp;import javafx.scene.effect.Effect;
+<i>15</i>&nbsp;import javafx.util.Duration;
+<i>16</i>&nbsp;
+<b class="nc"><i>17</i>&nbsp;public class UtilsGUI {</b>
+<i>18</i>&nbsp;
+<b class="nc"><i>19</i>&nbsp;    static BooleanProperty trueBool = new SimpleBooleanProperty(true);</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * Method that allows you to add a class to a {@link Node}
+<i>24</i>&nbsp;     *
+<i>25</i>&nbsp;     * @param node        the node to which you want to add the class
+<i>26</i>&nbsp;     * @param nameOfClass the name of the class you want to add to the node
+<i>27</i>&nbsp;     */
+<i>28</i>&nbsp;    protected static void addClassToElement(Node node, String nameOfClass) {
+<b class="nc"><i>29</i>&nbsp;        ObservableList&lt;String&gt; listOfClasses = node.getStyleClass();</b>
+<b class="nc"><i>30</i>&nbsp;        if (listOfClasses.indexOf(nameOfClass) == -1) {</b>
+<b class="nc"><i>31</i>&nbsp;            listOfClasses.add(nameOfClass);</b>
+<i>32</i>&nbsp;        }
+<i>33</i>&nbsp;    }
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * Method that allows you to remove a class to a {@link Node}
+<i>37</i>&nbsp;     *
+<i>38</i>&nbsp;     * @param node        the node to which you want to remove the class
+<i>39</i>&nbsp;     * @param nameOfClass the name of the class you want to remove from the node
+<i>40</i>&nbsp;     */
+<i>41</i>&nbsp;    protected static void removeClassToElement(Node node, String nameOfClass) {
+<b class="nc"><i>42</i>&nbsp;        node.getStyleClass().remove(nameOfClass);</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * Method that allows you to apply a hover effect to a specified button
+<i>47</i>&nbsp;     *
+<i>48</i>&nbsp;     * @param button the button you want to apply the effect to
+<i>49</i>&nbsp;     */
+<i>50</i>&nbsp;    protected static void buttonHoverEffect(Button button) {
+<b class="nc"><i>51</i>&nbsp;        nodeHoverEffect(button);</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * Method that allows you to apply a hover effect, with persistence if needed, to a specified button
+<i>57</i>&nbsp;     *
+<i>58</i>&nbsp;     * @param button the button you want to apply the effect to
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    protected static void buttonHoverEffectWithPersistence(Button button, BooleanProperty persistence) {
+<b class="nc"><i>61</i>&nbsp;        nodeHoverEffectWithPersistence(button, persistence);</b>
+<i>62</i>&nbsp;    }
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    /**
+<i>65</i>&nbsp;     * Method that allows you to apply a hover effect, with persistence if needed, to a specified node
+<i>66</i>&nbsp;     *
+<i>67</i>&nbsp;     * @param node        the node you want to apply the effect to
+<i>68</i>&nbsp;     * @param persistence if persistence is true, keep the effect applied even when not hover
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    protected static void nodeHoverEffectWithPersistence(Node node, BooleanProperty persistence) {
+<i>71</i>&nbsp;
+<b class="nc"><i>72</i>&nbsp;        ColorAdjust colorAdjust = new ColorAdjust();</b>
+<b class="nc"><i>73</i>&nbsp;        colorAdjust.setBrightness(0.3);</b>
+<i>74</i>&nbsp;
+<b class="nc"><i>75</i>&nbsp;        applyEffectBinding(node, colorAdjust, persistence);</b>
+<i>76</i>&nbsp;
+<b class="nc"><i>77</i>&nbsp;        node.hoverProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<b class="nc"><i>78</i>&nbsp;            if (!persistence.getValue()) {</b>
+<b class="nc"><i>79</i>&nbsp;                if (newValue) {</b>
+<b class="nc"><i>80</i>&nbsp;                    node.effectProperty().unbind();</b>
+<b class="nc"><i>81</i>&nbsp;                    node.setEffect(colorAdjust);</b>
+<i>82</i>&nbsp;                } else {
+<b class="nc"><i>83</i>&nbsp;                    applyEffectBinding(node, colorAdjust, persistence);</b>
+<i>84</i>&nbsp;                }
+<i>85</i>&nbsp;            } else {
+<b class="nc"><i>86</i>&nbsp;                applyEffectBinding(node, colorAdjust, persistence);</b>
+<i>87</i>&nbsp;            }
+<i>88</i>&nbsp;        });
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    /**
+<i>92</i>&nbsp;     * Applies a binding to the effect property of the specified node. When property is true, the effect is applied, otherwise it is removed
+<i>93</i>&nbsp;     *
+<i>94</i>&nbsp;     * @param node     node to which apply the effect
+<i>95</i>&nbsp;     * @param effect   effect to be applied
+<i>96</i>&nbsp;     * @param property property to monitor for changes
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    private static void applyEffectBinding(Node node, Effect effect, BooleanProperty property) {
+<b class="nc"><i>99</i>&nbsp;        node.effectProperty().bind(Bindings.when(</b>
+<b class="nc"><i>100</i>&nbsp;                property.isEqualTo(trueBool))</b>
+<b class="nc"><i>101</i>&nbsp;                .then(effect)</b>
+<b class="nc"><i>102</i>&nbsp;                .otherwise((Effect) null));</b>
+<i>103</i>&nbsp;    }
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;    /**
+<i>106</i>&nbsp;     * Adds an hover effect to the given node. Effect is an &quot;highlight effect&quot;
+<i>107</i>&nbsp;     *
+<i>108</i>&nbsp;     * @param node node to which apply the effect
+<i>109</i>&nbsp;     */
+<i>110</i>&nbsp;    protected static void nodeHoverEffect(Node node) {
+<b class="nc"><i>111</i>&nbsp;        node.hoverProperty().addListener((observable, oldValue, newValue) -&gt; {</b>
+<b class="nc"><i>112</i>&nbsp;            if (newValue) {</b>
+<b class="nc"><i>113</i>&nbsp;                ColorAdjust colorAdjust = new ColorAdjust();</b>
+<b class="nc"><i>114</i>&nbsp;                colorAdjust.setBrightness(0.3);</b>
+<b class="nc"><i>115</i>&nbsp;                node.setEffect(colorAdjust);</b>
+<b class="nc"><i>116</i>&nbsp;            } else {</b>
+<b class="nc"><i>117</i>&nbsp;                node.setEffect(null);</b>
+<i>118</i>&nbsp;            }
+<i>119</i>&nbsp;        });
+<i>120</i>&nbsp;    }
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    /**
+<i>123</i>&nbsp;     * Method that allows you to make slideInDown animation to a specified node
+<i>124</i>&nbsp;     *
+<i>125</i>&nbsp;     * @param node the node you want to apply the slide in down animation
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    protected static void slideInDownAnimation(Node node) {
+<b class="nc"><i>128</i>&nbsp;        new Timeline(</b>
+<b class="nc"><i>129</i>&nbsp;                new KeyFrame(Duration.millis(0),</b>
+<b class="nc"><i>130</i>&nbsp;                        new KeyValue(node.translateYProperty(), -100, Interpolator.SPLINE(0.215, 0.610, 0.355, 1.000))</b>
+<i>131</i>&nbsp;                ),
+<b class="nc"><i>132</i>&nbsp;                new KeyFrame(Duration.millis(200),</b>
+<b class="nc"><i>133</i>&nbsp;                        new KeyValue(node.translateYProperty(), 0, Interpolator.SPLINE(0.215, 0.610, 0.355, 1.000))</b>
+<i>134</i>&nbsp;                )
+<b class="nc"><i>135</i>&nbsp;        ).play();</b>
+<i>136</i>&nbsp;    }
+<i>137</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

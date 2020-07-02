@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Hourglass</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.psp40.view.cli</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Hourglass (it.polimi.ingsw.psp40.view.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Hourglass</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 36)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.psp40.view.cli;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.IOException;
+<i>4</i>&nbsp;import java.io.InputStream;
+<i>5</i>&nbsp;import java.net.URL;
+<i>6</i>&nbsp;import java.nio.charset.StandardCharsets;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * Class used to display a cool hourglass in ASCII while user is waiting
+<i>10</i>&nbsp; * &quot;Tempus fugit&quot;
+<i>11</i>&nbsp; *
+<i>12</i>&nbsp; * @author TiberioG
+<i>13</i>&nbsp; */
+<i>14</i>&nbsp;public class Hourglass implements Runnable {
+<i>15</i>&nbsp;    private Frame upper;
+<i>16</i>&nbsp;    private Frame lower;
+<i>17</i>&nbsp;    private volatile boolean cancelled;
+<b class="nc"><i>18</i>&nbsp;    private boolean lateral = false;</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * constructor
+<i>22</i>&nbsp;     *
+<i>23</i>&nbsp;     * @param upper   frame where the hourglass will be printed
+<i>24</i>&nbsp;     * @param lower   frame where to add additional messages
+<i>25</i>&nbsp;     * @param lateral specifies if it&#39;s a lateral hourglass
+<i>26</i>&nbsp;     */
+<b class="nc"><i>27</i>&nbsp;    public Hourglass(Frame upper, Frame lower, boolean lateral) {</b>
+<b class="nc"><i>28</i>&nbsp;        this.upper = upper;</b>
+<b class="nc"><i>29</i>&nbsp;        this.lower = lower;</b>
+<b class="nc"><i>30</i>&nbsp;        this.lateral = lateral;</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @Override
+<i>34</i>&nbsp;    public void run() {
+<i>35</i>&nbsp;        // this is for the hourglass in the center
+<b class="nc"><i>36</i>&nbsp;        if (!lateral) {</b>
+<i>37</i>&nbsp;            try {
+<b class="nc"><i>38</i>&nbsp;                Terminal.noBuffer();</b>
+<b class="nc"><i>39</i>&nbsp;            } catch (IOException | InterruptedException e) {</b>
+<i>40</i>&nbsp;                // e.printStackTrace();
+<b class="nc"><i>41</i>&nbsp;            }</b>
+<b class="nc"><i>42</i>&nbsp;            upper.clear();</b>
+<b class="nc"><i>43</i>&nbsp;            Terminal.hideCursor();</b>
+<b class="nc"><i>44</i>&nbsp;            while (!cancelled) {</b>
+<i>45</i>&nbsp;                try {
+<b class="nc"><i>46</i>&nbsp;                    lower.center(URLReader(getClass().getResource(&quot;/ascii/waiting&quot;)), 100);</b>
+<b class="nc"><i>47</i>&nbsp;                } catch (IOException e) {</b>
+<i>48</i>&nbsp;                    //
+<b class="nc"><i>49</i>&nbsp;                }</b>
+<b class="nc"><i>50</i>&nbsp;                for (int i = 1; i &lt;= 39; i++) { // 39 is the number of hourglass frames in ascii</b>
+<b class="nc"><i>51</i>&nbsp;                    if (cancelled) {</b>
+<b class="nc"><i>52</i>&nbsp;                        break;</b>
+<i>53</i>&nbsp;                    }
+<i>54</i>&nbsp;                    try {
+<b class="nc"><i>55</i>&nbsp;                        upper.centerFixed(URLReader(getClass().getResource(&quot;/ascii/hourglass/&quot; + i)), 26, 10);</b>
+<b class="nc"><i>56</i>&nbsp;                    } catch (IOException e) {</b>
+<i>57</i>&nbsp;                        //
+<b class="nc"><i>58</i>&nbsp;                    }</b>
+<i>59</i>&nbsp;                }
+<b class="nc"><i>60</i>&nbsp;                Utils.doTimeUnitSleep(500);</b>
+<i>61</i>&nbsp;            }
+<i>62</i>&nbsp;        }
+<i>63</i>&nbsp;        //this is for a lateral hourglass
+<i>64</i>&nbsp;        else {
+<b class="nc"><i>65</i>&nbsp;            Terminal.hideCursor();</b>
+<b class="nc"><i>66</i>&nbsp;            while (!cancelled) {</b>
+<b class="nc"><i>67</i>&nbsp;                for (int i = 1; i &lt;= 39; i++) { // 39 is the number of hourglass frames in ascii</b>
+<b class="nc"><i>68</i>&nbsp;                    if (cancelled) {</b>
+<b class="nc"><i>69</i>&nbsp;                        break;</b>
+<i>70</i>&nbsp;                    }
+<i>71</i>&nbsp;                    try {
+<b class="nc"><i>72</i>&nbsp;                        upper.centerCenterFixed(URLReader(getClass().getResource(&quot;/ascii/hourglass/&quot; + i)), &quot;Your turn is over&quot;, 26, 23, 10);</b>
+<b class="nc"><i>73</i>&nbsp;                    } catch (IOException e) {</b>
+<i>74</i>&nbsp;                        //
+<b class="nc"><i>75</i>&nbsp;                    }</b>
+<i>76</i>&nbsp;                }
+<b class="nc"><i>77</i>&nbsp;                Utils.doTimeUnitSleep(500);</b>
+<i>78</i>&nbsp;            }
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    }
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;    /**
+<i>84</i>&nbsp;     * stops the animation
+<i>85</i>&nbsp;     */
+<i>86</i>&nbsp;    public void cancel() {
+<b class="nc"><i>87</i>&nbsp;        cancelled = true;</b>
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * small utility to convert paths to string
+<i>92</i>&nbsp;     *
+<i>93</i>&nbsp;     * @param url where there is a resource
+<i>94</i>&nbsp;     * @return the path string
+<i>95</i>&nbsp;     * @throws IOException
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    public static String URLReader(URL url) throws IOException {
+<b class="nc"><i>98</i>&nbsp;        try (InputStream in = url.openStream()) {</b>
+<b class="nc"><i>99</i>&nbsp;            byte[] bytes = in.readAllBytes();</b>
+<b class="nc"><i>100</i>&nbsp;            return new String(bytes, StandardCharsets.UTF_8);</b>
+<b class="nc"><i>101</i>&nbsp;        }</b>
+<i>102</i>&nbsp;    }
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 22:37</div>
+</div>
+</body>
+</html>

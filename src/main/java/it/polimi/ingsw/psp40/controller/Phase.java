@@ -53,17 +53,4 @@ public class Phase {
     public boolean getNeedCheckForVictory() {
         return needCheckForVictory;
     }
-
-    /*
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-
-        Phase phase = (Phase) o;
-        if (phase.getType().equals(this.type)) return true;
-
-        return false;
-    }
-
-     */
 }
