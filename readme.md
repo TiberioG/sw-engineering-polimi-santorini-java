@@ -105,7 +105,7 @@ UML diagrams are [here](/deliveries/final/UML)
 
 
 ## Gameplay screenshots
-![Alt Text](http://santorini40.xyz/img/GUIDEMO640px.gif)
+![Alt Text](https://user-images.githubusercontent.com/7725068/86405047-f17d2d00-bcb0-11ea-8ebc-c70749ab197b.gif)
 
 [![asciicast](https://asciinema.org/a/M7hixox96x6bTS28k6X1SDAz2.svg )](https://asciinema.org/a/M7hixox96x6bTS28k6X1SDAz2 )
 
