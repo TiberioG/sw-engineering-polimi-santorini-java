@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp40.controller;
 
-import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.controller.strategies.strategyBuild.StrategyBuild;
 import it.polimi.ingsw.psp40.controller.strategies.strategyLose.StrategyLose;
@@ -8,6 +7,7 @@ import it.polimi.ingsw.psp40.controller.strategies.strategyMove.StrategyMove;
 import it.polimi.ingsw.psp40.controller.strategies.strategyWin.StrategyWin;
 import it.polimi.ingsw.psp40.exceptions.SantoriniException;
 import it.polimi.ingsw.psp40.model.Cell;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.model.Player;
 import it.polimi.ingsw.psp40.model.Worker;
 

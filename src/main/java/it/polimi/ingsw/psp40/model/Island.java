@@ -57,7 +57,7 @@ public class Island extends Publisher<Message> {
      */
     public Cell[][] getField() {
         return this.field;
-    } //todo fare una copia qui
+    }
 
     /**
      * Returns max coordinate X of the billboard
@@ -119,7 +119,7 @@ public class Island extends Publisher<Message> {
      * Adds the given component to the tower built on the given cell
      *
      * @param component component to build
-     * @param cell cell where to build
+     * @param cell      cell where to build
      * @throws BuildLowerComponentException
      */
     public void addComponent(Component component, Cell cell) throws BuildLowerComponentException {

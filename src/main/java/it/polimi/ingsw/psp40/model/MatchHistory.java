@@ -184,7 +184,7 @@ public class MatchHistory {
         Island island = JsonAdapter.getGsonBuilder().fromJson(oldMatch.get("island"), new TypeToken<Island>() {
         }.getType());
         for (int x = 0; x <= Island.getMaxX(); x++) {
-            for (int y = 0; y <= Island.getMaxX(); y++) {
+            for (int y = 0; y <= Island.getMaxY(); y++) {
                 try {
                     List<Component> oldComponents = island.getCell(x, y).getTower().getComponents();
                     oldComponents.remove(Component.GROUND); // Ground is already present in the newCell

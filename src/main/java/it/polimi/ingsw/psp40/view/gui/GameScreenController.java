@@ -1,14 +1,10 @@
 package it.polimi.ingsw.psp40.view.gui;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
 import it.polimi.ingsw.psp40.controller.Phase;
-import it.polimi.ingsw.psp40.model.Cell;
-import it.polimi.ingsw.psp40.model.Location;
-import it.polimi.ingsw.psp40.model.Player;
-import it.polimi.ingsw.psp40.model.Tower;
+import it.polimi.ingsw.psp40.model.*;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -304,7 +300,7 @@ public class GameScreenController extends ScreenController {
                     setInstructionsLabelText("Wait for your turn...");
                 }
             } else {
-                // todo: u can't place a worker here
+                System.out.println("You can't place a worker here");
             }
         }
     }
@@ -333,7 +329,7 @@ public class GameScreenController extends ScreenController {
 
         Cell desiredCell = getClient().getAvailableBuildCells().keySet().stream().filter(cell -> cell.getCoordX() == x && cell.getCoordY() == y).findFirst().orElse(null);
         if (desiredCell == null) {
-            // todo: u can't build here
+            System.out.println("You can't build here");
         } else {
             List<Integer> listOfAvailableComponents = getClient().getAvailableBuildCells().get(desiredCell); // getting the components buildable in the selected cell
             if (listOfAvailableComponents.size() == 1) {
@@ -479,10 +475,10 @@ public class GameScreenController extends ScreenController {
                 }
                 refresh();
             } else {
-                // todo: u can't move here (non dovrebbe poter capitare)
+                System.out.println("You can't move here");
             }
         } else {
-            // todo: please first select a worker (forse non può capitare)
+            System.out.println("Please first select a worker");
         }
     }
 
@@ -606,8 +602,6 @@ public class GameScreenController extends ScreenController {
         selectedWorker = null;
         selectedPhases = new ArrayList<>();
         setInstructionsLabelText("Wait your turn...");
-
-        //disableMap(true); // todo farlo o no?
     }
 
     /* METHODS TO SHOW PLAYERS INFO */
@@ -819,8 +813,6 @@ public class GameScreenController extends ScreenController {
      *
      * @param cell the cell to update
      */
-    // chiamato quando si riceve un'aggiornamento dell'isola
-    // todo teoricamente vuol dire che è stato modificato il top component. Controllo più approfondito?
     protected void updateCell(Cell cell) {
         int x = cell.getCoordX();
         int y = cell.getCoordY();

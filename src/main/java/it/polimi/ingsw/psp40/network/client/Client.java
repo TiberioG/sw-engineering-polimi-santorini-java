@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -329,7 +328,7 @@ public class Client implements ServerObserver {
     }
 
     private void stopHeartbeat() {
-        if(heartbeatTimer != null) {
+        if (heartbeatTimer != null) {
             heartbeatTimer.cancel();
         }
     }
@@ -337,6 +336,7 @@ public class Client implements ServerObserver {
 
     /**
      * Sends the given message to the server
+     *
      * @param message message to be sent
      */
     public void sendToServer(Message message) {

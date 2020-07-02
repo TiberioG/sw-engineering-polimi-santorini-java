@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;

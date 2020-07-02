@@ -1,11 +1,11 @@
 package it.polimi.ingsw.psp40.controller.strategies.strategyMove;
 
-import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.exceptions.CellOutOfBoundsException;
 import it.polimi.ingsw.psp40.exceptions.WorkerAlreadyPresentException;
 import it.polimi.ingsw.psp40.exceptions.WrongCellSelectedMoveException;
 import it.polimi.ingsw.psp40.exceptions.ZeroCellsAvailableMoveException;
 import it.polimi.ingsw.psp40.model.Cell;
+import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.model.Match;
 import it.polimi.ingsw.psp40.model.Worker;
 
