@@ -9,6 +9,7 @@
 # Maven
 log/
 target
+dependency-reduced-pom.xml
 
 #manifest files
 resources/manifest
@@ -22,3 +23,4 @@ classes/artifacts
 #various files
 backupOfMatches.json
 logfile.log.lck
+logfile.log

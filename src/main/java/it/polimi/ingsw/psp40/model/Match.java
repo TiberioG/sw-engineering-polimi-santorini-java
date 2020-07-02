@@ -30,7 +30,7 @@ public class Match extends Publisher<Message> {
     /**
      * Constructor
      *
-     * @param matchID ID of the match
+     * @param matchID     ID of the match
      * @param virtualView associated VirtuaLView instance
      */
     public Match(int matchID, VirtualView virtualView) {

@@ -18,6 +18,7 @@ import javafx.application.Application;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
@@ -25,13 +26,14 @@ import java.util.logging.Logger;
 
 public class Client implements ServerObserver {
 
-
     /* Attributes */
 
     public static final int MIN_PORT = Server.MIN_PORT;
     public static final int MAX_PORT = Server.MAX_PORT;
 
     private ViewInterface view;
+
+    private Timer heartbeatTimer = null;
 
     private String serverIP;
 
@@ -56,15 +58,12 @@ public class Client implements ServerObserver {
     private HashMap<Cell, List<Integer>> availableBuildCells;
     private List<Phase> listOfPhasesCache;
 
-
-
     /* Constructor(s) */
 
     public Client() {
     }
 
     /* Methods */
-
 
     public static void main(String[] args) {
         boolean cli = false;
@@ -91,7 +90,6 @@ public class Client implements ServerObserver {
 
         if (cli) {
             Client client = new Client();
-            //CLI view = new CLI(client);
             CoolCLI view = new CoolCLI(client);
             client.setView(view);
             view.displaySetup(); // ask for server IP and Port
@@ -111,9 +109,10 @@ public class Client implements ServerObserver {
      */
     public void connectToServer() {
         /* open a connection to the server */
-        Socket server;
+        Socket server = new Socket();
         try {
-            server = new Socket(getServerIP(), getServerPort());
+            //server = new Socket(getServerIP(), getServerPort());
+            server.connect(new InetSocketAddress(getServerIP(), getServerPort()), 3000);
             server.setSoTimeout(Configuration.clientTimeout * 1000); // milliseconds
 
             /* Create the adapter that will allow communication with the server
@@ -184,10 +183,12 @@ public class Client implements ServerObserver {
                 break;
 
             case DISCONNECTED_SERVER_SIDE:
+                this.stopHeartbeat();
                 view.displayDisconnectedUser((String) message.getPayload(String.class));
                 break;
 
             case SERVER_LOST:
+                this.stopHeartbeat();
                 view.displayDisconnected(); // will close the socket and terminate the execution
                 break;
 
@@ -315,9 +316,9 @@ public class Client implements ServerObserver {
 
     // Used to notify connection to the server
     private void startHeartbeat() {
-        Timer timer = new Timer();
+        heartbeatTimer = new Timer();
 
-        timer.schedule(new TimerTask() {
+        heartbeatTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 sendToServer(new Message(TypeOfMessage.HEARTBEAT));
@@ -326,6 +327,18 @@ public class Client implements ServerObserver {
         }, 1000, Configuration.serverTimeout / 2 * 1000); // this must be lower than (half should be ok) the value used server side in setSoTimeout()
     }
 
+    private void stopHeartbeat() {
+        if (heartbeatTimer != null) {
+            heartbeatTimer.cancel();
+        }
+    }
+
+
+    /**
+     * Sends the given message to the server
+     *
+     * @param message message to be sent
+     */
     public void sendToServer(Message message) {
         message.setUsername(this.username); // add the username to each message
         message.setUUID(this.UUID); // add the UUID to each message. Used to validate the user server side
@@ -389,6 +402,9 @@ public class Client implements ServerObserver {
             modifiedWorkersCache.addAll(new ArrayList<>(locationCache.getModifiedWorkers()));
     }
 
+    /**
+     * Clears cache of "modified workers"
+     */
     public void clearModifiedWorkersCache() {
         this.modifiedWorkersCache.clear();
     }

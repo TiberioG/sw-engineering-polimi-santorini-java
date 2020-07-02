@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp40.view.cli;
 
 import it.polimi.ingsw.psp40.commons.Colors;
-import it.polimi.ingsw.psp40.model.Component;
 import it.polimi.ingsw.psp40.commons.Configuration;
 import it.polimi.ingsw.psp40.commons.PhaseType;
 import it.polimi.ingsw.psp40.commons.messages.*;
@@ -770,7 +769,7 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        lower.center("Congratulations " + client.getUsername() + ", you won!", DELAY);
+        lower.center("Congratulations " + client.getUsername() + ", you won! Press CTRL C to exit", DELAY);
     }
 
     /**
@@ -792,7 +791,7 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        lower.center("You lost the game ", DELAY);
+        lower.center("You lost the game, press CTRL C to exit", DELAY);
 
     }
 

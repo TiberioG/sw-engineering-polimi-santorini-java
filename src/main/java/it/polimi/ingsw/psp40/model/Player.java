@@ -30,8 +30,8 @@ public class Player extends Publisher<Message> {
     /**
      * Constructor
      *
-     * @param name username of the player
-     * @param birthday birthday of the player
+     * @param name        username of the player
+     * @param birthday    birthday of the player
      * @param virtualView associated VirtualView instance
      */
     public Player(String name, Date birthday, VirtualView virtualView) {
@@ -43,7 +43,7 @@ public class Player extends Publisher<Message> {
     /**
      * Dumb constructor for testing
      *
-     * @param name username of the player
+     * @param name     username of the player
      * @param birthday birthday of the player
      */
     public Player(String name, Date birthday) {

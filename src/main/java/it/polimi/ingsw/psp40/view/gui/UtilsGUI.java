@@ -90,8 +90,9 @@ public class UtilsGUI {
 
     /**
      * Applies a binding to the effect property of the specified node. When property is true, the effect is applied, otherwise it is removed
-     * @param node node to which apply the effect
-     * @param effect effect to be applied
+     *
+     * @param node     node to which apply the effect
+     * @param effect   effect to be applied
      * @param property property to monitor for changes
      */
     private static void applyEffectBinding(Node node, Effect effect, BooleanProperty property) {
@@ -103,6 +104,7 @@ public class UtilsGUI {
 
     /**
      * Adds an hover effect to the given node. Effect is an "highlight effect"
+     *
      * @param node node to which apply the effect
      */
     protected static void nodeHoverEffect(Node node) {

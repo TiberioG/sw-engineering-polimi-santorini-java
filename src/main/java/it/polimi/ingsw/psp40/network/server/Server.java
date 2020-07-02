@@ -305,7 +305,6 @@ public class Server {
         return lobby.size() == howManyPlayers && !nullRemoved;
     }
 
-    // todo: controllare se nel frattempo qualcuno si è disconnesso
     private void startMatch() {
         // create VirtualView for the current match
         int matchID = new Date().hashCode();

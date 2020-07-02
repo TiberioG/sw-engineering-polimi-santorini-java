@@ -160,7 +160,7 @@ public abstract class Block extends ImageView {
                         this.getY(),
                         this.getImage().getWidth(),
                         this.getImage().getHeight(),
-                        Color.YELLOW // todo change me. Something better. Maybe use RGBA
+                        Color.YELLOW
                 )
         );
 

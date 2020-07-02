@@ -118,6 +118,7 @@ public class GUIProperties {
 
     /**
      * Returns the X (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+     *
      * @param row
      * @param col
      * @param cameraType
@@ -137,6 +138,7 @@ public class GUIProperties {
 
     /**
      * Returns the Y (position) value to be used to place the {@link Block} in the map, fixed with a corrective value depending on row, col and cameraType
+     *
      * @param row
      * @param col
      * @param cameraType
