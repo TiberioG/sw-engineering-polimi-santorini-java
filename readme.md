@@ -12,9 +12,12 @@
   - [Use our server](#use-our-server)
   - [Run your server](#run-your-server)
 - [Client](#client)
-  - [Comparibility notes for cli](#comparibility-notes-for-cli)
+  - [Compatibility notes for cli](#compatibility-notes-for-cli)
 - [Documentation](#documentation)
-- [Game screenshots](#game-screenshots)
+  - [Javadoc](#javadoc)
+  - [UML diagrams](#uml-diagrams)
+  - [Coverage report](#coverage-report)
+- [Gameplay screenshots](#gameplay-screenshots)
 - [External libraries used](#external-libraries-used)
 - [Authors (alphabetical order)](#authors-alphabetical-order)
 
@@ -48,8 +51,7 @@ The output directory for the jars is set to [/deliveries/final/jar](/deliveries/
 
 ### Using provided jars
 
-If you want you can use the jars we already built for you, you can find them here:
-[here](/deliveries/final/jar)
+If you want you can use the jars we already built for you, you can find them [here](/deliveries/final/jar)
 
 
 ## Server
@@ -100,7 +102,7 @@ Javadoc is available at this link: http://santorini40.xyz/javadoc
 UML diagrams are [here](/deliveries/final/UML)
 
 ### Coverage report 
-todo
+
 
 ## Gameplay screenshots
 ![Alt Text](http://santorini40.xyz/img/GUIDEMO640px.gif)
