@@ -96,13 +96,13 @@ Most terminals allow this by default, in case you have XTerm or iTerm:
 ## Documentation
 
 ### Javadoc
-Javadoc is available at this link: http://santorini40.xyz/javadoc
+Javadoc is available at this link: [http://santorini40.xyz/javadoc](http://santorini40.xyz/javadoc) 
 
 ### UML diagrams
-UML diagrams are [here](/deliveries/final/UML)
+UML diagrams are [here](/deliveries/final/uml)
 
 ### Coverage report 
-
+The final report of the coverage is [here](/deliveries/final/report)
 
 ## Gameplay screenshots
 ![Alt Text](https://user-images.githubusercontent.com/7725068/86405047-f17d2d00-bcb0-11ea-8ebc-c70749ab197b.gif)
