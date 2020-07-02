@@ -120,6 +120,7 @@ public class CoolCLI implements ViewInterface {
             ip = in.nextLine();
             while (!Utils.isValidIp(ip)) {
                 lower.center("This is not a valid IPv4 address. Please, try again:", 0);
+                Utils.doTimeUnitSleep(1000);
                 center.center(utils.form("enter address of server", 30), DELAY);
                 Terminal.moveRelativeCursor(-1, -29);
                 ip = in.nextLine();
@@ -817,7 +818,7 @@ public class CoolCLI implements ViewInterface {
         }
 
         left.printWrapped("Player " + player.getName() + "has lost");
-
+        Utils.doTimeUnitSleep(1000);
 
     }
 
