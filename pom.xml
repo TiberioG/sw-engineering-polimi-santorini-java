@@ -75,6 +75,7 @@
                   <goal>shade</goal>
                 </goals>
                 <configuration>
+                  <minimizeJar>true</minimizeJar>
                   <finalName>server</finalName>
                   <outputDirectory>./deliveries/final/jar</outputDirectory>
                 </configuration>

@@ -109,7 +109,11 @@ public class ServerAdapter implements Runnable {
             outputStm.writeObject(message);
             outputStm.flush();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            if(e.getMessage().equalsIgnoreCase("broken pipe")) {
+                Client.stopHeartbeat();
+            } else {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -120,7 +124,7 @@ public class ServerAdapter implements Runnable {
             observersCpy = new ArrayList<>(observers);
         }
 
-        /* notify the observers that we got a message from the server */
+        /* notify the observers */
         for (ServerObserver observer : observersCpy) {
             observer.handleMessage(msg);
         }
