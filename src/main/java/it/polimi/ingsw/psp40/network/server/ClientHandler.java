@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp40.network.server;
 
 import it.polimi.ingsw.psp40.commons.messages.Message;
 import it.polimi.ingsw.psp40.commons.messages.TypeOfMessage;
+import it.polimi.ingsw.psp40.network.client.Client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -59,7 +60,9 @@ public class ClientHandler implements Runnable {
             outputStm.writeObject(message);
             outputStm.flush();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            if(!e.getMessage().equalsIgnoreCase("broken pipe")) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
