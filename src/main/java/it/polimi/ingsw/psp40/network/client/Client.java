@@ -33,7 +33,7 @@ public class Client implements ServerObserver {
 
     private ViewInterface view;
 
-    private Timer heartbeatTimer = null;
+    private static Timer heartbeatTimer = null;
 
     private String serverIP;
 
@@ -327,7 +327,7 @@ public class Client implements ServerObserver {
         }, 1000, Configuration.serverTimeout / 2 * 1000); // this must be lower than (half should be ok) the value used server side in setSoTimeout()
     }
 
-    private void stopHeartbeat() {
+    protected static void stopHeartbeat() {
         if (heartbeatTimer != null) {
             heartbeatTimer.cancel();
         }
