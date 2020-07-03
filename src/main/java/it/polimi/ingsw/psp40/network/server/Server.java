@@ -115,6 +115,7 @@ public class Server {
      * @param message message received
      */
     public void receivedMessage(Message message) {
+        LOGGER.log(Level.INFO, "IN " + message.toString());
         if (message.getTypeOfMessage() == null)
             return;
 
@@ -157,6 +158,7 @@ public class Server {
                 if (matchToUUIDsMap.get(matchID) != null) {
                     matchToUUIDsMap.get(matchID).forEach(uuid -> {
                         UUIDtoClientMap.get(uuid).sendMessage(message);
+                        LOGGER.log(Level.INFO, "OUT " + message.toString());
                     });
                 } else {
                     LOGGER.log(Level.WARNING, "Something wrong");
