@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class GUI extends Application implements ViewInterface {
@@ -262,6 +263,11 @@ public class GUI extends Application implements ViewInterface {
     public void displayLocationUpdated() {
         if (gameScreenController != null) {
             Platform.runLater(() -> {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500); // to be sure that the cache has been updated
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 gameScreenController.updateWorkersPosition();
             });
         }
@@ -415,8 +421,7 @@ public class GUI extends Application implements ViewInterface {
         Platform.runLater(() -> {
             WinnerLoserPopup popup = new WinnerLoserPopup(primaryStage, false, () -> {
                 displaySetup();
-            });
-            popup.setWinningPlayer(winningPlayer);
+            }, winningPlayer);
             GUI.showPopup(popup);
         });
     }
@@ -431,6 +436,10 @@ public class GUI extends Application implements ViewInterface {
             confirmPopup.setClass("loser-popup");
             // Show Popup
             GUI.showPopup(confirmPopup, 1.5);
+
+/*            if(gameScreenController != null) {
+                gameScreenController.updateWholeIsland();
+            }*/
         });
     }
 

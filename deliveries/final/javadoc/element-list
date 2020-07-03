@@ -1,0 +1,15 @@
+module:it.polimi.ingsw.psp40
+it.polimi.ingsw.psp40.commons
+it.polimi.ingsw.psp40.commons.messages
+it.polimi.ingsw.psp40.controller
+it.polimi.ingsw.psp40.controller.strategies.strategyBuild
+it.polimi.ingsw.psp40.controller.strategies.strategyLose
+it.polimi.ingsw.psp40.controller.strategies.strategyMove
+it.polimi.ingsw.psp40.controller.strategies.strategyWin
+it.polimi.ingsw.psp40.exceptions
+it.polimi.ingsw.psp40.model
+it.polimi.ingsw.psp40.network.client
+it.polimi.ingsw.psp40.network.server
+it.polimi.ingsw.psp40.view
+it.polimi.ingsw.psp40.view.cli
+it.polimi.ingsw.psp40.view.gui

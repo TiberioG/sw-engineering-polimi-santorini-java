@@ -792,7 +792,7 @@ public class CoolCLI implements ViewInterface {
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        lower.center("You lost the game, press CTRL C to exit", DELAY);
+        lower.center(winningPlayer.getName() + " has won. You lost the game, press CTRL C to exit", DELAY);
 
     }
 

@@ -31,19 +31,22 @@ public class WinnerLoserPopup extends PopupStage {
      * @param continueFunction
      */
     WinnerLoserPopup(Stage ownerStage, boolean isWinner, FunctionInterface continueFunction) {
-        super(ownerStage);
-        this.isWinner = isWinner;
-        this.continueFunction = continueFunction;
-        build();
+        this(ownerStage, isWinner, continueFunction, null);
     }
 
     /**
-     * Method that permit to a set a winningPlayer information in the popup
-     *
-     * @param winningPlayer the player who has won
+     * Constructor
+     * @param ownerStage
+     * @param isWinner
+     * @param continueFunction
+     * @param winningPlayer
      */
-    protected void setWinningPlayer(Player winningPlayer) {
+    WinnerLoserPopup(Stage ownerStage, boolean isWinner, FunctionInterface continueFunction, Player winningPlayer) {
+        super(ownerStage);
         this.winningPlayer = winningPlayer;
+        this.isWinner = isWinner;
+        this.continueFunction = continueFunction;
+        build();
     }
 
     private void build() {
@@ -93,7 +96,7 @@ public class WinnerLoserPopup extends PopupStage {
             details = "Congratulations!\nYou Won!";
         } else {
             details = "I'm sorry, you lost :(";
-            if (winningPlayer != null) details += "\n\nThe winner is " + winningPlayer.getName();
+            if (winningPlayer != null) details += "\nThe winner is " + winningPlayer.getName();
         }
         return details;
     }

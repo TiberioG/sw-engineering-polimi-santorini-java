@@ -27,6 +27,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -818,7 +819,7 @@ public class GameScreenController extends ScreenController {
         int x = cell.getCoordX();
         int y = cell.getCoordY();
 
-        boolean cellAlreadyUpdated = levels_dx.stream().anyMatch(_block -> _block.row == x && _block.col == y && _block.component.getComponentCode() == cell.getTower().getTopComponent().getComponentCode()); // if the updateCell(cell) is called for the component that I've just built, skip the update because the view is already updated
+        boolean cellAlreadyUpdated = levels_dx.stream().filter(Objects::nonNull).filter(_block -> _block.component != null).anyMatch(_block -> _block.row == x && _block.col == y && _block.component.getComponentCode() == cell.getTower().getTopComponent().getComponentCode()); // if the updateCell(cell) is called for the component that I've just built, skip the update because the view is already updated
         if (cellAlreadyUpdated) {
             return;
         }
