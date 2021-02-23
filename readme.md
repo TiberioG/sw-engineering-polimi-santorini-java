@@ -1,9 +1,10 @@
-# Prova Finale Ingegneria del Software 2020
+# Final Project of Software Engineering course at [Politecnico di Milano](https://www.polimi.it "Learn more about Politecnico di Milano")
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
 **Table of Contents**  
 
+- [Description](#description)
 - [Features implemented](#features-implemented)
 - [Building](#building)
   - [Building with Maven](#building-with-maven)
@@ -21,7 +22,8 @@
 - [External libraries used](#external-libraries-used)
 - [Authors (alphabetical order)](#authors-alphabetical-order)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## Description
+This is a distributed Java game based on the table game Santorini.  
 
 ## Features implemented
 | Functionality | State |
